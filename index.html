@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AP Exam Practice</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <h1>AP Exam Practice</h1>
+  <p class="tagline">Free, timed, unofficial practice exams for every standard AP subject.</p>
+</header>
+
+<!-- ============ SPLASH / CATALOG SCREEN ============ -->
+<main id="screen-catalog" class="screen active">
+  <div class="catalog-toolbar">
+    <input type="search" id="catalog-search" placeholder="Search subjects…" aria-label="Search subjects" />
+  </div>
+  <div id="catalog-categories"></div>
+</main>
+
+<!-- ============ EXAM SCREEN ============ -->
+<main id="screen-exam" class="screen">
+  <div class="exam-topbar">
+    <button type="button" id="exam-back-btn" class="link-btn">← Exit</button>
+    <span id="exam-subject-name" class="exam-subject-name"></span>
+    <span id="timer" class="timer">0:00</span>
+  </div>
+
+  <div class="exam-body">
+    <div class="question-panel">
+      <p id="question-position" class="question-position"></p>
+      <div id="question-body"></div>
+      <div class="question-controls">
+        <button type="button" id="prev-btn">← Previous</button>
+        <button type="button" id="flag-btn">🚩 Flag for review</button>
+        <button type="button" id="next-btn">Next →</button>
+      </div>
+    </div>
+
+    <aside class="navigator-panel">
+      <h2>Questions</h2>
+      <div id="navigator-grid" class="navigator-grid"></div>
+      <ul class="navigator-legend">
+        <li><span class="legend-swatch answered"></span> Answered</li>
+        <li><span class="legend-swatch flagged"></span> Flagged</li>
+        <li><span class="legend-swatch current"></span> Current</li>
+      </ul>
+      <button type="button" id="submit-btn" class="submit-btn">Submit Exam</button>
+    </aside>
+  </div>
+</main>
+
+<!-- ============ RESULTS SCREEN ============ -->
+<main id="screen-results" class="screen">
+  <h2 id="results-subject-name"></h2>
+  <p id="results-score" class="results-score"></p>
+  <p id="results-scope-note" class="results-scope-note"></p>
+
+  <h3>Per-unit breakdown</h3>
+  <table class="results-table">
+    <thead><tr><th>Unit</th><th>Score</th></tr></thead>
+    <tbody id="results-unit-table"></tbody>
+  </table>
+
+  <h3>Answer review</h3>
+  <div id="results-review" class="results-review"></div>
+
+  <button type="button" id="results-back-btn">← Back to subjects</button>
+</main>
+
+<script src="js/subjects.js"></script>
+<script src="data/ap-art-history.js"></script>
+<script src="data/ap-music-theory.js"></script>
+<script src="data/ap-english-language.js"></script>
+<script src="data/ap-english-literature.js"></script>
+<script src="data/ap-african-american-studies.js"></script>
+<script src="data/ap-comparative-government.js"></script>
+<script src="data/ap-european-history.js"></script>
+<script src="data/ap-human-geography.js"></script>
+<script src="data/ap-macroeconomics.js"></script>
+<script src="data/ap-microeconomics.js"></script>
+<script src="data/ap-psychology.js"></script>
+<script src="data/ap-us-government.js"></script>
+<script src="data/ap-us-history.js"></script>
+<script src="data/ap-world-history.js"></script>
+<script src="data/ap-calculus-ab.js"></script>
+<script src="data/ap-calculus-bc.js"></script>
+<script src="data/ap-computer-science-a.js"></script>
+<script src="data/ap-computer-science-principles.js"></script>
+<script src="data/ap-precalculus.js"></script>
+<script src="data/ap-statistics.js"></script>
+<script src="data/ap-biology.js"></script>
+<script src="data/ap-chemistry.js"></script>
+<script src="data/ap-environmental-science.js"></script>
+<script src="data/ap-physics-1.js"></script>
+<script src="data/ap-physics-2.js"></script>
+<script src="data/ap-physics-c-mechanics.js"></script>
+<script src="data/ap-physics-c-em.js"></script>
+<script src="data/ap-chinese.js"></script>
+<script src="data/ap-french.js"></script>
+<script src="data/ap-german.js"></script>
+<script src="data/ap-italian.js"></script>
+<script src="data/ap-japanese.js"></script>
+<script src="data/ap-spanish-language.js"></script>
+<script src="data/ap-spanish-literature.js"></script>
+<script src="data/ap-latin.js"></script>
+<script src="data/ap-business-personal-finance.js"></script>
+<script src="data/ap-cybersecurity.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
