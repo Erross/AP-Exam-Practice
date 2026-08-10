@@ -118,7 +118,10 @@ test("Biology stimulus portfolio is intact, neutral, and graph-rich", () => {
       assert.ok(fs.existsSync(stimulus.image), `${groupId}: missing visual asset`);
       assert.ok(stimulus.alt.length >= 60, `${groupId}: visual requires meaningful alt text`);
       assert.doesNotMatch(stimulus.alt, /correct answer|therefore|proves that/i);
-      if (stimulus.visualKind === "graph") graphs.add(stimulus.image);
+      if (stimulus.visualKind === "graph") {
+        graphs.add(stimulus.image);
+        assert.ok(stimulus.description?.length >= 120, `${groupId}: experimental graph lacks methods context`);
+      }
       if (stimulus.uncertainty) uncertaintyGraphs++;
     } else {
       assert.ok(stimulus.columns.length >= 2);
@@ -142,6 +145,17 @@ test("Biology stimulus portfolio is intact, neutral, and graph-rich", () => {
   assert.match(meiosis, /After exchange/);
   assert.doesNotMatch(meiosis, /AFTER MEIOSIS I|AFTER MEIOSIS II/);
   assert.doesNotMatch(meiosis, /parental|recombinant/i, "figure must not classify the products for students");
+  const cells = fs.readFileSync("assets/ap-biology/cell-geometry.svg", "utf8");
+  assert.match(cells, /id="cube-1"/);
+  assert.match(cells, /id="cube-2"/);
+  assert.match(cells, /id="cube-4"/);
+  assert.doesNotMatch(cells, /SA:V/, "cell figure must not print the answers to its ratio questions");
+  const enzymes = fs.readFileSync("assets/ap-biology/enzyme-rates.svg", "utf8");
+  assert.match(enzymes, /Initial rate \(μmol min⁻¹\)/, "enzyme-rate axis requires complete visible units");
+  const signaling = fs.readFileSync("assets/ap-biology/signal-pathway.svg", "utf8");
+  assert.match(signaling, /A–P  →  A \+ Pᵢ/);
+  assert.match(signaling, /B–P  →  B \+ Pᵢ/, "phosphatase action on both relay proteins must be explicit");
+  assert.doesNotMatch(signaling, /stroke-dasharray="8 6"/, "ambiguous shared phosphatase connectors must not return");
 });
 
 test("Biology answer construction avoids systematic key and distractor tells", () => {
