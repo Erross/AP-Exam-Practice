@@ -56,13 +56,21 @@ See [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) for the required subject-
 
 ## Adding or releasing a subject
 
+See [CONTENT_STANDARDS.md](CONTENT_STANDARDS.md) for the full content-quality bar (CED verification, duplication avoidance, answer-construction bias checks, source accuracy, visual self-consistency, rationale quality) before starting.
+
 1. Add original questions to `data/<subject-id>.js` with stable IDs, current CED topic metadata, skill metadata, answer rationale, and source provenance where needed.
 2. Add a subject-specific blueprint when the exam requires particular stimulus types or sections.
+<<<<<<< Updated upstream
 3. Extend the audits and tests for that subject.
 4. Keep `releaseStatus: "draft"` until the complete gate passes.
 5. Merge the completed subject branch into an ephemeral integration branch.
 6. Change the status to `released` only in the integration release after the combined gate passes.
 7. Merge the validated integration branch to `main`; the build will then include that bank.
+=======
+3. Extend the audits and tests for that subject, including the duplication and Monte Carlo checks in CONTENT_STANDARDS.md.
+4. Keep `releaseStatus: "draft"` until the complete gate and an independent content review both pass.
+5. Change the status to `released`; the build will then include that bank.
+>>>>>>> Stashed changes
 
 ## License
 
