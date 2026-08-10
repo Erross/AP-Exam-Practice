@@ -4,7 +4,9 @@ A free, timed, unofficial multiple-choice practice app for AP subjects. The appl
 
 ## Released content
 
-AP United States Government and Politics is the first released subject. Its 126-question bank is aligned to the AP U.S. Government and Politics Course and Exam Description effective Fall 2026 (the 2027 exam cycle).
+The released subjects are AP United States Government and Politics and AP Biology.
+
+The Government bank contains 176 original questions aligned to the AP U.S. Government and Politics Course and Exam Description effective Fall 2026 (the 2027 exam cycle).
 
 Every 55-question attempt includes:
 
@@ -14,6 +16,14 @@ Every 55-question attempt includes:
 - three visual-source sets;
 - approximately 30 individual questions;
 - single-answer multiple-choice items only.
+
+The Biology bank contains 180 original questions covering all 60 CED topics at least twice. Every 60-question attempt:
+
+- uses exact unit totals of 6 / 7 / 8 / 8 / 6 / 8 / 10 / 7, within the College Board ranges;
+- keeps all six science-practice families within their Section I ranges;
+- includes four to eight complete stimulus sets without splitting a set;
+- excludes near-duplicate variants from the same attempt;
+- uses single-answer multiple-choice items only.
 
 All other catalog subjects are explicit drafts. A nonempty bank does not make a subject public. The release builder publishes only banks whose subject metadata says `releaseStatus: "released"`.
 
@@ -40,13 +50,19 @@ The release gate audits question schema, complete topic coverage, stimulus-set s
 
 The Pages workflow validates the repository, builds a released-only artifact, and deploys `_site/`. In repository **Settings → Pages**, select **GitHub Actions** as the source once. Subsequent pushes to `main` deploy only after the complete gate passes.
 
+## Development and release workflow
+
+See [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) for the required subject-branch → integration-branch → `main` process and its release gates.
+
 ## Adding or releasing a subject
 
 1. Add original questions to `data/<subject-id>.js` with stable IDs, current CED topic metadata, skill metadata, answer rationale, and source provenance where needed.
 2. Add a subject-specific blueprint when the exam requires particular stimulus types or sections.
 3. Extend the audits and tests for that subject.
 4. Keep `releaseStatus: "draft"` until the complete gate passes.
-5. Change the status to `released`; the build will then include that bank.
+5. Merge the completed subject branch into an ephemeral integration branch.
+6. Change the status to `released` only in the integration release after the combined gate passes.
+7. Merge the validated integration branch to `main`; the build will then include that bank.
 
 ## License
 

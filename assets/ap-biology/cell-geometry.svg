@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Geometry of three cube-shaped model cells</title><desc id="desc">Three cubes with side lengths one, two, and four micrometers are paired with their surface-area-to-volume ratios.</desc>
+  <rect width="900" height="520" rx="24" fill="#f8fafc"/>
+  <g fill="#93c5fd" stroke="#1d4ed8" stroke-width="4"><rect x="105" y="240" width="80" height="80"/><rect x="360" y="190" width="130" height="130"/><rect x="625" y="120" width="200" height="200"/></g>
+  <g fill="#334155" font-family="Arial" text-anchor="middle"><text x="145" y="365" font-size="22" font-weight="700">Side = 1 μm</text><text x="145" y="400" font-size="20">SA:V = 6:1</text><text x="425" y="365" font-size="22" font-weight="700">Side = 2 μm</text><text x="425" y="400" font-size="20">SA:V = 3:1</text><text x="725" y="365" font-size="22" font-weight="700">Side = 4 μm</text><text x="725" y="400" font-size="20">SA:V = 1.5:1</text><text x="450" y="72" font-size="25" font-weight="700">MODEL CELLS OF THE SAME SHAPE</text></g>
+  <path d="M120 450h660" stroke="#64748b" stroke-width="3" marker-end="url(#a)"/><text x="450" y="488" text-anchor="middle" fill="#475569" font-family="Arial" font-size="18">increasing cell size</text>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="#64748b"/></marker></defs>
+</svg>

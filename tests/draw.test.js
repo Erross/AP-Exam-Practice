@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { AP_SUBJECTS } = require("../js/subjects");
-const { drawExam, shuffleQuestionOptions } = require("../js/draw");
+const { drawExam, drawBlocks, shuffleQuestionOptions } = require("../js/draw");
 const { loadGovernmentBank } = require("./helpers");
 
 const subject = AP_SUBJECTS.find((item) => item.id === "ap-us-government");
@@ -28,8 +28,14 @@ test("every Government draw satisfies the unit and stimulus blueprints", () => {
       assert.equal(questions.length, bankGroupSize, "a stimulus group was split");
     }
     assert.deepEqual(counts, { quantitative: 5, foundational: 1, text: 1, visual: 3 });
-    assert.ok(55 - drawn.filter((q) => q.stimulusGroupId).length >= 29);
-    assert.ok(55 - drawn.filter((q) => q.stimulusGroupId).length <= 32);
+    // Bounds come from the subject's own declared standaloneRange rather than a
+    // hardcoded pair, because a larger stimulus pool (sets of varying size,
+    // chosen from more than the required minimum) legitimately widens how many
+    // stimulus-linked questions any one draw includes — the same variability a
+    // real administration has when it draws from a rotating item bank.
+    const standaloneCount = 55 - drawn.filter((q) => q.stimulusGroupId).length;
+    assert.ok(standaloneCount >= subject.examBlueprint.standaloneRange[0]);
+    assert.ok(standaloneCount <= subject.examBlueprint.standaloneRange[1]);
   }
 });
 
@@ -47,3 +53,56 @@ test("undersized banks and incomplete stimulus blueprints fail explicitly", () =
   assert.throws(() => drawExam(subject, bank.slice(0, 54)), /required/);
   assert.throws(() => drawExam(subject, bank.filter((q) => q.stimulus?.type !== "visual")), /visual stimulus sets/);
 });
+
+test("drawBlocks never selects two questions that share a variantGroupId", () => {
+  // Synthetic pool: three variant pairs plus enough untagged filler that a
+  // full draw is always reachable even when both members of a pair are
+  // excluded from consideration.
+  const pool = [];
+  for (let g = 0; g < 3; g++) {
+    pool.push({ id: `v${g}a`, variantGroupId: `variant-${g}` });
+    pool.push({ id: `v${g}b`, variantGroupId: `variant-${g}` });
+  }
+  for (let i = 0; i < 10; i++) pool.push({ id: `plain${i}` });
+
+  for (let attempt = 0; attempt < 500; attempt++) {
+    const usedVariantIds = new Set();
+    const drawn = drawBlocks(pool, 8, Math.random, usedVariantIds).flat();
+    assert.equal(drawn.length, 8);
+    const seen = new Set();
+    drawn.forEach((q) => {
+      if (!q.variantGroupId) return;
+      assert.ok(!seen.has(q.variantGroupId), `two questions from ${q.variantGroupId} were drawn together`);
+      seen.add(q.variantGroupId);
+    });
+  }
+});
+
+test("drawBlocks falls back to filling the target when variant exclusivity can't be honored", () => {
+  // Only variant-tagged questions exist and the target exceeds the number of
+  // distinct groups — exclusivity is impossible to fully satisfy, so the
+  // function must still return exactly `target` questions rather than fail.
+  const pool = [
+    { id: "a1", variantGroupId: "g1" },
+    { id: "a2", variantGroupId: "g1" },
+    { id: "b1", variantGroupId: "g2" },
+    { id: "b2", variantGroupId: "g2" },
+  ];
+  const drawn = drawBlocks(pool, 3, Math.random, new Set()).flat();
+  assert.equal(drawn.length, 3);
+});
+
+test("every Government draw is free of same-variant repeats", () => {
+  // Guards the real bank too: once any question pairs are tagged with a
+  // shared variantGroupId, no drawn exam should ever surface both.
+  for (let attempt = 0; attempt < 500; attempt++) {
+    const drawn = drawExam(subject, bank);
+    const seen = new Set();
+    drawn.forEach((q) => {
+      if (!q.variantGroupId) return;
+      assert.ok(!seen.has(q.variantGroupId), `two questions from ${q.variantGroupId} were drawn together`);
+      seen.add(q.variantGroupId);
+    });
+  }
+});
+

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" role="img" aria-labelledby="title desc">
+  <title id="title">Frequency of allele R across generations</title><desc id="desc">A graph compares allele R frequency in treated and untreated insect populations over ten generations.</desc>
+  <rect width="900" height="540" rx="24" fill="#f8fafc"/><path d="M110 50v390h680" fill="none" stroke="#334155" stroke-width="4"/>
+  <g stroke="#cbd5e1"><path d="M110 362h680M110 284h680M110 206h680M110 128h680M110 50h680"/></g>
+  <g fill="#334155" font-family="Arial" font-size="18" text-anchor="end"><text x="96" y="446">0</text><text x="96" y="368">0.2</text><text x="96" y="290">0.4</text><text x="96" y="212">0.6</text><text x="96" y="134">0.8</text><text x="96" y="56">1.0</text></g>
+  <g fill="#334155" font-family="Arial" font-size="18" text-anchor="middle"><text x="140" y="472">0</text><text x="265" y="472">2</text><text x="390" y="472">4</text><text x="515" y="472">6</text><text x="640" y="472">8</text><text x="765" y="472">10</text><text x="450" y="520" font-size="21" font-weight="700">Generation</text></g>
+  <text transform="translate(35 325) rotate(-90)" fill="#334155" font-family="Arial" font-size="21" font-weight="700">Frequency of allele R</text>
+  <polyline points="140,409 265,386 390,339 515,269 640,191 765,120" fill="none" stroke="#be123c" stroke-width="5"/><polyline points="140,409 265,413 390,405 515,409 640,401 765,405" fill="none" stroke="#0f766e" stroke-width="5"/>
+  <g fill="#be123c"><circle cx="140" cy="409" r="7"/><circle cx="265" cy="386" r="7"/><circle cx="390" cy="339" r="7"/><circle cx="515" cy="269" r="7"/><circle cx="640" cy="191" r="7"/><circle cx="765" cy="120" r="7"/></g><g fill="#0f766e"><circle cx="140" cy="409" r="7"/><circle cx="265" cy="413" r="7"/><circle cx="390" cy="405" r="7"/><circle cx="515" cy="409" r="7"/><circle cx="640" cy="401" r="7"/><circle cx="765" cy="405" r="7"/></g>
+  <g font-family="Arial" font-size="18" font-weight="700"><text x="585" y="78" fill="#be123c">Pesticide</text><text x="720" y="78" fill="#0f766e">Control</text></g>
+</svg>

@@ -9,6 +9,7 @@ const validUnits = new Set(subject.units.map((unit) => unit.id));
 const ids = new Set();
 const topicCodes = new Set();
 const groupMap = new Map();
+const variantMap = new Map();
 
 bank.forEach((question) => {
   assert.match(question.id, /^apgov-u[1-5]-\d{3}$/);
@@ -28,7 +29,26 @@ bank.forEach((question) => {
     if (!groupMap.has(question.stimulusGroupId)) groupMap.set(question.stimulusGroupId, []);
     groupMap.get(question.stimulusGroupId).push(question);
   }
+  if (question.variantGroupId) {
+    assert.ok(!question.stimulusGroupId, `${question.id}: variant tags are for standalone questions only`);
+    if (!variantMap.has(question.variantGroupId)) variantMap.set(question.variantGroupId, []);
+    variantMap.get(question.variantGroupId).push(question);
+  }
 });
+
+// variantGroupId marks near-duplicate questions (same narrow CED sub-point,
+// different wording/scenario) that drawExam() must never place in the same
+// exam together. A group of one is a stray tag; a group spanning units or
+// topics almost certainly is not actually a near-duplicate pair.
+let variantedQuestions = 0;
+for (const [groupId, questions] of variantMap) {
+  assert.ok(questions.length >= 2, `${groupId}: variant group has only one question`);
+  assert.equal(new Set(questions.map((q) => q.unit)).size, 1, `${groupId}: variants may not cross units`);
+  assert.equal(new Set(questions.map((q) => q.topicCode)).size, 1, `${groupId}: variants must share a topic code`);
+  const distinctText = new Set(questions.map((q) => q.q.trim().toLowerCase()));
+  assert.equal(distinctText.size, questions.length, `${groupId}: variant questions must be worded differently`);
+  variantedQuestions += questions.length;
+}
 
 const expectedTopics = {
   U1: 9, U2: 15, U3: 13, U4: 10, U5: 13,
@@ -71,6 +91,9 @@ const visualLeakageTerms = {
   "apgov-g-visual-president": ["bully pulpit", "agenda setting"],
   "apgov-g-visual-equal": ["equal protection", "fourteenth amendment", "strict scrutiny", "compelling government interest", "narrowly tailored"],
   "apgov-g-visual-media": ["agenda setting", "horse-race journalism", "prior restraint", "selective incorporation", "selective exposure"],
+  "apgov-g-visual-highway": ["categorical grant", "block grant", "coercion", "coercive", "revenue sharing"],
+  "apgov-g-visual-socialization": ["political socialization", "political efficacy", "selective exposure", "polarization"],
+  "apgov-g-visual-triangle": ["iron triangle", "divided government", "judicial review", "devolution"],
 };
 for (const [groupId, forbiddenTerms] of Object.entries(visualLeakageTerms)) {
   const questions = groupMap.get(groupId);
@@ -111,3 +134,5 @@ for (let position = 0; position < 4; position++) {
 
 console.log(`Government bank audit passed: ${bank.length} questions, ${groupMap.size} stimulus groups, all 60 CED topics covered.`);
 console.log(`Answer-pattern audit: uniquely longest ${(100 * uniqueLongest / bank.length).toFixed(1)}%; correct ${correctAverage.toFixed(2)} words vs distractors ${distractorAverage.toFixed(2)}.`);
+console.log(`Variant groups: ${variantMap.size} groups covering ${variantedQuestions} questions.`);
+

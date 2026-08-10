@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" role="img" aria-labelledby="title desc">
+  <title id="title">Behavior of one homologous chromosome pair in meiosis</title><desc id="desc">A model shows replicated homologs pairing, crossing over between nonsister chromatids, homolog separation in meiosis one, and sister-chromatid separation in meiosis two.</desc>
+  <rect width="900" height="540" rx="24" fill="#f8fafc"/>
+  <g font-family="Arial" font-size="19" font-weight="700" fill="#334155" text-anchor="middle"><text x="120" y="55">PAIRING</text><text x="340" y="55">CROSSING OVER</text><text x="570" y="55">AFTER MEIOSIS I</text><text x="790" y="55">AFTER MEIOSIS II</text></g>
+  <g stroke-width="12" stroke-linecap="round" fill="none"><path d="M90 130l70 150M160 130L90 280" stroke="#2563eb"/><path d="M185 130l70 150M255 130l-70 150" stroke="#d97706"/><path d="M310 130l70 150M380 130l-70 150" stroke="#2563eb"/><path d="M405 130l70 150M475 130l-70 150" stroke="#d97706"/></g>
+  <path d="M345 205h95" stroke="#16a34a" stroke-width="8"/><circle cx="392" cy="205" r="13" fill="#16a34a"/>
+  <g stroke-width="10" stroke-linecap="round"><path d="M535 135l55 120M590 135l-55 120" stroke="#2563eb"/><path d="M630 135l55 120M685 135l-55 120" stroke="#d97706"/><path d="M750 130v150M795 130v150" stroke="#2563eb"/><path d="M835 130v150M875 130v150" stroke="#d97706"/></g>
+  <g stroke="#64748b" stroke-width="4" marker-end="url(#a)"><path d="M265 205h35"/><path d="M485 205h35"/><path d="M700 205h35"/></g>
+  <g font-family="Arial" font-size="15" fill="#475569" text-anchor="middle">
+    <text x="390" y="335">nonsister chromatids</text><text x="390" y="357">exchange segments</text>
+    <text x="610" y="335">homologs</text><text x="610" y="357">separate</text>
+    <text x="810" y="335">sister chromatids</text><text x="810" y="357">separate</text>
+  </g>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="#64748b"/></marker></defs>
+</svg>
