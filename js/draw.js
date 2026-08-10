@@ -374,6 +374,77 @@
   }
 
   /**
+   * Draw a fixed number of complete passage/question sets from named pools.
+   *
+   * `subject.setBlueprint` is intentionally generic:
+   *
+   *   {
+   *     field: "setType",
+   *     order: ["reading", "writing-long", "writing-short"],
+   *     counts: { reading: 2, "writing-long": 2, "writing-short": 1 },
+   *     preserveCategoryOrder: true
+   *   }
+   *
+   * Every block must be a stimulus group and every question in a block must
+   * share the configured field value.  The search considers whole-set
+   * combinations only and accepts a combination only when its question total
+   * exactly matches `mcqCount`; an impossible bank fails loudly.
+   */
+  function drawSetBlueprintExam(subject, bank, rng) {
+    const blueprint = subject.setBlueprint;
+    const field = blueprint.field || "setType";
+    const order = blueprint.order || Object.keys(blueprint.counts || {});
+    const blocks = toBlocks(bank);
+    const pools = new Map(order.map((kind) => [kind, []]));
+
+    blocks.forEach((block) => {
+      if (!block[0] || !block[0].stimulusGroupId) {
+        throw new Error("Set-blueprint subjects may not contain standalone questions");
+      }
+      const values = new Set(block.map((question) => question[field]));
+      if (values.size !== 1) {
+        throw new Error(`${block[0].stimulusGroupId}: set disagrees on ${field}`);
+      }
+      const kind = block[0][field];
+      if (!pools.has(kind)) {
+        throw new Error(`${block[0].stimulusGroupId}: unsupported ${field} value ${kind}`);
+      }
+      pools.get(kind).push(block);
+    });
+
+    const requirements = order.map((kind) => ({
+      kind,
+      choices: combinations(pools.get(kind), blueprint.counts[kind] || 0, rng),
+    }));
+    requirements.forEach(({ kind, choices }) => {
+      if (choices.length === 0) {
+        throw new Error(`Insufficient ${kind} sets for the configured set blueprint`);
+      }
+    });
+
+    const valid = [];
+    function search(index, picked) {
+      if (index === requirements.length) {
+        const total = picked.flat().reduce((sum, block) => sum + block.length, 0);
+        if (total === subject.mcqCount) valid.push(picked.map((group) => group.slice()));
+        return;
+      }
+      requirements[index].choices.forEach((choice) => search(index + 1, picked.concat([choice])));
+    }
+    search(0, []);
+
+    if (valid.length === 0) {
+      throw new Error("No whole-set draw satisfies the configured set blueprint and question count");
+    }
+
+    const selected = valid[Math.floor((rng || Math.random)() * valid.length)];
+    const selectedBlocks = blueprint.preserveCategoryOrder
+      ? selected.flat()
+      : shuffle(selected.flat(), rng);
+    return selectedBlocks.flat();
+  }
+
+  /**
    * Build one attempt's question list for a subject.
    *
    * @param {object} subject   an AP_SUBJECTS entry
@@ -388,6 +459,8 @@
     }
     const drawCount = requestedCount;
     const units = Array.isArray(subject.units) ? subject.units : [];
+
+    if (subject.setBlueprint) return drawSetBlueprintExam(subject, bank, rng);
 
     // No unit metadata (most subjects, so far): fall back to a flat random draw,
     // but still keep stimulus sets contiguous.
@@ -480,6 +553,7 @@
     summarizeAttributes,
     drawConstrainedWeightedExam,
     drawBlueprintExam,
+    drawSetBlueprintExam,
     drawExam,
     shuffleQuestionOptions,
   };
