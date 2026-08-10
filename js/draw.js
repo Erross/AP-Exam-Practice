@@ -216,15 +216,50 @@
   }
 
   /**
+   * Count occurrences of arbitrary question fields across a draw, e.g. the
+   * calculator-permission split on a multi-part MCQ section. Generic by
+   * design: any subject can constrain a draw by any boolean/enum field this
+   * way without a new bespoke drawer, the same way `sciencePracticeRanges`
+   * constrains the skill-family split above.
+   *
+   * @param {Array<Array>} blocks
+   * @param {string[]} fields  question property names to tally
+   * @returns {Object<string, Object<string, number>>} field -> stringified
+   *   value -> count
+   */
+  function summarizeAttributes(blocks, fields) {
+    const result = {};
+    fields.forEach((field) => {
+      result[field] = {};
+    });
+    blocks.forEach((block) => {
+      block.forEach((question) => {
+        fields.forEach((field) => {
+          const key = String(question[field]);
+          result[field][key] = (result[field][key] || 0) + 1;
+        });
+      });
+    });
+    return result;
+  }
+
+  /**
    * Sample whole-block unit draws until all cross-cutting ranges are satisfied.
    * The bank's checked practice balance makes a valid draw common enough for a
    * bounded sampler; every returned exam is validated, and an unsupported bank
    * fails explicitly rather than silently relaxing its blueprint.
+   *
+   * `subject.attributeRanges`, if present, is `{ fieldName: { stringValue:
+   * [min, max] } }` — e.g. `{ calculatorAllowed: { "true": [11, 15], "false":
+   * [27, 31] } }` to hold a multi-part MCQ section's composition to its real
+   * exam split. Subjects that don't set it are unaffected.
    */
   function drawConstrainedWeightedExam(subject, byUnit, targets, rng) {
     const ranges = subject.sciencePracticeRanges || {};
     const setRange = subject.stimulusSetRange || [0, Infinity];
     const families = Object.keys(ranges);
+    const attributeRanges = subject.attributeRanges || {};
+    const attributeFields = Object.keys(attributeRanges);
     const attempts = subject.constraintDrawAttempts || 5000;
 
     for (let attempt = 0; attempt < attempts; attempt++) {
@@ -241,10 +276,20 @@
         const count = summary.practices[family] || 0;
         return count >= ranges[family][0] && count <= ranges[family][1];
       });
-      if (practicesValid) return shuffle(blocks, rng).flat();
+      if (!practicesValid) continue;
+      const attributeSummary = attributeFields.length ? summarizeAttributes(blocks, attributeFields) : {};
+      const attributesValid = attributeFields.every((field) =>
+        Object.entries(attributeRanges[field]).every(([key, range]) => {
+          const count = (attributeSummary[field] && attributeSummary[field][key]) || 0;
+          return count >= range[0] && count <= range[1];
+        })
+      );
+      if (attributesValid) return shuffle(blocks, rng).flat();
     }
 
-    throw new Error("No whole-block draw satisfies the configured unit, stimulus-set, and science-practice ranges");
+    throw new Error(
+      "No whole-block draw satisfies the configured unit, stimulus-set, science-practice, and attribute ranges"
+    );
   }
 
   /**
@@ -369,7 +414,7 @@
 
     if (subject.examBlueprint) return drawBlueprintExam(subject, bank, targets, rng);
 
-    if (subject.sciencePracticeRanges) {
+    if (subject.sciencePracticeRanges || subject.attributeRanges) {
       return drawConstrainedWeightedExam(subject, byUnit, targets, rng);
     }
 
@@ -432,6 +477,7 @@
     stimulusKind,
     practiceFamily,
     summarizeBlocks,
+    summarizeAttributes,
     drawConstrainedWeightedExam,
     drawBlueprintExam,
     drawExam,
