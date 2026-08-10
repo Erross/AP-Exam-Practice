@@ -71,6 +71,7 @@ const AP_SUBJECTS = [
     // and the AP English Language and Composition CED (© 2024, Exam Information).
     // Section I has 45 questions in five passage sets: two Reading sets totaling
     // 23-25 questions, followed by three Writing sets totaling 20-22 questions.
+    // This bank selects a valid 24 Reading / 21 Writing configuration.
     // Section II has three essays in 2hr 15min, including a 15-minute reading period.
     mcqCount: 45,
     mcqTimeMinutes: 60,
@@ -112,7 +113,8 @@ const AP_SUBJECTS = [
     // and the AP English Literature and Composition CED (© 2024, Exam Information).
     // Section I has 55 questions in five sets of 8-13, with at least two prose
     // fiction/drama passages and at least two poetry passages. Section II has
-    // three essays in 2 hours.
+    // three essays in 2 hours. This bank selects a valid 24 short-fiction /
+    // 22 poetry / 9 drama configuration within the published category ranges.
     mcqCount: 55,
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",

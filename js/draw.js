@@ -441,7 +441,11 @@
     const selectedBlocks = blueprint.preserveCategoryOrder
       ? selected.flat()
       : shuffle(selected.flat(), rng);
-    return selectedBlocks.flat();
+    return selectedBlocks.flatMap((block) => block.slice().sort((a, b) => {
+      const aSequence = Number.isInteger(a.sequence) ? a.sequence : 0;
+      const bSequence = Number.isInteger(b.sequence) ? b.sequence : 0;
+      return aSequence - bSequence;
+    }));
   }
 
   /**
