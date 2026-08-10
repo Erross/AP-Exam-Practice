@@ -1,20 +1,50 @@
 // AP Exam Practice — subject registry
 // Metadata only. Question banks live in data/<id>.js and are loaded separately.
-// tier: 1 = text/image MCQ, fully buildable now. 2 = MCQ section depends on audio
-//        (listening/aural) which this framework doesn't play back yet.
-// A subject's catalog card is enabled once its data/<id>.js array has questions in it.
+//
+// FIELDS
+//   tier            1 = text/image MCQ, fully buildable now.
+//                   2 = MCQ section depends on audio (listening/aural) which this
+//                       framework doesn't play back yet.
+//   releaseStatus   "draft"    = never selectable on the catalog, even if its bank
+//                                has questions in it. This is the default and the
+//                                only safe state for work-in-progress content.
+//                   "released" = selectable, provided the bank also has questions.
+//                   Gating on this field (instead of bank length alone) is what
+//                   stops a single WIP question from silently publishing a subject.
+//   formatVerified  true  = mcqCount / mcqTimeMinutes / totalExamTimeLabel were
+//                           checked against College Board's published exam page
+//                           during the pass noted in the inline comment.
+//                   false = inherited from an older draft; the catalog card says so.
+//   allowsMultiSelect  Whether this subject's MCQ section actually uses
+//                      "select two/three" items. Currently false everywhere: no AP
+//                      MCQ section in the current exam cycle uses multi-select
+//                      (AP Physics 1/2 were the last holdouts and dropped them in
+//                      the 2024-25 redesign). Enforced by tests/schema tests so a
+//                      bank can't quietly grow multi-select items.
+//   units           Optional per-unit exam weights. examWeight is the point estimate
+//                   used by the weighted drawer; examWeightRange is College Board's
+//                   published [min, max] band, used by the draw audit.
+//
+// Format verification pass: 2026-08-09, against apstudents.collegeboard.org
+// "About the Exam" pages (the 2026 administration) unless noted otherwise.
 const AP_SUBJECTS = [
   {
     id: "ap-art-history",
     name: "AP Art History",
     category: "Arts",
     tier: 1,
-    mcqCount: 28,
-    mcqTimeMinutes: 80,
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-art-history/assessment
+    // — Section I: Multiple Choice, 80 questions, 50% of score; total exam duration 3hrs.
+    // Section I is allotted 1 hour. Previous repo value (28 questions) was badly stale.
+    mcqCount: 80,
+    mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_ART_HISTORY", // global variable name set by data/ap-art-history.js
+    units: [],
+    dataVar: "QUESTIONS_AP_ART_HISTORY",
   },
   {
     id: "ap-music-theory",
@@ -24,9 +54,12 @@ const AP_SUBJECTS = [
     mcqCount: 75,
     mcqTimeMinutes: 65,
     totalExamTimeLabel: "2h 5m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: "Includes aural/sight-singing questions — audio playback not yet supported.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_MUSIC_THEORY", // global variable name set by data/ap-music-theory.js
+    units: [],
+    dataVar: "QUESTIONS_AP_MUSIC_THEORY",
   },
   {
     id: "ap-english-language",
@@ -36,9 +69,12 @@ const AP_SUBJECTS = [
     mcqCount: 45,
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 15m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_ENGLISH_LANGUAGE", // global variable name set by data/ap-english-language.js
+    units: [],
+    dataVar: "QUESTIONS_AP_ENGLISH_LANGUAGE",
   },
   {
     id: "ap-english-literature",
@@ -48,21 +84,31 @@ const AP_SUBJECTS = [
     mcqCount: 55,
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_ENGLISH_LITERATURE", // global variable name set by data/ap-english-literature.js
+    units: [],
+    dataVar: "QUESTIONS_AP_ENGLISH_LITERATURE",
   },
   {
     id: "ap-african-american-studies",
     name: "AP African American Studies",
     category: "History & Social Sciences",
     tier: 1,
-    mcqCount: 50,
-    mcqTimeMinutes: 60,
-    totalExamTimeLabel: "2h 30m",
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-african-american-studies/assessment
+    // — Section I: Multiple Choice, 60 questions, 1hr 10mins, 60% of score.
+    // Total exam duration 2hrs 45mins (also includes a 10-min project validation question
+    // and a 1hr 25min free-response section). Previous repo value (50 / 60 min) was stale.
+    mcqCount: 60,
+    mcqTimeMinutes: 70,
+    totalExamTimeLabel: "2h 45m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_AFRICAN_AMERICAN_STUDIES", // global variable name set by data/ap-african-american-studies.js
+    units: [],
+    dataVar: "QUESTIONS_AP_AFRICAN_AMERICAN_STUDIES",
   },
   {
     id: "ap-comparative-government",
@@ -72,9 +118,12 @@ const AP_SUBJECTS = [
     mcqCount: 55,
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "2h 30m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_COMPARATIVE_GOVERNMENT", // global variable name set by data/ap-comparative-government.js
+    units: [],
+    dataVar: "QUESTIONS_AP_COMPARATIVE_GOVERNMENT",
   },
   {
     id: "ap-european-history",
@@ -84,9 +133,12 @@ const AP_SUBJECTS = [
     mcqCount: 55,
     mcqTimeMinutes: 55,
     totalExamTimeLabel: "3h 15m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_EUROPEAN_HISTORY", // global variable name set by data/ap-european-history.js
+    units: [],
+    dataVar: "QUESTIONS_AP_EUROPEAN_HISTORY",
   },
   {
     id: "ap-human-geography",
@@ -96,9 +148,12 @@ const AP_SUBJECTS = [
     mcqCount: 60,
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "2h 15m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_HUMAN_GEOGRAPHY", // global variable name set by data/ap-human-geography.js
+    units: [],
+    dataVar: "QUESTIONS_AP_HUMAN_GEOGRAPHY",
   },
   {
     id: "ap-macroeconomics",
@@ -108,9 +163,12 @@ const AP_SUBJECTS = [
     mcqCount: 60,
     mcqTimeMinutes: 70,
     totalExamTimeLabel: "2h 10m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_MACROECONOMICS", // global variable name set by data/ap-macroeconomics.js
+    units: [],
+    dataVar: "QUESTIONS_AP_MACROECONOMICS",
   },
   {
     id: "ap-microeconomics",
@@ -120,9 +178,12 @@ const AP_SUBJECTS = [
     mcqCount: 60,
     mcqTimeMinutes: 70,
     totalExamTimeLabel: "2h 10m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_MICROECONOMICS", // global variable name set by data/ap-microeconomics.js
+    units: [],
+    dataVar: "QUESTIONS_AP_MICROECONOMICS",
   },
   {
     id: "ap-psychology",
@@ -132,27 +193,42 @@ const AP_SUBJECTS = [
     mcqCount: 75,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "2h 40m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_PSYCHOLOGY", // global variable name set by data/ap-psychology.js
+    units: [],
+    dataVar: "QUESTIONS_AP_PSYCHOLOGY",
   },
   {
     id: "ap-us-government",
     name: "AP United States Government and Politics",
     category: "History & Social Sciences",
     tier: 1,
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-united-states-government-and-politics/assessment
+    // — Section I: Multiple Choice, 55 questions, 1hr 20mins, 50% of score; total duration 3hrs.
+    // MCQ section is a mix of individual questions and question sets built on data,
+    // foundational-document excerpts, and other text/visual sources.
     mcqCount: 55,
     mcqTimeMinutes: 80,
     totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft", // bank rebuild in progress — only U1 is complete so far, do not flip until all 5 units are done and verified
+    allowsMultiSelect: false,
     tierNote: null,
+    // Unit exam weightings from the AP U.S. Government and Politics CED
+    // (Course Framework V.1, © 2026 College Board, p. "Exam Weighting"), verified
+    // 2026-08-09 against the CED PDF on AP Central. examWeight is the midpoint of
+    // the published band and is what the Hamilton apportionment drawer uses;
+    // examWeightRange is the published band the draw audit asserts against.
     units: [
-      { id: "U1", name: "Foundations of American Democracy", examWeight: 0.185 },
-      { id: "U2", name: "Interactions Among Branches of Government", examWeight: 0.305 },
-      { id: "U3", name: "Civil Liberties and Civil Rights", examWeight: 0.155 },
-      { id: "U4", name: "American Political Ideologies and Beliefs", examWeight: 0.125 },
-      { id: "U5", name: "Political Participation", examWeight: 0.235 },
+      { id: "U1", name: "Foundations of American Democracy", examWeight: 0.185, examWeightRange: [0.15, 0.22] },
+      { id: "U2", name: "Interactions Among Branches of Government", examWeight: 0.305, examWeightRange: [0.25, 0.36] },
+      { id: "U3", name: "Civil Liberties and Civil Rights", examWeight: 0.155, examWeightRange: [0.13, 0.18] },
+      { id: "U4", name: "American Political Ideologies and Beliefs", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U5", name: "Political Participation", examWeight: 0.235, examWeightRange: [0.20, 0.27] },
     ],
-    dataVar: "QUESTIONS_AP_US_GOVERNMENT", // global variable name set by data/ap-us-government.js
+    dataVar: "QUESTIONS_AP_US_GOVERNMENT",
   },
   {
     id: "ap-us-history",
@@ -162,9 +238,12 @@ const AP_SUBJECTS = [
     mcqCount: 55,
     mcqTimeMinutes: 55,
     totalExamTimeLabel: "3h 15m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_US_HISTORY", // global variable name set by data/ap-us-history.js
+    units: [],
+    dataVar: "QUESTIONS_AP_US_HISTORY",
   },
   {
     id: "ap-world-history",
@@ -174,33 +253,48 @@ const AP_SUBJECTS = [
     mcqCount: 55,
     mcqTimeMinutes: 55,
     totalExamTimeLabel: "3h 15m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_WORLD_HISTORY", // global variable name set by data/ap-world-history.js
+    units: [],
+    dataVar: "QUESTIONS_AP_WORLD_HISTORY",
   },
   {
     id: "ap-calculus-ab",
     name: "AP Calculus AB",
     category: "Math & Computer Science",
     tier: 1,
-    mcqCount: 45,
-    mcqTimeMinutes: 105,
-    totalExamTimeLabel: "3h 15m",
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-calculus-ab/assessment
+    // — Section I: Multiple Choice, 42 questions, 1hr 40mins (Part A 29 no-calculator,
+    // Part B 13 calculator); total exam duration 3hrs 10mins.
+    // Previous repo value (45 / 105 min) predates the 2025 redesign.
+    mcqCount: 42,
+    mcqTimeMinutes: 100,
+    totalExamTimeLabel: "3h 10m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_CALCULUS_AB", // global variable name set by data/ap-calculus-ab.js
+    units: [],
+    dataVar: "QUESTIONS_AP_CALCULUS_AB",
   },
   {
     id: "ap-calculus-bc",
     name: "AP Calculus BC",
     category: "Math & Computer Science",
     tier: 1,
-    mcqCount: 45,
-    mcqTimeMinutes: 105,
-    totalExamTimeLabel: "3h 15m",
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-calculus-bc/assessment
+    // — Section I: Multiple Choice, 42 questions, 1hr 40mins; total duration 3hrs 10mins.
+    mcqCount: 42,
+    mcqTimeMinutes: 100,
+    totalExamTimeLabel: "3h 10m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_CALCULUS_BC", // global variable name set by data/ap-calculus-bc.js
+    units: [],
+    dataVar: "QUESTIONS_AP_CALCULUS_BC",
   },
   {
     id: "ap-computer-science-a",
@@ -210,9 +304,12 @@ const AP_SUBJECTS = [
     mcqCount: 40,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_COMPUTER_SCIENCE_A", // global variable name set by data/ap-computer-science-a.js
+    units: [],
+    dataVar: "QUESTIONS_AP_COMPUTER_SCIENCE_A",
   },
   {
     id: "ap-computer-science-principles",
@@ -222,33 +319,49 @@ const AP_SUBJECTS = [
     mcqCount: 70,
     mcqTimeMinutes: 120,
     totalExamTimeLabel: "2h 0m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: "MCQ is the entire exam-day test; the Create Performance Task is separate coursework, not modeled here.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_COMPUTER_SCIENCE_PRINCIPLES", // global variable name set by data/ap-computer-science-principles.js
+    units: [],
+    dataVar: "QUESTIONS_AP_COMPUTER_SCIENCE_PRINCIPLES",
   },
   {
     id: "ap-precalculus",
     name: "AP Precalculus",
     category: "Math & Computer Science",
     tier: 1,
-    mcqCount: 40,
-    mcqTimeMinutes: 80,
-    totalExamTimeLabel: "2h 0m",
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-precalculus/assessment
+    // — Section I: Multiple Choice, 42 questions, 1hr 45mins (Part A 29 no-calculator /
+    // 65 mins, Part B calculator), approximately 63% of score; total duration 2hrs 55mins.
+    // Previous repo value (40 / 80 min) was stale.
+    mcqCount: 42,
+    mcqTimeMinutes: 105,
+    totalExamTimeLabel: "2h 55m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_PRECALCULUS", // global variable name set by data/ap-precalculus.js
+    units: [],
+    dataVar: "QUESTIONS_AP_PRECALCULUS",
   },
   {
     id: "ap-statistics",
     name: "AP Statistics",
     category: "Math & Computer Science",
     tier: 1,
-    mcqCount: 40,
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-statistics/assessment
+    // — Section I: Multiple Choice, 42 questions, 1hr 30mins, 50% of score;
+    // total duration 3hrs. Previous repo value (40 questions) was stale.
+    mcqCount: 42,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_STATISTICS", // global variable name set by data/ap-statistics.js
+    units: [],
+    dataVar: "QUESTIONS_AP_STATISTICS",
   },
   {
     id: "ap-biology",
@@ -258,9 +371,12 @@ const AP_SUBJECTS = [
     mcqCount: 60,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_BIOLOGY", // global variable name set by data/ap-biology.js
+    units: [],
+    dataVar: "QUESTIONS_AP_BIOLOGY",
   },
   {
     id: "ap-chemistry",
@@ -270,9 +386,12 @@ const AP_SUBJECTS = [
     mcqCount: 60,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 15m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_CHEMISTRY", // global variable name set by data/ap-chemistry.js
+    units: [],
+    dataVar: "QUESTIONS_AP_CHEMISTRY",
   },
   {
     id: "ap-environmental-science",
@@ -282,57 +401,83 @@ const AP_SUBJECTS = [
     mcqCount: 80,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "2h 40m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_ENVIRONMENTAL_SCIENCE", // global variable name set by data/ap-environmental-science.js
+    units: [],
+    dataVar: "QUESTIONS_AP_ENVIRONMENTAL_SCIENCE",
   },
   {
     id: "ap-physics-1",
     name: "AP Physics 1: Algebra-Based",
     category: "Sciences",
     tier: 1,
-    mcqCount: 50,
-    mcqTimeMinutes: 80,
-    totalExamTimeLabel: "2h 50m",
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-1-algebra-based/assessment
+    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score;
+    // total duration 3hrs. Discrete questions plus stimulus-based question sets.
+    // The old 50-question / multi-select format is gone as of the 2024-25 redesign.
+    mcqCount: 42,
+    mcqTimeMinutes: 85,
+    totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_PHYSICS_1", // global variable name set by data/ap-physics-1.js
+    units: [],
+    dataVar: "QUESTIONS_AP_PHYSICS_1",
   },
   {
     id: "ap-physics-2",
     name: "AP Physics 2: Algebra-Based",
     category: "Sciences",
     tier: 1,
-    mcqCount: 50,
-    mcqTimeMinutes: 90,
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-2-algebra-based/assessment
+    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score; total duration 3hrs.
+    mcqCount: 42,
+    mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_PHYSICS_2", // global variable name set by data/ap-physics-2.js
+    units: [],
+    dataVar: "QUESTIONS_AP_PHYSICS_2",
   },
   {
     id: "ap-physics-c-mechanics",
     name: "AP Physics C: Mechanics",
     category: "Sciences",
     tier: 1,
-    mcqCount: 35,
-    mcqTimeMinutes: 45,
-    totalExamTimeLabel: "1h 30m",
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-c-mechanics/assessment
+    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score; total duration 3hrs.
+    // Previous repo value (35 / 45 min) predates the 2024-25 redesign that doubled exam length.
+    mcqCount: 42,
+    mcqTimeMinutes: 85,
+    totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_PHYSICS_C_MECHANICS", // global variable name set by data/ap-physics-c-mechanics.js
+    units: [],
+    dataVar: "QUESTIONS_AP_PHYSICS_C_MECHANICS",
   },
   {
     id: "ap-physics-c-em",
     name: "AP Physics C: Electricity and Magnetism",
     category: "Sciences",
     tier: 1,
-    mcqCount: 35,
-    mcqTimeMinutes: 45,
-    totalExamTimeLabel: "1h 30m",
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-c-electricity-and-magnetism/assessment
+    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score; total duration 3hrs.
+    mcqCount: 42,
+    mcqTimeMinutes: 85,
+    totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_PHYSICS_C_EM", // global variable name set by data/ap-physics-c-em.js
+    units: [],
+    dataVar: "QUESTIONS_AP_PHYSICS_C_EM",
   },
   {
     id: "ap-chinese",
@@ -342,9 +487,12 @@ const AP_SUBJECTS = [
     mcqCount: 65,
     mcqTimeMinutes: 95,
     totalExamTimeLabel: "3h 0m",
-    tierNote: "Includes listening-comprehension questions — audio playback not yet supported.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_CHINESE", // global variable name set by data/ap-chinese.js
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: "Includes listening-comprehension questions — audio playback not yet supported. Several world-language exams are being redesigned for 2027.",
+    units: [],
+    dataVar: "QUESTIONS_AP_CHINESE",
   },
   {
     id: "ap-french",
@@ -354,9 +502,12 @@ const AP_SUBJECTS = [
     mcqCount: 65,
     mcqTimeMinutes: 95,
     totalExamTimeLabel: "3h 0m",
-    tierNote: "Includes listening-comprehension questions — audio playback not yet supported.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_FRENCH", // global variable name set by data/ap-french.js
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: "Includes listening-comprehension questions — audio playback not yet supported. Several world-language exams are being redesigned for 2027.",
+    units: [],
+    dataVar: "QUESTIONS_AP_FRENCH",
   },
   {
     id: "ap-german",
@@ -366,9 +517,12 @@ const AP_SUBJECTS = [
     mcqCount: 65,
     mcqTimeMinutes: 95,
     totalExamTimeLabel: "3h 0m",
-    tierNote: "Includes listening-comprehension questions — audio playback not yet supported.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_GERMAN", // global variable name set by data/ap-german.js
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: "Includes listening-comprehension questions — audio playback not yet supported. Several world-language exams are being redesigned for 2027.",
+    units: [],
+    dataVar: "QUESTIONS_AP_GERMAN",
   },
   {
     id: "ap-italian",
@@ -378,9 +532,12 @@ const AP_SUBJECTS = [
     mcqCount: 65,
     mcqTimeMinutes: 95,
     totalExamTimeLabel: "3h 0m",
-    tierNote: "Includes listening-comprehension questions — audio playback not yet supported.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_ITALIAN", // global variable name set by data/ap-italian.js
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: "Includes listening-comprehension questions — audio playback not yet supported. Several world-language exams are being redesigned for 2027.",
+    units: [],
+    dataVar: "QUESTIONS_AP_ITALIAN",
   },
   {
     id: "ap-japanese",
@@ -390,9 +547,12 @@ const AP_SUBJECTS = [
     mcqCount: 65,
     mcqTimeMinutes: 95,
     totalExamTimeLabel: "3h 0m",
-    tierNote: "Includes listening-comprehension questions — audio playback not yet supported.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_JAPANESE", // global variable name set by data/ap-japanese.js
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: "Includes listening-comprehension questions — audio playback not yet supported. Several world-language exams are being redesigned for 2027.",
+    units: [],
+    dataVar: "QUESTIONS_AP_JAPANESE",
   },
   {
     id: "ap-spanish-language",
@@ -402,9 +562,12 @@ const AP_SUBJECTS = [
     mcqCount: 65,
     mcqTimeMinutes: 95,
     totalExamTimeLabel: "3h 0m",
-    tierNote: "Includes listening-comprehension questions — audio playback not yet supported.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_SPANISH_LANGUAGE", // global variable name set by data/ap-spanish-language.js
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: "Includes listening-comprehension questions — audio playback not yet supported. Several world-language exams are being redesigned for 2027.",
+    units: [],
+    dataVar: "QUESTIONS_AP_SPANISH_LANGUAGE",
   },
   {
     id: "ap-spanish-literature",
@@ -414,46 +577,74 @@ const AP_SUBJECTS = [
     mcqCount: 65,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 40m",
-    tierNote: "Includes an oral component on the real exam — audio not yet supported.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_SPANISH_LITERATURE", // global variable name set by data/ap-spanish-literature.js
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: "Includes an oral component on the real exam — audio not yet supported. Several world-language exams are being redesigned for 2027.",
+    units: [],
+    dataVar: "QUESTIONS_AP_SPANISH_LITERATURE",
   },
   {
     id: "ap-latin",
     name: "AP Latin",
     category: "World Languages & Cultures",
     tier: 1,
-    mcqCount: 50,
-    mcqTimeMinutes: 60,
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-latin/assessment
+    // — Section I: Multiple-Choice Questions, 52 questions, 1hr 05mins, 50% of score;
+    // total duration 3hrs. Previous repo value (50 / 60 min) was stale.
+    mcqCount: 52,
+    mcqTimeMinutes: 65,
     totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_LATIN", // global variable name set by data/ap-latin.js
+    units: [],
+    dataVar: "QUESTIONS_AP_LATIN",
   },
   {
     id: "ap-business-personal-finance",
     name: "AP Business with Personal Finance",
     category: "Career Kickstart",
     tier: 1,
-    mcqCount: null,
-    mcqTimeMinutes: null,
-    totalExamTimeLabel: "~2h (TBD)",
-    tierNote: "New course — confirm exam format against the current CED before building content.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_BUSINESS_PERSONAL_FINANCE", // global variable name set by data/ap-business-personal-finance.js
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-business-personal-finance/assessment
+    // — Section I: Multiple Choice, 60 questions, 1hr 10mins, 60% of score;
+    // total duration 2hrs 40mins. MCQ appears in sets of 3 or 4 sharing stimulus material.
+    // Previously "TBD" in this repo.
+    mcqCount: 60,
+    mcqTimeMinutes: 70,
+    totalExamTimeLabel: "2h 40m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: null,
+    units: [],
+    dataVar: "QUESTIONS_AP_BUSINESS_PERSONAL_FINANCE",
   },
   {
     id: "ap-cybersecurity",
     name: "AP Cybersecurity",
     category: "Career Kickstart",
     tier: 1,
-    mcqCount: null,
-    mcqTimeMinutes: null,
-    totalExamTimeLabel: "TBD",
-    tierNote: "New course — confirm exam format against the current CED before building content.",
-    units: [], // optional per-unit exam weights, added when a subject's content is built
-    dataVar: "QUESTIONS_AP_CYBERSECURITY", // global variable name set by data/ap-cybersecurity.js
+    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-cybersecurity/assessment
+    // — Section I: Multiple Choice, 60 questions, 1hr 20mins, 70% of score;
+    // total duration 2hrs 10mins. MCQ mixes individual questions with sets of 2-4.
+    // Previously "TBD" in this repo.
+    mcqCount: 60,
+    mcqTimeMinutes: 80,
+    totalExamTimeLabel: "2h 10m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: null,
+    units: [],
+    dataVar: "QUESTIONS_AP_CYBERSECURITY",
   },
 ];
 
-const AP_CATEGORIES = [...new Set(AP_SUBJECTS.map(s => s.category))];
+const AP_CATEGORIES = [...new Set(AP_SUBJECTS.map((s) => s.category))];
+
+// Node (tests/audit scripts) loads this file with require(); browsers just get globals.
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { AP_SUBJECTS, AP_CATEGORIES };
+}

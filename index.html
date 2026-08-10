@@ -3,44 +3,54 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Everything this site needs is served from its own origin: no external scripts,
+     styles, fonts, images, or network calls, and no inline script/style. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'" />
 <title>AP Exam Practice</title>
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
 <header class="site-header">
   <h1>AP Exam Practice</h1>
-  <p class="tagline">Free, timed, unofficial practice exams for every standard AP subject.</p>
+  <p class="tagline">Free, timed, unofficial practice exams for AP subjects. Original questions — not official College Board material.</p>
 </header>
 
+<div id="main-content" tabindex="-1">
+
 <!-- ============ SPLASH / CATALOG SCREEN ============ -->
-<main id="screen-catalog" class="screen active">
+<main id="screen-catalog" class="screen active" aria-label="Subject catalog">
   <div class="catalog-toolbar">
-    <input type="search" id="catalog-search" placeholder="Search subjects…" aria-label="Search subjects" />
+    <label class="visually-hidden" for="catalog-search">Search subjects</label>
+    <input type="search" id="catalog-search" placeholder="Search subjects…" />
   </div>
   <div id="catalog-categories"></div>
 </main>
 
 <!-- ============ EXAM SCREEN ============ -->
-<main id="screen-exam" class="screen">
+<main id="screen-exam" class="screen" aria-label="Practice exam">
   <div class="exam-topbar">
     <button type="button" id="exam-back-btn" class="link-btn">← Exit</button>
     <span id="exam-subject-name" class="exam-subject-name"></span>
-    <span id="timer" class="timer">0:00</span>
+    <span id="timer" class="timer" role="timer" aria-live="off" aria-label="Time remaining">0:00</span>
   </div>
+
+  <p id="resume-banner" class="resume-banner" hidden>Resumed your in-progress attempt from this browser session.</p>
 
   <div class="exam-body">
     <div class="question-panel">
-      <p id="question-position" class="question-position"></p>
+      <h2 id="question-position" class="question-position" tabindex="-1"></h2>
       <div id="question-body"></div>
       <div class="question-controls">
         <button type="button" id="prev-btn">← Previous</button>
-        <button type="button" id="flag-btn">🚩 Flag for review</button>
+        <button type="button" id="flag-btn" aria-pressed="false">🚩 Flag for review</button>
         <button type="button" id="next-btn">Next →</button>
       </div>
     </div>
 
-    <aside class="navigator-panel">
+    <aside class="navigator-panel" aria-label="Question navigator">
       <h2>Questions</h2>
       <div id="navigator-grid" class="navigator-grid"></div>
       <ul class="navigator-legend">
@@ -54,14 +64,14 @@
 </main>
 
 <!-- ============ RESULTS SCREEN ============ -->
-<main id="screen-results" class="screen">
-  <h2 id="results-subject-name"></h2>
+<main id="screen-results" class="screen" aria-label="Results">
+  <h2 id="results-subject-name" tabindex="-1"></h2>
   <p id="results-score" class="results-score"></p>
   <p id="results-scope-note" class="results-scope-note"></p>
 
   <h3>Per-unit breakdown</h3>
   <table class="results-table">
-    <thead><tr><th>Unit</th><th>Score</th></tr></thead>
+    <thead><tr><th scope="col">Unit</th><th scope="col">Score</th></tr></thead>
     <tbody id="results-unit-table"></tbody>
   </table>
 
@@ -71,7 +81,10 @@
   <button type="button" id="results-back-btn">← Back to subjects</button>
 </main>
 
+</div>
+
 <script src="js/subjects.js"></script>
+<script src="js/draw.js"></script>
 <script src="data/ap-art-history.js"></script>
 <script src="data/ap-music-theory.js"></script>
 <script src="data/ap-english-language.js"></script>

@@ -142,7 +142,9 @@ body {
 .question-position { color: var(--text-dim); font-size: 0.85rem; margin: 0 0 12px; }
 .question-text { font-size: 1.05rem; margin: 0 0 16px; }
 
-.options { display: flex; flex-direction: column; gap: 8px; }
+/* .options is a <fieldset> so the option group has a programmatic label. */
+fieldset.options { display: flex; flex-direction: column; gap: 8px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.option-letter { font-weight: 700; color: var(--text-dim); }
 .option {
   display: flex;
   align-items: center;
@@ -254,6 +256,108 @@ body {
   padding: 10px 16px;
   cursor: pointer;
 }
+
+/* ---------- Accessibility utilities ---------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--accent);
+  color: #04122b;
+  padding: 10px 16px;
+  border-radius: 0 0 var(--radius) 0;
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+#main-content:focus { outline: none; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.resume-banner {
+  background: var(--panel-alt);
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0 0 16px;
+}
+
+.unverified-note { color: var(--text-dim); font-style: italic; }
+
+/* ---------- Stimulus blocks (shared sources for question sets) ---------- */
+
+.stimulus {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+}
+.stimulus-lead {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  font-weight: 700;
+}
+.stimulus-title { margin: 0 0 4px; font-weight: 600; font-size: 0.95rem; }
+.stimulus-kind {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+.stimulus-body { margin: 0; font-size: 0.92rem; line-height: 1.55; }
+blockquote.stimulus-body {
+  border-left: 2px solid var(--border);
+  padding-left: 12px;
+  font-style: italic;
+}
+.stimulus-source { margin: 8px 0 0; font-size: 0.78rem; color: var(--text-dim); }
+
+.stimulus-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.stimulus-table th,
+.stimulus-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.stimulus-table thead th { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.stimulus-table tbody th { font-weight: 500; }
+
+.review-stimulus { font-style: italic; }
+.review-topic { font-size: 0.78rem !important; color: var(--text-dim) !important; }
 
 @media (max-width: 720px) {
   .exam-body { grid-template-columns: 1fr; }
