@@ -386,7 +386,7 @@ const AP_SUBJECTS = [
     allowsMultiSelect: false,
     tierNote: null,
     // CED unit ranges. Point weights are range midpoints normalized to sum to
-    // one; Hamilton apportionment yields 6/7/8/7/6/8/10/8 on a 60-item draw.
+    // one; Hamilton apportionment yields 6/7/8/8/6/8/10/7 on a 60-item draw.
     units: [
       { id: "U1", name: "Chemistry of Life", examWeight: 0.095, examWeightRange: [0.08, 0.11] },
       { id: "U2", name: "Cells", examWeight: 0.115, examWeightRange: [0.10, 0.13] },
@@ -401,6 +401,16 @@ const AP_SUBJECTS = [
     // but not a fixed set count. Keep every practice draw within a credible
     // range while preserving whole groups and exact unit apportionment.
     stimulusSetRange: [4, 8],
+    // Integer counts corresponding to the CED's Section I practice weights:
+    // 25–33%, 16–24%, 8–14%, 8–14%, 8–14%, and 20–26%.
+    sciencePracticeRanges: {
+      "1": [15, 20],
+      "2": [10, 14],
+      "3": [5, 8],
+      "4": [5, 8],
+      "5": [5, 8],
+      "6": [12, 16],
+    },
     dataVar: "QUESTIONS_AP_BIOLOGY",
   },
   {

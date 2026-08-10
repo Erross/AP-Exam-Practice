@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">Growth of freshwater protist populations</title>
+  <desc id="desc">A line graph shows mean protist abundance over ten days in control cultures and cultures containing predators. Error bars show 95 percent confidence intervals.</desc>
+  <rect width="900" height="560" rx="24" fill="#f8fafc"/>
+  <g stroke="#cbd5e1" stroke-width="1"><path d="M110 450h680M110 370h680M110 290h680M110 210h680M110 130h680M110 50h680"/></g>
+  <path d="M110 50v400h680" fill="none" stroke="#334155" stroke-width="4"/>
+  <g fill="#334155" font-family="Arial, sans-serif" font-size="18" text-anchor="end"><text x="96" y="456">0</text><text x="96" y="376">100</text><text x="96" y="296">200</text><text x="96" y="216">300</text><text x="96" y="136">400</text><text x="96" y="56">500</text></g>
+  <g fill="#334155" font-family="Arial, sans-serif" font-size="18" text-anchor="middle"><text x="140" y="482">0</text><text x="265" y="482">2</text><text x="390" y="482">4</text><text x="515" y="482">6</text><text x="640" y="482">8</text><text x="765" y="482">10</text><text x="450" y="530" font-size="21" font-weight="700">Day</text></g>
+  <text transform="translate(35 330) rotate(-90)" fill="#334155" font-family="Arial, sans-serif" font-size="21" font-weight="700">Mean protist abundance</text>
+  <polyline points="140,434 265,400 390,309 515,176 640,133 765,129" fill="none" stroke="#0f766e" stroke-width="5"/>
+  <polyline points="140,434 265,409 390,367 515,340 640,349 765,344" fill="none" stroke="#be123c" stroke-width="5"/>
+  <g stroke-width="3"><g stroke="#0f766e"><path d="M140 426v16M132 426h16M132 442h16M265 390v20M257 390h16M257 410h16M390 295v28M382 295h16M382 323h16M515 158v36M507 158h16M507 194h16M640 113v40M632 113h16M632 153h16M765 109v40M757 109h16M757 149h16"/></g><g stroke="#be123c"><path d="M140 426v16M132 426h16M132 442h16M265 399v20M257 399h16M257 419h16M390 355v24M382 355h16M382 379h16M515 326v28M507 326h16M507 354h16M640 335v28M632 335h16M632 363h16M765 330v28M757 330h16M757 358h16"/></g></g>
+  <g fill="#0f766e"><circle cx="140" cy="434" r="7"/><circle cx="265" cy="400" r="7"/><circle cx="390" cy="309" r="7"/><circle cx="515" cy="176" r="7"/><circle cx="640" cy="133" r="7"/><circle cx="765" cy="129" r="7"/></g>
+  <g fill="#be123c"><circle cx="140" cy="434" r="7"/><circle cx="265" cy="409" r="7"/><circle cx="390" cy="367" r="7"/><circle cx="515" cy="340" r="7"/><circle cx="640" cy="349" r="7"/><circle cx="765" cy="344" r="7"/></g>
+  <g font-family="Arial, sans-serif" font-size="17" font-weight="700"><text x="610" y="78" fill="#0f766e">Control</text><text x="700" y="78" fill="#be123c">With predator</text></g>
+  <text x="450" y="22" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="16">n = 8 cultures per treatment; error bars = 95% confidence intervals</text>
+</svg>

@@ -25,7 +25,7 @@
   <g stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-width="6">
     <path d="M230 135v225" stroke="#0f766e"/><path d="M217 342l13 18 13-18" stroke="#0f766e"/>
     <path d="M401 125v225" stroke="#6d28d9"/><path d="M388 332l13 18 13-18" stroke="#6d28d9"/>
-    <path d="M586 370V150" stroke="#be123c"/><path d="M573 168l13-18 13 18" stroke="#be123c"/>
+    <path d="M586 130v240" stroke="#be123c"/><path d="M573 352l13 18 13-18" stroke="#be123c"/>
   </g>
   <rect x="685" y="350" width="150" height="70" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
   <text x="760" y="380" text-anchor="middle" fill="#9a3412" font-family="Arial, sans-serif" font-size="20" font-weight="700">ATP</text>

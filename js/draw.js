@@ -131,17 +131,37 @@
     return blocks;
   }
 
-  /** Pick exactly `target` questions from a pool without ever splitting a set. */
-  function drawBlocks(pool, target, rng) {
+  /**
+   * Pick exactly `target` questions from a pool without ever splitting a set.
+   * A shared variantGroupId is treated as a soft exclusion so near-duplicate
+   * siblings do not normally appear in the same exam.
+   */
+  function drawBlocks(pool, target, rng, usedVariantIds) {
     if (target <= 0) return [];
     const blocks = shuffle(toBlocks(pool), rng);
     const chosen = [];
     const used = new Set();
     let count = 0;
 
+    const variantIdOf = (block) => (block.length === 1 ? block[0].variantGroupId : null);
+
     for (const block of blocks) {
       if (count === target) break;
-      if (count + block.length <= target) {
+      if (count + block.length > target) continue;
+      const variantId = variantIdOf(block);
+      if (usedVariantIds && variantId && usedVariantIds.has(variantId)) continue;
+      chosen.push(block);
+      block.forEach((q) => used.add(q));
+      count += block.length;
+      if (usedVariantIds && variantId) usedVariantIds.add(variantId);
+    }
+
+    // Exact blueprint counts are mandatory; variant separation is not. If the
+    // soft exclusion prevents a complete draw, fill from the skipped blocks.
+    if (count < target) {
+      for (const block of blocks) {
+        if (count === target) break;
+        if (chosen.includes(block) || count + block.length > target) continue;
         chosen.push(block);
         block.forEach((q) => used.add(q));
         count += block.length;
@@ -178,6 +198,55 @@
     return stimulus.type;
   }
 
+  function practiceFamily(question) {
+    return String(question.skill || "").split(".")[0];
+  }
+
+  function summarizeBlocks(blocks) {
+    const practices = {};
+    let stimulusSets = 0;
+    blocks.forEach((block) => {
+      if (block[0] && block[0].stimulusGroupId) stimulusSets++;
+      block.forEach((question) => {
+        const family = practiceFamily(question);
+        practices[family] = (practices[family] || 0) + 1;
+      });
+    });
+    return { practices, stimulusSets };
+  }
+
+  /**
+   * Sample whole-block unit draws until all cross-cutting ranges are satisfied.
+   * The bank's checked practice balance makes a valid draw common enough for a
+   * bounded sampler; every returned exam is validated, and an unsupported bank
+   * fails explicitly rather than silently relaxing its blueprint.
+   */
+  function drawConstrainedWeightedExam(subject, byUnit, targets, rng) {
+    const ranges = subject.sciencePracticeRanges || {};
+    const setRange = subject.stimulusSetRange || [0, Infinity];
+    const families = Object.keys(ranges);
+    const attempts = subject.constraintDrawAttempts || 5000;
+
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      const usedVariantIds = new Set();
+      let blocks = [];
+      (subject.units || []).forEach((unit) => {
+        blocks = blocks.concat(drawBlocks(byUnit.get(unit.id), targets[unit.id] || 0, rng, usedVariantIds));
+      });
+      const placed = blocks.reduce((sum, block) => sum + block.length, 0);
+      if (placed !== subject.mcqCount) continue;
+      const summary = summarizeBlocks(blocks);
+      if (summary.stimulusSets < setRange[0] || summary.stimulusSets > setRange[1]) continue;
+      const practicesValid = families.every((family) => {
+        const count = summary.practices[family] || 0;
+        return count >= ranges[family][0] && count <= ranges[family][1];
+      });
+      if (practicesValid) return shuffle(blocks, rng).flat();
+    }
+
+    throw new Error("No whole-block draw satisfies the configured unit, stimulus-set, and science-practice ranges");
+  }
+
   /**
    * Draw an AP U.S. Government-shaped exam. The blueprint is expressed on the
    * subject record so this remains data-driven and testable. It selects whole
@@ -195,7 +264,7 @@
       const kind = stimulusKind(block);
       if (kind === "standalone") {
         const unit = block[0].unit;
-        if (standaloneByUnit.has(unit)) standaloneByUnit.get(unit).push(block);
+        if (standaloneByUnit.has(unit)) standaloneByUnit.get(unit).push(block[0]);
       } else if (groupsByKind[kind]) {
         groupsByKind[kind].push(block);
       }
@@ -239,13 +308,17 @@
     if (!selected) throw new Error("No whole-set draw can satisfy both the stimulus and unit blueprints");
 
     const usedByUnit = {};
+    const usedVariantIds = new Set();
     selected.forEach((block) => {
       usedByUnit[block[0].unit] = (usedByUnit[block[0].unit] || 0) + block.length;
+      block.forEach((question) => {
+        if (question.variantGroupId) usedVariantIds.add(question.variantGroupId);
+      });
     });
     const finalBlocks = selected.slice();
     (subject.units || []).forEach((u) => {
       const needed = targets[u.id] - (usedByUnit[u.id] || 0);
-      finalBlocks.push(...shuffle(standaloneByUnit.get(u.id), rng).slice(0, needed));
+      finalBlocks.push(...drawBlocks(standaloneByUnit.get(u.id), needed, rng, usedVariantIds));
     });
 
     const result = shuffle(finalBlocks, rng).flat();
@@ -295,6 +368,10 @@
     );
 
     if (subject.examBlueprint) return drawBlueprintExam(subject, bank, targets, rng);
+
+    if (subject.sciencePracticeRanges) {
+      return drawConstrainedWeightedExam(subject, byUnit, targets, rng);
+    }
 
     const setRange = Array.isArray(subject.stimulusSetRange) ? subject.stimulusSetRange : null;
     const attempts = setRange ? 200 : 1;
@@ -353,6 +430,9 @@
     drawBlocks,
     combinations,
     stimulusKind,
+    practiceFamily,
+    summarizeBlocks,
+    drawConstrainedWeightedExam,
     drawBlueprintExam,
     drawExam,
     shuffleQuestionOptions,
