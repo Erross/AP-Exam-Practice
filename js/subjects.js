@@ -21,9 +21,10 @@
 //                      (AP Physics 1/2 were the last holdouts and dropped them in
 //                      the 2024-25 redesign). Enforced by tests/schema tests so a
 //                      bank can't quietly grow multi-select items.
-//   units           Optional per-unit exam weights. examWeight is the point estimate
-//                   used by the weighted drawer; examWeightRange is College Board's
-//                   published [min, max] band, used by the draw audit.
+//   units           Optional unit/category metadata. For weighted subjects,
+//                   examWeight is the point estimate used by the drawer and
+//                   examWeightRange is College Board's published [min, max] band.
+//                   Set-blueprint subjects may use id/name only as result labels.
 //
 // Format verification pass: 2026-08-09, against apstudents.collegeboard.org
 // "About the Exam" pages (the 2026 administration) unless noted otherwise.
@@ -77,14 +78,18 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 15m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
+    // Reporting groups only. College Board publishes MCQ weights for the eight
+    // skill categories below, not these four Big Ideas. The previously recorded
+    // aggregate bands were project-derived sums, so they are intentionally not
+    // represented as official examWeightRange values.
     units: [
-      { id: "RHS", name: "Rhetorical Situation", examWeight: 0.25, examWeightRange: [0.22, 0.28] },
-      { id: "CLE", name: "Claims and Evidence", examWeight: 0.25, examWeightRange: [0.24, 0.30] },
-      { id: "REO", name: "Reasoning and Organization", examWeight: 0.25, examWeightRange: [0.24, 0.30] },
-      { id: "STL", name: "Style", examWeight: 0.25, examWeightRange: [0.22, 0.28] },
+      { id: "RHS", name: "Rhetorical Situation" },
+      { id: "CLE", name: "Claims and Evidence" },
+      { id: "REO", name: "Reasoning and Organization" },
+      { id: "STL", name: "Style" },
     ],
     skillRanges: {
       "1": [0.11, 0.14], "2": [0.11, 0.14], "3": [0.13, 0.16], "4": [0.11, 0.14],
@@ -119,7 +124,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // CED groups the nine instructional units into these three MCQ categories.
