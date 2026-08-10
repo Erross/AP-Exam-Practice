@@ -136,6 +136,12 @@ test("Biology stimulus portfolio is intact, neutral, and graph-rich", () => {
   const operon = fs.readFileSync("assets/ap-biology/operon-regulation.svg", "utf8");
   assert.match(operon, /P = promoter/);
   assert.match(operon, /O = operator/);
+  const meiosis = fs.readFileSync("assets/ap-biology/meiosis-model.svg", "utf8");
+  assert.match(meiosis, /left-exchanged-segment/);
+  assert.match(meiosis, /right-exchanged-segment/, "reciprocal segments must appear on both homologs");
+  assert.match(meiosis, /After exchange/);
+  assert.doesNotMatch(meiosis, /AFTER MEIOSIS I|AFTER MEIOSIS II/);
+  assert.doesNotMatch(meiosis, /parental|recombinant/i, "figure must not classify the products for students");
 });
 
 test("Biology answer construction avoids systematic key and distractor tells", () => {
