@@ -230,10 +230,12 @@ const AP_SUBJECTS = [
     ],
     // Effective Fall 2026 CED, p. 169: five quantitative sets, two text sets
     // (one foundational document and one other source), and three visual sets.
-    // Valid set sizes in the bank leave approximately 30 individual questions.
+    // The selected stimulus groups vary between two and three questions, so the
+    // achievable leftover standalone count currently ranges from 28 to 32.
+    // Recompute this range whenever the Government stimulus pools change.
     examBlueprint: {
       sets: { quantitative: 5, foundational: 1, text: 1, visual: 3 },
-      standaloneRange: [29, 32],
+      standaloneRange: [28, 32],
     },
     dataVar: "QUESTIONS_AP_US_GOVERNMENT",
   },
@@ -375,14 +377,42 @@ const AP_SUBJECTS = [
     name: "AP Biology",
     category: "Sciences",
     tier: 1,
+    // VERIFIED 2026-08-10: AP Central Biology exam page and the CED effective
+    // Fall 2025 — Section I: 60 single-select questions in 90 minutes, 50% of
+    // the score, mixing discrete questions with 4–5-question stimulus sets.
     mcqCount: 60,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
-    formatVerified: false,
-    releaseStatus: "draft",
+    formatVerified: true,
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // CED unit ranges. Point weights are range midpoints normalized to sum to
+    // one; Hamilton apportionment yields 6/7/8/8/6/8/10/7 on a 60-item draw.
+    units: [
+      { id: "U1", name: "Chemistry of Life", examWeight: 0.095, examWeightRange: [0.08, 0.11] },
+      { id: "U2", name: "Cells", examWeight: 0.115, examWeightRange: [0.10, 0.13] },
+      { id: "U3", name: "Cellular Energetics", examWeight: 0.140, examWeightRange: [0.12, 0.16] },
+      { id: "U4", name: "Cell Communication and Cell Cycle", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U5", name: "Heredity", examWeight: 0.095, examWeightRange: [0.08, 0.11] },
+      { id: "U6", name: "Gene Expression and Regulation", examWeight: 0.140, examWeightRange: [0.12, 0.16] },
+      { id: "U7", name: "Natural Selection", examWeight: 0.165, examWeightRange: [0.13, 0.20] },
+      { id: "U8", name: "Ecology", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+    ],
+    // AP Central specifies a mixture of discrete items and 4–5-question sets,
+    // but not a fixed set count. Keep every practice draw within a credible
+    // range while preserving whole groups and exact unit apportionment.
+    stimulusSetRange: [4, 8],
+    // Integer counts corresponding to the CED's Section I practice weights:
+    // 25–33%, 16–24%, 8–14%, 8–14%, 8–14%, and 20–26%.
+    sciencePracticeRanges: {
+      "1": [15, 20],
+      "2": [10, 14],
+      "3": [5, 8],
+      "4": [5, 8],
+      "5": [5, 8],
+      "6": [12, 16],
+    },
     dataVar: "QUESTIONS_AP_BIOLOGY",
   },
   {

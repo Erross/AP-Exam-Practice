@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">Transport across a model cell membrane</title>
+  <desc id="desc">Solute X crosses the bilayer, Y crosses a channel down its gradient, and Z is pumped against its gradient using ATP.</desc>
+  <rect width="900" height="500" rx="24" fill="#f8fafc"/>
+  <text x="60" y="58" fill="#334155" font-family="Arial, sans-serif" font-size="24" font-weight="700">OUTSIDE</text>
+  <text x="60" y="462" fill="#334155" font-family="Arial, sans-serif" font-size="24" font-weight="700">CYTOSOL</text>
+  <rect x="40" y="190" width="820" height="120" rx="18" fill="#e0f2fe" stroke="#64748b" stroke-width="2"/>
+  <g fill="#38bdf8" stroke="#0f172a" stroke-width="2">
+    <circle cx="70" cy="215" r="12"/><circle cx="110" cy="215" r="12"/><circle cx="150" cy="215" r="12"/><circle cx="190" cy="215" r="12"/><circle cx="230" cy="215" r="12"/><circle cx="270" cy="215" r="12"/><circle cx="310" cy="215" r="12"/><circle cx="350" cy="215" r="12"/><circle cx="390" cy="215" r="12"/><circle cx="430" cy="215" r="12"/><circle cx="470" cy="215" r="12"/><circle cx="510" cy="215" r="12"/><circle cx="550" cy="215" r="12"/><circle cx="590" cy="215" r="12"/><circle cx="630" cy="215" r="12"/><circle cx="670" cy="215" r="12"/><circle cx="710" cy="215" r="12"/><circle cx="750" cy="215" r="12"/><circle cx="790" cy="215" r="12"/><circle cx="830" cy="215" r="12"/>
+    <circle cx="70" cy="285" r="12"/><circle cx="110" cy="285" r="12"/><circle cx="150" cy="285" r="12"/><circle cx="190" cy="285" r="12"/><circle cx="230" cy="285" r="12"/><circle cx="270" cy="285" r="12"/><circle cx="310" cy="285" r="12"/><circle cx="350" cy="285" r="12"/><circle cx="390" cy="285" r="12"/><circle cx="430" cy="285" r="12"/><circle cx="470" cy="285" r="12"/><circle cx="510" cy="285" r="12"/><circle cx="550" cy="285" r="12"/><circle cx="590" cy="285" r="12"/><circle cx="630" cy="285" r="12"/><circle cx="670" cy="285" r="12"/><circle cx="710" cy="285" r="12"/><circle cx="750" cy="285" r="12"/><circle cx="790" cy="285" r="12"/><circle cx="830" cy="285" r="12"/>
+  </g>
+  <g stroke="#64748b" stroke-width="3">
+    <path d="M70 227l10 46M70 227l-10 46M110 227l10 46M110 227l-10 46M150 227l10 46M150 227l-10 46M190 227l10 46M190 227l-10 46M230 227l10 46M230 227l-10 46"/>
+    <path d="M670 227l10 46M670 227l-10 46M710 227l10 46M710 227l-10 46M750 227l10 46M750 227l-10 46M790 227l10 46M790 227l-10 46M830 227l10 46M830 227l-10 46"/>
+  </g>
+  <rect x="355" y="176" width="92" height="148" rx="42" fill="#a78bfa" stroke="#5b21b6" stroke-width="4"/>
+  <rect x="378" y="196" width="46" height="108" rx="22" fill="#f8fafc"/>
+  <path d="M565 176c-42 0-52 30-52 74s10 74 52 74h44c42 0 52-30 52-74s-10-74-52-74z" fill="#fb7185" stroke="#9f1239" stroke-width="4"/>
+  <path d="M575 210h25v80h-25z" fill="#fff1f2"/>
+  <g font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">
+    <g fill="#0f766e" font-size="22"><text x="230" y="120">X X X X</text><text x="230" y="392">X</text></g>
+    <g fill="#6d28d9" font-size="22"><text x="401" y="105">Y Y Y</text><text x="401" y="408">Y</text></g>
+    <g fill="#be123c" font-size="22"><text x="586" y="118">Z</text><text x="586" y="410">Z Z Z Z</text></g>
+  </g>
+  <g stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-width="6">
+    <path d="M230 135v225" stroke="#0f766e"/><path d="M217 342l13 18 13-18" stroke="#0f766e"/>
+    <path d="M401 125v225" stroke="#6d28d9"/><path d="M388 332l13 18 13-18" stroke="#6d28d9"/>
+    <path d="M586 130v240" stroke="#be123c"/><path d="M573 352l13 18 13-18" stroke="#be123c"/>
+  </g>
+  <rect x="685" y="350" width="150" height="70" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="760" y="380" text-anchor="middle" fill="#9a3412" font-family="Arial, sans-serif" font-size="20" font-weight="700">ATP</text>
+  <text x="760" y="405" text-anchor="middle" fill="#9a3412" font-family="Arial, sans-serif" font-size="17">ADP + Pᵢ</text>
+  <path d="M685 385H635" stroke="#ea580c" stroke-width="4" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" fill="#ea580c"/></marker></defs>
+</svg>

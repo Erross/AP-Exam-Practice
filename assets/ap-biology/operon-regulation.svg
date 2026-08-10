@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Regulation of a bacterial metabolic operon</title>
+  <desc id="desc">Two conditions compare a repressor bound at an operator with a small-molecule-bound repressor away from the operator.</desc>
+  <rect width="900" height="520" rx="24" fill="#f8fafc"/>
+  <text x="225" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#334155">CONDITION 1</text>
+  <text x="675" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#334155">CONDITION 2</text>
+  <path d="M450 25v470" stroke="#cbd5e1" stroke-width="3"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="35" y="265" width="380" height="38" rx="18" fill="#dbeafe" stroke="#1d4ed8" stroke-width="3"/>
+    <rect x="52" y="258" width="65" height="52" rx="8" fill="#fde68a" stroke="#a16207" stroke-width="3"/><text x="84" y="335" font-size="15" font-weight="700" fill="#713f12">P</text>
+    <rect x="126" y="258" width="65" height="52" rx="8" fill="#fecaca" stroke="#b91c1c" stroke-width="3"/><text x="158" y="335" font-size="15" font-weight="700" fill="#7f1d1d">O</text>
+    <rect x="205" y="258" width="58" height="52" rx="8" fill="#bbf7d0" stroke="#15803d" stroke-width="3"/><text x="234" y="287" font-size="17" font-weight="700">1</text>
+    <rect x="270" y="258" width="58" height="52" rx="8" fill="#a7f3d0" stroke="#15803d" stroke-width="3"/><text x="299" y="287" font-size="17" font-weight="700">2</text>
+    <rect x="335" y="258" width="58" height="52" rx="8" fill="#6ee7b7" stroke="#15803d" stroke-width="3"/><text x="364" y="287" font-size="17" font-weight="700">3</text>
+    <path d="M130 216c0-35 58-35 58 0v42h-58z" fill="#c4b5fd" stroke="#6d28d9" stroke-width="4"/><text x="159" y="168" font-size="14" font-weight="700" fill="#4c1d95">REPRESSOR</text>
+    <ellipse cx="80" cy="185" rx="38" ry="27" fill="#94a3b8" stroke="#334155" stroke-width="3"/><text x="80" y="191" font-size="16" font-weight="700" fill="white">RNAP</text>
+    <text x="245" y="400" font-size="21" font-weight="700" fill="#64748b">LOW TRANSCRIPTION</text>
+
+    <rect x="485" y="265" width="380" height="38" rx="18" fill="#dbeafe" stroke="#1d4ed8" stroke-width="3"/>
+    <rect x="502" y="258" width="65" height="52" rx="8" fill="#fde68a" stroke="#a16207" stroke-width="3"/><text x="534" y="335" font-size="15" font-weight="700" fill="#713f12">P</text>
+    <rect x="576" y="258" width="65" height="52" rx="8" fill="#fecaca" stroke="#b91c1c" stroke-width="3"/><text x="608" y="335" font-size="15" font-weight="700" fill="#7f1d1d">O</text>
+    <rect x="655" y="258" width="58" height="52" rx="8" fill="#bbf7d0" stroke="#15803d" stroke-width="3"/><text x="684" y="287" font-size="17" font-weight="700">1</text>
+    <rect x="720" y="258" width="58" height="52" rx="8" fill="#a7f3d0" stroke="#15803d" stroke-width="3"/><text x="749" y="287" font-size="17" font-weight="700">2</text>
+    <rect x="785" y="258" width="58" height="52" rx="8" fill="#6ee7b7" stroke="#15803d" stroke-width="3"/><text x="814" y="287" font-size="17" font-weight="700">3</text>
+    <ellipse cx="600" cy="185" rx="38" ry="27" fill="#94a3b8" stroke="#334155" stroke-width="3"/><text x="600" y="191" font-size="16" font-weight="700" fill="white">RNAP</text>
+    <path d="M585 250c80-60 160-60 240 0" fill="none" stroke="#0f766e" stroke-width="4" marker-end="url(#a)"/>
+    <path d="M735 95c0-35 58-35 58 0v42h-58z" fill="#c4b5fd" stroke="#6d28d9" stroke-width="4"/>
+    <circle cx="764" cy="104" r="15" fill="#f59e0b" stroke="#92400e" stroke-width="3"/><text x="764" y="109" font-size="13" font-weight="700">M</text>
+    <text x="764" y="164" font-size="13" font-weight="700" fill="#4c1d95">REPRESSOR WITH</text>
+    <text x="764" y="182" font-size="13" font-weight="700" fill="#4c1d95">SMALL MOLECULE</text>
+    <text x="695" y="400" font-size="21" font-weight="700" fill="#0f766e">TRANSCRIPTION</text>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#334155">
+    <text x="48" y="462">P = promoter</text><text x="250" y="462">O = operator</text>
+    <text x="498" y="462">P = promoter</text><text x="700" y="462">O = operator</text>
+  </g>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="#0f766e"/></marker></defs>
+</svg>

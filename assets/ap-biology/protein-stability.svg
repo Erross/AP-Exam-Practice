@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" role="img" aria-labelledby="title desc">
+  <title id="title">Temperature response of two enzyme variants</title><desc id="desc">A graph shows active enzyme fraction versus temperature for a reference enzyme and a variant enzyme.</desc>
+  <rect width="900" height="540" rx="24" fill="#f8fafc"/><path d="M110 50v390h680" fill="none" stroke="#334155" stroke-width="4"/>
+  <g stroke="#cbd5e1"><path d="M110 362h680M110 284h680M110 206h680M110 128h680M110 50h680"/></g>
+  <g fill="#334155" font-family="Arial" font-size="18" text-anchor="end"><text x="96" y="446">0</text><text x="96" y="368">0.2</text><text x="96" y="290">0.4</text><text x="96" y="212">0.6</text><text x="96" y="134">0.8</text><text x="96" y="56">1.0</text></g>
+  <g fill="#334155" font-family="Arial" font-size="18" text-anchor="middle"><text x="150" y="472">25</text><text x="280" y="472">35</text><text x="410" y="472">45</text><text x="540" y="472">55</text><text x="670" y="472">65</text><text x="450" y="520" font-size="21" font-weight="700">Temperature (°C)</text></g>
+  <text transform="translate(35 325) rotate(-90)" fill="#334155" font-family="Arial" font-size="21" font-weight="700">Fraction remaining active</text>
+  <polyline points="150,58 280,81 410,167 540,323 670,417" fill="none" stroke="#2563eb" stroke-width="5"/><polyline points="150,58 280,62 410,89 540,198 670,354" fill="none" stroke="#d97706" stroke-width="5"/>
+  <g fill="#2563eb"><circle cx="150" cy="58" r="7"/><circle cx="280" cy="81" r="7"/><circle cx="410" cy="167" r="7"/><circle cx="540" cy="323" r="7"/><circle cx="670" cy="417" r="7"/></g><g fill="#d97706"><circle cx="150" cy="58" r="7"/><circle cx="280" cy="62" r="7"/><circle cx="410" cy="89" r="7"/><circle cx="540" cy="198" r="7"/><circle cx="670" cy="354" r="7"/></g>
+  <g font-family="Arial" font-size="18" font-weight="700"><text x="720" y="92" fill="#2563eb">Reference</text><text x="720" y="125" fill="#d97706">Variant</text></g>
+</svg>

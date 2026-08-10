@@ -240,6 +240,97 @@ const S_CAMPAIGN_FINANCE = {
   rows: [["Congressional candidates", "$3.8 billion", "$3.7 billion"], ["Political party committees", "$2.7 billion", "$2.6 billion"], ["PACs", "$15.7 billion", "$15.5 billion"], ["Independent expenditures (reported)", "—", "$4.4 billion"]],
 };
 
+const S_DEATH_PENALTY = {
+  type: "quantitative",
+  title: "Public support for the death penalty for persons convicted of murder, selected years",
+  source: "Gallup, \"Death Penalty\" historical trend, https://news.gallup.com/poll/1606/death-penalty.aspx",
+  columns: ["Year", "In favor of the death penalty"],
+  rows: [
+    ["1994", "80%"],
+    ["2003", "64%"],
+    ["2013", "60%"],
+    ["2019", "56%"],
+    ["2025", "52%"],
+  ],
+};
+
+const S_FED_REVENUE_SHARE = {
+  type: "quantitative",
+  title: "Intergovernmental transfers as a share of combined state and local general revenue, selected years",
+  source: "Urban-Brookings Tax Policy Center, \"What are the sources of revenue for state and local governments?\" (updated January 2024), https://taxpolicycenter.org/briefing-book/what-are-sources-revenue-state-and-local-governments",
+  columns: ["Year", "Federal transfers (% of combined state and local general revenue)"],
+  rows: [
+    ["1977", "22%"],
+    ["1989", "16%"],
+    ["2003", "22%"],
+    ["2011", "25%"],
+    ["2019", "22%"],
+    ["2021", "27%"],
+  ],
+};
+
+const S_EXEC_ORDERS = {
+  type: "quantitative",
+  title: "Average executive orders issued per year in office, selected presidents",
+  source: "Gerhard Peters and John T. Woolley, \"Executive Orders,\" The American Presidency Project, https://www.presidency.ucsb.edu/statistics/data/executive-orders",
+  columns: ["President (term)", "Average executive orders per year in office"],
+  rows: [
+    ["Bill Clinton (1993–2001)", "46"],
+    ["George W. Bush (2001–2009)", "36"],
+    ["Barack Obama (2009–2017)", "35"],
+    ["Donald Trump, first term (2017–2021)", "55"],
+    ["Joe Biden (2021–2025)", "41"],
+  ],
+};
+
+const S_IDEOLOGY = {
+  type: "quantitative",
+  title: "Self-described political ideology of U.S. adults, selected years",
+  source: "Gallup, \"U.S. Political Ideology Steady; Conservatives, Moderates Tie,\" https://news.gallup.com/poll/388988/political-ideology-steady-conservatives-moderates-tie.aspx and \"U.S. Political Parties Historically Polarized Ideologically,\" https://news.gallup.com/poll/655190/political-parties-historically-polarized-ideologically.aspx",
+  columns: ["Year", "Conservative", "Moderate", "Liberal"],
+  rows: [
+    ["1992", "36%", "43%", "17%"],
+    ["2021", "36%", "37%", "25%"],
+    ["2024", "37%", "34%", "25%"],
+  ],
+};
+
+const S_DOUGLASS = {
+  type: "text",
+  title: "Argument in \"What to the Slave Is the Fourth of July?\" (1852)",
+  source: "Frederick Douglass, address to the Rochester Ladies' Anti-Slavery Society, July 5, 1852",
+  text:
+    "Douglass argues that an Independence Day celebration of liberty rings hollow for enslaved Americans, who share in " +
+    "none of the freedom the holiday commemorates. He does not reject the Declaration of Independence itself — he calls " +
+    "its principles \"saving\" and treats them as the legitimate standard by which the nation should be judged — but " +
+    "insists the country has failed to extend \"life, liberty, and the pursuit of happiness\" to all its people, and " +
+    "that the gap between the nation's stated ideals and its practice is the deepest wrong requiring correction.",
+};
+
+const S_FDR_INAUGURAL = {
+  type: "text",
+  title: "Argument in the First Inaugural Address (1933)",
+  source: "Franklin D. Roosevelt, First Inaugural Address, delivered March 4, 1933",
+  text:
+    "Speaking amid the Great Depression, Roosevelt argues that the emergency demands swift, unified executive " +
+    "leadership comparable to wartime mobilization. He pledges to work within his constitutional executive authority " +
+    "and to seek new authority from Congress through normal legislative channels, but adds that if Congress fails to " +
+    "act and the emergency persists, he will ask for \"broad Executive power to wage a war against the emergency, as " +
+    "great as the power that would be given to me if we were in fact invaded by a foreign foe.\"",
+};
+
+const S_PROGRESSIVE_1912 = {
+  type: "text",
+  title: "The Progressive (\"Bull Moose\") Party platform (1912)",
+  source: "Progressive Party national platform, adopted at the party's Chicago convention, August 1912",
+  text:
+    "Built around Theodore Roosevelt's independent candidacy after he split from the Republican Party, the platform " +
+    "called for direct primary elections, women's suffrage, an eight-hour workday, workers' compensation for " +
+    "industrial injuries, and stronger federal regulation of corporate trusts. Roosevelt finished second in the 1912 " +
+    "election, ahead of the Republican incumbent, but several of the platform's positions were adopted into law or the " +
+    "Constitution over the following decades even though the party itself did not endure.",
+};
+
 const S_VISUAL_PRESIDENT = {
   type: "visual",
   title: "Presidential communication routes",
@@ -254,6 +345,30 @@ const S_VISUAL_EQUAL = {
   source: "Original illustration created for AP Exam Practice; not official College Board material.",
   image: "assets/equal-protection-balance.svg",
   alt: "A state university applicant file highlights race or ethnicity among five review factors. The university cites broader representation, while an applicant challenges the government's use of a racial classification.",
+};
+
+const S_VISUAL_HIGHWAY = {
+  type: "visual",
+  title: "Federal highway money offered to a state with conditions attached",
+  source: "Original illustration created for AP Exam Practice; not official College Board material.",
+  image: "assets/highway-funding-conditions.svg",
+  alt: "A federal highway trust fund sends money toward a state transportation department, but a checklist between them lists three conditions the state must meet: setting the drinking age at 21, requiring seatbelt use, and posting standard speed limit signs. A note explains that noncompliance means a percentage of funds is withheld.",
+};
+
+const S_VISUAL_SOCIALIZATION = {
+  type: "visual",
+  title: "Four sources shaping a young adult's political views",
+  source: "Original illustration created for AP Exam Practice; not official College Board material.",
+  image: "assets/young-voter-influences.svg",
+  alt: "A young adult at the center receives political cues from four directions: a family dinner-table conversation, a school civics classroom, an evening news broadcast, and a college friend group discussion.",
+};
+
+const S_VISUAL_TRIANGLE = {
+  type: "visual",
+  title: "A recurring three-way exchange among a committee, an agency, and a trade group",
+  source: "Original illustration created for AP Exam Practice; not official College Board material.",
+  image: "assets/policy-network-triangle.svg",
+  alt: "A congressional subcommittee, a federal regulatory agency, and an industry trade association exchange favors in a closed loop: the subcommittee approves the agency's budget, the agency writes rules favorable to the industry, and the trade association funds campaign support for subcommittee members.",
 };
 
 const S_VISUAL_MEDIA = {
@@ -333,6 +448,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "1.3 Government power and individual rights: enumerated vs. reserved powers",
     type: "s",
     stimulusGroupId: null,
+    variantGroupId: "vg-u1-enumerated-reserved",
     q: "A member of Congress proposes a federal statute setting the curriculum and graduation requirements for every public high school in the country. Opponents argue the bill exceeds Congress's constitutional authority. Their strongest constitutional objection is that",
     o: ["education is not an enumerated power and is therefore reserved to the states", "the necessary and proper clause has been read to reach military and fiscal matters alone", "the supremacy clause applies only where Congress and a state have enacted identical statutes", "the Tenth Amendment bars Congress from spending money on any subject the states regulate"],
     c: [0],
@@ -730,6 +846,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "2.10 The federal bureaucracy: rule-making and discretion",
     type: "s",
     stimulusGroupId: null,
+    variantGroupId: "vg-u2-bureaucratic-discretion",
     q: "Congress passes a broad statute directing an agency to set 'reasonable' emissions standards without specifying exact numbers. The agency then issues detailed numeric limits through a formal rule-making process. This exercise of authority is best described as",
     o: ["judicial review, since the agency is interpreting the meaning of a federal statute", "discretionary rule-making authority, filling in details that Congress left unspecified", "an executive order, since agency rules are issued under the president's general supervision", "a legislative veto, since the agency's numbers displace those Congress might have chosen"],
     c: [1],
@@ -867,6 +984,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "2.13 Marbury v. Madison (1803) and judicial review",
     type: "s",
     stimulusGroupId: null,
+    variantGroupId: "vg-u2-marbury-judicial-review",
     q: "In Marbury v. Madison (1803), the Supreme Court held that",
     o: ["the judiciary's province is to say what the law is, establishing review of congressional acts", "state courts must follow federal constitutional rulings, settling the supremacy of federal law", "Congress may not enlarge the Supreme Court's appellate jurisdiction beyond what Article III lists", "the president may withhold a commission that has been signed and sealed but not delivered"],
     c: [0],
@@ -977,6 +1095,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "3.5 Gideon v. Wainwright (1963) and the right to counsel",
     type: "s",
     stimulusGroupId: null,
+    variantGroupId: "vg-u3-due-process-accused",
     q: "Gideon v. Wainwright (1963) established that",
     o: ["Indigent defendants must be given counsel on appeal but may be tried without an attorney", "Federal courts must appoint counsel for indigent defendants, a duty the states may decline", "States must provide counsel at public expense to felony defendants who cannot afford an attorney", "Police must inform a suspect of the right to counsel before beginning custodial questioning"],
     c: [2],
@@ -989,6 +1108,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "3.5 McDonald v. City of Chicago (2010) and incorporation of the Second Amendment",
     type: "s",
     stimulusGroupId: null,
+    variantGroupId: "vg-u3-second-amendment-incorporation",
     q: "McDonald v. City of Chicago (2010) is significant primarily because",
     o: ["It read the Second Amendment as protecting a collective right belonging to organized state militias", "It held that firearms regulation is committed to the states and outside federal judicial review", "It incorporated the Second Amendment against state and local governments through the Fourteenth", "It first recognized an individual right to keep and bear arms unconnected to militia service"],
     c: [2],
@@ -1186,6 +1306,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "4.3 Margin of error and interpreting poll results",
     type: "s",
     stimulusGroupId: null,
+    variantGroupId: "vg-u4-margin-of-error",
     q: "A poll of 1,000 randomly sampled adults finds 52% support a policy, with a margin of error of ±3 percentage points. Which is the most defensible interpretation?",
     o: ["Exactly 52 percent of all adults in the population support the policy", "The margin of error means about 3 percent of respondents answered the question incorrectly", "True support plausibly falls between 49 and 55 percent, so majority support is uncertain", "Support is certainly above 50 percent, since the estimate exceeds the margin of error"],
     c: [2],
@@ -1356,6 +1477,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "5.3 The Electoral College: winner-take-all allocation",
     type: "s",
     stimulusGroupId: null,
+    variantGroupId: "vg-u5-electoral-college",
     q: "In most states, a presidential candidate who wins a bare plurality of that state's popular vote receives",
     o: ["all of that state's electoral votes, under the winner-take-all rule most states use", "a share of the state's electors proportional to the candidate's share of the popular vote", "electoral votes corresponding to the congressional districts that the candidate carried", "the state's electoral votes once a runoff confirms majority rather than plurality support"],
     c: [0],
@@ -1615,7 +1737,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     c: [0], e: "The first ten amendments reassured critics by expressly protecting liberties and restricting the national government. Application of most provisions to the states came later through selective incorporation.",
   },
   {
-    id: "apgov-u4-018", unit: "U4", topic: "4.3 Changes in Ideology", topicCode: "4.3", skill: "1", type: "s", stimulusGroupId: null,
+    id: "apgov-u4-018", unit: "U4", topic: "4.3 Changes in Ideology", topicCode: "4.3", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u4-life-events-ideology",
     q: "Why can a major recession experienced during young adulthood produce a lasting change in political ideology?",
     o: ["Formative political events can reshape beliefs about government's economic role during a period of intense socialization", "Economic events determine party identification identically for every member of an age cohort", "Ideological change occurs only when Congress formally revises a party's national platform", "Public opinion becomes constitutionally binding when a generation reaches voting age"],
     c: [0], e: "Major events experienced during formative years can alter views of government and create cohort effects, though individuals within a generation remain diverse.",
@@ -1657,10 +1779,310 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     c: [0], e: "Lincoln grounded the Proclamation in wartime authority and applied it to areas in rebellion, including recruitment into federal service. Nationwide abolition required the Thirteenth Amendment.",
   },
   {
+    id: "apgov-u3-023", unit: "U3", topic: "3.6 Amendments: Balancing Individual Freedom with Public Order and Safety", topicCode: "3.6", skill: "3", type: "s", stimulusGroupId: "apgov-g-deathpenalty", stimulus: S_DEATH_PENALTY,
+    q: "Based on the table, which best describes the change in public support for the death penalty between 1994 and 2025?",
+    o: ["Support dropped roughly thirty points but stayed above a majority through 2025", "Support fell below fifty percent for the first time in 2025", "Support stayed essentially flat, moving less than five percentage points across three decades", "Support fell steadily until 2013 and then rebounded to near its 1994 level"],
+    c: [0], e: "Favor dropped from 80% in 1994 to 52% in 2025, a decline of about 28 points, while still remaining above 50%. It never fell below a majority in the table, the change was far larger than five points, and there was no rebound after 2013 — support kept declining.",
+  },
+  {
+    id: "apgov-u3-024", unit: "U3", topic: "3.6 Amendments: Balancing Individual Freedom with Public Order and Safety", topicCode: "3.6", skill: "3", type: "s", stimulusGroupId: "apgov-g-deathpenalty", stimulus: S_DEATH_PENALTY,
+    q: "A commentator opposed to capital punishment cites this national polling trend to argue that abolishing the death penalty would still be difficult to achieve nationally, despite decades of declining support. Which feature of the data most directly supports that argument?",
+    o: ["A majority of respondents continued to favor the death penalty in the most recent year shown", "Support for the death penalty was lower in 2025 than in any other year in the table", "The survey shows opposition to the death penalty exceeding fifty percent by 2019", "Support rebounded to its 1994 level by 2025"],
+    c: [0], e: "At 52% favor in 2025, opposition still trails support, which is exactly why repeal would remain politically difficult. 2025 is indeed the lowest year shown, but that observation supports repeal being easier, not harder; opposition never exceeded 50% in the table; and support never rebounded to 1994 levels.",
+  },
+  {
+    id: "apgov-u3-025", unit: "U3", topic: "3.6 Amendments: Balancing Individual Freedom with Public Order and Safety", topicCode: "3.6", skill: "3", type: "s", stimulusGroupId: "apgov-g-deathpenalty", stimulus: S_DEATH_PENALTY,
+    q: "Which of the following is the most reasonable inference to draw solely from the data in the table?",
+    o: ["Public backing for the death penalty has weakened over time without disappearing", "A majority of Americans now believe the death penalty is applied unfairly", "State legislatures have repealed the death penalty in most states", "Younger and older Americans support the death penalty at similar rates"],
+    c: [0], e: "The table tracks only overall favor/oppose responses over time, which shows a real but incomplete decline. It says nothing about perceived fairness of application, state-level repeal activity, or how support varies by age group.",
+  },
+  {
+    id: "apgov-u1-031", unit: "U1", topic: "1.9 Federalism in Action", topicCode: "1.9", skill: "3", type: "s", stimulusGroupId: "apgov-g-fedrevshare", stimulus: S_FED_REVENUE_SHARE,
+    q: "According to the table, in which years was the federal share of combined state and local general revenue identical?",
+    o: ["1977, 2003, and 2019, each at 22 percent", "1989 and 2011", "2003 and 2021", "No two years in the table share the same percentage"],
+    c: [0], e: "1977, 2003, and 2019 each show federal transfers at 22% of general revenue. 1989 (16%) and 2011 (25%) do not match each other, and 2003 (22%) does not match 2021 (27%).",
+  },
+  {
+    id: "apgov-u1-032", unit: "U1", topic: "1.9 Federalism in Action", topicCode: "1.9", skill: "3", type: "s", stimulusGroupId: "apgov-g-fedrevshare", stimulus: S_FED_REVENUE_SHARE,
+    q: "The federal share reached 25% in 2011 and a table high of 27% in 2021. Which explanation is most directly supported by the historical pattern in the table?",
+    o: ["Federal transfers rose again by 2011 amid 2009 recession relief spending", "Federal transfers have declined in every recorded year since the 1970s", "State governments have steadily reduced their own tax collection since 1977", "The federal share was below 20% in every year before 2011"],
+    c: [0], e: "The 2011 figure reflects a known pattern of federal transfers rising during emergency relief spending, foreshadowing the 2021 pandemic-era peak. The table shows increases as well as decreases rather than a steady decline, no data on states' own tax collection appears at all, and the federal share was actually above 20% in two of the three years before 2011 (1977 and 2003, both at 22%).",
+  },
+  {
+    id: "apgov-u1-033", unit: "U1", topic: "1.9 Federalism in Action", topicCode: "1.9", skill: "3", type: "s", stimulusGroupId: "apgov-g-fedrevshare", stimulus: S_FED_REVENUE_SHARE,
+    q: "A rising federal share of state general revenue, as shown in the table, is most closely associated with which model of federalism?",
+    o: ["Cooperative federalism, where national and state governments share funding and responsibility", "Dual federalism, in which national and state governments operate in separate spheres", "New federalism, which primarily returns policy discretion to the states through devolution", "Nullification, in which a state refuses to enforce a federal law"],
+    c: [0], e: "A deepening financial relationship between federal and state governments reflects cooperative federalism's shared funding and responsibility. Dual federalism describes separate, non-overlapping spheres; new federalism is defined by returning discretion to states, not by a rising federal funding share; and nullification describes a state rejecting federal law outright.",
+  },
+  {
+    id: "apgov-u2-029", unit: "U2", topic: "2.6 Expansion of Presidential Power", topicCode: "2.6", skill: "3", type: "s", stimulusGroupId: "apgov-g-execorders", stimulus: S_EXEC_ORDERS,
+    q: "According to the table, which president averaged the most executive orders per year in office?",
+    o: ["Donald Trump, during his first term", "Bill Clinton, across his two full terms", "Barack Obama, across his two full terms", "Joe Biden, across his one full term"],
+    c: [0], e: "Trump's first term averaged 55 executive orders per year, higher than Clinton (46), Biden (41), or Obama (35).",
+  },
+  {
+    id: "apgov-u2-030", unit: "U2", topic: "2.6 Expansion of Presidential Power", topicCode: "2.6", skill: "3", type: "s", stimulusGroupId: "apgov-g-execorders", stimulus: S_EXEC_ORDERS,
+    q: "Every president shown continues to issue dozens of executive orders per year in office, even though the yearly average rises and falls from one administration to the next. Which best explains the persistent incentive behind this tool, consistent with the table?",
+    o: ["Executive orders let a president act without needing new congressional majorities", "Executive orders carry greater legal permanence than statutes because courts cannot review them", "Executive orders require a two-thirds vote of the Senate, giving presidents leverage over appropriators", "Executive orders automatically become part of the Constitution once issued"],
+    c: [0], e: "Unilateral action lets a president bypass the need to build a legislative coalition, which is especially attractive under divided or gridlocked government. Executive orders are reviewable by courts and more easily reversed than statutes, do not require any Senate vote, and have no effect on the Constitution's text.",
+  },
+  {
+    id: "apgov-u2-031", unit: "U2", topic: "2.6 Expansion of Presidential Power", topicCode: "2.6", skill: "3", type: "s", stimulusGroupId: "apgov-g-execorders", stimulus: S_EXEC_ORDERS,
+    q: "Which limitation most directly constrains a president's ability to use executive orders, as tallied in the table, to make durable policy?",
+    o: ["A successor president may revoke a predecessor's executive order without congressional action", "The Senate must ratify every executive order by a two-thirds vote", "The House of Representatives can void an executive order by simple majority resolution", "State governors have constitutional authority to nullify federal executive orders"],
+    c: [0], e: "Because a later president can simply rescind or rewrite an order, executive orders are inherently less durable than legislation — a limitation that recurs each time control of the presidency changes party. Executive orders require no Senate ratification, no House resolution can void one, and governors have no constitutional power to nullify federal action.",
+  },
+  {
+    id: "apgov-u4-021", unit: "U4", topic: "4.6 Evaluating Public Opinion Data", topicCode: "4.6", skill: "3", type: "s", stimulusGroupId: "apgov-g-ideology", stimulus: S_IDEOLOGY,
+    q: "Based on the table, how did the share of Americans identifying as politically moderate change between 1992 and 2024?",
+    o: ["It declined nine points while conservative stayed flat and liberal grew", "It grew steadily while both conservative and liberal identification declined", "It remained the largest group of the three in every year shown", "It fell below liberal identification by 2024"],
+    c: [0], e: "Moderate fell from 43% to 34% (a nine-point drop) while conservative moved only 36% to 37% and liberal rose from 17% to 25%. Moderate was largest in 1992 but conservative (37%) edged ahead of it by 2024, and moderate (34%) stayed above liberal (25%) throughout.",
+  },
+  {
+    id: "apgov-u4-022", unit: "U4", topic: "4.6 Evaluating Public Opinion Data", topicCode: "4.6", skill: "3", type: "s", stimulusGroupId: "apgov-g-ideology", stimulus: S_IDEOLOGY,
+    q: "A researcher cautions against over-interpreting this table as an exact measure of Americans' policy positions. Which limitation of the data best supports that caution?",
+    o: ["Respondents self-select a broad ideological label, which can mask disagreement over specific policies within each category", "The survey used only online panels, making it unrepresentative of the adult population", "Gallup substantially reworded the ideology question across the years shown, so responses are not comparable over time", "The percentages in each year do not sum to 100%, which indicates a data-collection error"],
+    c: [0], e: "A single self-chosen label like \"conservative\" can group together people who disagree sharply on individual policies, which is the standard critique of ideology self-placement measures. The survey has long used telephone interviews with consistent question wording, and the residual left after the three categories reflects respondents with no opinion — not an error.",
+  },
+  {
     id: "apgov-u4-020", unit: "U4", topic: "4.9 Ideology and Economic Policy", topicCode: "4.9", skill: "4", type: "s", stimulusGroupId: "apgov-g-wealth", stimulus: S_WEALTH,
     q: "A policymaker relying on the argument in the excerpt would be most likely to support",
     o: ["competitive markets with government protecting property rights and voluntary exchange", "comprehensive price controls designed to replace private decisions about production", "a ban on private profit so that firms pursue only objectives set by public officials", "government ownership of all industry to prevent individuals from pursuing self-interest"],
     c: [0], e: "Smith's argument links self-interest and competition to social benefits, aligning with market exchange protected by property and contract rules rather than comprehensive state direction.",
+  },
+  {
+    id: "apgov-u1-034", unit: "U1", topic: "1.1 Ideals of Democracy", topicCode: "1.1", skill: "4", type: "s", stimulusGroupId: "apgov-g-douglass", stimulus: S_DOUGLASS,
+    q: "Douglass's argument in the passage most directly illustrates which idea about American democracy?",
+    o: ["A gap can exist between stated ideals and who enjoys those rights", "The Declaration of Independence should be rejected as a legitimate founding document", "Civil disobedience is an illegitimate response to unjust laws", "The Constitution's amendment process is the only legitimate way to expand rights"],
+    c: [0], e: "Douglass's central claim is that the nation has not extended its own professed ideals of liberty to all its people. He treats the Declaration as a legitimate standard rather than rejecting it, and the passage says nothing about civil disobedience or the amendment process.",
+  },
+  {
+    id: "apgov-u1-035", unit: "U1", topic: "1.1 Ideals of Democracy", topicCode: "1.1", skill: "4", type: "s", stimulusGroupId: "apgov-g-douglass", stimulus: S_DOUGLASS,
+    q: "Which best describes how Douglass uses the founding documents in his argument?",
+    o: ["He treats the Declaration's principles as a standard the nation must still meet", "He argues the Declaration was never intended to apply to any American citizens", "He calls for a new constitutional convention to replace the founding documents", "He argues the Founders intentionally excluded ideals of liberty from the nation's founding"],
+    c: [0], e: "Douglass calls the Declaration's principles \"saving\" and holds the nation to them, rather than dismissing the founding documents or claiming the Founders rejected liberty as an ideal.",
+  },
+  {
+    id: "apgov-u1-036", unit: "U1", topic: "1.1 Ideals of Democracy", topicCode: "1.1", skill: "4", type: "s", stimulusGroupId: "apgov-g-douglass", stimulus: S_DOUGLASS,
+    q: "A modern activist citing Douglass's speech to justify continued activism would most likely emphasize which theme?",
+    o: ["Appeals to a nation's founding principles can be powerful tools for demanding change", "Protest is most effective when it avoids referencing constitutional language", "Civil rights progress requires abandoning appeals to the Declaration of Independence", "The passage shows that founding-era language has no relevance to later social movements"],
+    c: [0], e: "Douglass's rhetorical strategy — holding the nation to its own stated principles — became a recurring model for later movements, the opposite of avoiding or abandoning founding-era language.",
+  },
+  {
+    id: "apgov-u2-032", unit: "U2", topic: "2.6 Expansion of Presidential Power", topicCode: "2.6", skill: "4", type: "s", stimulusGroupId: "apgov-g-fdr-inaugural", stimulus: S_FDR_INAUGURAL,
+    q: "Which best characterizes the argument Roosevelt makes in the excerpt?",
+    o: ["The president should have broad emergency authority to act decisively during a crisis", "Congress alone should manage the national response to the Depression without executive involvement", "The federal government should defer entirely to state governments to address the crisis", "The Supreme Court should suspend judicial review during the emergency"],
+    c: [0], e: "Roosevelt frames the Depression as comparable to a foreign invasion and asks for war-scale executive authority if Congress cannot act quickly enough. He does not propose excluding the executive, deferring to the states, or suspending judicial review.",
+  },
+  {
+    id: "apgov-u2-033", unit: "U2", topic: "2.6 Expansion of Presidential Power", topicCode: "2.6", skill: "4", type: "s", stimulusGroupId: "apgov-g-fdr-inaugural", stimulus: S_FDR_INAUGURAL,
+    q: "Roosevelt's framing of the emergency as comparable to a foreign invasion most directly illustrates which use of presidential rhetoric?",
+    o: ["Using dramatic language to build public and congressional support for executive action", "Formally declaring war under authority the Constitution reserves to Congress", "Invoking the president's role as party leader to unify a divided Congress", "Asserting a constitutional power to suspend elections during emergencies"],
+    c: [0], e: "The invasion comparison is rhetorical persuasion aimed at building support for emergency powers, not a formal war declaration, a party-leadership appeal, or a claim about suspending elections — none of which appear in the excerpt.",
+  },
+  {
+    id: "apgov-u2-034", unit: "U2", topic: "2.6 Expansion of Presidential Power", topicCode: "2.6", skill: "4", type: "s", stimulusGroupId: "apgov-g-fdr-inaugural", stimulus: S_FDR_INAUGURAL,
+    q: "Which constitutional safeguard would most directly limit the kind of broad emergency power Roosevelt described, if Congress declined to grant it?",
+    o: ["Congress's control over which powers to delegate, and its ability to withhold them", "The Senate's power to remove a president by majority vote at any time", "A constitutional line-item veto letting Congress cancel individual executive actions", "The vice president's authority to overrule presidential emergency actions"],
+    c: [0], e: "Roosevelt explicitly says he will ask Congress for the power, meaning Congress's choice to grant or withhold it is the operative check. Removal requires impeachment and conviction, not a simple majority vote; no constitutional line-item veto exists; and the vice president has no power to overrule the president.",
+  },
+  {
+    id: "apgov-u5-027", unit: "U5", topic: "5.5 Third-Party Politics", topicCode: "5.5", skill: "4", type: "s", stimulusGroupId: "apgov-g-progressive1912", stimulus: S_PROGRESSIVE_1912,
+    q: "Which of the following was a stated goal of the 1912 Progressive Party platform described in the passage?",
+    o: ["Expanding direct citizen participation in candidate selection through primaries", "Repealing the constitutional amendment establishing a federal income tax", "Restricting voting rights to property-owning citizens", "Eliminating federal regulation of interstate corporations"],
+    c: [0], e: "The platform called for direct primaries as one of several democratizing reforms. It supported women's suffrage rather than restricting the franchise, favored stronger — not weaker — regulation of trusts, and said nothing about repealing income tax.",
+  },
+  {
+    id: "apgov-u5-028", unit: "U5", topic: "5.5 Third-Party Politics", topicCode: "5.5", skill: "4", type: "s", stimulusGroupId: "apgov-g-progressive1912", stimulus: S_PROGRESSIVE_1912,
+    q: "The platform's positions, several of which were later enacted into law or the Constitution, best illustrate which function of third parties in the U.S. political system?",
+    o: ["Raising policy issues that major parties eventually adopt once popular", "Winning the presidency outright by building majority coalitions across most states", "Serving as a permanent governing coalition partner in Congress", "Preventing any major-party candidate from being elected for multiple election cycles"],
+    c: [0], e: "Third parties rarely win office themselves but can push issues onto the national agenda that major parties later absorb, exactly as described. The Progressive Party did not win the presidency, did not become a permanent congressional coalition partner, and a major-party candidate (Wilson) won in 1912 despite the split.",
+  },
+  {
+    id: "apgov-u1-037", unit: "U1", topic: "1.7 Relationship Between the States and Federal Government", topicCode: "1.7", skill: "4", type: "s", stimulusGroupId: "apgov-g-visual-highway", stimulus: S_VISUAL_HIGHWAY,
+    q: "The funding arrangement depicted is an example of which federal policy tool?",
+    o: ["A categorical grant that ties federal funding to specific state compliance conditions", "A block grant that gives states broad discretion over how to spend the funds", "Revenue sharing that transfers funds with no policy strings attached", "An unfunded mandate that requires state action without any accompanying federal funding"],
+    c: [0], e: "Money offered on the condition that the state meet specific, narrow requirements is the hallmark of a categorical grant. A block grant would leave the state broad discretion, revenue sharing carries no conditions, and an unfunded mandate provides no money at all — here funding is offered, just conditionally.",
+  },
+  {
+    id: "apgov-u1-038", unit: "U1", topic: "1.7 Relationship Between the States and Federal Government", topicCode: "1.7", skill: "4", type: "s", stimulusGroupId: "apgov-g-visual-highway", stimulus: S_VISUAL_HIGHWAY,
+    q: "A state legislature objects to the conditions shown, arguing Congress is coercing rather than encouraging compliance. Which factor would most strengthen that argument?",
+    o: ["The funds withheld for noncompliance represent a very large share of the state's transportation budget", "The federal government offered the same conditions to every state equally", "The conditions relate to a legitimate national concern about highway safety", "States received advance notice before the conditions took effect"],
+    c: [0], e: "Courts have treated the size of the financial threat relative to a state's budget as the key factor separating permissible inducement from unconstitutional coercion — a small percentage is encouragement, a large enough share becomes coercive. Equal treatment, a legitimate federal interest, and advance notice all support the arrangement's validity rather than undermining it.",
+  },
+  {
+    id: "apgov-u4-023", unit: "U4", topic: "4.2 Political Socialization", topicCode: "4.2", skill: "4", type: "s", stimulusGroupId: "apgov-g-visual-socialization", stimulus: S_VISUAL_SOCIALIZATION,
+    q: "The four influences shown converging on the young adult best illustrate which concept?",
+    o: ["Political socialization, the process by which people acquire their political attitudes and values", "Political efficacy, the belief that one's own participation matters", "Selective exposure, the tendency to seek out information that confirms existing views", "Political polarization, the growing ideological distance between the two major parties"],
+    c: [0], e: "Family, school, media, and peer groups are the classic agents through which people acquire political attitudes over time — the definition of political socialization. Efficacy, selective exposure, and polarization describe different phenomena not depicted here.",
+  },
+  {
+    id: "apgov-u4-024", unit: "U4", topic: "4.2 Political Socialization", topicCode: "4.2", skill: "4", type: "s", stimulusGroupId: "apgov-g-visual-socialization", stimulus: S_VISUAL_SOCIALIZATION,
+    q: "Research on political socialization has generally found which of the sources shown to be the strongest predictor of a young adult's initial party identification?",
+    o: ["Family, because early political cues from parents tend to be an especially durable influence", "Evening news broadcasts, because they reach the largest audience of any source shown", "College friend groups, because peers are trusted more than institutional sources", "School civics classes, because they introduce formal political theory"],
+    c: [0], e: "Family remains the most consistently documented early influence on party identification in political socialization research, often persisting well into adulthood. Media, peers, and formal schooling all matter but are typically found to be weaker predictors of initial party attachment.",
+  },
+  {
+    id: "apgov-u2-035", unit: "U2", topic: "2.14 Holding the Bureaucracy Accountable", topicCode: "2.14", skill: "4", type: "s", stimulusGroupId: "apgov-g-visual-triangle", stimulus: S_VISUAL_TRIANGLE,
+    q: "The closed, mutually reinforcing relationship depicted best illustrates which concept?",
+    o: ["An iron triangle, a stable alliance among a congressional committee, an agency, and an interest group", "Divided government, in which different parties control the presidency and Congress", "Judicial review, in which courts assess whether a law is constitutional", "Devolution, in which the federal government transfers program authority to the states"],
+    c: [0], e: "A recurring, self-reinforcing exchange of favors among a committee, an agency, and an organized group is the textbook description of an iron triangle. Divided government, judicial review, and devolution describe unrelated institutional relationships.",
+  },
+  {
+    id: "apgov-u2-036", unit: "U2", topic: "2.14 Holding the Bureaucracy Accountable", topicCode: "2.14", skill: "4", type: "s", stimulusGroupId: "apgov-g-visual-triangle", stimulus: S_VISUAL_TRIANGLE,
+    q: "Which development would most directly disrupt the stability of the relationship shown?",
+    o: ["A committee reassignment that removes the agency and trade association's key congressional allies", "An increase in the agency's annual budget request", "A different interest group forming an alliance in an unrelated policy area", "The agency publishing its routine annual report to Congress"],
+    c: [0], e: "Because the relationship depends on specific, durable relationships among a particular committee, agency, and group, losing the friendly committee members most directly breaks the cycle. A routine budget request, an unrelated group's separate alliance, and a routine report do not disturb this particular relationship.",
+  },
+  {
+    id: "apgov-u1-039", unit: "U1", topic: "1.4 Challenges of the Articles of Confederation", topicCode: "1.4", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Under the Articles of Confederation, amending the document required the unanimous consent of all thirteen state legislatures. Which outcome most directly resulted from this requirement?",
+    o: ["Structural reforms addressing the national government's weaknesses were effectively impossible to enact", "State legislatures rarely exercised their veto power over proposed amendments", "The national government could bypass the amendment process through executive action", "Congress used the process to pass several major structural reforms during the 1780s"],
+    c: [0], e: "Requiring all thirteen states to agree gave any single state an effective veto, which is why the Confederation Congress could never secure the reforms it needed. There was no national executive to bypass the process, and in practice the unanimity rule blocked structural change rather than enabling it.",
+  },
+  {
+    id: "apgov-u1-040", unit: "U1", topic: "1.6 Principles of American Government", topicCode: "1.6", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A state constitution declares that all governmental power ultimately derives from the consent of the governed, expressed through elections and ratification votes. This provision most directly reflects which constitutional principle?",
+    o: ["Popular sovereignty", "Federalism", "Judicial review", "Enumerated powers"],
+    c: [0], e: "Popular sovereignty holds that government's authority comes from the people's consent, exactly what the provision describes. Federalism concerns the division of power between national and state governments, judicial review concerns courts assessing constitutionality, and enumerated powers concerns which specific powers Congress holds.",
+  },
+  {
+    id: "apgov-u1-041", unit: "U1", topic: "1.3 Government Power and Individual Rights: enumerated vs. reserved powers", topicCode: "1.3", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u1-enumerated-reserved",
+    q: "Congress passes a statute regulating the interest rates that national banks may charge across state lines. A challenge to this law would most likely fail because the power to regulate interstate commerce is",
+    o: ["an enumerated power explicitly granted to Congress in Article I", "a reserved power retained by the states under the Tenth Amendment", "an implied power derived solely from the president's executive authority", "a concurrent power shared equally between Congress and state courts"],
+    c: [0], e: "Article I, Section 8 explicitly grants Congress the power to regulate interstate commerce, making this an enumerated rather than reserved, executive, or judicial power.",
+  },
+  {
+    id: "apgov-u1-042", unit: "U1", topic: "1.3 Government Power and Individual Rights: enumerated vs. reserved powers", topicCode: "1.3", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u1-enumerated-reserved",
+    q: "A state legislature enacts a law setting curriculum standards for public elementary schools. This exercise of authority is best explained by which constitutional principle?",
+    o: ["Education is a reserved power retained by the states under the Tenth Amendment", "Education is an enumerated power granted to Congress under Article I", "Education is a power delegated exclusively to the executive branch", "Education is a power the Constitution assigns jointly to Congress and the president"],
+    c: [0], e: "Because education is not among Congress's enumerated powers, the Tenth Amendment reserves it to the states — the same reserved-versus-enumerated distinction tested from the opposite direction.",
+  },
+  {
+    id: "apgov-u1-043", unit: "U1", topic: "1.8 Constitutional Interpretations of Federalism", topicCode: "1.8", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A member of Congress argues that the necessary and proper clause justifies a broad range of federal legislation beyond Congress's specifically enumerated powers. Which historical development most directly supports this reading?",
+    o: ["The expansive interpretation of federal authority that followed the Supreme Court's ruling in McCulloch v. Maryland", "The strict construction of federal power associated with the Articles of Confederation", "The Tenth Amendment's explicit reservation of undelegated powers to the states", "The nullification doctrine asserted by South Carolina in the 1830s"],
+    c: [0], e: "McCulloch v. Maryland (1819) read the necessary and proper clause broadly, supplying the doctrinal basis for expansive federal legislation. The Articles reflected weak central power, the Tenth Amendment supports the opposite (states'-rights) reading, and nullification asserted states could void federal law.",
+  },
+  {
+    id: "apgov-u2-037", unit: "U2", topic: "2.4 Roles and Powers of the President", topicCode: "2.4", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Which of the following is an example of the president exercising a formal constitutional power rather than an informal power derived from the office?",
+    o: ["Vetoing a bill passed by both chambers of Congress", "Using a prime-time address to build public support for a policy", "Issuing a signing statement interpreting how a new law will be enforced", "Negotiating privately with committee chairs to shape a bill before passage"],
+    c: [0], e: "The veto is an enumerated power in Article I, Section 7. Prime-time appeals, signing statements, and informal bargaining are classic informal tools presidents use to extend influence beyond their enumerated powers.",
+  },
+  {
+    id: "apgov-u2-038", unit: "U2", topic: "2.5 Checks on the President", topicCode: "2.5", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Which scenario best illustrates a legislative check on presidential power?",
+    o: ["The Senate refuses to confirm a president's nominee for a cabinet secretary position", "A federal appeals court blocks enforcement of an executive order", "A state governor declines to enforce a federal executive order", "The president's own party loses seats in a midterm election"],
+    c: [0], e: "Senate confirmation is a formal legislative check under Article II. A court blocking an order is a judicial check, a governor's noncompliance is a federalism conflict rather than a formal check, and midterm losses are an electoral consequence, not a constitutional check.",
+  },
+  {
+    id: "apgov-u2-039", unit: "U2", topic: "2.8 The Judicial Branch", topicCode: "2.8", skill: "2", type: "s", stimulusGroupId: null, variantGroupId: "vg-u2-marbury-judicial-review",
+    q: "Which power did the Supreme Court establish for itself in Marbury v. Madison (1803)?",
+    o: ["The authority to declare an act of Congress unconstitutional", "The authority to initiate legislation on constitutional matters", "The authority to remove a sitting president from office", "The authority to appoint federal judges without Senate confirmation"],
+    c: [0], e: "Marbury established judicial review — the Court's power to strike down a federal statute that conflicts with the Constitution. The Court cannot initiate legislation, remove a president, or bypass Senate confirmation of judges.",
+  },
+  {
+    id: "apgov-u2-040", unit: "U2", topic: "2.10 The Court in Action", topicCode: "2.10", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Before the Supreme Court will hear a case, a plaintiff generally must demonstrate \"standing.\" Which requirement does this best describe?",
+    o: ["The plaintiff must show a concrete, personal injury caused by the challenged action", "The plaintiff must first win a majority vote in a state referendum", "The plaintiff must obtain the consent of the losing party in a lower court", "The plaintiff must be a licensed attorney representing themselves"],
+    c: [0], e: "Standing requires a concrete, particularized injury traceable to the challenged action. No referendum, opposing party's consent, or attorney licensure is required to bring a case.",
+  },
+  {
+    id: "apgov-u2-041", unit: "U2", topic: "2.11 Checks on the Judicial Branch", topicCode: "2.11", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Which of the following is a constitutional check that Congress holds over the federal judiciary?",
+    o: ["The Senate's power to confirm or reject a president's judicial nominees", "The authority to overturn a Supreme Court ruling by a simple majority vote in the House", "The authority to directly rewrite the text of a Supreme Court opinion", "The power to remove individual justices through a presidential veto"],
+    c: [0], e: "Senate confirmation is Congress's clearest formal check on the judiciary. Congress cannot overturn a ruling by ordinary vote, rewrite an opinion's text, and removal requires impeachment and conviction, not a presidential veto.",
+  },
+  {
+    id: "apgov-u2-042", unit: "U2", topic: "2.13 Discretionary and Rulemaking Authority", topicCode: "2.13", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u2-bureaucratic-discretion",
+    q: "Congress passes a broad environmental statute directing \"the responsible agency\" to set air quality standards \"as needed to protect public health,\" without specifying exact numeric limits. This delegation of authority is an example of",
+    o: ["Bureaucratic discretion, in which an agency fills in the specific details Congress left unresolved", "Judicial review, in which courts determine the precise numeric standards", "Devolution, in which states set their own air quality standards instead", "Impoundment, in which the executive refuses to spend appropriated funds"],
+    c: [0], e: "Vague statutory language forces the implementing agency to exercise discretion in setting specific standards — the defining feature of bureaucratic rulemaking authority, not a judicial, devolutionary, or impoundment action.",
+  },
+  {
+    id: "apgov-u2-043", unit: "U2", topic: "2.13 Discretionary and Rulemaking Authority", topicCode: "2.13", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u2-bureaucratic-discretion",
+    q: "A federal transportation agency, authorized by a broadly worded statute, issues detailed regulations specifying exact seatbelt design requirements for new vehicles. This action illustrates",
+    o: ["Bureaucratic discretion, in which an agency exercises delegated authority to make detailed policy choices", "Executive privilege, in which the agency withholds information from Congress", "Senatorial courtesy, in which senators influence agency staffing decisions", "A pocket veto, in which the agency prevents a bill from becoming law"],
+    c: [0], e: "Turning a broad statutory directive into specific technical requirements is bureaucratic discretion in action — a different scenario testing the same rulemaking concept from a different angle.",
+  },
+  {
+    id: "apgov-u3-026", unit: "U3", topic: "3.8 Amendments: Due Process and the Rights of the Accused", topicCode: "3.8", skill: "2", type: "s", stimulusGroupId: null, variantGroupId: "vg-u3-due-process-accused",
+    q: "In Gideon v. Wainwright (1963), the Supreme Court held that state courts must provide free legal counsel to felony defendants who cannot afford an attorney. This ruling most directly extended which constitutional guarantee to defendants in state courts?",
+    o: ["The Sixth Amendment right to counsel", "The Fourth Amendment protection against unreasonable searches", "The Fifth Amendment protection against self-incrimination", "The Eighth Amendment protection against cruel and unusual punishment"],
+    c: [0], e: "Gideon incorporated the Sixth Amendment right to counsel against the states. It did not concern search-and-seizure, self-incrimination, or cruel-and-unusual-punishment protections.",
+  },
+  {
+    id: "apgov-u3-027", unit: "U3", topic: "3.8 Amendments: Due Process and the Rights of the Accused", topicCode: "3.8", skill: "2", type: "s", stimulusGroupId: null, variantGroupId: "vg-u3-due-process-accused",
+    q: "A state defendant who could not afford an attorney was convicted without legal representation before Gideon v. Wainwright (1963). Which change did the ruling require going forward?",
+    o: ["State courts must appoint and fund defense counsel for indigent felony defendants", "State courts must allow defendants to represent themselves in all cases", "State courts must dismiss any case in which a defendant cannot afford private counsel", "State courts must transfer indigent defendants' cases to federal court"],
+    c: [0], e: "Gideon requires states to appoint and fund counsel for indigent felony defendants rather than dismissing cases, forcing self-representation, or shifting cases to federal court.",
+  },
+  {
+    id: "apgov-u3-028", unit: "U3", topic: "3.4 First Amendment: Freedom of the Press", topicCode: "3.4", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A newspaper publishes a story based on leaked government documents revealing questionable but not classified-for-security-reasons policy decisions. The government seeks a court order to stop publication before it happens. This kind of request is known as",
+    o: ["Prior restraint, which courts view with a strong presumption against its constitutionality", "Selective incorporation, which extends Bill of Rights protections to the states", "Symbolic speech, which protects nonverbal expressive conduct", "Defamation, which allows a private lawsuit after publication has already occurred"],
+    c: [0], e: "Government action blocking publication before it happens is prior restraint, which courts strongly disfavor. The other terms describe unrelated doctrines: incorporation, nonverbal expression, and after-the-fact defamation suits.",
+  },
+  {
+    id: "apgov-u3-029", unit: "U3", topic: "3.5 Second Amendment: Rights to Bear Arms", topicCode: "3.5", skill: "2", type: "s", stimulusGroupId: null, variantGroupId: "vg-u3-second-amendment-incorporation",
+    q: "Which best describes the holding of McDonald v. Chicago (2010)?",
+    o: ["The Second Amendment right to bear arms for self-defense applies to state and local governments through the Fourteenth Amendment", "State governments may ban all private ownership of firearms within city limits", "The Second Amendment applies only to militia service, not individual self-defense", "Congress may regulate firearms only within federal territories, not the states"],
+    c: [0], e: "McDonald incorporated the Second Amendment against the states via the Fourteenth Amendment. It did not uphold a total ban, restrict the right to militia service, or limit federal regulation to territories.",
+  },
+  {
+    id: "apgov-u4-025", unit: "U4", topic: "4.3 Changes in Ideology", topicCode: "4.3", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u4-life-events-ideology",
+    q: "A voter's political ideology shifts significantly after experiencing a major recession and losing their job. This shift is best explained by which influence on ideology?",
+    o: ["Life-cycle and personal economic experiences reshaping political attitudes", "Political socialization occurring primarily through childhood family influence", "Selective exposure to media that confirms preexisting views", "Elite cues from party leaders instructing voters how to feel"],
+    c: [0], e: "A major personal economic event reshaping political views is a life-cycle effect, distinct from childhood socialization, selective media exposure, or simply following party elites.",
+  },
+  {
+    id: "apgov-u4-026", unit: "U4", topic: "4.5 Measuring Public Opinion", topicCode: "4.5", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u4-margin-of-error",
+    q: "A poll reports that 52% of respondents support a policy, with a margin of error of plus or minus 4 percentage points. Which conclusion is most justified by this result?",
+    o: ["The true level of support in the full population is plausibly anywhere between about 48% and 56%", "Exactly 52% of the entire population supports the policy", "The poll is invalid because the margin of error exceeds zero", "A majority of the population is certain to oppose the policy"],
+    c: [0], e: "A margin of error defines a plausible range around the reported figure, not an exact population value. Every sample-based poll has some nonzero margin of error, and 52% with a 4-point margin does not establish certain majority opposition.",
+  },
+  {
+    id: "apgov-u4-027", unit: "U4", topic: "4.10 Ideology and Social Policy", topicCode: "4.10", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A policymaker who identifies as ideologically conservative on social issues would be most likely to support which policy position?",
+    o: ["Greater local and parental control over public school curriculum decisions", "Expanded federal regulation of school curriculum content nationwide", "A significant increase in federal funding for social welfare programs", "New federal mandates standardizing school policy across all states"],
+    c: [0], e: "Social conservatism typically favors local and parental control over centralized federal mandates, the opposite of the other three options, which each expand federal or centralized authority.",
+  },
+  {
+    id: "apgov-u5-030", unit: "U5", topic: "5.8 Electing a President", topicCode: "5.8", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u5-electoral-college",
+    q: "A presidential candidate wins the national popular vote but loses the election. Which feature of the U.S. electoral system best explains how this outcome is possible?",
+    o: ["The Electoral College awards all of a state's electoral votes to the popular-vote winner in most states, regardless of the national vote total", "Congress may override the popular vote if national security is at stake", "The Supreme Court automatically reviews and can reverse close presidential elections", "State governors may appoint electors of their own choosing regardless of the vote"],
+    c: [0], e: "Winner-take-all state allocation means a candidate can amass electoral votes efficiently while losing the national popular tally. No emergency override, automatic Court review, or unrestricted gubernatorial elector power exists.",
+  },
+  {
+    id: "apgov-u5-031", unit: "U5", topic: "5.8 Electing a President", topicCode: "5.8", skill: "1", type: "s", stimulusGroupId: null, variantGroupId: "vg-u5-electoral-college",
+    q: "A presidential candidate concentrates campaign resources on a small number of closely divided states rather than campaigning nationally. Which feature of the presidential election system most directly explains this strategy?",
+    o: ["Winner-take-all allocation of electoral votes makes narrowly divided states disproportionately decisive", "Federal law requires candidates to visit every state an equal number of times", "The national popular vote total has no bearing on determining the winner", "Party primaries are held simultaneously with the general election in swing states"],
+    c: [0], e: "Because a state's full electoral-vote bloc typically goes to whoever wins it narrowly, competitive states offer the highest return on campaign resources — the same structural feature tested from a strategic angle.",
+  },
+  {
+    id: "apgov-u5-032", unit: "U5", topic: "5.4 How and Why Political Parties Change and Adapt", topicCode: "5.4", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A major political party gradually shifts its platform on an issue after a significant, sustained increase in public support for the opposing position. This best illustrates which dynamic of party behavior?",
+    o: ["Parties adapt their platforms over time to remain competitive with shifting public opinion", "Parties are constitutionally required to update platforms every four years", "Party platforms are legally binding on all of a party's elected officials", "Party positions are set permanently by the party's founding documents"],
+    c: [0], e: "Parties are office-seeking coalitions that adjust positions to stay competitive as opinion shifts; platforms are not constitutionally mandated, legally binding, or permanently fixed.",
+  },
+  {
+    id: "apgov-u5-033", unit: "U5", topic: "5.6 Interest Groups Influencing Policymaking", topicCode: "5.6", skill: "1", type: "s", stimulusGroupId: null,
+    q: "An interest group funds detailed research reports and provides technical briefings to congressional staff on a complex regulatory issue. Which function of interest groups does this best illustrate?",
+    o: ["Supplying specialized information that helps time-constrained legislators evaluate complex policy", "Nominating candidates to run in a political party's primary election", "Certifying the results of a congressional election", "Administering the enforcement of a federal regulation"],
+    c: [0], e: "Providing expertise and research to legislators is a core interest-group function. Nominating candidates is a party function, certifying elections is an official government function, and enforcing regulation is an agency function.",
+  },
+  {
+    id: "apgov-u5-034", unit: "U5", topic: "5.10 Modern Campaigns", topicCode: "5.10", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A modern campaign increasingly relies on data analytics to target individual voters with tailored digital advertising rather than broad television buys. Which trend in campaign strategy does this best illustrate?",
+    o: ["A shift toward microtargeting voters using detailed data about their preferences and behavior", "A return to exclusively door-to-door canvassing as the primary outreach method", "A legal requirement that all campaign ads appear only on broadcast television", "A decline in the total amount of money spent on political campaigns"],
+    c: [0], e: "Using voter data to deliver individually tailored messages is microtargeting, a defining feature of modern digital campaigns — not a return to door-to-door-only outreach, a broadcast-only mandate, or reduced spending.",
+  },
+  {
+    id: "apgov-u5-029", unit: "U5", topic: "5.5 Third-Party Politics", topicCode: "5.5", skill: "4", type: "s", stimulusGroupId: "apgov-g-progressive1912", stimulus: S_PROGRESSIVE_1912,
+    q: "Which structural feature of U.S. elections most directly explains why the Progressive Party, despite significant public support in 1912, could not translate that support into lasting institutional power?",
+    o: ["A winner-take-all, single-member-district electoral system that disadvantages parties without regionally concentrated support", "A constitutional requirement that only two parties may appear on a presidential ballot", "A federal law banning third-party candidates from qualifying for the Electoral College", "A Supreme Court ruling upholding a nationwide ban on third-party campaign spending"],
+    c: [0], e: "Winner-take-all, single-member-district rules make it structurally difficult for any party without concentrated regional strength to convert vote share into won seats or electoral votes. No constitutional or federal rule bars third parties from ballots, the Electoral College, or campaign spending.",
   },
 ];
 
@@ -1709,6 +2131,24 @@ const APGOV_METADATA = [
   ["5.6", "1", ["apgov-u5-009"]], ["5.7", "1", ["apgov-u5-026"]], ["5.8", "1", ["apgov-u5-006"]], ["5.9", "1", ["apgov-u5-023"]],
   ["5.10", "1", ["apgov-u5-024"]], ["5.11", "2", ["apgov-u5-010"]], ["5.11", "3", ["apgov-u5-016", "apgov-u5-017"]],
   ["5.12", "1", ["apgov-u5-011"]], ["5.12", "4", ["apgov-u5-018"]], ["5.13", "1", ["apgov-u5-025"]], ["5.13", "4", ["apgov-u5-019"]],
+  ["3.6", "3", ["apgov-u3-023", "apgov-u3-024", "apgov-u3-025"]],
+  ["1.9", "3", ["apgov-u1-031", "apgov-u1-032", "apgov-u1-033"]],
+  ["2.6", "3", ["apgov-u2-029", "apgov-u2-030", "apgov-u2-031"]],
+  ["4.6", "3", ["apgov-u4-021", "apgov-u4-022"]],
+  ["1.1", "4", ["apgov-u1-034", "apgov-u1-035", "apgov-u1-036"]],
+  ["2.6", "4", ["apgov-u2-032", "apgov-u2-033", "apgov-u2-034"]],
+  ["5.5", "4", ["apgov-u5-027", "apgov-u5-028", "apgov-u5-029"]],
+  ["1.7", "4", ["apgov-u1-037", "apgov-u1-038"]],
+  ["4.2", "4", ["apgov-u4-023", "apgov-u4-024"]],
+  ["2.14", "4", ["apgov-u2-035", "apgov-u2-036"]],
+  ["1.4", "1", ["apgov-u1-039"]], ["1.6", "1", ["apgov-u1-040"]],
+  ["1.3", "1", ["apgov-u1-041", "apgov-u1-042"]], ["1.8", "1", ["apgov-u1-043"]],
+  ["2.4", "1", ["apgov-u2-037"]], ["2.5", "1", ["apgov-u2-038"]], ["2.8", "2", ["apgov-u2-039"]],
+  ["2.10", "1", ["apgov-u2-040"]], ["2.11", "1", ["apgov-u2-041"]], ["2.13", "1", ["apgov-u2-042", "apgov-u2-043"]],
+  ["3.8", "2", ["apgov-u3-026", "apgov-u3-027"]], ["3.4", "1", ["apgov-u3-028"]], ["3.5", "2", ["apgov-u3-029"]],
+  ["4.3", "1", ["apgov-u4-025"]], ["4.6", "1", ["apgov-u4-026"]], ["4.10", "1", ["apgov-u4-027"]],
+  ["5.8", "1", ["apgov-u5-030", "apgov-u5-031"]], ["5.4", "1", ["apgov-u5-032"]],
+  ["5.6", "1", ["apgov-u5-033"]], ["5.10", "1", ["apgov-u5-034"]],
 ];
 
 const APGOV_BY_ID = new Map(window.QUESTIONS_AP_US_GOVERNMENT.map((question) => [question.id, question]));
@@ -1732,3 +2172,4 @@ window.QUESTIONS_AP_US_GOVERNMENT.forEach((question, index) => {
     question.c = [target];
   }
 });
+

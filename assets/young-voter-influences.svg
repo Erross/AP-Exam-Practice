@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">Four sources shaping a young adult's political views</title>
+  <desc id="desc">A young adult at the center of the illustration is shown receiving political cues from four directions: a family dinner-table conversation, a school civics classroom, an evening news broadcast, and a college friend group discussion.</desc>
+  <rect x="1" y="1" width="898" height="498" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <circle cx="450" cy="250" r="52" fill="#17365d"/>
+    <circle cx="450" cy="228" r="18" fill="#f2c9a0"/>
+    <path d="M418 288c6-24 16-36 32-36s26 12 32 36" fill="#f2c9a0"/>
+    <text x="450" y="325" text-anchor="middle" font-size="14" font-weight="700" fill="#17365d">YOUNG ADULT</text>
+
+    <g transform="translate(60 40)">
+      <rect width="240" height="120" rx="10" fill="#ffffff" stroke="#4d749f" stroke-width="3"/>
+      <text x="120" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#17365d">FAMILY DINNER TABLE</text>
+      <text x="120" y="54" text-anchor="middle" font-size="12" fill="#334155">Parents discuss a news</text>
+      <text x="120" y="72" text-anchor="middle" font-size="12" fill="#334155">story over dinner and</text>
+      <text x="120" y="90" text-anchor="middle" font-size="12" fill="#334155">share their opinions</text>
+    </g>
+
+    <g transform="translate(600 40)">
+      <rect width="240" height="120" rx="10" fill="#ffffff" stroke="#4d749f" stroke-width="3"/>
+      <text x="120" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#17365d">SCHOOL CLASSROOM</text>
+      <text x="120" y="54" text-anchor="middle" font-size="12" fill="#334155">A teacher leads a lesson</text>
+      <text x="120" y="72" text-anchor="middle" font-size="12" fill="#334155">on how a bill becomes</text>
+      <text x="120" y="90" text-anchor="middle" font-size="12" fill="#334155">a law</text>
+    </g>
+
+    <g transform="translate(60 340)">
+      <rect width="240" height="120" rx="10" fill="#ffffff" stroke="#4d749f" stroke-width="3"/>
+      <text x="120" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#17365d">EVENING NEWS</text>
+      <text x="120" y="54" text-anchor="middle" font-size="12" fill="#334155">A televised broadcast</text>
+      <text x="120" y="72" text-anchor="middle" font-size="12" fill="#334155">covers a national</text>
+      <text x="120" y="90" text-anchor="middle" font-size="12" fill="#334155">election campaign</text>
+    </g>
+
+    <g transform="translate(600 340)">
+      <rect width="240" height="120" rx="10" fill="#ffffff" stroke="#4d749f" stroke-width="3"/>
+      <text x="120" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#17365d">COLLEGE FRIEND GROUP</text>
+      <text x="120" y="54" text-anchor="middle" font-size="12" fill="#334155">Classmates debate a</text>
+      <text x="120" y="72" text-anchor="middle" font-size="12" fill="#334155">campus policy issue</text>
+      <text x="120" y="90" text-anchor="middle" font-size="12" fill="#334155">between classes</text>
+    </g>
+
+    <path d="M300 120L410 210" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 6"/>
+    <path d="M600 120L490 210" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 6"/>
+    <path d="M300 380L410 290" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 6"/>
+    <path d="M600 380L490 290" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 6"/>
+  </g>
+</svg>
+
