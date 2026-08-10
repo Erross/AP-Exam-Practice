@@ -1,7 +1,6 @@
-// AP Chemistry — focused correction for curated questions whose rewritten
-// options were authored before the deterministic raw-key rebalance. This file
-// is intentionally explicit so the content audit can verify the semantic key,
-// rather than trusting option position.
+// AP Chemistry — focused corrections discovered during independent content audit.
+// Loaded after curation so semantic keys, wording cleanup, and rationale fixes are
+// explicit and regression-testable rather than being hidden in option positions.
 
 const CHEM_SEMANTIC_KEYS = {
   "apchem-u3-022": "An upward arrow connecting the lower level to the upper level",
@@ -28,7 +27,55 @@ Object.entries(CHEM_SEMANTIC_KEYS).forEach(([id, correctText]) => {
   item.c = [correctIndex];
 });
 
-// Restore deterministic 46/46/45/45 raw-key balance after semantic correction.
+// CONTENT_STANDARDS.md §3 allows an occasional absolute-language distractor but
+// treats two or more in one item as a statistical tell. The independent audit
+// found the following 15 items. Preserve one such distractor at most and soften
+// additional ones without changing the keyed response.
+const CHEM_ABSOLUTE_LANGUAGE_AUDIT_IDS = new Set([
+  "apchem-u2-008", "apchem-u4-002", "apchem-u5-009", "apchem-u5-010", "apchem-u5-022",
+  "apchem-u6-002", "apchem-u7-004", "apchem-u7-015", "apchem-u7-018", "apchem-u8-001",
+  "apchem-u8-011", "apchem-u8-015", "apchem-u8-019", "apchem-u8-022", "apchem-u9-002",
+]);
+const CHEM_ABSOLUTE_WORD = /\b(every|always|never|only|entirely|unlimited|identical)\b/i;
+const CHEM_SOFTEN_ABSOLUTE = (text) => text
+  .replace(/\bevery\b/gi, "many")
+  .replace(/\balways\b/gi, "generally")
+  .replace(/\bnever\b/gi, "seldom")
+  .replace(/\bonly\b/gi, "primarily")
+  .replace(/\bentirely\b/gi, "largely")
+  .replace(/\bunlimited\b/gi, "very large")
+  .replace(/\bidentical\b/gi, "closely matched");
+
+CHEM_ABSOLUTE_LANGUAGE_AUDIT_IDS.forEach((id) => {
+  const item = CHEM_BY_ID.get(id);
+  let retainedAbsoluteDistractor = false;
+  item.o = item.o.map((option, index) => {
+    if (index === item.c[0] || !CHEM_ABSOLUTE_WORD.test(option)) return option;
+    if (!retainedAbsoluteDistractor) {
+      retainedAbsoluteDistractor = true;
+      return option;
+    }
+    return CHEM_SOFTEN_ABSOLUTE(option);
+  });
+});
+
+// Six explanations in the draft had correct but too-short authored reasoning and
+// therefore inherited the helper's generic 90-character padding sentence. Replace
+// each with item-specific teaching rationale so no boilerplate remains in the bank.
+const CHEM_RATIONALE_FIXES = {
+  "apchem-u3-007": "For an ideal gas, V=nRT/P. Using n=1.00 mol, T=300 K, P=1.00 atm, and R=0.08206 L·atm·mol⁻¹·K⁻¹ gives V≈24.6 L, matching trial A and linking the table directly to the ideal-gas model.",
+  "apchem-u6-007": "The water cools by 5.0 °C, so the magnitude of its heat change is |q|=mc|ΔT|=(100.0 g)(4.18 J g⁻¹ °C⁻¹)(5.0 °C)=2090 J=2.09 kJ. The negative sign belongs to the cooling water; the question asks for magnitude.",
+  "apchem-u7-013": "At equilibrium [A]=1.0−x and [B]=x for the 1:1 conversion A ⇌ B. Substituting those concentrations into Kc=[B]/[A] with Kc=4.0 gives x/(1.0−x)=4.0; the alternative forms invert or otherwise misbuild the equilibrium expression.",
+  "apchem-u8-003": "HCl is treated as a strong acid, so 1.0×10⁻³ M HCl gives approximately 1.0×10⁻³ M H₃O⁺. Applying pH=−log[H₃O⁺] gives pH=3.00; values such as 11 would correspond to a basic solution instead.",
+  "apchem-u8-004": "At 25 °C, Kw=1.0×10⁻¹⁴ and therefore pH+pOH=14.00. A solution with pOH=4.00 has pH=14.00−4.00=10.00, placing it on the basic side of neutrality as expected from the low pOH.",
+  "apchem-u8-018": "The Henderson-Hasselbalch equation gives pH=pKa+log([A⁻]/[HA]). With pKa=4.76 and a base-to-acid ratio of 10, log(10)=1.00, so pH=5.76. The tenfold excess of conjugate base raises pH by one unit above pKa.",
+};
+Object.entries(CHEM_RATIONALE_FIXES).forEach(([id, explanation]) => {
+  CHEM_BY_ID.get(id).e = explanation;
+});
+
+// Restore deterministic 46/46/45/45 raw-key balance after all semantic/content
+// corrections. Runtime delivery still shuffles options on every attempt.
 CHEM_QUESTIONS.forEach((item, index) => {
   const target = index % 4;
   const current = item.c[0];
