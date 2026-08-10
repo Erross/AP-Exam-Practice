@@ -12,7 +12,7 @@
 //      content can never be parsed as markup.
 //   2. Nothing about the exam is subject-specific.
 
-const STORAGE_KEY = "ap-exam-practice:in-progress:v1";
+const STORAGE_KEY = "ap-exam-practice:in-progress:v2";
 
 const state = {
   subject: null,       // the AP_SUBJECTS entry currently selected
@@ -22,6 +22,7 @@ const state = {
   flagged: new Set(),      // questionIndex set
   current: 0,
   timerId: null,
+  createdAt: null,
   endsAt: null,             // wall-clock ms timestamp the attempt expires at
 };
 
@@ -179,14 +180,15 @@ function startExam(subject) {
   // Blueprint-weighted draw (see js/draw.js) — per-unit counts are fixed by
   // Hamilton apportionment of subject.units[].examWeight before any sampling.
   state.questions = drawExam(subject, bank).map((question) => {
-    const { o, c } = shuffleQuestionOptions(question);
-    return { ...question, o, c };
+    const { o, c, order } = shuffleQuestionOptions(question);
+    return { ...question, o, c, optionOrder: order };
   });
   state.answers = {};
   state.struckOut = {};
   state.flagged = new Set();
   state.current = 0;
-  state.endsAt = Date.now() + (subject.mcqTimeMinutes || 0) * 60 * 1000;
+  state.createdAt = Date.now();
+  state.endsAt = state.createdAt + (subject.mcqTimeMinutes || 0) * 60 * 1000;
 
   enterExamScreen();
   persistSession();
@@ -321,12 +323,16 @@ function renderStimulus(question, index, ranges) {
   if (stim.type === "quantitative") {
     wrap.appendChild(renderStimulusTable(stim));
   } else if (stim.type === "visual") {
+    wrap.appendChild(el("p", { className: "stimulus-kind", text: "Visual source" }));
     wrap.appendChild(
-      el("p", { className: "stimulus-kind", text: "Described visual source" })
+      el("img", {
+        className: "stimulus-image",
+        attrs: { src: stim.image, alt: stim.alt || stim.description || "" },
+      })
     );
-    wrap.appendChild(
-      el("p", { className: "stimulus-body", text: stim.description || stim.text || "" })
-    );
+    if (stim.description) {
+      wrap.appendChild(el("p", { className: "stimulus-body", text: stim.description }));
+    }
   } else {
     // "text" (secondary/qualitative excerpt) and "document" (required foundational
     // document excerpt) render the same way; the kind line distinguishes them.
@@ -393,7 +399,7 @@ function renderQuestion(opts = {}) {
   fieldset.appendChild(
     el("legend", {
       className: "visually-hidden",
-      text: `Answer options for question ${state.current + 1}`,
+      text: `Question ${state.current + 1}: ${q.q}`,
     })
   );
 
@@ -513,11 +519,15 @@ function persistSession() {
   if (!state.subject || !state.endsAt) return;
   try {
     const payload = {
-      v: 1,
+      v: 2,
       subjectId: state.subject.id,
+      createdAt: state.createdAt,
       endsAt: state.endsAt,
       current: state.current,
-      questions: state.questions,
+      questions: state.questions.map((question) => ({
+        id: question.id,
+        optionOrder: question.optionOrder,
+      })),
       answers: state.answers,
       flagged: [...state.flagged],
       struckOut: Object.fromEntries(
@@ -556,30 +566,16 @@ function restoreSession() {
   }
 
   const subject = saved && saved.subjectId ? findSubjectById(saved.subjectId) : null;
-  const usable =
-    saved &&
-    saved.v === 1 &&
-    subject &&
-    subjectIsPlayable(subject) &&
-    Array.isArray(saved.questions) &&
-    saved.questions.length > 0 &&
-    typeof saved.endsAt === "number" &&
-    saved.endsAt > Date.now();
-
-  if (!usable) {
+  const restored = subject
+    ? validateSavedSession(saved, subject, getQuestionBank(subject), Date.now())
+    : null;
+  if (!restored) {
     clearSession();
     return false;
   }
 
   state.subject = subject;
-  state.questions = saved.questions;
-  state.answers = saved.answers || {};
-  state.flagged = new Set(saved.flagged || []);
-  state.struckOut = Object.fromEntries(
-    Object.entries(saved.struckOut || {}).map(([k, v]) => [k, new Set(v)])
-  );
-  state.current = Math.min(saved.current || 0, state.questions.length - 1);
-  state.endsAt = saved.endsAt;
+  Object.assign(state, restored);
 
   enterExamScreen();
   const banner = document.getElementById("resume-banner");
@@ -670,6 +666,7 @@ function backToCatalog() {
   clearSession();
   state.subject = null;
   state.questions = [];
+  state.createdAt = null;
   state.endsAt = null;
   const banner = document.getElementById("resume-banner");
   if (banner) banner.hidden = true;

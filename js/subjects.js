@@ -213,7 +213,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 80,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft", // bank rebuild in progress — only U1 is complete so far, do not flip until all 5 units are done and verified
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // Unit exam weightings from the AP U.S. Government and Politics CED
@@ -228,6 +228,13 @@ const AP_SUBJECTS = [
       { id: "U4", name: "American Political Ideologies and Beliefs", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
       { id: "U5", name: "Political Participation", examWeight: 0.235, examWeightRange: [0.20, 0.27] },
     ],
+    // Effective Fall 2026 CED, p. 169: five quantitative sets, two text sets
+    // (one foundational document and one other source), and three visual sets.
+    // Valid set sizes in the bank leave approximately 30 individual questions.
+    examBlueprint: {
+      sets: { quantitative: 5, foundational: 1, text: 1, visual: 3 },
+      standaloneRange: [29, 32],
+    },
     dataVar: "QUESTIONS_AP_US_GOVERNMENT",
   },
   {

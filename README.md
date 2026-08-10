@@ -1,67 +1,53 @@
 # AP Exam Practice
 
-A free, timed, unofficial multiple-choice practice-exam app covering every standard AP subject. Pure static HTML/CSS/JS — no build step, no backend, no accounts. Modeled on [Claude_CCDV_F_Practice](https://github.com/Erross/Claude_CCDV_F_Practice), generalized from one exam to a catalog of 37.
+A free, timed, unofficial multiple-choice practice app for AP subjects. The application is static HTML, CSS, and JavaScript: no account, backend, analytics, or network requests.
 
-**This is the framework only.** Every subject's question bank in `data/` is currently empty — the catalog shows all 37 subjects, but each stays disabled ("content coming soon") until its bank is populated. See `PLAN.md` for the full architecture and the plan for adding content subject by subject.
+## Released content
 
-## What it does (once a subject has content)
+AP United States Government and Politics is the first released subject. Its 126-question bank is aligned to the AP U.S. Government and Politics Course and Exam Description effective Fall 2026 (the 2027 exam cycle).
 
-Draws a fresh multiple-choice practice exam from that subject's question bank, timed to match the real exam's MCQ section length. Includes a question navigator grid, strikeout tool, flag-for-review, shuffled question/option order, and a results screen with a score and per-unit breakdown plus full answer review. This app grades the MCQ section only — it doesn't attempt FRQ grading.
+Every 55-question attempt includes:
 
-## Running it
+- exact unit totals of 10 / 17 / 8 / 7 / 13, within the College Board ranges;
+- five quantitative stimulus sets;
+- two text-source sets, one based on a required foundational document;
+- three visual-source sets;
+- approximately 30 individual questions;
+- single-answer multiple-choice items only.
 
-Nothing to install. Open `index.html` in a browser, or serve the folder with any static file server:
+All other catalog subjects are explicit drafts. A nonempty bank does not make a subject public. The release builder publishes only banks whose subject metadata says `releaseStatus: "released"`.
 
-```
-python3 -m http.server 8000
-# then visit http://localhost:8000
-```
+## Accuracy and provenance
 
-## Deploying to GitHub Pages
+The questions are original practice material, not released or secure College Board questions. Required-document excerpts use public-domain sources except for a short quoted phrase from *Letter from a Birmingham Jail*, which otherwise appears as original paraphrase for commentary and teaching.
 
-This repo includes `.github/workflows/pages.yml`, which auto-builds and deploys on every push to `main`.
+Quantitative sources identify the publisher, dataset or report, date where applicable, and a direct source URL. Visual stimuli are original SVG illustrations shipped with the repository. Question metadata records the effective CED topic and primary multiple-choice skill category.
 
-1. Push this folder to the root of your repo.
-2. In the repo, go to **Settings → Pages**.
-3. Under **Build and deployment**, set **Source** to **"GitHub Actions"**.
-4. Push to `main` (or run the workflow manually from the **Actions** tab).
-5. Your site will be live at `https://erross.github.io/AP-Exam-Practice/` within a minute or two.
+This project is not affiliated with, endorsed by, or reviewed by College Board. “AP” and “Advanced Placement” are College Board trademarks. Scores cover this practice MCQ section only and are not official AP scores.
 
-## File structure
+## Local validation
 
-```
-├── index.html               # all three screens: catalog, exam, results
-├── style.css                 # all styling
-├── js/
-│   ├── app.js                 # generic exam engine — timer, navigator, scoring, results
-│   └── subjects.js             # registry of all 37 subject configs (metadata only)
-├── data/
-│   └── <subject-id>.js          # one file per subject — empty question array + schema doc
-├── PLAN.md                    # full site plan: architecture, subject catalog, timing, roadmap
-└── .github/workflows/pages.yml
+Requires Node.js 22 or later.
+
+```bash
+npm ci
+npm run check
 ```
 
-## Adding questions for a subject
+The release gate audits question schema, complete topic coverage, stimulus-set sizes, source metadata, answer-key tells, exact draw composition, option shuffling, corrupt saved state, accessibility invariants, and draft-bank leakage. It then builds `_site/` and runs the production dependency audit.
 
-Open that subject's `data/<id>.js` file and push objects onto its array:
+## Deployment
 
-```js
-{
-  unit: "U1",                    // optional — for the per-unit results breakdown
-  type: "s",                      // "s" = single-select, "m" = multi-select
-  q: "Question text?",
-  o: ["Option A", "Option B", "Option C", "Option D"],
-  c: [1],                          // index/indices of the correct option(s)
-  e: "One-line rationale shown on the results review page."
-}
-```
+The Pages workflow validates the repository, builds a released-only artifact, and deploys `_site/`. In repository **Settings → Pages**, select **GitHub Actions** as the source once. Subsequent pushes to `main` deploy only after the complete gate passes.
 
-Once a subject's array has at least one question, its catalog card enables automatically — no other changes needed. `js/subjects.js` has each subject's target `mcqCount` (how many questions get drawn per attempt) and `mcqTimeMinutes` (the timer length), both pulled from the real exam's MCQ-section format — see `PLAN.md` for the full table and how it was derived.
+## Adding or releasing a subject
 
-## Accuracy notes
-
-Subject MCQ counts and timings in `js/subjects.js` are a strong starting draft compiled from public exam-format guidance, not a scrape of the current-year AP Course and Exam Description. College Board does occasionally redesign a subject's format — verify against the current CED at apcentral.collegeboard.org before finalizing content for a given subject.
+1. Add original questions to `data/<subject-id>.js` with stable IDs, current CED topic metadata, skill metadata, answer rationale, and source provenance where needed.
+2. Add a subject-specific blueprint when the exam requires particular stimulus types or sections.
+3. Extend the audits and tests for that subject.
+4. Keep `releaseStatus: "draft"` until the complete gate passes.
+5. Change the status to `released`; the build will then include that bank.
 
 ## License
 
-MIT. Not affiliated with, endorsed by, or reviewed by College Board or the AP Program. "AP" and "Advanced Placement" are trademarks of the College Board.
+MIT © 2026 Ewan Ross. See [LICENSE](LICENSE).

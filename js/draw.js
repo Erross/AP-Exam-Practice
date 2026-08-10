@@ -131,13 +131,7 @@
     return blocks;
   }
 
-  /**
-   * Pick exactly `target` questions from `pool`, preferring to take whole
-   * stimulus sets. Falls back to partial sets only when it is the only way to
-   * hit the exact count.
-   *
-   * @returns {Array<Array<object>>} chosen blocks (each an array of questions)
-   */
+  /** Pick exactly `target` questions from a pool without ever splitting a set. */
   function drawBlocks(pool, target, rng) {
     if (target <= 0) return [];
     const blocks = shuffle(toBlocks(pool), rng);
@@ -154,21 +148,111 @@
       }
     }
 
-    if (count < target) {
-      // Top up with leftovers, standalone questions first, then split a set.
-      const leftovers = shuffle(
-        pool.filter((q) => !used.has(q)),
-        rng
-      ).sort((a, b) => (a.stimulusGroupId ? 1 : 0) - (b.stimulusGroupId ? 1 : 0));
-      for (const q of leftovers) {
-        if (count === target) break;
-        chosen.push([q]);
-        used.add(q);
-        count++;
+    return count === target ? chosen : [];
+  }
+
+  function combinations(items, count, rng) {
+    if (count === 0) return [[]];
+    if (items.length < count) return [];
+    const source = shuffle(items, rng);
+    const result = [];
+    function visit(start, picked) {
+      if (picked.length === count) {
+        result.push(picked.slice());
+        return;
+      }
+      for (let i = start; i <= source.length - (count - picked.length); i++) {
+        picked.push(source[i]);
+        visit(i + 1, picked);
+        picked.pop();
       }
     }
+    visit(0, []);
+    return result;
+  }
 
-    return chosen;
+  function stimulusKind(block) {
+    const stimulus = block[0] && block[0].stimulus;
+    if (!stimulus) return "standalone";
+    if (stimulus.type === "document") return "foundational";
+    return stimulus.type;
+  }
+
+  /**
+   * Draw an AP U.S. Government-shaped exam. The blueprint is expressed on the
+   * subject record so this remains data-driven and testable. It selects whole
+   * sets by stimulus type, then fills the exact unit targets with standalone
+   * questions. A missing/undersized pool is a hard failure, not a quiet fallback.
+   */
+  function drawBlueprintExam(subject, bank, targets, rng) {
+    const blueprint = subject.examBlueprint;
+    const blocks = toBlocks(bank);
+    const standaloneByUnit = new Map();
+    (subject.units || []).forEach((u) => standaloneByUnit.set(u.id, []));
+
+    const groupsByKind = { quantitative: [], foundational: [], text: [], visual: [] };
+    blocks.forEach((block) => {
+      const kind = stimulusKind(block);
+      if (kind === "standalone") {
+        const unit = block[0].unit;
+        if (standaloneByUnit.has(unit)) standaloneByUnit.get(unit).push(block);
+      } else if (groupsByKind[kind]) {
+        groupsByKind[kind].push(block);
+      }
+    });
+
+    const requirements = ["quantitative", "foundational", "text", "visual"].map((kind) => ({
+      kind,
+      count: blueprint.sets[kind],
+      choices: combinations(groupsByKind[kind], blueprint.sets[kind], rng),
+    }));
+    requirements.forEach((requirement) => {
+      if (requirement.choices.length === 0) {
+        throw new Error(`Insufficient ${requirement.kind} stimulus sets for the configured exam blueprint`);
+      }
+    });
+
+    let selected = null;
+    function search(index, picked, usedByUnit) {
+      if (selected) return;
+      if (index === requirements.length) {
+        const canFill = (subject.units || []).every((u) => {
+          const needed = targets[u.id] - (usedByUnit[u.id] || 0);
+          return needed >= 0 && standaloneByUnit.get(u.id).length >= needed;
+        });
+        if (canFill) selected = picked.slice();
+        return;
+      }
+      for (const choice of requirements[index].choices) {
+        const nextCounts = { ...usedByUnit };
+        let valid = true;
+        choice.forEach((block) => {
+          const unit = block[0].unit;
+          nextCounts[unit] = (nextCounts[unit] || 0) + block.length;
+          if (nextCounts[unit] > (targets[unit] || 0)) valid = false;
+        });
+        if (valid) search(index + 1, picked.concat(choice), nextCounts);
+        if (selected) return;
+      }
+    }
+    search(0, [], {});
+    if (!selected) throw new Error("No whole-set draw can satisfy both the stimulus and unit blueprints");
+
+    const usedByUnit = {};
+    selected.forEach((block) => {
+      usedByUnit[block[0].unit] = (usedByUnit[block[0].unit] || 0) + block.length;
+    });
+    const finalBlocks = selected.slice();
+    (subject.units || []).forEach((u) => {
+      const needed = targets[u.id] - (usedByUnit[u.id] || 0);
+      finalBlocks.push(...shuffle(standaloneByUnit.get(u.id), rng).slice(0, needed));
+    });
+
+    const result = shuffle(finalBlocks, rng).flat();
+    if (result.length !== subject.mcqCount) {
+      throw new Error(`Blueprint draw produced ${result.length}; expected ${subject.mcqCount}`);
+    }
+    return result;
   }
 
   /**
@@ -180,7 +264,11 @@
    * @returns {Array} questions in delivered order (options not yet shuffled)
    */
   function drawExam(subject, bank, rng) {
-    const drawCount = Math.min(subject.mcqCount || bank.length, bank.length);
+    const requestedCount = subject.mcqCount || bank.length;
+    if (bank.length < requestedCount) {
+      throw new Error(`Question bank has ${bank.length} questions; ${requestedCount} are required`);
+    }
+    const drawCount = requestedCount;
     const units = Array.isArray(subject.units) ? subject.units : [];
 
     // No unit metadata (most subjects, so far): fall back to a flat random draw,
@@ -206,26 +294,18 @@
       drawCount
     );
 
+    if (subject.examBlueprint) return drawBlueprintExam(subject, bank, targets, rng);
+
     let blocks = [];
     units.forEach((u) => {
       blocks = blocks.concat(drawBlocks(byUnit.get(u.id), targets[u.id] || 0, rng));
     });
 
-    // If unit pools couldn't cover mcqCount, backfill from anything left over so
-    // the student still gets a full-length exam.
+    // If a weighted pool cannot cover the configured draw, fail visibly. Quietly
+    // borrowing from another unit would make the delivered blueprint untrue.
     let placed = blocks.reduce((n, b) => n + b.length, 0);
     if (placed < drawCount) {
-      const chosen = new Set(blocks.flat());
-      const spare = shuffle(
-        bank.concat(orphans).filter((q) => !chosen.has(q)),
-        rng
-      );
-      for (const q of spare) {
-        if (placed >= drawCount) break;
-        blocks.push([q]);
-        chosen.add(q);
-        placed++;
-      }
+      throw new Error(`Weighted draw could place only ${placed} of ${drawCount} questions`);
     }
 
     return shuffle(blocks, rng).flat();
@@ -247,8 +327,18 @@
     const c = order
       .map((originalIndex, newIndex) => (correctSet.has(originalIndex) ? newIndex : null))
       .filter((v) => v !== null);
-    return { o, c };
+    return { o, c, order };
   }
 
-  return { shuffle, apportion, toBlocks, drawBlocks, drawExam, shuffleQuestionOptions };
+  return {
+    shuffle,
+    apportion,
+    toBlocks,
+    drawBlocks,
+    combinations,
+    stimulusKind,
+    drawBlueprintExam,
+    drawExam,
+    shuffleQuestionOptions,
+  };
 });

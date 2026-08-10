@@ -1,0 +1,15 @@
+{
+  "name": "ap-exam-practice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unofficial AP multiple-choice practice exams",
+  "scripts": {
+    "audit": "node tools/audit.js",
+    "test": "node --test",
+    "build": "node tools/build.js",
+    "test:artifact": "node tools/artifact-check.js",
+    "check": "npm run audit && npm test && npm run build && npm run test:artifact && npm audit --omit=dev"
+  },
+  "engines": { "node": ">=22" },
+  "license": "MIT"
+}

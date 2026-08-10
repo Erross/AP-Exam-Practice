@@ -63,7 +63,7 @@
 //     { type: "text",         title, source, text }         other text / qualitative source
 //     { type: "quantitative", title, source, columns, rows }  data table
 //     { type: "visual",       title, source, description }  described cartoon / map / infographic
-//                                                            (this app ships no image assets)
+//                                                            with image/alt/description metadata
 //
 //   Every question in a set carries the same stimulus object and the same
 //   stimulusGroupId; js/app.js renders the source once, above the question, with a
@@ -128,16 +128,14 @@ const S_GETTYSBURG = {
 const S_GRANTS = {
   type: "quantitative",
   title: "Federal grants-in-aid to state and local governments, selected years",
-  source:
-    "Illustrative figures compiled for this practice set from federal budget historical tables; " +
-    "rounded and simplified for analysis practice.",
-  columns: ["Fiscal year", "Total grants (billions of current dollars)", "Share that is categorical", "Share of state/local revenue"],
+  source: "Office of Management and Budget, Historical Table 12.2, Outlays for Grants to State and Local Governments (current dollars), https://www.whitehouse.gov/omb/budget/historical-tables/",
+  columns: ["Fiscal year", "Federal grant outlays (billions of current dollars)"],
   rows: [
-    ["1980", "$91", "About 80%", "About 26%"],
-    ["1990", "$135", "About 88%", "About 20%"],
-    ["2000", "$285", "About 89%", "About 22%"],
-    ["2010", "$608", "About 92%", "About 31%"],
-    ["2020", "$721", "About 92%", "About 30%"],
+    ["1980", "$91.4"],
+    ["1990", "$135.3"],
+    ["2000", "$285.9"],
+    ["2010", "$608.4"],
+    ["2020", "$828.9"],
   ],
 };
 
@@ -169,15 +167,13 @@ const S_FED78 = {
 
 const S_BIRMINGHAM = {
   type: "text",
-  title: "\"Letter from a Birmingham Jail\" (1963) — brief excerpt for commentary and teaching",
+  title: "Argument in \"Letter from a Birmingham Jail\" (1963)",
   source: "Martin Luther King Jr., written from the Birmingham city jail, April 16, 1963",
   text:
-    "One may well ask: 'How can you advocate breaking some laws and obeying others?' The answer lies in the fact that " +
-    "there are two types of laws: just and unjust. … A just law is a man-made code that squares with the moral law … " +
-    "An unjust law is a code that a numerical or power majority group compels a minority group to obey but does not " +
-    "make binding on itself. … An individual who breaks a law that conscience tells him is unjust, and who willingly " +
-    "accepts the penalty of imprisonment in order to arouse the conscience of the community over its injustice, is in " +
-    "reality expressing the highest respect for law.",
+    "King distinguishes just from unjust laws by asking whether a rule accords with moral law and whether a majority " +
+    "imposes it on a minority without accepting the same rule itself. He defends open, nonviolent civil disobedience " +
+    "when the protester accepts the legal penalty to expose injustice. In his words, this can express \"the highest " +
+    "respect for law.\"",
 };
 
 const S_EMANCIPATION = {
@@ -205,31 +201,70 @@ const S_WEALTH = {
 
 const S_BILLDATA = {
   type: "quantitative",
-  title: "Outcomes of bills introduced in the U.S. House, selected Congresses",
-  source:
-    "Illustrative figures compiled for this practice set to approximate typical patterns reported by the " +
-    "Congressional Research Service; rounded and simplified for analysis practice, not official totals for a specific Congress.",
-  columns: ["Congress (illustrative)", "Bills introduced", "Reported out of committee", "Enacted into law"],
+  title: "Party division at the opening of the 118th Congress (January 3, 2023)",
+  source: "U.S. House of Representatives, 118th Congress profile, and U.S. Senate Historical Office party-division tables; https://history.house.gov/Congressional-Overview/Profiles/118th/ and https://www.senate.gov/history/partydiv.htm",
+  columns: ["Chamber", "Republicans", "Democrats", "Independents", "Vacancies"],
   rows: [
-    ["A", "~9,000", "~600", "~330"],
-    ["B", "~10,500", "~550", "~310"],
-    ["C", "~11,000", "~500", "~270"],
+    ["House", "222", "212", "0", "1"],
+    ["Senate", "49", "48", "3", "0"],
   ],
 };
 
 const S_TURNOUT = {
   type: "quantitative",
-  title: "Voter turnout (voting-age population), presidential vs. midterm election years",
-  source:
-    "Illustrative figures approximating typical modern U.S. turnout patterns reported by the U.S. Census Bureau and " +
-    "academic turnout trackers; rounded and simplified for analysis practice, not exact totals for specific years.",
-  columns: ["Election year (illustrative)", "Election type", "Turnout (% of voting-age population)"],
+  title: "Reported voter turnout in selected federal elections",
+  source: "U.S. Census Bureau, Current Population Survey voting and registration reports, https://www.census.gov/topics/public-sector/voting/data/tables.html",
+  columns: ["Election year", "Election type", "Reported turnout (% of citizen voting-age population)"],
   rows: [
-    ["Year 1", "Presidential", "~60%"],
-    ["Year 2", "Midterm", "~40%"],
-    ["Year 3", "Presidential", "~62%"],
-    ["Year 4", "Midterm", "~47%"],
+    ["2016", "Presidential", "61.4%"],
+    ["2018", "Midterm", "53.4%"],
+    ["2020", "Presidential", "66.8%"],
+    ["2022", "Midterm", "52.2%"],
+    ["2024", "Presidential", "65.3%"],
   ],
+};
+
+const S_TRUST = {
+  type: "quantitative",
+  title: "Trust in the federal government, June 2024",
+  source: "Pew Research Center, national survey conducted June 3–9, 2024, https://www.pewresearch.org/politics/2024/06/24/americans-trust-in-federal-government-and-attitudes-toward-it/",
+  columns: ["Group", "Trust government always/most of the time"],
+  rows: [["All adults", "22%"], ["Democrats/Democratic leaners", "35%"], ["Republicans/Republican leaners", "About 10%"]],
+};
+
+const S_CAMPAIGN_FINANCE = {
+  type: "quantitative",
+  title: "Federal campaign activity, 2023–2024 election cycle",
+  source: "Federal Election Commission, 24-month statistical summary published April 23, 2025, https://www.fec.gov/updates/statistical-summary-of-24-month-campaign-activity-of-the-2023-2024-election-cycle/",
+  columns: ["Political actor", "Receipts", "Disbursements"],
+  rows: [["Congressional candidates", "$3.8 billion", "$3.7 billion"], ["Political party committees", "$2.7 billion", "$2.6 billion"], ["PACs", "$15.7 billion", "$15.5 billion"], ["Independent expenditures (reported)", "—", "$4.4 billion"]],
+};
+
+const S_VISUAL_PRESIDENT = {
+  type: "visual",
+  title: "From one address to many channels",
+  source: "Original illustration created for AP Exam Practice; not official College Board material.",
+  image: "assets/presidential-communication.svg",
+  alt: "A president at a podium sends one message simultaneously toward a television, a smartphone, a newspaper, and the Capitol.",
+  description: "The same presidential message reaches several audiences and institutions at once through modern media.",
+};
+
+const S_VISUAL_EQUAL = {
+  type: "visual",
+  title: "Competing claims in an affirmative-action case",
+  source: "Original illustration created for AP Exam Practice; not official College Board material.",
+  image: "assets/equal-protection-balance.svg",
+  alt: "A balance scale places individual equal-protection claims on one side and policies addressing group disparities on the other, with the Fourteenth Amendment above it.",
+  description: "The illustration presents the constitutional tension courts consider in debates over affirmative-action policy.",
+};
+
+const S_VISUAL_MEDIA = {
+  type: "visual",
+  title: "The shrinking news spotlight",
+  source: "Original illustration created for AP Exam Practice; not official College Board material.",
+  image: "assets/media-spotlight.svg",
+  alt: "A large news spotlight illuminates one issue card labeled Issue A while three other issue cards remain outside the beam.",
+  description: "The illustration emphasizes that repeated coverage can make one issue more visible than competing concerns.",
 };
 
 // ---------------------------------------------------------------------------
@@ -553,9 +588,9 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     stimulusGroupId: "apgov-g-grants",
     stimulus: S_GRANTS,
     q: "Which statement is best supported by the data in the table?",
-    o: ["Federal grants fell as a share of state and local revenue in every decade shown", "Total grants roughly doubled between 1980 and 2020 while the categorical share declined", "Total grants rose at each observation, and the categorical share rose from 1980 to 2020", "Block grants overtook categorical grants as the dominant form of federal aid to states after 1990"],
-    c: [2],
-    e: "Reading the table directly: totals rise at every observation, and the categorical share rises from about 80% to about 92%, so categorical grants remained dominant throughout. Totals grew roughly eightfold rather than doubling, the categorical share rose rather than declining, and the revenue share fluctuated rather than falling steadily.",
+    o: ["Grant outlays declined between 1990 and 2000 before rising during the next decade", "Grant outlays rose at every selected observation and were about nine times larger in 2020 than in 1980", "Grant outlays stayed below $300 billion until 2020 and then more than doubled in one year", "The table shows that grants rose faster than inflation in every decade represented"],
+    c: [1],
+    e: "The current-dollar total rises at each selected observation, from $91.4 billion in 1980 to $828.9 billion in 2020, about a ninefold increase. The table does not provide an inflation series, so it cannot establish the rate of real growth.",
   },
 
   {
@@ -565,10 +600,10 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     type: "s",
     stimulusGroupId: "apgov-g-grants",
     stimulus: S_GRANTS,
-    q: "A political scientist uses this table to argue that federal influence over state policy has grown. Which feature of the data most directly supports that argument?",
-    o: ["The five fiscal years shown are spaced ten years apart across four full decades", "The share of state and local revenue was lower in 1990 than it had been in 1980", "Rising dollar totals combined with a rising categorical share, since categorical grants carry conditions", "The table reports totals in current dollars rather than in inflation-adjusted dollars"],
+    q: "Which conclusion about federal influence over state policy can be drawn most defensibly from this table alone?",
+    o: ["The national government gained greater policy control because every dollar shown carried a categorical condition", "States became fiscally dependent because grants exceeded half of all state and local revenue by 2020", "The nominal scale of federal support grew, but the table alone does not show the conditions attached or states' dependence", "The federal balance shifted toward states because larger grant totals necessarily indicate greater state discretion"],
     c: [2],
-    e: "Influence follows from conditions, not dollars alone: more money delivered through more heavily conditioned categorical grants means more federal leverage over state choices. The 1990 dip in the revenue share and the use of unadjusted current dollars both cut against the argument, and the spacing of the observations is not evidence either way.",
+    e: "The table establishes growth in nominal grant outlays. It does not distinguish categorical from block grants, report state and local revenue, or measure the conditions attached, so broader claims about control or dependence require additional evidence.",
   },
 
   {
@@ -581,7 +616,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     q: "Which is the most significant limitation of using this table to measure the balance of power between the national and state governments?",
     o: ["Grants-in-aid have no bearing on the federal balance, since states may decline to accept them", "It reports only three of the five decades in which federal grants-in-aid have existed", "It measures grants per capita, which understates the aid flowing to less populous states", "It uses current dollars and captures fiscal tools alone, omitting mandates, preemption, and court rulings"],
     c: [3],
-    e: "Two real limits: unadjusted current dollars overstate real growth, and money is one instrument among several — unfunded mandates, statutory preemption, and Supreme Court doctrine also move the federal-state balance and appear nowhere in the table. The table reports aggregate dollars rather than per capita figures, it lists five years rather than three, and the formal voluntariness of grants does not make them irrelevant, since states rarely forgo sums this large.",
+    e: "Two real limits are visible: current dollars do not adjust for inflation, and money is only one instrument of federalism. Mandates, statutory preemption, and Supreme Court doctrine also affect the national-state balance but appear nowhere in the table.",
   },
 
   {
@@ -663,9 +698,9 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     type: "s",
     stimulusGroupId: null,
     q: "Which pairing correctly matches a presidential power with whether the Constitution grants it explicitly?",
-    o: ["Vetoing legislation — an informal power that developed through presidential custom", "Issuing executive orders — a formal power listed by name in Article II", "Using the bully pulpit — a formal power that Article II conditions on Senate approval", "Negotiating treaties — a formal power flowing from Article II's grant of executive power and diplomatic role"],
+    o: ["Vetoing legislation — an informal power that developed through presidential custom", "Issuing executive orders — a formal power listed by name in Article II", "Using the bully pulpit — a formal power that Article II conditions on Senate approval", "Negotiating treaties — an express Article II power exercised with the advice and consent of the Senate"],
     c: [3],
-    e: "Article II's grant of executive power and the president's role as chief diplomat are the textual basis for negotiating treaties, though ratification requires a separate two-thirds Senate vote. The veto is explicit in Article I, Section 7 rather than a matter of custom; executive orders are nowhere named in the text and rest on implied authority from the executive-power and take-care clauses; and the bully pulpit is an informal tool requiring no Senate role.",
+    e: "Article II expressly authorizes the president to make treaties with the advice and consent of two-thirds of senators present. The veto is explicit in Article I, Section 7 rather than a matter of custom; executive orders are nowhere named in the text and must rest on constitutional or delegated authority; and the bully pulpit is an informal tool requiring no Senate role.",
   },
 
   {
@@ -735,7 +770,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     type: "s",
     stimulusGroupId: null,
     q: "Alexander Hamilton called the judiciary 'the least dangerous branch' because it has 'neither FORCE nor WILL, but merely judgment.' Which modern example most directly illustrates the vulnerability Hamilton described?",
-    o: ["A Senate that declines to hold confirmation hearings on a president's judicial nominee", "A president deploying federal marshals so that a desegregation ruling takes effect over a governor's resistance", "A justice who writes a lengthy dissent criticizing the majority's constitutional reasoning", "A Congress that adds seats to a lower federal court to shift its ideological balance"],
+    o: ["A Senate that declines to hold confirmation hearings on a president's judicial nominee", "A president using federal troops and the federalized National Guard to enforce a desegregation order", "A justice who writes a lengthy dissent criticizing the majority's constitutional reasoning", "A Congress that adds seats to a lower federal court to shift its ideological balance"],
     c: [1],
     e: "The Court has no independent enforcement mechanism; its rulings depend on the executive branch's willingness to carry them out, as in the Little Rock desegregation crisis — precisely Hamilton's 'neither force nor will' point. Blocked nominations and court expansion are checks on the judiciary's composition rather than on the enforceability of its judgments, and a dissent has no bearing on enforcement at all.",
   },
@@ -844,27 +879,27 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
   {
     id: "apgov-u2-022",
     unit: "U2",
-    topic: "2.2 Reading data on congressional bill outcomes",
+    topic: "2.1 Reading data on congressional composition",
     type: "s",
     stimulusGroupId: "apgov-g-billdata",
     stimulus: S_BILLDATA,
     q: "Which statement is best supported by the data in the table?",
-    o: ["Most introduced bills never reach a floor vote, consistent with committees' gatekeeping role", "Bills reported out of committee were rarely enacted, so floor votes are the main obstacle", "Introductions fell steadily while the number of bills enacted rose across the three Congresses", "More bills were enacted into law than were reported out of committee in each Congress"],
+    o: ["Republicans held a House majority, while Democrats could organize the Senate with independent support", "Democrats held outright numerical majorities in both the House and the Senate", "Republicans held exactly the same share of seats in each congressional chamber", "Neither chamber could organize because vacancies prevented either party from reaching a majority"],
     c: [0],
-    e: "In every Congress shown, a small fraction of introduced bills are reported out of committee, and fewer still are enacted — direct evidence of committees' gatekeeping function. Roughly half of the bills reported out did become law, introductions rose rather than fell while enactments fell, and enactments were always well below the number reported.",
+    e: "Republicans held 222 of the 434 filled House seats. In the Senate, the 48 Democrats and three independents who caucused with them allowed Democrats to organize the chamber despite Republicans holding 49 seats.",
   },
 
   {
     id: "apgov-u2-023",
     unit: "U2",
-    topic: "2.2 Explaining the committee gatekeeping pattern in the data",
+    topic: "2.1 Evaluating congressional composition data",
     type: "s",
     stimulusGroupId: "apgov-g-billdata",
     stimulus: S_BILLDATA,
-    q: "A student argues the low enactment rate shown in the table proves Congress is 'failing to do its job.' Which is the strongest evidence-based objection to that claim?",
-    o: ["Committees are designed to filter proposals, so a low enactment rate can reflect screening", "Bills that die in committee are usually withdrawn by their sponsors before any vote", "Most bills that fail in committee are later enacted as riders on appropriations measures", "The table shows the Senate enacted more measures than the House in each Congress listed"],
+    q: "Which is the most important limitation of using this table to predict legislative outcomes during the entire 118th Congress?",
+    o: ["Opening-day membership does not capture later vacancies, replacements, party unity, coalitions, or procedural rules", "The table reports party membership rather than the constitutional age requirements for serving", "The table combines senators and representatives even though both groups cast votes in the same chamber", "Opening-day figures cannot identify which party had more members in either chamber"],
     c: [0],
-    e: "A low pass rate is the expected output of a system in which committees deliberately screen proposals and most legislation requires broad coalition-building to advance — evidence of the process working as designed rather than proof of failure. Bills that die in committee are typically just never acted on rather than withdrawn or revived in appropriations bills, and the table reports House data alone.",
+    e: "A membership snapshot identifies formal party numbers but not later changes or how consistently members vote together. Institutional rules such as the Senate filibuster also affect outcomes beyond simple seat totals.",
   },
 
   {
@@ -957,7 +992,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "3.5 McDonald v. City of Chicago (2010) and incorporation of the Second Amendment",
     type: "s",
     stimulusGroupId: null,
-    q: "McDonald v. City of Chicago (2010) is significant primarily because it",
+    q: "McDonald v. City of Chicago (2010) is significant primarily because",
     o: ["It read the Second Amendment as protecting a collective right belonging to organized state militias", "It held that firearms regulation is committed to the states and outside federal judicial review", "It incorporated the Second Amendment against state and local governments through the Fourteenth", "It first recognized an individual right to keep and bear arms unconnected to militia service"],
     c: [2],
     e: "McDonald extended Heller's individual-rights reading of the Second Amendment so that it binds state and local governments as well as the federal government. Heller, decided two years earlier, is what first recognized the individual right; the Court rejected a militia-only reading; and McDonald brought state firearms laws further within federal judicial review rather than removing them from it.",
@@ -1375,7 +1410,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     q: "Which statement correctly compares a traditional PAC, a Super PAC, and the holding of Citizens United v. FEC (2010)?",
     o: ["Traditional PACs and Super PACs face identical rules, since Citizens United removed limits on direct contributions", "Super PACs may coordinate freely with campaigns, since Citizens United treated coordinated spending as protected speech", "Traditional PACs give limited amounts to candidates; Super PACs, enabled by Citizens United, spend unlimited sums independently", "Traditional PACs are limited to independent spending, while Citizens United let Super PACs give directly to candidates"],
     c: [2],
-    e: "Contribution limits still apply to money given directly to candidates, which is what traditional PACs do. Citizens United held that independent political expenditures by corporations and unions are protected speech, and that holding is what enabled Super PACs, which may raise and spend unlimited sums independently but may neither coordinate with a campaign nor contribute to a candidate's own account.",
+    e: "Traditional PACs may contribute limited amounts directly to candidates. Citizens United protected corporate and union independent expenditures; SpeechNow.org v. FEC then applied that reasoning to hold that independent-expenditure-only groups may accept unlimited contributions. Those groups, now called Super PACs, may not contribute to or coordinate spending with candidates.",
   },
 
   {
@@ -1439,4 +1474,264 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     c: [1],
     e: "Higher salience, heavier coverage, and more intense party mobilization in presidential years are the standard explanations for the turnout gap, directly connecting Unit 5's turnout data to the media's agenda-setting role and parties' mobilization function. The voting-age population does not expand in midterm years, registration rules do not change with the election cycle, and midterm ballots still feature contested House, Senate, and state races.",
   },
+
+  {
+    id: "apgov-u2-024", unit: "U2", topic: "2.7 Presidential Communication", topicCode: "2.7", skill: "4",
+    type: "s", stimulusGroupId: "apgov-g-visual-president", stimulus: S_VISUAL_PRESIDENT,
+    q: "Which development in presidential communication is most directly represented by the visual?",
+    o: ["Presidents can address the national constituency rapidly through several media channels", "Congress can require private news organizations to carry every presidential address", "Presidents now communicate with voters without relying on professional news coverage", "Courts review presidential messages before the public receives them through digital media"],
+    c: [0],
+    e: "Modern television and digital platforms let presidents communicate rapidly and simultaneously with a national audience. News organizations remain independent, courts do not preclear political messages, and presidents still depend partly on intermediaries even when they also use direct channels.",
+  },
+  {
+    id: "apgov-u2-025", unit: "U2", topic: "2.7 Presidential Communication", topicCode: "2.7", skill: "4",
+    type: "s", stimulusGroupId: "apgov-g-visual-president", stimulus: S_VISUAL_PRESIDENT,
+    q: "A president uses the communication pattern in the visual to keep one proposal at the center of public debate. This is an example of",
+    o: ["signing-statement authority used to change how an enacted statute will be enforced", "the bully pulpit used to set the national policy agenda and pressure Congress", "executive privilege used to withhold internal deliberations from congressional committees", "the pardon power used to signal a change in the administration's enforcement priorities"],
+    c: [1],
+    e: "The bully pulpit is the president's informal capacity to use visibility and media attention to shape the public agenda and build pressure on other institutions. The other choices are distinct formal or claimed presidential powers.",
+  },
+  {
+    id: "apgov-u3-019", unit: "U3", topic: "3.13 Affirmative Action", topicCode: "3.13", skill: "4",
+    type: "s", stimulusGroupId: "apgov-g-visual-equal", stimulus: S_VISUAL_EQUAL,
+    q: "The constitutional debate represented by the balance scale centers primarily on which provision?",
+    o: ["The Equal Protection Clause of the Fourteenth Amendment", "The Establishment Clause of the First Amendment", "The Takings Clause of the Fifth Amendment", "The Privileges and Immunities Clause of Article IV"],
+    c: [0],
+    e: "Affirmative-action litigation focuses on whether classifications used to address disparities comply with the Fourteenth Amendment's Equal Protection Clause. The other provisions concern religion, property compensation, or discrimination against out-of-state citizens.",
+  },
+  {
+    id: "apgov-u3-020", unit: "U3", topic: "3.13 Affirmative Action", topicCode: "3.13", skill: "4",
+    type: "s", stimulusGroupId: "apgov-g-visual-equal", stimulus: S_VISUAL_EQUAL,
+    q: "Which statement best explains why the two sides of the visual can produce competing constitutional claims?",
+    o: ["Policies addressing group disparities may themselves classify individuals, prompting equal-protection review", "The Fourteenth Amendment bars federal courts from reviewing state education and employment policies", "Equal protection requires every public institution to produce identical demographic outcomes", "Affirmative-action disputes concern only statutory language and do not raise constitutional questions"],
+    c: [0],
+    e: "Remedial policies can pursue equality while using classifications that affect individuals differently, which creates the equal-protection question shown by the scale. Equal protection does not guarantee identical outcomes, and courts may review such government policies.",
+  },
+  {
+    id: "apgov-u4-015", unit: "U4", topic: "4.4 Influence of Political Events on Ideology", topicCode: "4.4", skill: "3",
+    type: "s", stimulusGroupId: "apgov-g-trust", stimulus: S_TRUST,
+    q: "Which comparison is supported by the survey data?",
+    o: ["Republican-aligned adults reported about the same trust as the national public", "Democratic-aligned adults reported substantially more trust than Republican-aligned adults", "A majority of each partisan group trusted the federal government always or most of the time", "Adults without a party preference reported more trust than either major-party group"],
+    c: [1],
+    e: "The reported 35 percent among Democratic-aligned adults is substantially above the approximately 10 percent among Republican-aligned adults. Neither group reaches a majority, and the table provides no separate figure for unaffiliated adults.",
+  },
+  {
+    id: "apgov-u4-016", unit: "U4", topic: "4.4 Influence of Political Events on Ideology", topicCode: "4.4", skill: "3",
+    type: "s", stimulusGroupId: "apgov-g-trust", stimulus: S_TRUST,
+    q: "Which course concept offers the strongest explanation for the partisan gap shown in the table?",
+    o: ["People often evaluate institutions differently depending on whether their party controls the presidency", "Political socialization produces identical institutional attitudes within every generation", "Random sampling guarantees that partisan groups will report the same level of trust", "Federalism causes national institutions to receive lower ratings than every state institution"],
+    c: [0],
+    e: "Public trust often shifts with partisan control of the presidency: identifiers of the president's party tend to express greater trust than identifiers of the out-party. Sampling does not force identical subgroup views, and the table makes no state-national comparison.",
+  },
+  {
+    id: "apgov-u4-017", unit: "U4", topic: "4.6 Evaluating Public Opinion Data", topicCode: "4.6", skill: "3",
+    type: "s", stimulusGroupId: "apgov-g-trust", stimulus: S_TRUST,
+    q: "Which additional information is most important before deciding whether the partisan difference is statistically distinguishable?",
+    o: ["The number of news stories published about government during the survey week", "The sample sizes and margins of error for the two partisan subgroups", "The number of federal employees living in every respondent's county", "The percentage of elected officials who approved of the survey question"],
+    c: [1],
+    e: "Subgroup sample sizes and margins of error are necessary to evaluate sampling uncertainty around the observed gap. News volume, local employment, and officials' reactions do not establish statistical distinguishability.",
+  },
+  {
+    id: "apgov-u5-016", unit: "U5", topic: "5.11 Campaign Finance", topicCode: "5.11", skill: "3",
+    type: "s", stimulusGroupId: "apgov-g-campaign-finance", stimulus: S_CAMPAIGN_FINANCE,
+    q: "Which statement is best supported by the FEC summary?",
+    o: ["Political party committees spent more than PACs during the cycle", "Congressional candidates received more than all PACs combined", "PAC receipts and disbursements exceeded those reported for the other listed actors", "Independent expenditures were included as contributions made directly to candidates"],
+    c: [2],
+    e: "PAC receipts and disbursements were about $15.7 and $15.5 billion, respectively, well above the candidate and party totals shown. Independent expenditures are spending made without candidate coordination, not direct candidate contributions.",
+  },
+  {
+    id: "apgov-u5-017", unit: "U5", topic: "5.11 Campaign Finance", topicCode: "5.11", skill: "3",
+    type: "s", stimulusGroupId: "apgov-g-campaign-finance", stimulus: S_CAMPAIGN_FINANCE,
+    q: "Which limitation most constrains using this table to determine who had the greatest influence on election outcomes?",
+    o: ["The dollar totals do not reveal persuasion effects, coordination rules, electoral targets, or whether spending changed votes", "The table reports both receipts and spending, making comparisons between political actors impossible", "The FEC lacks constitutional authority to collect campaign-finance reports from federal committees", "The totals exclude all spending by congressional candidates and national political parties"],
+    c: [0],
+    e: "Financial volume is not a direct measure of political effect. The table does not show targeting, message effectiveness, coordination status for each expenditure, or counterfactual election outcomes.",
+  },
+  {
+    id: "apgov-u5-018", unit: "U5", topic: "5.12 The Media", topicCode: "5.12", skill: "4",
+    type: "s", stimulusGroupId: "apgov-g-visual-media", stimulus: S_VISUAL_MEDIA,
+    q: "Which media effect is represented most directly by the spotlight in the visual?",
+    o: ["Agenda setting, because coverage can raise the perceived importance of one issue", "Prior restraint, because editors must obtain approval before publishing political news", "Selective incorporation, because media rights bind state and local governments", "Horse-race journalism, because every issue is presented as a contest between candidates"],
+    c: [0],
+    e: "Agenda setting describes the media's capacity to influence which issues audiences regard as important by giving some matters more attention. Nothing in the visual concerns censorship, incorporation, or poll-centered campaign coverage.",
+  },
+  {
+    id: "apgov-u5-019", unit: "U5", topic: "5.13 Changing Media", topicCode: "5.13", skill: "4",
+    type: "s", stimulusGroupId: "apgov-g-visual-media", stimulus: S_VISUAL_MEDIA,
+    q: "How can a fragmented digital-media environment alter the process represented in the visual?",
+    o: ["Different audiences may encounter different issue spotlights because algorithms and selective exposure segment attention", "Digital platforms eliminate agenda setting because every user receives the same complete list of public issues", "Social media prevents candidates and officials from communicating without approval from traditional editors", "Fragmentation requires news organizations to allocate identical coverage time to every policy question"],
+    c: [0],
+    e: "Digital fragmentation can create distinct agendas for different audiences as algorithms, platform choices, and selective exposure shape which issues each group sees. It does not standardize attention or require traditional editorial approval.",
+  },
+  {
+    id: "apgov-u5-020", unit: "U5", topic: "5.1 Voting Rights and Models of Voting Behavior", topicCode: "5.1", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A voter supports the incumbent after deciding that employment and household income improved during the incumbent's term. Which model best describes the decision?",
+    o: ["Prospective voting based on the challenger's promised future program", "Retrospective voting based on the incumbent's past performance", "Party-line voting based solely on a long-standing partisan identity", "Rational abstention based on the perceived cost of reaching the polls"],
+    c: [1], e: "Retrospective voters judge incumbents by past performance. Prospective voters emphasize future promises; party-line voting relies on party identity rather than the performance evidence described.",
+  },
+  {
+    id: "apgov-u5-021", unit: "U5", topic: "5.4 How and Why Political Parties Change and Adapt", topicCode: "5.4", skill: "1", type: "s", stimulusGroupId: null,
+    q: "After a critical election shifts a durable bloc of voters toward the opposing party, party leaders revise their platform and use voter data to appeal to the new coalition. This best illustrates",
+    o: ["party realignment followed by organizational and message adaptation", "divided government followed by mandatory coalition government", "selective incorporation followed by national policy preemption", "judicial restraint followed by congressional delegation"],
+    c: [0], e: "A durable shift in party support is realignment. Parties then adapt policy, messaging, technology, and coalition strategy to compete under the new alignment.",
+  },
+  {
+    id: "apgov-u5-022", unit: "U5", topic: "5.5 Third-Party Politics", topicCode: "5.5", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Why do single-member plurality districts create a barrier for third-party candidates?",
+    o: ["They reserve ballot access for candidates nominated by the two largest parties", "They encourage strategic voting for a major-party candidate who has a realistic chance to win", "They allocate seats proportionally, leaving small parties without geographic concentrations", "They require third parties to win a national popular majority before receiving any local seats"],
+    c: [1], e: "Winner-take-all plurality rules encourage voters to avoid a candidate perceived as unable to finish first, reinforcing two-party competition. Ballot rules can add barriers, but plurality districts do not formally reserve access or require a national majority.",
+  },
+  {
+    id: "apgov-u5-023", unit: "U5", topic: "5.9 Congressional Elections", topicCode: "5.9", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Which factor most directly contributes to the incumbency advantage in congressional elections?",
+    o: ["Incumbents can claim credit for constituent service and district projects while benefiting from name recognition", "Incumbents automatically receive their party's nomination without facing a primary challenger", "Federal law gives incumbents more broadcast advertising time than challengers at the same price", "The Constitution allows incumbents to redraw their own districts before every election"],
+    c: [0], e: "Casework, credit claiming, fundraising networks, and name recognition benefit incumbents. They can face primaries, receive no special advertising allotment, and do not individually control redistricting.",
+  },
+  {
+    id: "apgov-u5-024", unit: "U5", topic: "5.10 Modern Campaigns", topicCode: "5.10", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A campaign hires consultants to test messages, targets narrow voter segments with digital advertising, and devotes substantial candidate time to fundraising. Which feature of modern campaigns does this scenario illustrate?",
+    o: ["Candidate-centered professionalization accompanied by rising costs and data-driven strategy", "Party-centered nominations controlled almost entirely by national convention delegates", "A return to short election cycles with limited reliance on professional staff", "Public financing that eliminates the need for private fundraising and targeted media"],
+    c: [0], e: "Modern campaigns are increasingly candidate centered, consultant driven, expensive, long, and reliant on data targeting. The scenario describes those characteristics rather than party control or comprehensive public financing.",
+  },
+  {
+    id: "apgov-u5-025", unit: "U5", topic: "5.13 Changing Media", topicCode: "5.13", skill: "1", type: "s", stimulusGroupId: null,
+    q: "A citizen follows only ideologically congenial accounts, while a platform repeatedly recommends similar political content. Which consequence of changing media is most directly illustrated?",
+    o: ["Selective exposure can reinforce polarization by limiting encounters with cross-cutting information", "The fairness doctrine requires the platform to provide equal time to competing viewpoints", "Prior restraint permits the government to remove inaccurate political opinions before publication", "Agenda setting disappears because digital users no longer receive political information"],
+    c: [0], e: "Selective exposure and algorithmic recommendation can produce ideologically homogeneous information environments and reinforce polarization. The fairness doctrine does not govern social platforms, and digital media do not eliminate agenda setting.",
+  },
+  {
+    id: "apgov-u2-026", unit: "U2", topic: "2.11 Checks on the Judicial Branch", topicCode: "2.11", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Which action is a constitutional check that the elected branches can exercise on the federal judiciary?",
+    o: ["The Senate may confirm or reject the president's nominees for federal judgeships", "The president may reverse a Supreme Court judgment through an executive order", "The House may remove a justice by passing a resolution with a simple majority", "Congress may require the Court to obtain legislative approval before invalidating a statute"],
+    c: [0], e: "The Senate's advice-and-consent power checks judicial appointments. Removal requires House impeachment and Senate conviction, while neither Congress nor the president may directly reverse a constitutional judgment through ordinary action.",
+  },
+  {
+    id: "apgov-u2-027", unit: "U2", topic: "2.12 The Bureaucracy", topicCode: "2.12", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Which statement best describes the federal bureaucracy's role in policymaking?",
+    o: ["Departments and agencies implement statutes through administration, enforcement, and specialized expertise", "Independent commissions write statutes that take effect without congressional authorization", "Government corporations decide constitutional disputes that arise from agency enforcement", "Cabinet departments exercise only advisory functions and do not administer federal programs"],
+    c: [0], e: "Federal departments, agencies, commissions, and government corporations implement policy through administration, enforcement, expertise, and rulemaking under statutory authority. They do not enact statutes or exercise the judiciary's constitutional role.",
+  },
+  {
+    id: "apgov-u3-021", unit: "U3", topic: "3.1 The Bill of Rights", topicCode: "3.1", skill: "1", type: "s", stimulusGroupId: null,
+    q: "The original purpose of adding the Bill of Rights to the Constitution was primarily to",
+    o: ["protect specified individual liberties and limit the new national government's power", "transfer authority over civil liberties from state courts to Congress", "replace structural checks and balances with judicial enforcement of rights", "guarantee that every listed liberty would immediately bind state governments"],
+    c: [0], e: "The first ten amendments reassured critics by expressly protecting liberties and restricting the national government. Application of most provisions to the states came later through selective incorporation.",
+  },
+  {
+    id: "apgov-u4-018", unit: "U4", topic: "4.3 Changes in Ideology", topicCode: "4.3", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Why can a major recession experienced during young adulthood produce a lasting change in political ideology?",
+    o: ["Formative political events can reshape beliefs about government's economic role during a period of intense socialization", "Economic events determine party identification identically for every member of an age cohort", "Ideological change occurs only when Congress formally revises a party's national platform", "Public opinion becomes constitutionally binding when a generation reaches voting age"],
+    c: [0], e: "Major events experienced during formative years can alter views of government and create cohort effects, though individuals within a generation remain diverse.",
+  },
+  {
+    id: "apgov-u4-019", unit: "U4", topic: "4.10 Ideology and Social Policy", topicCode: "4.10", skill: "1", type: "s", stimulusGroupId: null,
+    q: "Which comparison most accurately reflects mainstream ideological differences over social policy?",
+    o: ["Liberals generally favor a larger national role in areas such as education and health, while conservatives more often prefer state or private responsibility", "Liberals generally oppose public-health regulation, while conservatives favor uniform national administration of health programs", "Both ideologies reject government involvement in education, differing only over the level of taxation", "Conservatives generally favor national control of social policy, while liberals prefer devolution to the states"],
+    c: [0], e: "The CED contrasts liberal support for more national involvement in some social-policy areas with conservative support for less national involvement and greater state or private responsibility. These are tendencies, not universal positions.",
+  },
+  {
+    id: "apgov-u5-026", unit: "U5", topic: "5.7 Groups Influencing Policy Outcomes", topicCode: "5.7", skill: "1", type: "s", stimulusGroupId: null,
+    q: "An environmental movement combines public demonstrations, agency comments, litigation, and lobbying during congressional budget negotiations. The example best illustrates that",
+    o: ["organized groups can use multiple access points to influence policy at different stages", "social movements may act only through elections because agencies cannot consider public input", "interest-group litigation prevents the same organization from lobbying Congress", "budget policy is insulated from influence by social movements and professional groups"],
+    c: [0], e: "Groups and movements influence policy through many access points, including elections, agencies, courts, Congress, and public pressure. Using one strategy does not bar another.",
+  },
+  {
+    id: "apgov-u1-029", unit: "U1", topic: "1.7 Relationship Between the States and Federal Government", topicCode: "1.7", skill: "4", type: "s", stimulusGroupId: "apgov-g-fed39", stimulus: S_FED39,
+    q: "Which constitutional feature best supports Madison's claim that the proposed government is partly federal and partly national?",
+    o: ["The House is elected by the people while states have equal representation in the Senate", "Federal judges are nominated by the president and confirmed by a national popular vote", "State legislatures may nullify federal laws while Congress may overturn state constitutions", "The president is selected by Congress while governors appoint each state's presidential electors"],
+    c: [0], e: "The House reflects population and national popular representation, while equal state representation in the Senate preserves a federal element. The other arrangements do not describe the Constitution.",
+  },
+  {
+    id: "apgov-u1-030", unit: "U1", topic: "1.1 Ideals of Democracy", topicCode: "1.1", skill: "4", type: "s", stimulusGroupId: "apgov-g-gettysburg", stimulus: S_GETTYSBURG,
+    q: "Lincoln's description of a \"new birth of freedom\" most directly reframes the Civil War as a struggle to",
+    o: ["renew the founding commitments to equality and self-government", "restore the Articles of Confederation as the basis of national union", "replace popular sovereignty with rule by a permanent national elite", "transfer responsibility for civil rights entirely to state governments"],
+    c: [0], e: "Lincoln links Union victory to renewed freedom, equality, and government by the people. He does not advocate the Articles, elite rule, or exclusive state control of rights.",
+  },
+  {
+    id: "apgov-u2-028", unit: "U2", topic: "2.6 Expansion of Presidential Power", topicCode: "2.6", skill: "4", type: "s", stimulusGroupId: "apgov-g-fed70", stimulus: S_FED70,
+    q: "Which institutional tradeoff follows most directly from Hamilton's defense of an energetic executive?",
+    o: ["Unity can improve speed and accountability while increasing the importance of checks on concentrated power", "Plural executive councils produce faster decisions but make responsibility easier to identify", "Executive energy requires eliminating legislative control over appropriations and confirmation", "A strong executive necessarily replaces judicial review with presidential interpretation"],
+    c: [0], e: "Unity can support decision, dispatch, and identifiable responsibility, but concentrated executive capacity also makes constitutional checks important. Hamilton does not call for eliminating the other branches' powers.",
+  },
+  {
+    id: "apgov-u3-022", unit: "U3", topic: "3.12 Balancing Minority and Majority Rights", topicCode: "3.12", skill: "4", type: "s", stimulusGroupId: "apgov-g-emancipation", stimulus: S_EMANCIPATION,
+    q: "The Proclamation's reference to military service most directly illustrates how the order",
+    o: ["connected emancipation in rebelling states to the president's wartime authority", "created a permanent peacetime power to alter any state's labor law", "applied only after Congress approved it as a constitutional amendment", "ended slavery nationwide through the president's ordinary lawmaking power"],
+    c: [0], e: "Lincoln grounded the Proclamation in wartime authority and applied it to areas in rebellion, including recruitment into federal service. Nationwide abolition required the Thirteenth Amendment.",
+  },
+  {
+    id: "apgov-u4-020", unit: "U4", topic: "4.9 Ideology and Economic Policy", topicCode: "4.9", skill: "4", type: "s", stimulusGroupId: "apgov-g-wealth", stimulus: S_WEALTH,
+    q: "A policymaker relying on the argument in the excerpt would be most likely to support",
+    o: ["competitive markets with government protecting property rights and voluntary exchange", "comprehensive price controls designed to replace private decisions about production", "a ban on private profit so that firms pursue only objectives set by public officials", "government ownership of all industry to prevent individuals from pursuing self-interest"],
+    c: [0], e: "Smith's argument links self-interest and competition to social benefits, aligning with market exchange protected by property and contract rules rather than comprehensive state direction.",
+  },
 ];
+
+// Centralized CED metadata keeps the learner-facing topic labels and the audit
+// codes tied to the effective Fall 2026 framework instead of to older numbering.
+const APGOV_TOPIC_NAMES = {
+  "1.1": "Ideals of Democracy", "1.2": "Types of Democracy", "1.3": "Government Power and Individual Rights", "1.4": "Challenges of the Articles of Confederation", "1.5": "Ratification of the U.S. Constitution", "1.6": "Principles of American Government", "1.7": "Relationship Between the States and Federal Government", "1.8": "Constitutional Interpretations of Federalism", "1.9": "Federalism in Action",
+  "2.1": "Congress: The Senate and the House of Representatives", "2.2": "Structures, Powers, and Functions of Congress", "2.3": "Congressional Behavior", "2.4": "Roles and Powers of the President", "2.5": "Checks on the President", "2.6": "Expansion of Presidential Power", "2.7": "Presidential Communication", "2.8": "The Judicial Branch", "2.9": "The Role of the Judicial Branch", "2.10": "The Court in Action", "2.11": "Checks on the Judicial Branch", "2.12": "The Bureaucracy", "2.13": "Discretionary and Rulemaking Authority", "2.14": "Holding the Bureaucracy Accountable", "2.15": "Policy and the Branches of Government",
+  "3.1": "The Bill of Rights", "3.2": "First Amendment: Freedom of Religion", "3.3": "First Amendment: Freedom of Speech", "3.4": "First Amendment: Freedom of the Press", "3.5": "Second Amendment: Rights to Bear Arms", "3.6": "Amendments: Balancing Individual Freedom with Public Order and Safety", "3.7": "Selective Incorporation", "3.8": "Amendments: Due Process and the Rights of the Accused", "3.9": "Amendments: Due Process and the Right to Privacy", "3.10": "Social Movements and Equal Protection", "3.11": "Government Responses to Social Movements", "3.12": "Balancing Minority and Majority Rights", "3.13": "Affirmative Action",
+  "4.1": "American Attitudes About Government and Politics", "4.2": "Political Socialization", "4.3": "Changes in Ideology", "4.4": "Influence of Political Events on Ideology", "4.5": "Measuring Public Opinion", "4.6": "Evaluating Public Opinion Data", "4.7": "Ideologies of Political Parties", "4.8": "Ideology and Policymaking", "4.9": "Ideology and Economic Policy", "4.10": "Ideology and Social Policy",
+  "5.1": "Voting Rights and Models of Voting Behavior", "5.2": "Voter Turnout", "5.3": "Political Parties", "5.4": "How and Why Political Parties Change and Adapt", "5.5": "Third-Party Politics", "5.6": "Interest Groups Influencing Policymaking", "5.7": "Groups Influencing Policy Outcomes", "5.8": "Electing a President", "5.9": "Congressional Elections", "5.10": "Modern Campaigns", "5.11": "Campaign Finance", "5.12": "The Media", "5.13": "Changing Media",
+};
+
+const APGOV_METADATA = [
+  ["1.1", "1", ["apgov-u1-001", "apgov-u1-024", "apgov-u1-025"]], ["1.1", "4", ["apgov-u1-030"]],
+  ["1.2", "1", ["apgov-u1-002", "apgov-u1-003"]],
+  ["1.2", "4", ["apgov-u1-016", "apgov-u1-017", "apgov-u1-018"]],
+  ["1.3", "1", ["apgov-u1-006"]], ["1.3", "4", ["apgov-u1-019", "apgov-u1-020"]],
+  ["1.4", "1", ["apgov-u1-004"]],
+  ["1.5", "1", ["apgov-u1-005", "apgov-u1-015"]], ["1.5", "4", ["apgov-u1-021"]],
+  ["1.6", "1", ["apgov-u1-014"]],
+  ["1.7", "1", ["apgov-u1-007", "apgov-u1-012"]], ["1.7", "4", ["apgov-u1-022", "apgov-u1-023", "apgov-u1-029"]],
+  ["1.8", "2", ["apgov-u1-008", "apgov-u1-009"]],
+  ["1.9", "1", ["apgov-u1-010", "apgov-u1-011", "apgov-u1-013"]], ["1.9", "3", ["apgov-u1-026", "apgov-u1-027", "apgov-u1-028"]],
+  ["2.1", "1", ["apgov-u2-001"]], ["2.2", "1", ["apgov-u2-003", "apgov-u2-004", "apgov-u2-005"]],
+  ["2.1", "3", ["apgov-u2-022", "apgov-u2-023"]], ["2.3", "1", ["apgov-u2-002", "apgov-u2-006"]],
+  ["2.4", "1", ["apgov-u2-007"]], ["2.5", "1", ["apgov-u2-009"]], ["2.6", "1", ["apgov-u2-008"]],
+  ["2.6", "4", ["apgov-u2-016", "apgov-u2-017", "apgov-u2-028"]], ["2.7", "4", ["apgov-u2-024", "apgov-u2-025"]],
+  ["2.8", "2", ["apgov-u2-021"]], ["2.8", "4", ["apgov-u2-018", "apgov-u2-019", "apgov-u2-020"]],
+  ["2.9", "1", ["apgov-u2-014"]], ["2.10", "1", ["apgov-u2-013"]],
+  ["2.11", "1", ["apgov-u2-026"]], ["2.12", "1", ["apgov-u2-027"]],
+  ["2.13", "1", ["apgov-u2-010"]], ["2.14", "1", ["apgov-u2-011", "apgov-u2-012"]], ["2.15", "1", ["apgov-u2-015"]],
+  ["3.1", "1", ["apgov-u3-021"]],
+  ["3.2", "2", ["apgov-u3-002", "apgov-u3-003"]], ["3.3", "2", ["apgov-u3-004"]],
+  ["3.4", "2", ["apgov-u3-006"]], ["3.5", "2", ["apgov-u3-008"]], ["3.6", "2", ["apgov-u3-005"]], ["3.7", "1", ["apgov-u3-001"]],
+  ["3.8", "2", ["apgov-u3-007"]], ["3.9", "2", ["apgov-u3-011"]], ["3.10", "2", ["apgov-u3-009"]],
+  ["3.11", "1", ["apgov-u3-010", "apgov-u3-013"]], ["3.11", "4", ["apgov-u3-014", "apgov-u3-015", "apgov-u3-016"]],
+  ["3.12", "2", ["apgov-u3-012"]], ["3.12", "4", ["apgov-u3-017", "apgov-u3-018", "apgov-u3-022"]], ["3.13", "4", ["apgov-u3-019", "apgov-u3-020"]],
+  ["4.1", "1", ["apgov-u4-002"]], ["4.1", "4", ["apgov-u4-010", "apgov-u4-011"]], ["4.2", "1", ["apgov-u4-001"]],
+  ["4.3", "1", ["apgov-u4-018"]], ["4.4", "3", ["apgov-u4-015", "apgov-u4-016"]], ["4.5", "1", ["apgov-u4-005"]], ["4.6", "1", ["apgov-u4-006"]], ["4.6", "3", ["apgov-u4-017"]],
+  ["4.7", "1", ["apgov-u4-003", "apgov-u4-004"]], ["4.8", "1", ["apgov-u4-007", "apgov-u4-008", "apgov-u4-009"]],
+  ["4.9", "1", ["apgov-u4-012", "apgov-u4-013", "apgov-u4-014"]], ["4.9", "4", ["apgov-u4-020"]], ["4.10", "1", ["apgov-u4-019"]],
+  ["5.1", "1", ["apgov-u5-001", "apgov-u5-002", "apgov-u5-003", "apgov-u5-020"]],
+  ["5.2", "1", ["apgov-u5-004", "apgov-u5-005", "apgov-u5-013"]], ["5.2", "3", ["apgov-u5-014", "apgov-u5-015"]],
+  ["5.3", "1", ["apgov-u5-007", "apgov-u5-012"]], ["5.4", "1", ["apgov-u5-021"]], ["5.5", "1", ["apgov-u5-008", "apgov-u5-022"]],
+  ["5.6", "1", ["apgov-u5-009"]], ["5.7", "1", ["apgov-u5-026"]], ["5.8", "1", ["apgov-u5-006"]], ["5.9", "1", ["apgov-u5-023"]],
+  ["5.10", "1", ["apgov-u5-024"]], ["5.11", "2", ["apgov-u5-010"]], ["5.11", "3", ["apgov-u5-016", "apgov-u5-017"]],
+  ["5.12", "1", ["apgov-u5-011"]], ["5.12", "4", ["apgov-u5-018"]], ["5.13", "1", ["apgov-u5-025"]], ["5.13", "4", ["apgov-u5-019"]],
+];
+
+const APGOV_BY_ID = new Map(window.QUESTIONS_AP_US_GOVERNMENT.map((question) => [question.id, question]));
+APGOV_METADATA.forEach(([topicCode, skill, ids]) => ids.forEach((id) => {
+  const question = APGOV_BY_ID.get(id);
+  if (question) {
+    question.topicCode = topicCode;
+    question.topic = `${topicCode} ${APGOV_TOPIC_NAMES[topicCode]}`;
+    question.skill = skill;
+  }
+}));
+
+// Normalize source-key positions independently of content. Runtime options are
+// shuffled again for each attempt, but balanced source order also keeps exports,
+// previews, and future delivery paths from inheriting an answer-letter tell.
+window.QUESTIONS_AP_US_GOVERNMENT.forEach((question, index) => {
+  const target = index % 4;
+  const current = question.c[0];
+  if (current !== target) {
+    [question.o[current], question.o[target]] = [question.o[target], question.o[current]];
+    question.c = [target];
+  }
+});
