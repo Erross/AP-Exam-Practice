@@ -145,7 +145,13 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 80,
     totalExamTimeLabel: "3h 0m",
     tierNote: null,
-    units: [], // optional per-unit exam weights, added when a subject's content is built
+    units: [
+      { id: "U1", name: "Foundations of American Democracy", examWeight: 0.185 },
+      { id: "U2", name: "Interactions Among Branches of Government", examWeight: 0.305 },
+      { id: "U3", name: "Civil Liberties and Civil Rights", examWeight: 0.155 },
+      { id: "U4", name: "American Political Ideologies and Beliefs", examWeight: 0.125 },
+      { id: "U5", name: "Political Participation", examWeight: 0.235 },
+    ],
     dataVar: "QUESTIONS_AP_US_GOVERNMENT", // global variable name set by data/ap-us-government.js
   },
   {

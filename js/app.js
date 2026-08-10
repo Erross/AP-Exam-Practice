@@ -305,8 +305,10 @@ function renderResults(correct, total, perUnit) {
   const table = document.getElementById("results-unit-table");
   table.innerHTML = "";
   Object.entries(perUnit).forEach(([unitId, { correct: c, total: t }]) => {
+    const unitConfig = (state.subject.units || []).find((u) => u.id === unitId);
+    const label = unitConfig ? `${unitId}: ${unitConfig.name}` : unitId;
     const row = document.createElement("tr");
-    row.innerHTML = `<td>${unitId}</td><td>${c} / ${t}</td>`;
+    row.innerHTML = `<td>${label}</td><td>${c} / ${t}</td>`;
     table.appendChild(row);
   });
 
