@@ -285,7 +285,31 @@ const AP_SUBJECTS = [
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // Unit exam weightings from the AP Calculus AB CED (Course Framework, ©
+    // College Board), verified 2026-08-09 against the Course Overview / Course-
+    // at-a-Glance PDFs on AP Central. examWeight is the midpoint of the
+    // published band, used by the Hamilton apportionment drawer; examWeightRange
+    // is the published band the draw audit asserts against.
+    units: [
+      { id: "U1", name: "Limits and Continuity", examWeight: 0.11, examWeightRange: [0.10, 0.12] },
+      { id: "U2", name: "Differentiation: Definition and Fundamental Properties", examWeight: 0.11, examWeightRange: [0.10, 0.12] },
+      { id: "U3", name: "Differentiation: Composite, Implicit, and Inverse Functions", examWeight: 0.11, examWeightRange: [0.09, 0.13] },
+      { id: "U4", name: "Contextual Applications of Differentiation", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U5", name: "Analytical Applications of Differentiation", examWeight: 0.165, examWeightRange: [0.15, 0.18] },
+      { id: "U6", name: "Integration and Accumulation of Change", examWeight: 0.185, examWeightRange: [0.17, 0.20] },
+      { id: "U7", name: "Differential Equations", examWeight: 0.09, examWeightRange: [0.06, 0.12] },
+      { id: "U8", name: "Applications of Integration", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+    ],
+    // Section I splits into a 29-question no-calculator Part A and a
+    // 13-question calculator-required Part B (apstudents.collegeboard.org
+    // assessment page, verified 2026-08-09). Every generated attempt must hit
+    // that exact split, so it's expressed as an exact-range attribute
+    // constraint rather than left to chance — see js/draw.js's
+    // drawConstrainedWeightedExam / summarizeAttributes (core/exam-section-
+    // constraints, merged into main 2026-08-10).
+    attributeRanges: {
+      calculatorAllowed: { false: [29, 29], true: [13, 13] },
+    },
     dataVar: "QUESTIONS_AP_CALCULUS_AB",
   },
   {
