@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">Relationships among five hypothetical species</title>
+  <desc id="desc">A rooted cladogram in which A branches first, B branches next, C is sister to a clade containing D and E, and D and E are sister taxa.</desc>
+  <rect width="900" height="500" rx="24" fill="#f8fafc"/>
+  <g stroke="#334155" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90 430V85M90 385h150M240 385V155M240 325h150M390 325V205M390 265h150M540 265V115M540 205h150M540 115h150"/>
+  </g>
+  <g fill="#0f172a" font-family="Arial, sans-serif" font-size="28" font-weight="700">
+    <text x="714" y="125">D</text><text x="714" y="215">E</text><text x="565" y="275">C</text><text x="415" y="335">B</text><text x="265" y="395">A</text>
+  </g>
+  <g fill="#f59e0b" stroke="#92400e" stroke-width="2">
+    <circle cx="165" cy="385" r="11"/><circle cx="315" cy="325" r="11"/><circle cx="465" cy="265" r="11"/><circle cx="615" cy="205" r="11"/>
+  </g>
+  <g fill="#78350f" font-family="Arial, sans-serif" font-size="17">
+    <text x="130" y="420">character 1</text><text x="278" y="360">character 2</text><text x="428" y="300">character 3</text><text x="578" y="242">character 4</text>
+  </g>
+  <path d="M65 450h70" stroke="#0f766e" stroke-width="5" marker-end="url(#a)"/>
+  <text x="150" y="458" fill="#0f766e" font-family="Arial, sans-serif" font-size="18" font-weight="700">time</text>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="#0f766e"/></marker></defs>
+</svg>

@@ -375,14 +375,32 @@ const AP_SUBJECTS = [
     name: "AP Biology",
     category: "Sciences",
     tier: 1,
+    // VERIFIED 2026-08-10: AP Central Biology exam page and the CED effective
+    // Fall 2025 — Section I: 60 single-select questions in 90 minutes, 50% of
+    // the score, mixing discrete questions with 4–5-question stimulus sets.
     mcqCount: 60,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
-    formatVerified: false,
+    formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // CED unit ranges. Point weights are range midpoints normalized to sum to
+    // one; Hamilton apportionment yields 6/7/8/7/6/8/10/8 on a 60-item draw.
+    units: [
+      { id: "U1", name: "Chemistry of Life", examWeight: 0.095, examWeightRange: [0.08, 0.11] },
+      { id: "U2", name: "Cells", examWeight: 0.115, examWeightRange: [0.10, 0.13] },
+      { id: "U3", name: "Cellular Energetics", examWeight: 0.140, examWeightRange: [0.12, 0.16] },
+      { id: "U4", name: "Cell Communication and Cell Cycle", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U5", name: "Heredity", examWeight: 0.095, examWeightRange: [0.08, 0.11] },
+      { id: "U6", name: "Gene Expression and Regulation", examWeight: 0.140, examWeightRange: [0.12, 0.16] },
+      { id: "U7", name: "Natural Selection", examWeight: 0.165, examWeightRange: [0.13, 0.20] },
+      { id: "U8", name: "Ecology", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+    ],
+    // AP Central specifies a mixture of discrete items and 4–5-question sets,
+    // but not a fixed set count. Keep every practice draw within a credible
+    // range while preserving whole groups and exact unit apportionment.
+    stimulusSetRange: [4, 8],
     dataVar: "QUESTIONS_AP_BIOLOGY",
   },
   {

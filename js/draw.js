@@ -296,19 +296,35 @@
 
     if (subject.examBlueprint) return drawBlueprintExam(subject, bank, targets, rng);
 
-    let blocks = [];
-    units.forEach((u) => {
-      blocks = blocks.concat(drawBlocks(byUnit.get(u.id), targets[u.id] || 0, rng));
-    });
+    const setRange = Array.isArray(subject.stimulusSetRange) ? subject.stimulusSetRange : null;
+    const attempts = setRange ? 200 : 1;
+    let lastPlaced = 0;
 
-    // If a weighted pool cannot cover the configured draw, fail visibly. Quietly
-    // borrowing from another unit would make the delivered blueprint untrue.
-    let placed = blocks.reduce((n, b) => n + b.length, 0);
-    if (placed < drawCount) {
-      throw new Error(`Weighted draw could place only ${placed} of ${drawCount} questions`);
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      let blocks = [];
+      units.forEach((u) => {
+        blocks = blocks.concat(drawBlocks(byUnit.get(u.id), targets[u.id] || 0, rng));
+      });
+
+      // If a weighted pool cannot cover the configured draw, try another whole-
+      // block combination before failing. Quietly borrowing from another unit
+      // would make the delivered blueprint untrue.
+      const placed = blocks.reduce((n, b) => n + b.length, 0);
+      lastPlaced = placed;
+      if (placed !== drawCount) continue;
+
+      if (setRange) {
+        const setCount = blocks.filter((block) => block[0] && block[0].stimulusGroupId).length;
+        if (setCount < setRange[0] || setCount > setRange[1]) continue;
+      }
+
+      return shuffle(blocks, rng).flat();
     }
 
-    return shuffle(blocks, rng).flat();
+    if (setRange) {
+      throw new Error(`No whole-set draw satisfied stimulus set range ${setRange[0]}-${setRange[1]}`);
+    }
+    throw new Error(`Weighted draw could place only ${lastPlaced} of ${drawCount} questions`);
   }
 
   /**
