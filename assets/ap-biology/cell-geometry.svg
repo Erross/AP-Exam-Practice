@@ -1,8 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
-  <title id="title">Geometry of three cube-shaped model cells</title><desc id="desc">Three cubes with side lengths one, two, and four micrometers are paired with their surface-area-to-volume ratios.</desc>
+  <title id="title">Three cube-shaped model cells</title>
+  <desc id="desc">Three proportional cube models are labeled with side lengths of one, two, and four micrometers. Surface-area-to-volume ratios are not displayed.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0l10 5-10 5z" fill="#64748b"/>
+    </marker>
+    <style>
+      .front { fill: #93c5fd; stroke: #1d4ed8; stroke-width: 4; stroke-linejoin: round; }
+      .top { fill: #bfdbfe; stroke: #1d4ed8; stroke-width: 4; stroke-linejoin: round; }
+      .side { fill: #60a5fa; stroke: #1d4ed8; stroke-width: 4; stroke-linejoin: round; }
+      .label { font: 700 22px Arial, sans-serif; fill: #334155; text-anchor: middle; }
+    </style>
+  </defs>
   <rect width="900" height="520" rx="24" fill="#f8fafc"/>
-  <g fill="#93c5fd" stroke="#1d4ed8" stroke-width="4"><rect x="105" y="240" width="80" height="80"/><rect x="360" y="190" width="130" height="130"/><rect x="625" y="120" width="200" height="200"/></g>
-  <g fill="#334155" font-family="Arial" text-anchor="middle"><text x="145" y="365" font-size="22" font-weight="700">Side = 1 μm</text><text x="145" y="400" font-size="20">SA:V = 6:1</text><text x="425" y="365" font-size="22" font-weight="700">Side = 2 μm</text><text x="425" y="400" font-size="20">SA:V = 3:1</text><text x="725" y="365" font-size="22" font-weight="700">Side = 4 μm</text><text x="725" y="400" font-size="20">SA:V = 1.5:1</text><text x="450" y="72" font-size="25" font-weight="700">MODEL CELLS OF THE SAME SHAPE</text></g>
-  <path d="M120 450h660" stroke="#64748b" stroke-width="3" marker-end="url(#a)"/><text x="450" y="488" text-anchor="middle" fill="#475569" font-family="Arial" font-size="18">increasing cell size</text>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="#64748b"/></marker></defs>
+  <text x="450" y="52" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="26" font-weight="700">CUBE-SHAPED MODEL CELLS</text>
+
+  <g id="cube-1">
+    <path class="top" d="M92 242l28-28h68l-28 28z"/>
+    <path class="side" d="M160 242l28-28v68l-28 28z"/>
+    <path class="front" d="M92 242h68v68H92z"/>
+    <text class="label" x="140" y="355">Side = 1 μm</text>
+  </g>
+
+  <g id="cube-2">
+    <path class="top" d="M325 194l42-42h116l-42 42z"/>
+    <path class="side" d="M441 194l42-42v116l-42 42z"/>
+    <path class="front" d="M325 194h116v116H325z"/>
+    <text class="label" x="404" y="355">Side = 2 μm</text>
+  </g>
+
+  <g id="cube-4">
+    <path class="top" d="M590 132l58-58h174l-58 58z"/>
+    <path class="side" d="M764 132l58-58v174l-58 58z"/>
+    <path class="front" d="M590 132h174v174H590z"/>
+    <text class="label" x="706" y="355">Side = 4 μm</text>
+  </g>
+
+  <path d="M115 425h670" stroke="#64748b" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="450" y="470" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="20">increasing side length</text>
 </svg>

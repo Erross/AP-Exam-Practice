@@ -11,7 +11,7 @@
     <text x="150" y="482">0.5</text><text x="285" y="482">1.0</text><text x="420" y="482">2.0</text><text x="555" y="482">5.0</text><text x="690" y="482">10.0</text>
     <text x="450" y="530" font-size="21" font-weight="700">Substrate concentration (mM)</text>
   </g>
-  <text transform="translate(35 330) rotate(-90)" fill="#334155" font-family="Arial, sans-serif" font-size="21" font-weight="700">Initial rate (μmol product min⁻¹)</text>
+  <text transform="translate(32 250) rotate(-90)" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="21" font-weight="700">Initial rate (μmol min⁻¹)</text>
   <polyline points="150,370 285,310 420,230 555,140 690,130" fill="none" stroke="#2563eb" stroke-width="5"/>
   <polyline points="150,410 285,370 420,300 555,170 690,140" fill="none" stroke="#d97706" stroke-width="5"/>
   <polyline points="150,390 285,360 420,330 555,300 690,290" fill="none" stroke="#7c3aed" stroke-width="5"/>

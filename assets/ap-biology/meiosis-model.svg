@@ -1,15 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" role="img" aria-labelledby="title desc">
-  <title id="title">Behavior of one homologous chromosome pair in meiosis</title><desc id="desc">A model shows replicated homologs pairing, crossing over between nonsister chromatids, homolog separation in meiosis one, and sister-chromatid separation in meiosis two.</desc>
-  <rect width="900" height="540" rx="24" fill="#f8fafc"/>
-  <g font-family="Arial" font-size="19" font-weight="700" fill="#334155" text-anchor="middle"><text x="120" y="55">PAIRING</text><text x="340" y="55">CROSSING OVER</text><text x="570" y="55">AFTER MEIOSIS I</text><text x="790" y="55">AFTER MEIOSIS II</text></g>
-  <g stroke-width="12" stroke-linecap="round" fill="none"><path d="M90 130l70 150M160 130L90 280" stroke="#2563eb"/><path d="M185 130l70 150M255 130l-70 150" stroke="#d97706"/><path d="M310 130l70 150M380 130l-70 150" stroke="#2563eb"/><path d="M405 130l70 150M475 130l-70 150" stroke="#d97706"/></g>
-  <path d="M345 205h95" stroke="#16a34a" stroke-width="8"/><circle cx="392" cy="205" r="13" fill="#16a34a"/>
-  <g stroke-width="10" stroke-linecap="round"><path d="M535 135l55 120M590 135l-55 120" stroke="#2563eb"/><path d="M630 135l55 120M685 135l-55 120" stroke="#d97706"/><path d="M750 130v150M795 130v150" stroke="#2563eb"/><path d="M835 130v150M875 130v150" stroke="#d97706"/></g>
-  <g stroke="#64748b" stroke-width="4" marker-end="url(#a)"><path d="M265 205h35"/><path d="M485 205h35"/><path d="M700 205h35"/></g>
-  <g font-family="Arial" font-size="15" fill="#475569" text-anchor="middle">
-    <text x="390" y="335">nonsister chromatids</text><text x="390" y="357">exchange segments</text>
-    <text x="610" y="335">homologs</text><text x="610" y="357">separate</text>
-    <text x="810" y="335">sister chromatids</text><text x="810" y="357">separate</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" role="img" aria-labelledby="title desc">
+  <title id="title">Crossing over between homologous chromosomes</title>
+  <desc id="desc">Three stages show a purple and blue replicated homolog before pairing, two inner chromatids crossing while the homologs are paired, and after exchange each homolog has one unchanged chromatid and one chromatid with a distal segment in the other color.</desc>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#617086"/>
+    </marker>
+    <style>
+      .panel-title { font: 600 26px Arial, sans-serif; fill: #26364a; text-anchor: middle; }
+      .stage-number { font: 700 18px Arial, sans-serif; fill: #ffffff; text-anchor: middle; dominant-baseline: middle; }
+      .stage-circle { fill: #34465d; }
+      .purple { fill: none; stroke: #9b59b6; stroke-width: 24; stroke-linecap: round; stroke-linejoin: round; }
+      .blue { fill: none; stroke: #4f73c3; stroke-width: 24; stroke-linecap: round; stroke-linejoin: round; }
+      .outline { fill: none; stroke: #ffffff; stroke-width: 31; stroke-linecap: round; stroke-linejoin: round; }
+      .centromere-purple { fill: #ffffff; stroke: #7c3f98; stroke-width: 8; }
+      .centromere-blue { fill: #ffffff; stroke: #365aa7; stroke-width: 8; }
+      .flow { stroke: #617086; stroke-width: 5; fill: none; marker-end: url(#arrowhead); }
+      .breakpoint { stroke: #34465d; stroke-width: 3; }
+      .key-label { font: 20px Arial, sans-serif; fill: #26364a; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="540" rx="24" fill="#f8fafc"/>
+
+  <circle class="stage-circle" cx="35" cy="35" r="18"/>
+  <text class="stage-number" x="35" y="36">1</text>
+  <text class="panel-title" x="205" y="48">Before pairing</text>
+
+  <path class="purple" d="M105 125 C102 178 116 230 130 275 C118 325 103 378 105 430"/>
+  <path class="purple" d="M155 125 C158 178 144 230 130 275 C142 325 157 378 155 430"/>
+  <circle class="centromere-purple" cx="130" cy="275" r="17"/>
+
+  <path class="blue" d="M245 125 C242 178 256 230 270 275 C258 325 243 378 245 430"/>
+  <path class="blue" d="M295 125 C298 178 284 230 270 275 C282 325 297 378 295 430"/>
+  <circle class="centromere-blue" cx="270" cy="275" r="17"/>
+
+  <path class="flow" d="M350 278 H420"/>
+
+  <circle class="stage-circle" cx="455" cy="35" r="18"/>
+  <text class="stage-number" x="455" y="36">2</text>
+  <text class="panel-title" x="610" y="48">During pairing</text>
+
+  <path class="purple" d="M500 125 C497 180 513 232 535 275 C521 326 503 378 505 430"/>
+  <path class="blue" d="M695 125 C698 180 682 232 660 275 C674 326 692 378 690 430"/>
+
+  <path class="outline" d="M565 125 C562 162 577 191 611 221 C590 242 554 261 535 275 C547 327 565 379 565 430"/>
+  <path class="outline" d="M630 125 C633 162 618 191 584 221 C605 242 641 261 660 275 C648 327 630 379 630 430"/>
+  <path class="purple" d="M565 125 C562 162 577 191 611 221 C590 242 554 261 535 275 C547 327 565 379 565 430"/>
+  <path class="blue" d="M630 125 C633 162 618 191 584 221 C605 242 641 261 660 275 C648 327 630 379 630 430"/>
+
+  <circle class="centromere-purple" cx="535" cy="275" r="17"/>
+  <circle class="centromere-blue" cx="660" cy="275" r="17"/>
+
+  <path class="flow" d="M775 278 H845"/>
+
+  <circle class="stage-circle" cx="880" cy="35" r="18"/>
+  <text class="stage-number" x="880" y="36">3</text>
+  <text class="panel-title" x="1038" y="48">After exchange</text>
+
+  <path class="purple" d="M905 125 C902 178 916 230 930 275 C918 325 903 378 905 430"/>
+  <path id="left-exchanged-segment" class="blue" d="M955 125 C957 154 953 182 948 205"/>
+  <path class="purple" d="M948 205 C943 231 936 255 930 275 C942 325 957 378 955 430"/>
+  <line class="breakpoint" x1="938" y1="204" x2="958" y2="208"/>
+  <circle class="centromere-purple" cx="930" cy="275" r="17"/>
+
+  <path id="right-exchanged-segment" class="purple" d="M1045 125 C1043 154 1047 182 1052 205"/>
+  <path class="blue" d="M1052 205 C1057 231 1064 255 1070 275 C1058 325 1043 378 1045 430"/>
+  <path class="blue" d="M1095 125 C1098 178 1084 230 1070 275 C1082 325 1097 378 1095 430"/>
+  <line class="breakpoint" x1="1042" y1="208" x2="1062" y2="204"/>
+  <circle class="centromere-blue" cx="1070" cy="275" r="17"/>
+
+  <g aria-label="Color key">
+    <line class="purple" x1="466" y1="492" x2="502" y2="492"/>
+    <text class="key-label" x="520" y="500">one homolog</text>
+    <line class="blue" x1="650" y1="492" x2="686" y2="492"/>
+    <text class="key-label" x="704" y="500">the other homolog</text>
   </g>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="#64748b"/></marker></defs>
 </svg>
