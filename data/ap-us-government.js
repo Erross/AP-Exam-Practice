@@ -242,29 +242,26 @@ const S_CAMPAIGN_FINANCE = {
 
 const S_VISUAL_PRESIDENT = {
   type: "visual",
-  title: "From one address to many channels",
+  title: "Presidential communication routes",
   source: "Original illustration created for AP Exam Practice; not official College Board material.",
   image: "assets/presidential-communication.svg",
-  alt: "A president at a podium sends one message simultaneously toward a television, a smartphone, a newspaper, and the Capitol.",
-  description: "The same presidential message reaches several audiences and institutions at once through modern media.",
+  alt: "A White House podium connects to a broadcast screen, mobile feed, news desk, and Congress, with members of the public beyond the media panels.",
 };
 
 const S_VISUAL_EQUAL = {
   type: "visual",
-  title: "Competing claims in an affirmative-action case",
+  title: "A public university admissions policy under review",
   source: "Original illustration created for AP Exam Practice; not official College Board material.",
   image: "assets/equal-protection-balance.svg",
-  alt: "A balance scale places individual equal-protection claims on one side and policies addressing group disparities on the other, with the Fourteenth Amendment above it.",
-  description: "The illustration presents the constitutional tension courts consider in debates over affirmative-action policy.",
+  alt: "A state university applicant file highlights race or ethnicity among five review factors. The university cites broader representation, while an applicant challenges the government's use of a racial classification.",
 };
 
 const S_VISUAL_MEDIA = {
   type: "visual",
-  title: "The shrinking news spotlight",
+  title: "A city newspaper and its readers",
   source: "Original illustration created for AP Exam Practice; not official College Board material.",
   image: "assets/media-spotlight.svg",
-  alt: "A large news spotlight illuminates one issue card labeled Issue A while three other issue cards remain outside the beam.",
-  description: "The illustration emphasizes that repeated coverage can make one issue more visible than competing concerns.",
+  alt: "A city newspaper gives housing costs the largest headline and image while transit, schools, and flooding receive smaller boxes. Nearby residents discuss rising housing costs.",
 };
 
 // ---------------------------------------------------------------------------
@@ -1478,15 +1475,15 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
   {
     id: "apgov-u2-024", unit: "U2", topic: "2.7 Presidential Communication", topicCode: "2.7", skill: "4",
     type: "s", stimulusGroupId: "apgov-g-visual-president", stimulus: S_VISUAL_PRESIDENT,
-    q: "Which development in presidential communication is most directly represented by the visual?",
-    o: ["Presidents can address the national constituency rapidly through several media channels", "Congress can require private news organizations to carry every presidential address", "Presidents now communicate with voters without relying on professional news coverage", "Courts review presidential messages before the public receives them through digital media"],
+    q: "Which conclusion about the modern presidency is best supported by the visual?",
+    o: ["Presidents can combine direct appeals with mediated coverage when seeking public support", "Presidents rely more on congressional leaders than on public appeals when promoting policy", "News organizations determine the content of presidential proposals before audiences receive them", "Communication technology gives presidents greater formal lawmaking authority than Congress"],
     c: [0],
-    e: "Modern television and digital platforms let presidents communicate rapidly and simultaneously with a national audience. News organizations remain independent, courts do not preclear political messages, and presidents still depend partly on intermediaries even when they also use direct channels.",
+    e: "The visual shows direct and mediated routes operating at the same time. Presidents can appeal directly through digital platforms while also relying on broadcast and professional news coverage. Those routes can support persuasion, but they do not transfer Congress's formal lawmaking authority or let news organizations rewrite presidential proposals.",
   },
   {
     id: "apgov-u2-025", unit: "U2", topic: "2.7 Presidential Communication", topicCode: "2.7", skill: "4",
     type: "s", stimulusGroupId: "apgov-g-visual-president", stimulus: S_VISUAL_PRESIDENT,
-    q: "A president uses the communication pattern in the visual to keep one proposal at the center of public debate. This is an example of",
+    q: "A president repeatedly uses the routes shown to keep one proposal at the center of public debate and build pressure on Congress. This is an example of",
     o: ["signing-statement authority used to change how an enacted statute will be enforced", "the bully pulpit used to set the national policy agenda and pressure Congress", "executive privilege used to withhold internal deliberations from congressional committees", "the pardon power used to signal a change in the administration's enforcement priorities"],
     c: [1],
     e: "The bully pulpit is the president's informal capacity to use visibility and media attention to shape the public agenda and build pressure on other institutions. The other choices are distinct formal or claimed presidential powers.",
@@ -1494,7 +1491,7 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
   {
     id: "apgov-u3-019", unit: "U3", topic: "3.13 Affirmative Action", topicCode: "3.13", skill: "4",
     type: "s", stimulusGroupId: "apgov-g-visual-equal", stimulus: S_VISUAL_EQUAL,
-    q: "The constitutional debate represented by the balance scale centers primarily on which provision?",
+    q: "A constitutional challenge to the state university policy shown would center primarily on which provision?",
     o: ["The Equal Protection Clause of the Fourteenth Amendment", "The Establishment Clause of the First Amendment", "The Takings Clause of the Fifth Amendment", "The Privileges and Immunities Clause of Article IV"],
     c: [0],
     e: "Affirmative-action litigation focuses on whether classifications used to address disparities comply with the Fourteenth Amendment's Equal Protection Clause. The other provisions concern religion, property compensation, or discrimination against out-of-state citizens.",
@@ -1502,10 +1499,10 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
   {
     id: "apgov-u3-020", unit: "U3", topic: "3.13 Affirmative Action", topicCode: "3.13", skill: "4",
     type: "s", stimulusGroupId: "apgov-g-visual-equal", stimulus: S_VISUAL_EQUAL,
-    q: "Which statement best explains why the two sides of the visual can produce competing constitutional claims?",
-    o: ["Policies addressing group disparities may themselves classify individuals, prompting equal-protection review", "The Fourteenth Amendment bars federal courts from reviewing state education and employment policies", "Equal protection requires every public institution to produce identical demographic outcomes", "Affirmative-action disputes concern only statutory language and do not raise constitutional questions"],
-    c: [0],
-    e: "Remedial policies can pursue equality while using classifications that affect individuals differently, which creates the equal-protection question shown by the scale. Equal protection does not guarantee identical outcomes, and courts may review such government policies.",
+    q: "Under current constitutional doctrine, how would a court generally review the university's use of the highlighted factor?",
+    o: ["Under rational-basis review, asking whether the policy is reasonably related to a legitimate university purpose", "Under the political-question doctrine, leaving the policy entirely to university administrators and elected officials", "Under strict scrutiny, asking whether the classification is narrowly tailored to serve a compelling government interest", "Under intermediate scrutiny, asking whether the policy is substantially related to an important government interest"],
+    c: [2],
+    e: "Government racial classifications are subject to strict scrutiny. In Students for Fair Admissions v. Harvard and the companion University of North Carolina case, the Court held that the challenged admissions programs did not satisfy that standard. Rational-basis and intermediate scrutiny are less demanding tests, and a constitutional challenge to a state policy is justiciable.",
   },
   {
     id: "apgov-u4-015", unit: "U4", topic: "4.4 Influence of Political Events on Ideology", topicCode: "4.4", skill: "3",
@@ -1550,18 +1547,18 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
   {
     id: "apgov-u5-018", unit: "U5", topic: "5.12 The Media", topicCode: "5.12", skill: "4",
     type: "s", stimulusGroupId: "apgov-g-visual-media", stimulus: S_VISUAL_MEDIA,
-    q: "Which media effect is represented most directly by the spotlight in the visual?",
-    o: ["Agenda setting, because coverage can raise the perceived importance of one issue", "Prior restraint, because editors must obtain approval before publishing political news", "Selective incorporation, because media rights bind state and local governments", "Horse-race journalism, because every issue is presented as a contest between candidates"],
+    q: "Which media effect best explains the relationship shown in the visual?",
+    o: ["Agenda setting, because story prominence can raise an issue's perceived importance", "Framing, because a story's language can emphasize one interpretation of an issue", "Watchdog journalism, because reporters can investigate misconduct by public officials", "Horse-race journalism, because coverage can emphasize campaign strategy and polling"],
     c: [0],
-    e: "Agenda setting describes the media's capacity to influence which issues audiences regard as important by giving some matters more attention. Nothing in the visual concerns censorship, incorporation, or poll-centered campaign coverage.",
+    e: "Agenda setting describes the media's capacity to influence which issues audiences regard as important by giving some matters more prominence. The visual contrasts story placement and audience attention; it does not show interpretive language, an investigation of officials, or campaign strategy and polling.",
   },
   {
     id: "apgov-u5-019", unit: "U5", topic: "5.13 Changing Media", topicCode: "5.13", skill: "4",
     type: "s", stimulusGroupId: "apgov-g-visual-media", stimulus: S_VISUAL_MEDIA,
-    q: "How can a fragmented digital-media environment alter the process represented in the visual?",
-    o: ["Different audiences may encounter different issue spotlights because algorithms and selective exposure segment attention", "Digital platforms eliminate agenda setting because every user receives the same complete list of public issues", "Social media prevents candidates and officials from communicating without approval from traditional editors", "Fragmentation requires news organizations to allocate identical coverage time to every policy question"],
+    q: "If most readers replaced a shared city edition with individually ranked news feeds, which outcome would be most likely?",
+    o: ["Different groups could rank different issues as important because algorithms and selective exposure segment attention", "A shared national agenda could become more consistent because algorithms expose users to similar issue priorities", "Traditional editors could gain more control because individualized feeds reduce direct communication by political actors", "Issue salience could become less connected to media choices because ranking replaces story selection"],
     c: [0],
-    e: "Digital fragmentation can create distinct agendas for different audiences as algorithms, platform choices, and selective exposure shape which issues each group sees. It does not standardize attention or require traditional editorial approval.",
+    e: "Individualized feeds can produce different issue agendas for different audiences because algorithms, platform choices, and selective exposure shape what each group sees. Digital media neither standardize attention nor require traditional editorial approval.",
   },
   {
     id: "apgov-u5-020", unit: "U5", topic: "5.1 Voting Rights and Models of Voting Behavior", topicCode: "5.1", skill: "1", type: "s", stimulusGroupId: null,

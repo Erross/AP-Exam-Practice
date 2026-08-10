@@ -1,3 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" role="img" aria-labelledby="title desc">
-  <title id="title">Competing claims under equal protection</title><desc id="desc">A balanced scale compares individual equal-protection claims with policies intended to address group disparities.</desc><rect width="900" height="430" rx="24" fill="#f7f5f0"/><text x="450" y="58" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="bold" fill="#342e28">FOURTEENTH AMENDMENT</text><path d="M450 90v245M315 335h270M380 370h140" stroke="#765d35" stroke-width="14" stroke-linecap="round"/><path d="M210 145h480M450 100l-28 45h56z" fill="none" stroke="#765d35" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M210 145l-88 145M210 145l88 145M690 145l-88 145M690 145l88 145" stroke="#765d35" stroke-width="6"/><path d="M92 290h236c-12 52-50 78-118 78S104 342 92 290zM572 290h236c-12 52-50 78-118 78s-106-26-118-78z" fill="#dce7f3" stroke="#244c7c" stroke-width="6"/><g font-family="system-ui" fill="#17345f" text-anchor="middle"><text x="210" y="318" font-size="22" font-weight="bold">INDIVIDUAL</text><text x="210" y="344" font-size="19">equal-protection claim</text><text x="690" y="318" font-size="22" font-weight="bold">REMEDIAL POLICY</text><text x="690" y="344" font-size="19">addressing disparities</text></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">A public university admissions policy under review</title>
+  <desc id="desc">A state university admissions file lists several review factors, including race or ethnicity, between a university goal of broader representation and an applicant challenge to the use of a racial classification.</desc>
+  <rect x="1" y="1" width="898" height="498" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <path d="M0 0h900v82H0z" fill="#17365d"/>
+    <path d="M62 60V30h44v30M70 30V20h28v10M77 20V11h14v9" fill="none" stroke="#f8fafc" stroke-width="4" stroke-linecap="round"/>
+    <text x="130" y="51" font-size="24" font-weight="700" letter-spacing="1.4" fill="#ffffff">STATE UNIVERSITY ADMISSIONS</text>
+    <text x="808" y="49" text-anchor="end" font-size="16" font-weight="700" letter-spacing="1.2" fill="#bfdbfe">POLICY REVIEW</text>
+
+    <g transform="translate(70 126)">
+      <rect width="334" height="302" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="3"/>
+      <path d="M0 54h334" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="28" y="35" font-size="18" font-weight="700" fill="#334155">APPLICANT FILE</text>
+      <g font-size="16" fill="#334155">
+        <text x="30" y="92">Academic record</text><text x="30" y="136">Activities and service</text><text x="30" y="180">Geographic background</text><text x="30" y="224">Personal experiences</text><text x="30" y="268">Race or ethnicity</text>
+      </g>
+      <g fill="none" stroke="#64748b" stroke-width="3">
+        <rect x="277" y="74" width="24" height="24" rx="3"/><rect x="277" y="118" width="24" height="24" rx="3"/><rect x="277" y="162" width="24" height="24" rx="3"/><rect x="277" y="206" width="24" height="24" rx="3"/>
+      </g>
+      <rect x="265" y="244" width="48" height="48" rx="8" fill="#fef2f2" stroke="#8f1d2c" stroke-width="3"/>
+      <path d="M276 266l9 9 18-21" fill="none" stroke="#8f1d2c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <path d="M437 277h45" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M468 265l16 12-16 12" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <g transform="translate(510 126)">
+      <rect width="320" height="126" rx="14" fill="#eef5fb" stroke="#4d749f" stroke-width="3"/>
+      <circle cx="50" cy="48" r="22" fill="#17365d"/>
+      <path d="M20 99c4-28 13-41 30-41s26 13 30 41" fill="#17365d"/>
+      <text x="100" y="39" font-size="15" font-weight="700" letter-spacing="1" fill="#4d749f">UNIVERSITY POSITION</text>
+      <text x="100" y="68" font-size="19" font-weight="700" fill="#17365d">Build a broadly</text>
+      <text x="100" y="94" font-size="19" font-weight="700" fill="#17365d">representative class</text>
+    </g>
+    <g transform="translate(510 302)">
+      <rect width="320" height="126" rx="14" fill="#fff7ed" stroke="#b96c2e" stroke-width="3"/>
+      <circle cx="50" cy="48" r="22" fill="#7c3f13"/>
+      <path d="M20 99c4-28 13-41 30-41s26 13 30 41" fill="#7c3f13"/>
+      <text x="100" y="39" font-size="15" font-weight="700" letter-spacing="1" fill="#9a5724">APPLICANT POSITION</text>
+      <text x="100" y="68" font-size="19" font-weight="700" fill="#7c3f13">Government classified</text>
+      <text x="100" y="94" font-size="19" font-weight="700" fill="#7c3f13">me by race</text>
+    </g>
+    <path d="M670 252v50" stroke="#64748b" stroke-width="3" stroke-dasharray="7 7"/>
+  </g>
 </svg>

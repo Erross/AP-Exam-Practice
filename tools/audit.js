@@ -53,6 +53,7 @@ for (const [groupId, questions] of groupMap) {
     assert.equal(questions.length, 2, `${groupId}: visual sets require two items`);
     assert.ok(fs.existsSync(questions[0].stimulus.image), `${groupId}: image asset missing`);
     assert.ok(questions[0].stimulus.alt.length >= 20, `${groupId}: meaningful alt text required`);
+    assert.ok(!questions[0].stimulus.description, `${groupId}: do not pre-interpret a visual with a prose caption`);
   } else {
     assert.ok(questions.length >= 3 && questions.length <= 4, `${groupId}: text sets require 3-4 items`);
   }
@@ -61,6 +62,26 @@ assert.ok(groupCounts.quantitative >= 5);
 assert.ok(groupCounts.foundational >= 1);
 assert.ok(groupCounts.text >= 1);
 assert.ok(groupCounts.visual >= 3);
+
+// A visual source may supply evidence, but it must not print the course term or
+// doctrine that its associated questions ask students to identify. Check the
+// visible asset text and every user-facing source field, including accessible
+// alternatives, so the same standard applies to sighted and screen-reader users.
+const visualLeakageTerms = {
+  "apgov-g-visual-president": ["bully pulpit", "agenda setting"],
+  "apgov-g-visual-equal": ["equal protection", "fourteenth amendment", "strict scrutiny", "compelling government interest", "narrowly tailored"],
+  "apgov-g-visual-media": ["agenda setting", "horse-race journalism", "prior restraint", "selective incorporation", "selective exposure"],
+};
+for (const [groupId, forbiddenTerms] of Object.entries(visualLeakageTerms)) {
+  const questions = groupMap.get(groupId);
+  assert.ok(questions, `${groupId}: expected visual group is missing`);
+  const stimulus = questions[0].stimulus;
+  const asset = fs.readFileSync(stimulus.image, "utf8");
+  const exposedSource = [stimulus.title, stimulus.alt, stimulus.description, asset].join(" ").toLowerCase();
+  forbiddenTerms.forEach((term) => {
+    assert.ok(!exposedSource.includes(term), `${groupId}: visual source leaks assessed term "${term}"`);
+  });
+}
 
 const wordCount = (text) => text.trim().split(/\s+/).length;
 let uniqueLongest = 0;
