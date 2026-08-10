@@ -1,6 +1,6 @@
 # AP Exam Practice
 
-A free, timed, unofficial multiple-choice practice app for AP subjects. The application is static HTML, CSS, and JavaScript: no account, backend, analytics, or network requests.
+A free, timed, unofficial multiple-choice practice app for AP subjects. The application is static HTML, CSS, and JavaScript: no account, backend, analytics, or network requests. Continuous integration runs checks on branches and pull requests before merging to main.
 
 ## Released content
 
