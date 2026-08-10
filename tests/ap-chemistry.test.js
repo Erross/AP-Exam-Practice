@@ -10,7 +10,8 @@ function loadChemistrySubject() {
   vm.createContext(sandbox);
   vm.runInContext(fs.readFileSync("js/subjects.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("js/ap-chemistry-metadata.js", "utf8"), sandbox);
-  return sandbox.module.exports.AP_SUBJECTS.find((item) => item.id === "ap-chemistry");
+  const subject = sandbox.module.exports.AP_SUBJECTS.find((item) => item.id === "ap-chemistry");
+  return JSON.parse(JSON.stringify(subject));
 }
 
 const bank = loadChemistryBank();
