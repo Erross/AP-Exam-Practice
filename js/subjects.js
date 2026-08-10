@@ -66,14 +66,41 @@ const AP_SUBJECTS = [
     name: "AP English Language and Composition",
     category: "English",
     tier: 1,
+    // VERIFIED 2026-08-10:
+    // https://apcentral.collegeboard.org/courses/ap-english-language-and-composition/exam
+    // and the AP English Language and Composition CED (© 2024, Exam Information).
+    // Section I has 45 questions in five passage sets: two Reading sets totaling
+    // 23-25 questions, followed by three Writing sets totaling 20-22 questions.
+    // This bank selects a valid 24 Reading / 21 Writing configuration.
+    // Section II has three essays in 2hr 15min, including a 15-minute reading period.
     mcqCount: 45,
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 15m",
-    formatVerified: false,
+    formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    units: [
+      { id: "RHS", name: "Rhetorical Situation", examWeight: 0.25, examWeightRange: [0.22, 0.28] },
+      { id: "CLE", name: "Claims and Evidence", examWeight: 0.25, examWeightRange: [0.24, 0.30] },
+      { id: "REO", name: "Reasoning and Organization", examWeight: 0.25, examWeightRange: [0.24, 0.30] },
+      { id: "STL", name: "Style", examWeight: 0.25, examWeightRange: [0.22, 0.28] },
+    ],
+    skillRanges: {
+      "1": [0.11, 0.14], "2": [0.11, 0.14], "3": [0.13, 0.16], "4": [0.11, 0.14],
+      "5": [0.13, 0.16], "6": [0.11, 0.14], "7": [0.11, 0.14], "8": [0.11, 0.14],
+    },
+    setBlueprint: {
+      field: "setType",
+      order: ["reading", "writing-long", "writing-short"],
+      counts: { reading: 2, "writing-long": 2, "writing-short": 1 },
+      preserveCategoryOrder: true,
+    },
+    freeResponse: {
+      timeMinutes: 135,
+      readingPeriodMinutes: 15,
+      questions: ["Synthesis", "Rhetorical Analysis", "Argument"],
+    },
     dataVar: "QUESTIONS_AP_ENGLISH_LANGUAGE",
   },
   {
@@ -81,14 +108,42 @@ const AP_SUBJECTS = [
     name: "AP English Literature and Composition",
     category: "English",
     tier: 1,
+    // VERIFIED 2026-08-10:
+    // https://apcentral.collegeboard.org/courses/ap-english-literature-and-composition/exam
+    // and the AP English Literature and Composition CED (© 2024, Exam Information).
+    // Section I has 55 questions in five sets of 8-13, with at least two prose
+    // fiction/drama passages and at least two poetry passages. Section II has
+    // three essays in 2 hours. This bank selects a valid 24 short-fiction /
+    // 22 poetry / 9 drama configuration within the published category ranges.
     mcqCount: 55,
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",
-    formatVerified: false,
+    formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // CED groups the nine instructional units into these three MCQ categories.
+    // Point weights are midpoints of the published ranges: .455, .405, .165.
+    units: [
+      { id: "SF", name: "Short Fiction", examWeight: 0.455, examWeightRange: [0.42, 0.49] },
+      { id: "PO", name: "Poetry", examWeight: 0.405, examWeightRange: [0.36, 0.45] },
+      { id: "LD", name: "Longer Fiction or Drama", examWeight: 0.165, examWeightRange: [0.15, 0.18] },
+    ],
+    skillRanges: {
+      "1": [0.16, 0.20], "2": [0.03, 0.06], "3": [0.16, 0.20], "4": [0.21, 0.26],
+      "5": [0.10, 0.13], "6": [0.10, 0.13], "7": [0.10, 0.13],
+    },
+    setBlueprint: {
+      field: "setType",
+      order: ["short-fiction", "poetry", "longer-drama"],
+      counts: { "short-fiction": 2, poetry: 2, "longer-drama": 1 },
+      preserveCategoryOrder: false,
+    },
+    freeResponse: {
+      timeMinutes: 120,
+      readingPeriodMinutes: 0,
+      questions: ["Poetry Analysis", "Prose Fiction Analysis", "Literary Argument"],
+    },
     dataVar: "QUESTIONS_AP_ENGLISH_LITERATURE",
   },
   {
