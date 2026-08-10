@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { AP_SUBJECTS } = require("../js/subjects");
-const { drawExam, drawBlocks, shuffleQuestionOptions } = require("../js/draw");
+const { drawExam, drawBlocks, shuffleQuestionOptions, summarizeAttributes } = require("../js/draw");
 const { loadGovernmentBank } = require("./helpers");
 
 const subject = AP_SUBJECTS.find((item) => item.id === "ap-us-government");
@@ -104,5 +104,38 @@ test("every Government draw is free of same-variant repeats", () => {
       seen.add(q.variantGroupId);
     });
   }
+});
+
+test("attributeRanges holds an arbitrary field's split across the whole draw, e.g. a calculator section", () => {
+  // Synthetic subject mirroring a multi-part MCQ section (like AP Calculus's
+  // no-calculator/calculator-required split): one unit, a bank with slack
+  // beyond the draw size so the sampler must actually choose, and an exact
+  // 7/3 split enforced purely through attributeRanges rather than a bespoke
+  // drawer for this one subject.
+  const syntheticSubject = {
+    mcqCount: 10,
+    units: [{ id: "U1", examWeight: 1 }],
+    attributeRanges: { calculatorAllowed: { false: [7, 7], true: [3, 3] } },
+  };
+  const pool = [];
+  for (let i = 0; i < 14; i++) pool.push({ id: `nc${i}`, unit: "U1", calculatorAllowed: false });
+  for (let i = 0; i < 6; i++) pool.push({ id: `c${i}`, unit: "U1", calculatorAllowed: true });
+
+  for (let attempt = 0; attempt < 200; attempt++) {
+    const drawn = drawExam(syntheticSubject, pool);
+    assert.equal(drawn.length, 10);
+    assert.equal(drawn.filter((q) => q.calculatorAllowed === false).length, 7);
+    assert.equal(drawn.filter((q) => q.calculatorAllowed === true).length, 3);
+  }
+});
+
+test("summarizeAttributes tallies arbitrary question fields per block", () => {
+  const blocks = [
+    [{ calculatorAllowed: true }],
+    [{ calculatorAllowed: false }, { calculatorAllowed: false }],
+  ];
+  assert.deepEqual(summarizeAttributes(blocks, ["calculatorAllowed"]), {
+    calculatorAllowed: { true: 1, false: 2 },
+  });
 });
 
