@@ -50,11 +50,11 @@ const patterns = {
   asciiInequality: /<=|>=/,
   asciiPlusMinus: /\+\/-/,
   asciiSubscript: /\b[A-Za-z]_[A-Za-z0-9]+\b/,
-  plainInfinity: /(?:^|[\s=(])(?:\+|-|−)?infinity\b/i,
+  // Signed infinity and "approaches infinity" are raw symbolic forms; prose such
+  // as "limit at infinity" is standard readable mathematical English.
+  plainInfinity: /(?:\+|-|−)infinity\b|approaches\s+infinity\b/i,
   greekWord: /\b(?:Delta|theta|lambda|sigma)\b/,
   plainIonicCharge: /\b(?:H|Li|Na|K|Mg|Ca|Al|Fe|Cu|Zn|Ag|F|Cl|Br|O|N|S)\d*[+−-](?=\s|,|\.|\)|\/|$)/,
-  // Formulas with digits should render those digits as subscripts. Formulas such
-  // as HCl and NaOH need no typography change and are intentionally not flagged.
   plainChemFormula: /\b(?:H2O|CO2|O2|N2|H2|NH3|CH4|H2SO4|HNO3|NO2|SO2|SO3|CaCO3|Na2CO3|Cl2|Br2|I2|Fe2O3|Al2O3)\b/,
 };
 
