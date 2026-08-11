@@ -8,6 +8,15 @@ function loadGovernmentBank() {
   return sandbox.window.QUESTIONS_AP_US_GOVERNMENT;
 }
 
+function loadChemistryBank() {
+  const sandbox = { window: {} };
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-chemistry.js", "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-chemistry-curation.js", "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-chemistry-corrections.js", "utf8"), sandbox);
+  return sandbox.window.QUESTIONS_AP_CHEMISTRY;
+}
+
 function loadPhysics2Bank() {
   const sandbox = { window: {} };
   vm.createContext(sandbox);
@@ -15,4 +24,4 @@ function loadPhysics2Bank() {
   return sandbox.window.QUESTIONS_AP_PHYSICS_2;
 }
 
-module.exports = { loadGovernmentBank, loadPhysics2Bank };
+module.exports = { loadGovernmentBank, loadChemistryBank, loadPhysics2Bank };

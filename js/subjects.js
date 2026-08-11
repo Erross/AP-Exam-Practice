@@ -78,7 +78,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 15m",
     formatVerified: true,
-    releaseStatus: "released",
+    releaseStatus: "draft", // reverted pending independent content review of the public-domain passage replacement (see subject/ap-english-public-domain-passages),
     allowsMultiSelect: false,
     tierNote: null,
     // Reporting groups only. College Board publishes MCQ weights for the eight
@@ -124,7 +124,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "released",
+    releaseStatus: "draft", // reverted pending independent content review of the public-domain passage replacement (see subject/ap-english-public-domain-passages),
     allowsMultiSelect: false,
     tierNote: null,
     // CED groups the nine instructional units into these three MCQ categories.
@@ -480,14 +480,53 @@ const AP_SUBJECTS = [
     name: "AP Chemistry",
     category: "Sciences",
     tier: 1,
+    // VERIFIED 2026-08-10:
+    // https://apcentral.collegeboard.org/courses/ap-chemistry/exam
+    // AP Chemistry Course and Exam Description effective Fall 2024:
+    // https://apcentral.collegeboard.org/media/pdf/ap-chemistry-course-and-exam-description.pdf
+    // Section I: 60 single-select MCQs in 90 minutes, 50% of score; discrete and
+    // stimulus/data-set questions. Calculators are permitted throughout.
+    // Section II: 7 FRQs (3 long, 4 short) in 105 minutes, 50% of score.
     mcqCount: 60,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 15m",
-    formatVerified: false,
+    formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // Published CED MCQ ranges are preserved exactly. With a 60-question integer
+    // draw no allocation can satisfy all nine ranges simultaneously: the seven
+    // 7–9% units contribute at most 5 each, U3 at most 13, and U8 at most 9, for
+    // a strict-band maximum of 57. This 6/6/13/6/5/5/5/9/5 blueprint minimizes
+    // total discrete deviation; U1/U2/U4 are each one question above 9%.
+    units: [
+      { id: "U1", name: "Atomic Structure and Properties", examWeight: 6 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U2", name: "Compound Structure and Properties", examWeight: 6 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U3", name: "Properties of Substances and Mixtures", examWeight: 13 / 60, examWeightRange: [0.18, 0.22] },
+      { id: "U4", name: "Chemical Reactions", examWeight: 6 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U5", name: "Kinetics", examWeight: 5 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U6", name: "Thermochemistry", examWeight: 5 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U7", name: "Equilibrium", examWeight: 5 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U8", name: "Acids and Bases", examWeight: 9 / 60, examWeightRange: [0.11, 0.15] },
+      { id: "U9", name: "Thermodynamics and Electrochemistry", examWeight: 5 / 60, examWeightRange: [0.07, 0.09] },
+    ],
+    // CED Section I science-practice weights converted to inclusive integer
+    // counts for 60 questions. Practice 3 is assessed in free response, not MCQ.
+    sciencePracticeRanges: {
+      "1": [5, 7],
+      "2": [5, 7],
+      "4": [14, 18],
+      "5": [21, 25],
+      "6": [5, 7],
+    },
+    stimulusSetRange: [2, 5],
+    freeResponse: {
+      timeMinutes: 105,
+      questions: [
+        "Long Answer 1", "Long Answer 2", "Long Answer 3",
+        "Short Answer 1", "Short Answer 2", "Short Answer 3", "Short Answer 4",
+      ],
+    },
     dataVar: "QUESTIONS_AP_CHEMISTRY",
   },
   {
