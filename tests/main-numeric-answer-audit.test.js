@@ -1,0 +1,5 @@
+const test=require('node:test');const fs=require('node:fs');const vm=require('node:vm');
+function load(files,g){const s={window:{}};vm.createContext(s);for(const f of files)vm.runInContext(fs.readFileSync(f,'utf8'),s);return s.window[g];}
+const banks={C:load(['data/ap-chemistry.js','data/ap-chemistry-curation.js','data/ap-chemistry-corrections.js'],'QUESTIONS_AP_CHEMISTRY'),A:load(['data/ap-calculus-ab.js'],'QUESTIONS_AP_CALCULUS_AB'),P:load(['data/ap-physics-2.js'],'QUESTIONS_AP_PHYSICS_2')};
+function nums(s){return (String(s).replace(/[−–—]/g,'-').match(/[+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:\s*[×x]\s*10\s*\^?\s*[+-]?\d+)?/g)||[]).map(x=>x.replace(/\s+/g,'').replace(/x/g,'×'));}
+for(const [k,bank] of Object.entries(banks))test(`NUMERIC ${k}`,()=>{const flags=[];let n=0;for(const q of bank){const a=q.o[q.c[0]];const an=nums(a);if(!an.length)continue;n++;const en=nums(q.e);const shared=an.some(x=>en.includes(x));if(!shared)flags.push({id:q.id,a,an,e:q.e,en});}console.log('NUMERIC_SUMMARY',k,n,'flagged',flags.length);for(const f of flags)console.log('NUMERIC_FLAG',k,JSON.stringify(f));});
