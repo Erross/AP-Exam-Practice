@@ -14,6 +14,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Patch reconstruction script
+        run: node .apstats-hotfix.js
       - name: Reconstruct and wire AP Statistics
         run: node .apstats-repair.js
       - name: Validate repaired course
@@ -22,7 +24,7 @@ jobs:
           npm run check
       - name: Commit repair
         run: |
-          rm -rf .apstats-build .apstats-parts .apstats-repair.js .github/workflows/apstats-repair.yml
+          rm -rf .apstats-build .apstats-parts .apstats-repair.js .apstats-hotfix.js .github/workflows/apstats-repair.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
