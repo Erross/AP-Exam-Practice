@@ -78,7 +78,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 15m",
     formatVerified: true,
-    releaseStatus: "released",
+    releaseStatus: "draft", // reverted pending independent content review of the public-domain passage replacement (see subject/ap-english-public-domain-passages),
     allowsMultiSelect: false,
     tierNote: null,
     // Reporting groups only. College Board publishes MCQ weights for the eight
@@ -124,7 +124,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "released",
+    releaseStatus: "draft", // reverted pending independent content review of the public-domain passage replacement (see subject/ap-english-public-domain-passages),
     allowsMultiSelect: false,
     tierNote: null,
     // CED groups the nine instructional units into these three MCQ categories.
