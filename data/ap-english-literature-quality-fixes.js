@@ -86,9 +86,16 @@
     .replace(/\bnever\b/gi, "rarely")
     .replace(/\bevery\b/gi, "most")
     .replace(/\bonly\b/gi, "mainly")
+    .replace(/\bentirely\b/gi, "largely")
+    .replace(/\bunlimited\b/gi, "very broad")
+    .replace(/\bnone\b/gi, "few")
     .replace(/\ball\b/gi, "the relevant")
     .replace(/\bcompletely\b/gi, "substantially")
-    .replace(/\bimpossible\b/gi, "unlikely");
+    .replace(/\bidentical\b/gi, "closely similar")
+    .replace(/\bimpossible\b/gi, "unlikely")
+    .replace(/\bguarantees\b/gi, "strongly suggests")
+    .replace(/\bguaranteed\b/gi, "strongly suggested")
+    .replace(/\bguarantee\b/gi, "strongly suggest");
   absoluteIds.forEach((id) => {
     const q = byId.get(id);
     let kept = false;
