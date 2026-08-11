@@ -29,10 +29,10 @@ Object.entries(CHEM_SEMANTIC_KEYS).forEach(([id, correctText]) => {
 
 // CONTENT_STANDARDS.md §3 allows an occasional absolute-language distractor but
 // treats two or more in one item as a statistical tell. The independent audit
-// found the following 15 items. Preserve one such distractor at most and soften
-// additional ones without changing the keyed response.
+// plus CI found the following 16 items. Preserve one such distractor at most and
+// soften additional ones without changing the keyed response.
 const CHEM_ABSOLUTE_LANGUAGE_AUDIT_IDS = new Set([
-  "apchem-u2-008", "apchem-u4-002", "apchem-u5-009", "apchem-u5-010", "apchem-u5-022",
+  "apchem-u2-008", "apchem-u3-010", "apchem-u4-002", "apchem-u5-009", "apchem-u5-010", "apchem-u5-022",
   "apchem-u6-002", "apchem-u7-004", "apchem-u7-015", "apchem-u7-018", "apchem-u8-001",
   "apchem-u8-011", "apchem-u8-015", "apchem-u8-019", "apchem-u8-022", "apchem-u9-002",
 ]);
