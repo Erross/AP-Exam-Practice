@@ -19,11 +19,18 @@ test("notation tokenizer handles powers, units, and caret ionic charges", () => 
   assert.equal(compact("e^(−kt)"), "text:e|sup:−kt");
 });
 
+test("notation tokenizer renders whitelisted scientific subscripts", () => {
+  assert.equal(compact("f(x_i) Δx and q_p"), "text:f(|text:x|sub:i|text:) Δx and |text:q|sub:p");
+  assert.equal(compact("H_products − H_reactants"), "text:H|sub:products|text: − |text:H|sub:reactants");
+  assert.equal(compact("ΔH_vap and K_eq"), "text:ΔH|sub:vap|text: and |text:K|sub:eq");
+});
+
 test("notation tokenizer renders chemical subscripts and common plain ionic charges", () => {
   assert.equal(compact("H2O and CO2"), "text:H|sub:2|text:O|text: and |text:C|text:O|sub:2");
   assert.equal(compact("O2 and Cl2"), "text:O|sub:2|text: and |text:Cl|sub:2");
   assert.equal(compact("Ca2+ and O2− and Cl−"), "text:Ca|sup:2+|text: and |text:O|sup:2−|text: and |text:Cl|sup:−");
   assert.equal(compact("NH4+ and SO4^2−"), "text:N|text:H|sub:4|sup:+|text: and |text:S|text:O|sub:4|sup:2−");
+  assert.equal(compact("sigma bonds and pi-bonding"), "text:σ bonds and π-bonding");
 });
 
 test("notation tokenizer uses familiar radical and arrow symbols", () => {
@@ -37,4 +44,5 @@ test("notation tokenizer leaves programming/unit-like text alone", () => {
   assert.deepEqual(tokenizeNotation("Unit U2"), [{ type: "text", value: "Unit U2" }]);
   assert.deepEqual(tokenizeNotation("node->next"), [{ type: "text", value: "node->next" }]);
   assert.deepEqual(tokenizeNotation("i <= n"), [{ type: "text", value: "i <= n" }]);
+  assert.deepEqual(tokenizeNotation("student_score"), [{ type: "text", value: "student_score" }]);
 });
