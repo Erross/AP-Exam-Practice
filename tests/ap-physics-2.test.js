@@ -28,7 +28,7 @@ test("AP Physics 2 bank matches its declared CED metadata and unit counts", () =
   assert.equal(subject.mcqTimeMinutes, 85);
   assert.equal(subject.freeResponse.timeMinutes, 95);
   assert.deepEqual(subject.freeResponse.questions, ["Question 1 (Mathematical Routines)", "Question 2 (Translation Between Representations)", "Question 3 (Experimental Design and Analysis)", "Question 4 (Qualitative/Quantitative Translation)"]);
-  assert.equal(subject.releaseStatus, "draft", "Physics 2 must stay draft until an independent content review happens");
+  assert.equal(subject.releaseStatus, "released", "reviewed Physics 2 should be released");
   assert.deepEqual(
     Object.fromEntries(subject.units.map((unit) => [unit.id, bank.filter((q) => q.unit === unit.id).length])),
     EXPECTED_UNIT_COUNTS

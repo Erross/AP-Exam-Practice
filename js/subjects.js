@@ -78,7 +78,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 15m",
     formatVerified: true,
-    releaseStatus: "draft", // reverted pending independent content review of the public-domain passage replacement (see subject/ap-english-public-domain-passages),
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // Reporting groups only. College Board publishes MCQ weights for the eight
@@ -124,7 +124,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft", // reverted pending independent content review of the public-domain passage replacement (see subject/ap-english-public-domain-passages),
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // CED groups the nine instructional units into these three MCQ categories.
@@ -350,7 +350,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 100,
     totalExamTimeLabel: "3h 10m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // Unit exam weightings, quoted exactly from the CED's "Exam Weighting for
@@ -553,7 +553,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 15m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // Published CED MCQ ranges are preserved exactly. With a 60-question integer
@@ -639,7 +639,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // VERIFIED 2026-08-11: https://apcentral.collegeboard.org/media/pdf/ap-physics-2-course-at-a-glance.pdf

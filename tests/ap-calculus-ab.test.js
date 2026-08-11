@@ -44,7 +44,7 @@ const SKILL_PATTERN = /^[123]\.[A-G]$/;
 
 test("Calculus AB bank has full CED coverage and audited metadata", () => {
   assert.equal(bank.length, 120);
-  assert.equal(subject.releaseStatus, "draft", "Calculus AB has not yet passed independent content review");
+  assert.equal(subject.releaseStatus, "released", "reviewed Calculus AB should be released");
   assert.equal(subject.formatVerified, true);
   assert.equal(subject.mcqCount, 42);
   assert.deepEqual(subject.attributeRanges, { calculatorAllowed: { false: [29, 29], true: [13, 13] } });
