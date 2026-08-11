@@ -92,6 +92,42 @@ Nora (moving towards the stove). As you please, Torvald.`;
   const trifles = bank.find((q) => q.stimulusGroupId === "aplit-g-ld-kitchen").stimulus;
   trifles.source = "Public-domain text: https://www.gutenberg.org/ebooks/59432, 1916.";
 
+  // The first Wilde draft stopped immediately after Algernon's closing judgment of Lane.
+  // Continue the same contiguous Act I excerpt through Jack's entrance and the next exchange
+  // so the drama set clears the project's minimum passage-length gate without padding.
+  const wilde = bank.find((q) => q.stimulusGroupId === "aplit-g-ld-clock").stimulus;
+  wilde.text += `
+
+[Enter Lane.]
+
+LANE. Mr. Ernest Worthing.
+
+[Enter Jack.]
+
+[Lane goes out.]
+
+ALGERNON. How are you, my dear Ernest? What brings you up to town?
+
+JACK. Oh, pleasure, pleasure! What else should bring one anywhere? Eating as usual, I see, Algy!
+
+ALGERNON. [Stiffly.] I believe it is customary in good society to take some slight refreshment at five o'clock. Where have you been since last Thursday?
+
+JACK. [Sitting down on the sofa.] In the country.
+
+ALGERNON. What on earth do you do there?
+
+JACK. [Pulling off his gloves.] When one is in town one amuses oneself. When one is in the country one amuses other people. It is excessively boring.
+
+ALGERNON. And who are the people you amuse?
+
+JACK. [Airily.] Oh, neighbours, neighbours.
+
+ALGERNON. Got nice neighbours in your part of Shropshire?
+
+JACK. Perfectly horrid! Never speak to one of them.
+
+ALGERNON. How immensely you must amuse them! [Goes over and takes sandwich.] By the way, Shropshire is your county, is it not?`;
+
   // Avoid stacked absolute-language distractors in the Ibsen structure question.
   const orbitSix = byId.get("aplit-ld-orbit-06");
   const correct = orbitSix.o[orbitSix.c[0]];
