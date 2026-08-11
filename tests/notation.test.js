@@ -1,0 +1,50 @@
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const { tokenizeNotation } = require("../js/notation.js");
+
+function compact(text) {
+  return tokenizeNotation(text).map((token) => `${token.type}:${token.value}`).join("|");
+}
+
+test("notation tokenizer turns scientific-notation powers into superscripts", () => {
+  assert.equal(compact("3.0×10^-4 J"), "text:3.0×10|sup:−4|text: J");
+  assert.equal(compact("3.0×10^−4 J"), "text:3.0×10|sup:−4|text: J");
+});
+
+test("notation tokenizer handles powers, units, and caret ionic charges", () => {
+  assert.equal(compact("x^2 + y^{10}"), "text:x|sup:2|text: + y|sup:10");
+  assert.equal(compact("m^2/s^2"), "text:m|sup:2|text:/s|sup:2");
+  assert.equal(compact("Fe^3+"), "text:Fe|sup:3+");
+  assert.equal(compact("H^+"), "text:H|sup:+");
+  assert.equal(compact("e^(−kt)"), "text:e|sup:−kt");
+});
+
+test("notation tokenizer renders whitelisted scientific subscripts", () => {
+  assert.equal(compact("f(x_i) Δx and q_p"), "text:f(|text:x|sub:i|text:) Δx and |text:q|sub:p");
+  assert.equal(compact("H_products − H_reactants"), "text:H|sub:products|text: − |text:H|sub:reactants");
+  assert.equal(compact("ΔH_vap and K_eq"), "text:Δ|text:H|sub:vap|text: and |text:K|sub:eq");
+  assert.equal(compact("R_total, V_parallel, v_sound, K_new"), "text:R|sub:total|text:, |text:V|sub:parallel|text:, |text:v|sub:sound|text:, |text:K|sub:new");
+});
+
+test("notation tokenizer renders chemical subscripts and common plain ionic charges", () => {
+  assert.equal(compact("H2O and CO2"), "text:H|sub:2|text:O|text: and |text:C|text:O|sub:2");
+  assert.equal(compact("O2 and Cl2"), "text:O|sub:2|text: and |text:Cl|sub:2");
+  assert.equal(compact("Ca2+ and O2− and Cl−"), "text:Ca|sup:2+|text: and |text:O|sup:2−|text: and |text:Cl|sup:−");
+  assert.equal(compact("NH4+ and SO4^2−"), "text:N|text:H|sub:4|sup:+|text: and |text:S|text:O|sub:4|sup:2−");
+  assert.equal(compact("sigma bonds and pi-bonding"), "text:σ bonds and π-bonding");
+});
+
+test("notation tokenizer uses familiar radical, arrow, plus-minus, and infinity symbols", () => {
+  assert.equal(compact("sqrt([A]) and sqrt (K)"), "text:√([A]) and √(K)");
+  assert.equal(compact("x -> 0 and A <-> B"), "text:x → 0 and A ↔ B");
+  assert.equal(compact("5 +/- 0.2"), "text:5 ± 0.2");
+  assert.equal(compact("x approaches +infinity, y approaches -infinity, n approaches infinity"), "text:x approaches +∞, y approaches −∞, n approaches ∞");
+});
+
+test("notation tokenizer leaves programming/unit-like text alone", () => {
+  assert.deepEqual(tokenizeNotation("value = a ^ b;"), [{ type: "text", value: "value = a ^ b;" }]);
+  assert.deepEqual(tokenizeNotation("Unit U2"), [{ type: "text", value: "Unit U2" }]);
+  assert.deepEqual(tokenizeNotation("node->next"), [{ type: "text", value: "node->next" }]);
+  assert.deepEqual(tokenizeNotation("i <= n"), [{ type: "text", value: "i <= n" }]);
+  assert.deepEqual(tokenizeNotation("student_score"), [{ type: "text", value: "student_score" }]);
+});
