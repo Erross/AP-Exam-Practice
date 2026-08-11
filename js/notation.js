@@ -1,11 +1,14 @@
 // Safe notation renderer: converts common math/science plain-text notation into
 // semantic DOM without innerHTML. This keeps question-bank source readable while
-// presenting powers, ionic charges, chemical subscripts, radicals, and common
-// mathematical symbols the way students normally see them in AP course materials.
+// presenting powers, scientific subscripts, ionic charges, chemical formulas,
+// radicals, and common mathematical symbols in familiar AP-style notation.
 (function (root) {
   "use strict";
 
   const SUP_PATTERN = /\^(\{([^{}]+)\}|\(([^()]+)\)|([+\-−]?\d+(?:\.\d+)?[+\-−]?|[+\-−]|[A-Za-z]))/g;
+  // Whitelist notation-style underscore subscripts rather than treating every
+  // underscore as mathematics; that preserves Java/pseudocode identifiers.
+  const SUB_PATTERN = /\b(ΔH|[A-Za-z])_(products|reactants|final|initial|system|water|target|vap|rms|net|eq|max|min|sp|p|c|a|b|w|i|f)\b/g;
 
   // AP science banks use a fairly conventional subset of element symbols. The
   // list deliberately excludes one-letter U so strings such as a unit label U2
@@ -24,7 +27,11 @@
       // other programming syntax is not silently rewritten.
       .replace(/\s<->\s/g, " ↔ ")
       .replace(/\s->\s/g, " → ")
-      .replace(/\+\/-/g, "±");
+      .replace(/\+\/-/g, "±")
+      // These replacements are restricted to chemistry terminology, so normal
+      // prose using the words sigma or pi is left alone.
+      .replace(/\bsigma(?=-bonding|-bond|\s+bonding|\s+bond|\s+domains?)/gi, "σ")
+      .replace(/\bpi(?=-bonding|-bond|\s+bonding|\s+bond)/gi, "π");
   }
 
   function tokenizeChemistry(text) {
@@ -37,15 +44,11 @@
     while ((match = CHEM_PATTERN.exec(source)) !== null) {
       if (match.index > lastIndex) tokens.push({ type: "text", value: source.slice(lastIndex, match.index) });
 
-      // First alternative: a monatomic ion written in common plain form such as
-      // Ca2+, Fe3+, O2−, or Cl−. The magnitude and sign belong in superscript.
       if (match[1]) {
         tokens.push({ type: "text", value: match[1] });
         const charge = `${match[2] || ""}${match[3]}`.replace(/-/g, "−");
         tokens.push({ type: "sup", value: charge });
       } else {
-        // Second alternative: a molecular/ionic formula containing numeric
-        // subscripts, optionally followed by a one-character overall charge.
         const formula = match[4];
         let part;
         ELEMENT_PART_PATTERN.lastIndex = 0;
@@ -80,10 +83,27 @@
     return tokens;
   }
 
+  function tokenizeSubscripts(text) {
+    const source = String(text);
+    const tokens = [];
+    let lastIndex = 0;
+    let match;
+    SUB_PATTERN.lastIndex = 0;
+    while ((match = SUB_PATTERN.exec(source)) !== null) {
+      if (match.index > lastIndex) tokens.push({ type: "text", value: source.slice(lastIndex, match.index) });
+      tokens.push({ type: "text", value: match[1] });
+      tokens.push({ type: "sub", value: match[2] });
+      lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex === 0) return [{ type: "text", value: source }];
+    if (lastIndex < source.length) tokens.push({ type: "text", value: source.slice(lastIndex) });
+    return tokens;
+  }
+
   function tokenizeNotation(text) {
-    return tokenizeSuperscripts(text).flatMap((token) =>
-      token.type === "text" ? tokenizeChemistry(token.value) : [token]
-    );
+    return tokenizeSuperscripts(text)
+      .flatMap((token) => token.type === "text" ? tokenizeSubscripts(token.value) : [token])
+      .flatMap((token) => token.type === "text" ? tokenizeChemistry(token.value) : [token]);
   }
 
   function replaceTextNode(textNode) {
