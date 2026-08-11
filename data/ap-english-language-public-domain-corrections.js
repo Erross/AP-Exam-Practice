@@ -60,7 +60,6 @@
     "aplang-r-shade-09": "cause-and-effect reasoning about what women are taught to seek",
     "aplang-r-shade-10": "flattering on the surface but ultimately harmful",
     "aplang-r-shade-11": "desire versus respect for a thinking companion",
-
     "aplang-r-repair-01": "show how the prohibition revealed literacy's liberating power",
     "aplang-r-repair-02": "education as a source of intellectual agency",
     "aplang-r-repair-03": "Auld unintentionally teaches Douglass why reading matters",
@@ -73,7 +72,6 @@
     "aplang-r-repair-10": "sudden understanding of ignorance's role in slavery",
     "aplang-r-repair-11": "sharpens the opposing interests of master and learner",
     "aplang-r-repair-12": "introduces the idea that resolves the preceding difficulty",
-
     "aplang-r-maps-01": "argue for limited government judged by its practical effects",
     "aplang-r-maps-02": "may reject abstraction but consider practical reform",
     "aplang-r-maps-03": "an example of government acting beyond popular consent",
@@ -86,7 +84,6 @@
     "aplang-r-maps-10": "a practical means rather than an end in itself",
     "aplang-r-maps-11": "build an emphatic case against governmental achievement",
     "aplang-r-maps-12": "sets a definition beside a limitation on actual governments",
-
     "aplang-r-replicas-02": "social discomfort surrounding direct discussion of race",
     "aplang-r-replicas-03": "grounding an abstract claim in personal experience",
     "aplang-r-replicas-04": "He says the desired words and opportunities belonged to others.",
@@ -98,7 +95,6 @@
     "aplang-r-replicas-10": "circling a subject they hesitate to state directly",
     "aplang-r-replicas-11": "competitive effort to counter exclusion through achievement",
     "aplang-r-replicas-12": "examples of darker responses to the same condition",
-
     "aplang-r-observers-01": "trace early social responsibility through childhood memories",
     "aplang-r-observers-02": "reflection that recognizes earnest motives and childish exaggeration",
     "aplang-r-observers-03": "showing when an admired city became morally complicated",
