@@ -4,6 +4,8 @@ let data = fs.readFileSync("data/ap-physics-2.js", "utf8");
 for (const [from, to] of [
   ["Frequency increases by the same amount in every trial.", "Frequency increases by a uniform 100 Hz between trials."],
   ["Wavelength is numerically equal to frequency in every row.", "Wavelength and frequency have matching numerical values."],
+  ["Energy is the same for every frequency.", "Energy stays near 2.5 eV as frequency changes."],
+  ["Frequency changes but energy decreases in every row.", "Energy decreases as frequency increases across the measurements."],
 ]) {
   if (!data.includes(from)) throw new Error(`Missing final Physics 2 wording target: ${from}`);
   data = data.replace(from, to);
