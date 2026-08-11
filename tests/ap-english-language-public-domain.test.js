@@ -7,11 +7,7 @@ const { shuffleQuestionOptions } = require("../js/draw");
 function loadBank() {
   const sandbox = { window: {} };
   vm.createContext(sandbox);
-  for (const file of [
-    "data/ap-english-language.js",
-    "data/ap-english-language-public-domain.js",
-    "data/ap-english-language-public-domain-corrections.js",
-  ]) {
+  for (const file of ["data/ap-english-language.js"]) {
     vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
   }
   return sandbox.window.QUESTIONS_AP_ENGLISH_LANGUAGE;

@@ -158,7 +158,9 @@ test("English Literature bank covers the required prose, poetry, and drama compo
     assert.equal(questions.length, sizes[questions[0].setType], `${groupId}: wrong set size`);
   }
   assert.equal(new Set(literature.bank.filter((q) => q.setType === "poetry").map((q) => q.stimulusGroupId)).size, 5);
-  assert.ok(literature.bank.filter((q) => q.setType !== "poetry").every((q) => q.era === "contemporary"));
+  const nonPoetry = literature.bank.filter((q) => q.setType !== "poetry");
+  assert.ok(nonPoetry.every((q) => q.stimulus.source.startsWith("Public-domain text: https://")));
+  assert.ok(new Set(nonPoetry.map((q) => q.era)).size >= 2);
   assert.ok(literature.bank.filter((q) => q.setType === "poetry").every((q) => q.stimulus.source.startsWith("Public-domain text: https://")));
   assert.ok(literature.bank.filter((q) => q.era.startsWith("pre-20th")).length > 0);
   for (const questions of groups.values()) {

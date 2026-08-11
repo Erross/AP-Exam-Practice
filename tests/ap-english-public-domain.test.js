@@ -7,7 +7,7 @@ const { shuffleQuestionOptions } = require("../js/draw");
 function loadLiteratureWithReplacements() {
   const sandbox = { window: {} };
   vm.createContext(sandbox);
-  for (const file of ["data/ap-english-literature.js", "data/ap-english-literature-public-domain.js", "data/ap-english-public-domain-corrections.js"]) {
+  for (const file of ["data/ap-english-literature.js"]) {
     if (fs.existsSync(file)) vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
   }
   return sandbox.window.QUESTIONS_AP_ENGLISH_LITERATURE;
