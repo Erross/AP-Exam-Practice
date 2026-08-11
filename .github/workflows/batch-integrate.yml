@@ -24,23 +24,37 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - name: Fetch reviewed source branches
+      - name: Merge reviewed Calculus AB branch
         run: |
-          git fetch origin integration/2026-08-ap-physics-2 subject/ap-calculus-ab
-      - name: Integrate Physics 2
-        run: |
-          node tools/batch-integrate-active-branches.js
-          git add data/ap-physics-2.js tests/ap-physics-2.test.js tests/helpers.js js/subjects.js
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Batch integrate reviewed AP Physics 2"
-      - name: Diagnose Calculus AB merge conflicts
-        run: |
+          git fetch origin subject/ap-calculus-ab
+          git show origin/subject/ap-calculus-ab:tools/resolve-calculus-batch-merge.js > /tmp/resolve-calculus.js
           set +e
           git merge --no-commit --no-ff origin/subject/ap-calculus-ab
-          status=$?
-          echo "merge_status=$status"
-          echo "Unmerged files:"
-          git diff --name-only --diff-filter=U || true
-          exit 1
+          merge_status=$?
+          set -e
+          conflicts=$(git diff --name-only --diff-filter=U || true)
+          unexpected=$(printf '%s\n' "$conflicts" | grep -vE '^(README\.md|js/draw\.js|style\.css)?$' || true)
+          if [ -n "$unexpected" ]; then
+            echo "Unexpected conflicts:"
+            echo "$unexpected"
+            exit 1
+          fi
+          if echo "$conflicts" | grep -q '^README.md$'; then git checkout --ours README.md; fi
+          if echo "$conflicts" | grep -q '^js/draw.js$'; then git checkout --ours js/draw.js; fi
+          if echo "$conflicts" | grep -q '^style.css$'; then git checkout --ours style.css; fi
+          git checkout HEAD -- package-lock.json
+          node /tmp/resolve-calculus.js
+          rm -f tools/calculus-batch-conflicts.txt tools/resolve-calculus-batch-merge.js
+          rm -f .github/workflows/resolve-calculus-batch.yml .github/workflows/diagnose-calculus-batch.yml
+          rm -f tools/batch-integrate-active-branches.js
+          git add -A
+      - run: npm ci
+      - run: npm run check
+      - name: Commit green batch integration
+        run: |
+          rm -f .github/workflows/batch-integrate.yml
+          git add -A
+          git commit -m "Integrate reviewed AP Calculus AB into August batch"
+          git push origin HEAD:integration/2026-08-batch-release
