@@ -66,6 +66,8 @@ test("new Literature questions meet rationale, key, absolute-language, and bias 
   let amongLongest = 0;
   let correctWords = 0;
   let distractorWords = 0;
+  const defects = [];
+  const outliers = [];
   for (const q of questions) {
     assert.ok(q.q.length >= 20, `${q.id}: stem too short`);
     assert.ok(q.e.length >= 90, `${q.id}: rationale too short`);
@@ -73,20 +75,27 @@ test("new Literature questions meet rationale, key, absolute-language, and bias 
     const shuffled = shuffleQuestionOptions(q);
     assert.equal(shuffled.o[shuffled.c[0]], q.o[q.c[0]], `${q.id}: shuffle loses semantic key`);
     const distractors = q.o.filter((_, i) => i !== q.c[0]);
-    assert.ok(distractors.filter((option) => absolute.test(option)).length < 2,
-      `${q.id}: multiple absolute-language distractors`);
+    const absoluteCount = distractors.filter((option) => absolute.test(option)).length;
+    if (absoluteCount >= 2) defects.push(`${q.id}: ${absoluteCount} absolute-language distractors`);
     const lengths = q.o.map(wordCount);
     const longest = Math.max(...lengths);
     const c = lengths[q.c[0]];
     if (c === longest) amongLongest++;
-    if (c === longest && lengths.filter((n) => n === longest).length === 1) uniqueLongest++;
+    if (c === longest && lengths.filter((n) => n === longest).length === 1) {
+      uniqueLongest++;
+      outliers.push(`${q.id}: correct=${JSON.stringify(q.o[q.c[0]])} lengths=${lengths.join("/")}`);
+    }
     correctWords += c;
     lengths.forEach((n, i) => { if (i !== q.c[0]) distractorWords += n; });
   }
   const correctAvg = correctWords / questions.length;
   const distractorAvg = distractorWords / (questions.length * 3);
-  assert.ok(uniqueLongest / questions.length <= 0.25, `unique-longest share ${(100 * uniqueLongest / questions.length).toFixed(1)}%`);
-  assert.ok(amongLongest / questions.length <= 0.58, `among-longest share ${(100 * amongLongest / questions.length).toFixed(1)}%`);
-  assert.ok(Math.abs(correctAvg - distractorAvg) / distractorAvg <= 0.12,
-    `correct/distractor length delta ${(100 * Math.abs(correctAvg - distractorAvg) / distractorAvg).toFixed(1)}%`);
+  if (uniqueLongest / questions.length > 0.25) defects.push(`unique-longest share ${(100 * uniqueLongest / questions.length).toFixed(1)}%`);
+  if (amongLongest / questions.length > 0.58) defects.push(`among-longest share ${(100 * amongLongest / questions.length).toFixed(1)}%`);
+  if (Math.abs(correctAvg - distractorAvg) / distractorAvg > 0.12) {
+    defects.push(`correct/distractor length delta ${(100 * Math.abs(correctAvg - distractorAvg) / distractorAvg).toFixed(1)}%`);
+  }
+  if (defects.length) {
+    assert.fail(`Literature construction defects:\n${defects.join("\n")}\nUnique-longest outliers:\n${outliers.join("\n")}`);
+  }
 });
