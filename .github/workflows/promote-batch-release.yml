@@ -1,0 +1,76 @@
+name: Promote Batch Release
+
+on:
+  push:
+    branches: [integration/2026-08-batch-release]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promote-batch-release
+  cancel-in-progress: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: integration/2026-08-batch-release
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Mark independently reviewed courses released
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const ids = [
+            'ap-english-language',
+            'ap-english-literature',
+            'ap-calculus-ab',
+            'ap-chemistry',
+            'ap-physics-2',
+          ];
+          let subjects = fs.readFileSync('js/subjects.js', 'utf8');
+          for (const id of ids) {
+            const start = subjects.indexOf(`    id: "${id}",`);
+            if (start < 0) throw new Error(`Missing subject ${id}`);
+            const next = subjects.indexOf('\n  {\n    id:', start + 1);
+            const end = next < 0 ? subjects.length : next;
+            const record = subjects.slice(start, end);
+            if (!/releaseStatus: "draft"/.test(record) && !/releaseStatus: "released"/.test(record)) {
+              throw new Error(`Missing releaseStatus for ${id}`);
+            }
+            const updated = record.replace(/releaseStatus: "draft"[^\n]*/, 'releaseStatus: "released",');
+            subjects = subjects.slice(0, start) + updated + subjects.slice(end);
+          }
+          fs.writeFileSync('js/subjects.js', subjects);
+
+          const replacements = [
+            ['tests/ap-english.test.js', /releaseStatus, "draft", "stays draft pending independent content review of the public-domain passage replacement"/g, 'releaseStatus, "released", "reviewed public-domain English should be released"'],
+            ['tests/ap-chemistry.test.js', /releaseStatus, "draft"/g, 'releaseStatus, "released"'],
+            ['tests/ap-physics-2.test.js', /releaseStatus, "draft", "Physics 2 must stay draft until an independent content review happens"/g, 'releaseStatus, "released", "reviewed Physics 2 should be released"'],
+            ['tests/ap-calculus-ab.test.js', /releaseStatus, "draft", "Calculus AB has not yet passed independent content review"/g, 'releaseStatus, "released", "reviewed Calculus AB should be released"'],
+          ];
+          for (const [path, pattern, replacement] of replacements) {
+            let text = fs.readFileSync(path, 'utf8');
+            const before = text;
+            text = text.replace(pattern, replacement);
+            if (text === before) throw new Error(`Expected release assertion not found in ${path}`);
+            fs.writeFileSync(path, text);
+          }
+          NODE
+      - run: npm ci
+      - run: npm run check
+      - name: Commit release-ready batch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/promote-batch-release.yml tools/promote-batch-release-trigger.txt
+          git add -A
+          git commit -m "Mark reviewed August AP courses released"
+          git push origin HEAD:integration/2026-08-batch-release
