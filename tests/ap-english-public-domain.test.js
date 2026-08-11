@@ -1,3 +1,4 @@
+// Canonical-bank regression coverage for the consolidated AP English public-domain pass.
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
