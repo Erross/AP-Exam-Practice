@@ -28,15 +28,17 @@ Object.entries(CHEM_SEMANTIC_KEYS).forEach(([id, correctText]) => {
 });
 
 // CONTENT_STANDARDS.md §3 allows an occasional absolute-language distractor but
-// treats two or more in one item as a statistical tell. The independent audit
-// plus CI found the following 16 items. Preserve one such distractor at most and
-// soften additional ones without changing the keyed response.
+// treats two or more in one item as a statistical tell. Match both the explicit
+// examples in the standard and close equivalents such as all/none/completely,
+// impossible, and guarantee wording. Preserve at most one absolute distractor.
 const CHEM_ABSOLUTE_LANGUAGE_AUDIT_IDS = new Set([
-  "apchem-u2-008", "apchem-u3-010", "apchem-u4-002", "apchem-u5-009", "apchem-u5-010", "apchem-u5-022",
-  "apchem-u6-002", "apchem-u7-004", "apchem-u7-015", "apchem-u7-018", "apchem-u8-001",
-  "apchem-u8-011", "apchem-u8-015", "apchem-u8-019", "apchem-u8-022", "apchem-u9-002",
+  "apchem-u2-001", "apchem-u2-008", "apchem-u3-010", "apchem-u4-002",
+  "apchem-u5-009", "apchem-u5-010", "apchem-u5-022", "apchem-u6-002",
+  "apchem-u7-004", "apchem-u7-015", "apchem-u7-018", "apchem-u8-001",
+  "apchem-u8-011", "apchem-u8-015", "apchem-u8-019", "apchem-u8-022",
+  "apchem-u9-002",
 ]);
-const CHEM_ABSOLUTE_WORD = /\b(every|always|never|only|entirely|unlimited|identical)\b/i;
+const CHEM_ABSOLUTE_WORD = /\b(every|always|never|only|entirely|unlimited|identical|all|none|completely|impossible|guarantee(?:s|d)?)\b/i;
 const CHEM_SOFTEN_ABSOLUTE = (text) => text
   .replace(/\bevery\b/gi, "many")
   .replace(/\balways\b/gi, "generally")
@@ -44,7 +46,14 @@ const CHEM_SOFTEN_ABSOLUTE = (text) => text
   .replace(/\bonly\b/gi, "primarily")
   .replace(/\bentirely\b/gi, "largely")
   .replace(/\bunlimited\b/gi, "very large")
-  .replace(/\bidentical\b/gi, "closely matched");
+  .replace(/\bidentical\b/gi, "closely matched")
+  .replace(/\ball\b/gi, "many")
+  .replace(/\bnone\b/gi, "few")
+  .replace(/\bcompletely\b/gi, "substantially")
+  .replace(/\bimpossible\b/gi, "unlikely")
+  .replace(/\bguarantees\b/gi, "suggests")
+  .replace(/\bguaranteed\b/gi, "suggested")
+  .replace(/\bguarantee\b/gi, "suggest");
 
 CHEM_ABSOLUTE_LANGUAGE_AUDIT_IDS.forEach((id) => {
   const item = CHEM_BY_ID.get(id);
