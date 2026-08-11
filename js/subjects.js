@@ -529,8 +529,11 @@ const AP_SUBJECTS = [
     name: "AP Physics 2: Algebra-Based",
     category: "Sciences",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-2-algebra-based/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score; total duration 3hrs.
+    // VERIFIED 2026-08-11 for the May 2027 exam:
+    // https://apcentral.collegeboard.org/courses/ap-physics-2
+    // https://apcentral.collegeboard.org/media/pdf/ap-physics-2-course-and-exam-description-clarifications.pdf
+    // Fall 2026 clarification changes Section I from 40/80 to 42 questions / 85 minutes
+    // and Section II from 100 to 95 minutes, effective with the May 2027 exam.
     mcqCount: 42,
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
@@ -538,7 +541,58 @@ const AP_SUBJECTS = [
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // VERIFIED 2026-08-11: https://apcentral.collegeboard.org/media/pdf/ap-physics-2-course-at-a-glance.pdf
+    // Physics 2's CED continues Physics 1's unit numbering (Units 9-15; Physics 1
+    // covers 1-8). Published bands: Units 9-11 each 15-18%; Units 12-15 each 12-15%.
+    // With 42 questions, U9-U11's floor (15% of 42 = 6.3, so >=7 each) already
+    // requires 21 of the 42 seats, and U12-U15's floor (12% of 42 = 5.04, so >=6
+    // each) would need another 24 -- 45 total, three more than the exam has. No
+    // integer allocation can satisfy all seven bands simultaneously. The
+    // 7/7/7/5/5/6/5 blueprint below keeps U9-U11 at their exact floor (7 each,
+    // 16.7%) and lets three of the four smaller units land one question under
+    // their floor (5/42 = 11.9% vs. a 12% floor -- 0.1 point short) while U14
+    // (the largest unit, 9 topics) gets the fourth unit's full 6/42 = 14.3%.
+    // That 0.1-point shortfall is far smaller than shorting any U9-U11 unit
+    // would be (14.3% vs. their 15% floor, a 0.7-point gap), so it minimizes
+    // total discrete deviation from the published bands, the same reasoning
+    // AP Chemistry's blueprint comment uses.
+    units: [
+      { id: "U9", name: "Thermodynamics", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U10", name: "Electric Force, Field, and Potential", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U11", name: "Electric Circuits", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U12", name: "Magnetism and Electromagnetism", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U13", name: "Geometric Optics", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U14", name: "Waves, Sound, and Physical Optics", examWeight: 6 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U15", name: "Modern Physics", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+    ],
+    // VERIFIED 2026-08-11 against the current AP Physics 2 course page.
+    // Section I assesses only skills 2.A-2.D and 3.B-3.C. Practice 1 and 3.A are
+    // FRQ-only. Integer ranges below are the published MCQ percentage bands
+    // converted to feasible counts on a 42-question section.
+    attributeRanges: {
+      skill: {
+        "2.A": [7, 8],
+        "2.B": [9, 10],
+        "2.C": [5, 6],
+        "2.D": [5, 6],
+        "3.B": [9, 10],
+        "3.C": [3, 4],
+      },
+    },
+    // The live exam uses both discrete items and stimulus/data question sets.
+    // This original bank now carries one 3-question synthetic set per unit;
+    // draws require 2-4 complete sets and never split a group.
+    stimulusSetRange: [2, 4],
+    constraintDrawAttempts: 20000,
+    freeResponse: {
+      timeMinutes: 95,
+      questions: [
+        "Question 1 (Mathematical Routines)",
+        "Question 2 (Translation Between Representations)",
+        "Question 3 (Experimental Design and Analysis)",
+        "Question 4 (Qualitative/Quantitative Translation)",
+      ],
+    },
     dataVar: "QUESTIONS_AP_PHYSICS_2",
   },
   {
