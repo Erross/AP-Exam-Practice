@@ -1,4 +1,5 @@
 const test = require("node:test");
+const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 const { tokenizeNotation } = require("../js/notation.js");
@@ -35,8 +36,6 @@ function stringsFor(q) {
   return out.filter((x) => typeof x === "string");
 }
 
-// Only text tokens are checked: anything converted to semantic <sup>/<sub> has
-// already been successfully normalized for display and should not be re-flagged.
 function remainingTextAfterRendering(text) {
   return tokenizeNotation(text)
     .filter((token) => token.type === "text")
@@ -54,10 +53,12 @@ const patterns = {
   plainInfinity: /(?:^|[\s=(])(?:\+|-|−)?infinity\b/i,
   greekWord: /\b(?:Delta|theta|lambda|sigma)\b/,
   plainIonicCharge: /\b(?:H|Li|Na|K|Mg|Ca|Al|Fe|Cu|Zn|Ag|F|Cl|Br|O|N|S)\d*[+−-](?=\s|,|\.|\)|\/|$)/,
-  plainChemFormula: /\b(?:H2O|CO2|O2|N2|H2|NH3|CH4|H2SO4|HNO3|NO2|SO2|SO3|CaCO3|Na2CO3|NaOH|HCl|Cl2|Br2|I2|Fe2O3|Al2O3)\b/,
+  // Formulas with digits should render those digits as subscripts. Formulas such
+  // as HCl and NaOH need no typography change and are intentionally not flagged.
+  plainChemFormula: /\b(?:H2O|CO2|O2|N2|H2|NH3|CH4|H2SO4|HNO3|NO2|SO2|SO3|CaCO3|Na2CO3|Cl2|Br2|I2|Fe2O3|Al2O3)\b/,
 };
 
-test("diagnose notation still ugly after display normalization", () => {
+test("all loaded banks are presentation-ready after notation normalization", () => {
   const rows = loadAllBanks();
   const hits = Object.fromEntries(Object.keys(patterns).map((key) => [key, []]));
   rows.forEach(({ bank, q }) => {
@@ -68,7 +69,8 @@ test("diagnose notation still ugly after display normalization", () => {
       });
     });
   });
-  Object.entries(hits).forEach(([name, examples]) => {
-    console.log(`NOTATION_DIAGNOSTIC ${name}: ${examples.length ? examples.join(" || ") : "none"}`);
-  });
+
+  const failures = Object.entries(hits).filter(([, examples]) => examples.length);
+  failures.forEach(([name, examples]) => console.log(`NOTATION_DIAGNOSTIC ${name}: ${examples.join(" || ")}`));
+  assert.deepEqual(failures, [], "raw math/science notation remains after display normalization");
 });
