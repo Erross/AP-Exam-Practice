@@ -62,7 +62,7 @@ pq("U10","10.1","Electric Charge and Electric Force","2.A","Two point charges, q
 pq("U10","10.1","Electric Charge and Electric Force","3.A","If the distance between two fixed point charges is tripled, what happens to the magnitude of the electric force between them?","It becomes one-ninth as large.",["It becomes one-third as large.","It stays the same.","It becomes three times as large."],"Coulomb's law shows the force is inversely proportional to the square of the separation. Tripling r increases r^2 by a factor of 9, so the force is reduced to 1/9 of its original value.");
 pq("U10","10.1","Electric Charge and Electric Force","1.A","Two small charged spheres repel each other when brought near one another. Which statement about their charges is best supported?","The spheres carry the same sign of charge.",["The spheres must both carry positive charge specifically.","One sphere is charged and the other is perfectly neutral.","The spheres carry charges of opposite sign."],"Like charges repel and opposite charges attract. Observing repulsion alone establishes that the two charges share the same sign, but does not by itself reveal whether that sign is positive or negative.");
 
-pq("U10","10.2","Conservation of Electric Charge and the Process of Charging","1.B","A neutral metal sphere is charged by conduction after briefly touching a positively charged rod and then separating from it. Compared with the rod's original charge, the sphere ends up with","some positive charge, while the rod keeps a reduced amount",["a full negative charge, while the rod becomes fully neutral","exactly the same amount of positive charge that remains on the rod","no charge at all, since conduction only transfers charge briefly"],"Charging by conduction transfers some like-sign charge (here, positive) from the rod to the sphere until they reach a shared potential. Total charge is conserved between the two objects, but it is redistributed, not duplicated or eliminated.");
+pq("U10","10.2","Conservation of Electric Charge and the Process of Charging","1.B","A neutral metal sphere is charged by conduction after briefly touching a positively charged rod and then separating from it. Compared with the rod's original charge, the sphere ends up with","some positive charge, while the rod keeps a reduced amount",["a full negative charge, while the rod becomes fully neutral","exactly the same amount of positive charge that remains on the rod","no charge at all, since conduction only transfers charge briefly"],"In an ordinary metal conductor, electrons are the mobile charge carriers. When the neutral sphere touches the positively charged rod, electrons move from the sphere toward the electron-deficient rod. The sphere is left with a net positive charge while total charge of the two-object system remains conserved.");
 pq("U10","10.2","Conservation of Electric Charge and the Process of Charging","3.B","A neutral conducting sphere is charged by induction using a nearby negatively charged rod, without the rod ever touching the sphere. After the sphere is grounded and then the ground connection and rod are removed, the sphere ends up","positively charged, since electrons were repelled away through the ground connection",["negatively charged, since electrons were attracted onto the sphere from the ground","neutral, since induction never permanently changes an object's total charge","charged with the same charge sign as the inducing rod"],"The negative rod repels the sphere's mobile electrons; grounding lets those repelled electrons flow away to the ground. Removing the ground connection and then the rod traps the sphere with a net positive charge.");
 pq("U10","10.2","Conservation of Electric Charge and the Process of Charging","2.B","An isolated system contains three point charges: +4.0 μC, −7.0 μC, and an unknown charge q. If the system's total charge is measured to be −5.0 μC, what is q?","−2.0 μC",["+2.0 μC","−16.0 μC","+16.0 μC"],"Conservation of charge requires the sum of all charges to equal the total: 4.0 + (−7.0) + q = −5.0, so q = −5.0 − (4.0 − 7.0) = −5.0 − (−3.0) = −2.0 μC.");
 
@@ -82,7 +82,7 @@ pq("U10","10.6","Capacitors","2.A","A capacitor with capacitance 4.0×10^−6 F 
 pq("U10","10.6","Capacitors","2.C","Using the same 4.0×10^−6 F capacitor charged to 12 V, how much energy is stored in the capacitor?","About 2.9×10^−4 J",["About 5.8×10^−4 J","About 4.8×10^−5 J","About 1.4×10^−4 J"],"Stored energy is U = (1/2)CV^2 = (1/2)(4.0×10^−6)(12)^2 = (1/2)(4.0×10^−6)(144) ≈ 2.9×10^−4 J.");
 pq("U10","10.6","Capacitors","3.C","A parallel-plate capacitor's plate separation is doubled while the plate area and the charge on the plates are held fixed. What happens to the capacitance and the stored energy?","Capacitance is halved, and stored energy doubles.",["Capacitance doubles, and stored energy is halved.","Both capacitance and stored energy stay the same.","Capacitance is halved, and stored energy is also halved."],"Since C = ε0A/d, doubling d halves C. With Q held fixed, U = Q^2/(2C), so halving C doubles the stored energy for the same charge.");
 
-pq("U10","10.7","Conservation of Electric Energy","2.D","A proton (charge +e) is released from rest and accelerates through a potential difference of 1000 V in vacuum. Using the work-energy theorem, what determines its final kinetic energy?","KE = qΔV, charge times the potential difference it moves through.",["KE = V/q, so kinetic energy is potential divided by charge.","KE depends only on the proton's initial position, not on the potential difference.","KE cannot be determined without knowing the exact path the proton follows."],"By conservation of energy, the electric potential energy lost as the proton accelerates converts entirely into kinetic energy, so KE = qΔV. Electric potential energy depends only on position (start and end points), not on the path taken.");
+pq("U10","10.7","Conservation of Electric Energy","2.D","A proton (charge +e) is released from rest and accelerates through a potential difference of 1000 V in vacuum. Using the work-energy theorem, what determines its final kinetic energy?","The kinetic-energy gain is q times the magnitude of the potential drop, q|ΔV|.",["KE = V/q, so kinetic energy is potential divided by charge.","KE depends only on the proton's initial position, not on the potential difference.","KE cannot be determined without knowing the exact path the proton follows."],"With ΔV defined as Vf − Vi, conservation of energy gives ΔK = −qΔV. A positive proton released from rest accelerates toward lower electric potential, so its kinetic-energy gain is q(Vi − Vf) = q|ΔV| for the stated 1000 V potential drop; the path taken is irrelevant.");
 pq("U10","10.7","Conservation of Electric Energy","3.A","An electron moves from a region of lower electric potential to a region of higher electric potential, gaining kinetic energy as it does so. What does this reveal about the electron's charge?","This is consistent with the electron's negative charge, which loses potential energy as potential increases.",["The result shows the electron must actually behave as if positively charged in this situation.","The result violates conservation of energy for any charged particle.","The result is only possible if an external nonconservative force also acts on the electron."],"Electric potential energy is U = qV. For a negative charge, U decreases as V increases, so moving toward higher potential lowers U and correspondingly raises KE, consistent with the electron's actual negative charge and with energy conservation.");
 
 // --------------------------------------------------------------------------
@@ -198,7 +198,7 @@ pq("U14","14.8","Double-Slit Interference and Diffraction Gratings","1.A","In Yo
 
 pq("U14","14.9","Thin-Film Interference","2.A","A thin film of material with index of refraction 1.33 has thickness 200 nm. For constructive interference with no net phase-shift difference between the two reflections, using 2nt = mλ, what wavelength (in nm) satisfies this condition for m = 1?","532 nm",["266 nm","150 nm","1064 nm"],"Solving 2nt = mλ for λ gives λ = 2nt/m = 2(1.33)(200)/1 = 532 nm for the m = 1 case. The factor of 2 accounts for light traveling down through the film's thickness and back up before recombining.");
 pq("U14","14.9","Thin-Film Interference","3.A","A thin soap film in air has a higher index of refraction than the surrounding air on both sides. Why does light reflecting from the front surface of the film undergo a 180° phase shift, while light reflecting from the back surface (film-to-air) does not?","A phase shift occurs only when reflecting off a higher-index medium.",["A phase shift occurs at every reflection surface regardless of the surrounding media.","No phase shift ever occurs for reflections involving thin films.","The phase shift depends mainly on the film's thickness rather than on the surrounding indices."],"Reflection produces a 180° phase shift only when light reflects from a boundary where the index of refraction increases (low-to-high index). Reflection at the film's front surface (air-to-film) meets this condition, while reflection at the back surface (film-to-air) does not.");
-pq("U14","14.9","Thin-Film Interference","1.B","A thin oil film on a wet road shows bands of different colors when viewed under white light. What causes these visible color bands?","Different wavelengths interfere constructively at different film thicknesses.",["The oil film absorbs all wavelengths except one fixed color everywhere.","The road surface beneath the film changes color depending on the water depth.","The colors result from the oil film's own pigment, unrelated to interference."],"Because the constructive-interference condition 2nt = mλ depends on both thickness t and wavelength λ, thickness variations across the film cause different wavelengths to interfere constructively at different locations, producing the observed rainbow of colors.");
+pq("U14","14.9","Thin-Film Interference","1.B","A thin oil film on a wet road shows bands of different colors when viewed under white light. What causes these visible color bands?","Different wavelengths interfere constructively at different film thicknesses.",["The oil film absorbs all wavelengths except one fixed color everywhere.","The road surface beneath the film changes color depending on the water depth.","The colors result from the oil film's own pigment, unrelated to interference."],"Reflected rays from the film's two interfaces acquire a thickness-dependent optical path difference, and reflection phase shifts depend on the refractive-index change at each boundary. As film thickness varies, different visible wavelengths satisfy the appropriate constructive-reflection condition at different locations, producing the observed colors.");
 
 // --------------------------------------------------------------------------
 // Unit 15: Modern Physics (8 topics)
@@ -232,5 +232,225 @@ pq("U15","15.7","Fission, Fusion, and Nuclear Decay","3.A","Very light nuclei, s
 pq("U15","15.8","Types of Radioactive Decay","1.A","A nucleus undergoes alpha decay, emitting an alpha particle (2 protons and 2 neutrons). How do the resulting nucleus's mass number and atomic number compare with the original nucleus?","The mass number decreases by 4, and the atomic number decreases by 2.",["The mass number decreases by 2, and the atomic number decreases by 4.","The mass number and atomic number both stay exactly the same.","The mass number increases by 4, and the atomic number decreases by 2."],"An alpha particle is a helium-4 nucleus, carrying away 2 protons and 2 neutrons. The daughter nucleus therefore has its mass number reduced by 4 and its atomic number reduced by 2 compared with the parent.");
 pq("U15","15.8","Types of Radioactive Decay","1.B","A nucleus undergoes beta-minus decay, in which a neutron converts into a proton while emitting an electron and an antineutrino. How does the resulting nucleus's atomic number compare with the original, and what happens to its mass number?","The atomic number increases by 1, while the mass number stays the same.",["The atomic number decreases by 1, while the mass number increases by 1.","Both the atomic number and mass number stay exactly the same.","The atomic number stays the same, while the mass number decreases by 1."],"Beta-minus decay converts a neutron into a proton within the nucleus, increasing the atomic number (proton count) by 1 while the total number of nucleons, and therefore the mass number, remains unchanged.");
 pq("U15","15.8","Types of Radioactive Decay","3.A","A sample of radioactive material has a half-life of 10 days. Starting with a sample of a certain initial activity, approximately what fraction of the original radioactive nuclei remain after 30 days?","About 1/8 of the original amount.",["About 1/3 of the original amount.","About 1/30 of the original amount.","About 1/10 of the original amount."],"Thirty days corresponds to exactly three half-lives (30/10 = 3). Each half-life halves the remaining amount, so after three half-lives the fraction remaining is (1/2)^3 = 1/8 of the original amount.");
+
+
+// --------------------------------------------------------------------------
+// Independent CED/content audit corrections — 2026-08-11
+// --------------------------------------------------------------------------
+// College Board's current Physics 2 framework assesses only 2.A-2.D and
+// 3.B-3.C in Section I. Practice 1 and 3.A are FRQ-only, so legacy draft tags
+// are remapped here inside the canonical bank rather than enforced by the draw.
+function mcqSkillFor(question) {
+  if (/^1\./.test(question.skill)) return "3.B";
+  if (question.skill === "3.A") {
+    return /\b(doubl|tripl|halv|factor|proportional|increase|decrease|what happens|how does|as .* changes)\b/i.test(question.q)
+      ? "2.D"
+      : "3.B";
+  }
+  return question.skill;
+}
+PHYS2_QUESTIONS.forEach((question) => { question.skill = mcqSkillFor(question); });
+
+function simulatedTable(title, description, columns, rows) {
+  return {
+    type: "table",
+    title,
+    description,
+    source: "Original simulated data created for AP Exam Practice.",
+    columns,
+    rows,
+  };
+}
+
+function replaceLinked(id, stimulusGroupId, stimulus, skill, stem, correct, distractors, explanation) {
+  const question = PHYS2_QUESTIONS.find((item) => item.id === id);
+  if (!question) throw new Error("Missing Physics 2 question " + id);
+  const correctIndex = question.c[0];
+  const options = distractors.slice();
+  options.splice(correctIndex, 0, correct);
+  question.skill = skill;
+  question.q = stem;
+  question.o = options;
+  question.e = explanation;
+  question.stimulusGroupId = stimulusGroupId;
+  question.stimulus = stimulus;
+  question.variantGroupId = undefined;
+}
+
+const thermo = simulatedTable(
+  "Fixed-volume ideal-gas measurements",
+  "A student keeps the amount of gas and container volume constant, waits for thermal equilibrium at each setting, and records absolute pressure as temperature changes.",
+  ["Temperature (K)", "Pressure (kPa)"],
+  [[250, 100], [300, 120], [400, 160]],
+);
+replaceLinked("apphys2-u9-001", "apphys2-stim-u9-gas", thermo, "2.C", "Using the table, how does the average molecular translational kinetic energy at 400 K compare with that at 250 K?", "1.6 times as large.", ["It is 0.625 times as large.", "It is 2.0 times as large.", "It is unchanged because the volume is fixed."], "Average translational kinetic energy is proportional to absolute temperature. The ratio is 400/250 = 1.6, so molecules at 400 K have 1.6 times the average translational kinetic energy of those at 250 K.");
+replaceLinked("apphys2-u9-002", "apphys2-stim-u9-gas", thermo, "2.D", "If the same fixed-volume gas is brought to 500 K, what pressure is predicted by the trend in the table?", "200 kPa", ["125 kPa", "180 kPa", "250 kPa"], "For a fixed amount of ideal gas at fixed volume, P/T is constant. The table gives 100/250 = 0.400 kPa/K, so at 500 K the predicted pressure is (0.400)(500) = 200 kPa.");
+replaceLinked("apphys2-u9-003", "apphys2-stim-u9-gas", thermo, "3.C", "Which evidence from the table best supports the claim that the gas behaves consistently with the fixed-volume ideal-gas model?", "P/T is constant across the rows.", ["Pressure rises by 20 kPa between adjacent rows.", "Temperature and pressure have matching numerical values.", "The gas pressure is independent of absolute temperature."], "At fixed amount and volume, the ideal-gas law predicts P/T = nR/V = constant. Each row gives P/T = 0.400 kPa/K, directly supporting the proportional relationship predicted by the model.");
+
+const electric = simulatedTable(
+  "Force between two fixed point charges",
+  "Two small charged spheres keep the same charges while their center-to-center separation is changed. Force magnitudes are measured after the spheres are stationary at each separation.",
+  ["Separation r (m)", "Force magnitude F (N)"],
+  [[0.10, 3.60], [0.20, 0.90], [0.30, 0.40]],
+);
+replaceLinked("apphys2-u10-001", "apphys2-stim-u10-force", electric, "2.C", "How does the measured force at r = 0.10 m compare with the force at r = 0.20 m?", "It is four times as large.", ["It is twice as large.", "It is eight times as large.", "It is one-fourth as large."], "The table gives 3.60 N at 0.10 m and 0.90 N at 0.20 m. Their ratio is 3.60/0.90 = 4, consistent with an inverse-square dependence when distance is doubled.");
+replaceLinked("apphys2-u10-002", "apphys2-stim-u10-force", electric, "2.D", "If the charge values stay fixed and the separation is increased to 0.40 m, what force magnitude is predicted by the relationship in the data?", "About 0.225 N", ["About 0.45 N", "About 0.80 N", "About 1.80 N"], "Coulomb force varies as 1/r². Using the 0.20 m row, doubling separation to 0.40 m reduces 0.90 N by a factor of four, giving 0.225 N.");
+replaceLinked("apphys2-u10-003", "apphys2-stim-u10-force", electric, "3.C", "Which feature of the data most directly supports an inverse-square model for electric force?", "Doubling r reduces F to one-fourth.", ["Equal increases in r produce equal decreases in F.", "The product Fr increases as r increases.", "The force becomes zero for any separation above 0.30 m."], "An inverse-square model predicts that multiplying distance by 2 divides force by 2² = 4. The measured change from 3.60 N to 0.90 N matches that prediction exactly.");
+
+const circuits = simulatedTable(
+  "Resistors connected separately to one ideal battery",
+  "Each resistor is connected by itself across the same 12.0 V ideal battery. After the circuit reaches steady state, the current through the resistor is recorded.",
+  ["Resistance (Ω)", "Current (A)"],
+  [[2.0, 6.0], [4.0, 3.0], [6.0, 2.0]],
+);
+replaceLinked("apphys2-u11-001", "apphys2-stim-u11-ohm", circuits, "2.B", "How much power is dissipated by the 4.0 Ω resistor in the table?", "36 W", ["12 W", "48 W", "144 W"], "For the 4.0 Ω row, V = 12.0 V and I = 3.0 A, so P = VI = (12.0)(3.0) = 36 W. The same result follows from I²R = (3.0)²(4.0).");
+replaceLinked("apphys2-u11-002", "apphys2-stim-u11-ohm", circuits, "2.C", "How does the current through the 2.0 Ω resistor compare with the current through the 6.0 Ω resistor?", "It is three times as large.", ["It is twice as large.", "It is one-third as large.", "It is the same because the voltage is the same."], "The measured currents are 6.0 A and 2.0 A, so the current through the 2.0 Ω resistor is 6.0/2.0 = 3 times as large.");
+replaceLinked("apphys2-u11-003", "apphys2-stim-u11-ohm", circuits, "3.C", "Which statement is best justified by all three measurements?", "Current varies inversely with resistance.", ["At fixed voltage, current is directly proportional to resistance.", "The product IR decreases as resistance increases.", "The battery voltage changes to match each resistance."], "Each row has IR = 12 V: (2)(6), (4)(3), and (6)(2). Because voltage is fixed, the data support I = V/R, so current varies inversely with resistance.");
+
+const magnetism = simulatedTable(
+  "Magnetic field near a long straight wire",
+  "A long straight wire carries a steady 10 A current. A magnetic-field sensor is placed perpendicular to the wire at several distances, with background field removed from each reading.",
+  ["Distance r (m)", "Magnetic field B (T)"],
+  [[0.010, 2.0e-4], [0.020, 1.0e-4], [0.040, 5.0e-5]],
+);
+replaceLinked("apphys2-u12-001", "apphys2-stim-u12-field", magnetism, "2.D", "If the sensor is moved to r = 0.080 m while the current remains 10 A, what field magnitude is predicted by the data?", "2.5×10^−5 T", ["1.25×10^−5 T", "1.0×10^−4 T", "4.0×10^−4 T"], "The data show B halves whenever r doubles, consistent with B ∝ 1/r. Doubling distance from 0.040 m to 0.080 m therefore halves 5.0×10^−5 T to 2.5×10^−5 T.");
+replaceLinked("apphys2-u12-002", "apphys2-stim-u12-field", magnetism, "2.C", "How does B at 0.010 m compare with B at 0.040 m?", "It is four times as large.", ["It is twice as large.", "It is eight times as large.", "It is one-fourth as large."], "The measured fields are 2.0×10^−4 T and 5.0×10^−5 T. Their ratio is 4, matching the fourfold difference in inverse distance.");
+replaceLinked("apphys2-u12-003", "apphys2-stim-u12-field", magnetism, "3.C", "Which relationship is best supported by the measurements?", "For fixed current, B is inversely proportional to r.", ["For fixed current, B is proportional to r.", "For fixed current, B is proportional to r².", "For fixed current, B does not depend on distance."], "When distance doubles from 0.010 to 0.020 m and again to 0.040 m, the field halves each time. That pattern supports B ∝ 1/r for a long straight wire.");
+
+const optics = simulatedTable(
+  "Reflection from a plane mirror",
+  "A ray box sends narrow light rays toward a plane mirror. Angles are measured from the surface normal using a protractor, and repeated trials are averaged.",
+  ["Incident angle (°)", "Reflected angle (°)"],
+  [[20, 20], [40, 40], [60, 60]],
+);
+replaceLinked("apphys2-u13-001", "apphys2-stim-u13-reflection", optics, "2.C", "Compared with the reflected angle in the 20° trial, how large is the reflected angle in the 60° trial?", "It is three times as large.", ["It is twice as large.", "It is one-third as large.", "It is unchanged."], "The reflected angles are 20° and 60°. The ratio 60/20 = 3, so the reflected angle in the 60° trial is three times the reflected angle in the 20° trial.");
+replaceLinked("apphys2-u13-002", "apphys2-stim-u13-reflection", optics, "3.B", "What claim about reflection from this plane mirror is consistent with all three trials?", "Reflected angle equals incident angle.", ["The reflected angle is always 90° minus the incident angle.", "The reflected angle is independent of incident angle.", "The reflected angle is twice the incident angle."], "Every measured pair has equal incident and reflected angles: 20°/20°, 40°/40°, and 60°/60°. This is the law of reflection with both angles referenced to the normal.");
+replaceLinked("apphys2-u13-003", "apphys2-stim-u13-reflection", optics, "3.C", "Which evidence from the table most directly justifies the law-of-reflection claim?", "Each paired angle is equal.", ["All three incident angles differ by 20°.", "The largest measured angle is 60°.", "The mirror was tested with a ray box rather than sunlight."], "The law of reflection predicts θr = θi. The relevant evidence is the row-by-row equality of the paired measurements, not the spacing chosen between trial angles or the particular light source.");
+
+const waves = simulatedTable(
+  "Periodic waves in one medium",
+  "A wave generator produces several steady frequencies in the same medium. Wavelength is measured from successive crests after the pattern becomes stable.",
+  ["Frequency (Hz)", "Wavelength (m)"],
+  [[100, 3.0], [150, 2.0], [300, 1.0]],
+);
+replaceLinked("apphys2-u14-001", "apphys2-stim-u14-wave", waves, "2.B", "What wave speed is calculated from the 150 Hz measurement?", "300 m/s", ["75 m/s", "150 m/s", "450 m/s"], "Wave speed is v = fλ. For the 150 Hz row, v = (150 Hz)(2.0 m) = 300 m/s, consistent with the other rows because the medium is unchanged.");
+replaceLinked("apphys2-u14-002", "apphys2-stim-u14-wave", waves, "2.D", "If the generator frequency is increased to 600 Hz in the same medium, what wavelength is predicted by the data?", "0.50 m", ["1.5 m", "2.0 m", "6.0 m"], "The table shows a constant wave speed of 300 m/s. Therefore λ = v/f = 300/600 = 0.50 m; doubling frequency from 300 to 600 Hz halves wavelength from 1.0 m to 0.50 m.");
+replaceLinked("apphys2-u14-003", "apphys2-stim-u14-wave", waves, "3.C", "Which evidence best supports the claim that wave speed is constant across the three trials?", "Each row gives fλ = 300 m/s.", ["Frequency increases by a uniform 100 Hz between trials.", "Wavelength and frequency have matching numerical values.", "The wavelength remains constant while frequency changes."], "For each row, multiplying frequency by wavelength gives 300 m/s: 100×3.0, 150×2.0, and 300×1.0. Equal fλ values directly support constant propagation speed.");
+
+const modern = simulatedTable(
+  "Photon energy versus frequency",
+  "Monochromatic light sources are characterized by frequency, and photon energies are calculated from calibrated measurements using the same apparatus for each source.",
+  ["Frequency (10^14 Hz)", "Photon energy (eV)"],
+  [[5.0, 2.07], [6.0, 2.48], [8.0, 3.31]],
+);
+replaceLinked("apphys2-u15-001", "apphys2-stim-u15-photon", modern, "2.B", "Using the proportional trend in the table, what photon energy is expected at 7.0×10^14 Hz?", "About 2.9 eV", ["About 1.8 eV", "About 3.7 eV", "About 5.8 eV"], "Photon energy is proportional to frequency. Interpolating with E/f ≈ 4.14×10^−15 eV·s gives E ≈ (4.14×10^−15)(7.0×10^14) ≈ 2.9 eV.");
+replaceLinked("apphys2-u15-002", "apphys2-stim-u15-photon", modern, "2.D", "If photon frequency is doubled while all other source properties are irrelevant to single-photon energy, what happens to the photon energy?", "It doubles.", ["It is halved.", "It quadruples.", "It remains unchanged."], "The table is consistent with E = hf, a direct proportionality. Doubling f therefore doubles the energy of each photon.");
+replaceLinked("apphys2-u15-003", "apphys2-stim-u15-photon", modern, "3.C", "Which feature of the data best supports the quantum relation E = hf?", "E/f is approximately constant.", ["Energy stays near 2.5 eV as frequency changes.", "Energy decreases as frequency increases across the measurements.", "The product Ef is approximately constant."], "For each measurement, E/f is about 4.14×10^−15 eV·s. A nearly constant E/f ratio is the expected evidence for the direct proportionality E = hf.");
+
+
+// --------------------------------------------------------------------------
+// MCQ skill rebalance after independent CED review
+// --------------------------------------------------------------------------
+// Section I's published weighting is by 2.A-2.D and 3.B-3.C. The original
+// draft used 2.A for many plug-in calculations and 3.B for nearly every
+// conceptual item. This pass classifies the non-stimulus bank by what the
+// student actually does, then replaces 24 suitable formula items with genuine
+// symbolic-derivation questions so 2.A is represented authentically.
+const PHYS2_DERIVATION_IDS = new Set([
+  "apphys2-u9-004","apphys2-u9-008","apphys2-u9-011","apphys2-u9-015",
+  "apphys2-u10-007","apphys2-u10-010","apphys2-u10-013","apphys2-u10-016",
+  "apphys2-u11-004","apphys2-u11-007","apphys2-u11-010","apphys2-u11-021",
+  "apphys2-u12-004","apphys2-u12-008","apphys2-u12-011",
+  "apphys2-u13-004","apphys2-u13-008","apphys2-u13-012",
+  "apphys2-u14-004","apphys2-u14-016","apphys2-u14-022",
+  "apphys2-u15-004","apphys2-u15-012","apphys2-u15-017",
+]);
+
+function classifyPhysics2Mcq(question) {
+  if (question.stimulusGroupId || PHYS2_DERIVATION_IDS.has(question.id)) return question.skill;
+  const stem = question.q.toLowerCase();
+  if (/\b(justif|evidence|best supports|why does|what does this reveal)\b/.test(stem)) return "3.C";
+  if (/\b(compare|compared|greater than|less than|relative to|how does .* compare)\b/.test(stem)) return "2.C";
+  if (/\b(doubl|tripl|halv|factor|proportional|increased|decreased|increases|decreases|what happens to|how does .* change|predict)\b/.test(stem)) return "2.D";
+  if (/\b(calculate|how much|what is the (magnitude|current|voltage|potential|energy|frequency|wavelength|resistance|temperature|pressure|volume|time constant|angle|speed|force)|at what angle|what fraction)\b/.test(stem) || /\d/.test(question.q) && /\bwhat\b/.test(stem)) return "2.B";
+  return "3.B";
+}
+PHYS2_QUESTIONS.forEach((question) => { question.skill = classifyPhysics2Mcq(question); });
+
+function derivation(id, stem, correct, distractors, explanation) {
+  const question = PHYS2_QUESTIONS.find((item) => item.id === id);
+  if (!question) throw new Error("Missing derivation target " + id);
+  const correctIndex = question.c[0];
+  const options = distractors.slice();
+  options.splice(correctIndex, 0, correct);
+  question.skill = "2.A";
+  question.q = stem;
+  question.o = options;
+  question.e = explanation;
+}
+
+derivation("apphys2-u9-004", "For a fixed amount of ideal gas, which expression for V2 follows from P1V1/T1 = P2V2/T2?", "V2 = P1V1T2/(P2T1)", ["V2 = P2V1T1/(P1T2)", "V2 = P1P2V1/(T1T2)", "V2 = V1T1T2/(P1P2)"], "Starting from P1V1/T1 = P2V2/T2, multiply both sides by T2/P2 to isolate V2. This gives V2 = P1V1T2/(P2T1), with each state variable kept in its proper numerator or denominator.");
+derivation("apphys2-u9-008", "A slab conducts thermal energy at rate H = kAΔT/L. Which expression for k is obtained by solving symbolically for the thermal conductivity?", "k = HL/(AΔT)", ["k = HAΔT/L", "k = AΔT/(HL)", "k = H/(LAΔT)"], "From H = kAΔT/L, multiply by L and divide by AΔT. The isolated conductivity is k = HL/(AΔT), which also has the expected units of watts per meter-kelvin.");
+derivation("apphys2-u9-011", "Using ΔEint = Q − W, which expression gives the work W done by a gas in terms of Q and ΔEint?", "W = Q − ΔEint", ["W = Q + ΔEint", "W = ΔEint − Q", "W = QΔEint"], "Rearrange ΔEint = Q − W by adding W to both sides and subtracting ΔEint from both sides. The result is W = Q − ΔEint.");
+derivation("apphys2-u9-015", "Starting from Q = mcΔT, which expression gives the specific heat capacity c?", "c = Q/(mΔT)", ["c = QmΔT", "c = mΔT/Q", "c = QΔT/m"], "Divide both sides of Q = mcΔT by mΔT. This isolates the material property c and gives c = Q/(mΔT).");
+
+derivation("apphys2-u10-007", "For a point charge, E = kQ/r². Which expression gives r in terms of E, k, and Q?", "r = √(kQ/E)", ["r = kQ/E", "r = √(E/(kQ))", "r = E²/(kQ)"], "From E = kQ/r², multiply by r² and divide by E to obtain r² = kQ/E. Taking the positive square root for a distance gives r = √(kQ/E).");
+derivation("apphys2-u10-010", "The electric potential energy of two point charges is U = kq1q2/r. Which expression gives their separation r?", "r = kq1q2/U", ["r = U/(kq1q2)", "r = kU/(q1q2)", "r = q1q2/(kU)"], "Multiply U = kq1q2/r by r and divide by U. The resulting symbolic expression is r = kq1q2/U; signs determine the sign of U, while r itself is a positive separation magnitude.");
+derivation("apphys2-u10-013", "For a point charge, V = kQ/r. Which expression gives Q in terms of V and r?", "Q = Vr/k", ["Q = Vk/r", "Q = k/(Vr)", "Q = r/(Vk)"], "Multiplying V = kQ/r by r and dividing by k isolates the source charge: Q = Vr/k.");
+derivation("apphys2-u10-016", "A capacitor obeys Q = CV. Which expression for C follows directly from this relation?", "C = Q/V", ["C = QV", "C = V/Q", "C = 1/(QV)"], "Divide the capacitor relation Q = CV by V to isolate capacitance. This yields C = Q/V.");
+
+derivation("apphys2-u11-004", "Using Ohm's law V = IR, which expression gives the circuit current I?", "I = V/R", ["I = VR", "I = R/V", "I = V²R"], "Dividing V = IR by R isolates the current and gives I = V/R.");
+derivation("apphys2-u11-007", "A uniform wire has R = ρL/A. Which expression gives its resistivity ρ?", "ρ = RA/L", ["ρ = RL/A", "ρ = A/(RL)", "ρ = L/(RA)"], "Multiply R = ρL/A by A and divide by L. The resulting symbolic expression is ρ = RA/L.");
+derivation("apphys2-u11-010", "Combining P = VI with I = V/R, which expression gives resistor power using only V and R?", "P = V²/R", ["P = VR²", "P = R/V²", "P = V/R²"], "Substitute I = V/R into P = VI: P = V(V/R) = V²/R. This is the voltage-resistance form of resistive power.");
+derivation("apphys2-u11-021", "For an RC circuit with time constant τ = RC, which expression gives C?", "C = τ/R", ["C = τR", "C = R/τ", "C = 1/(τR)"], "Divide τ = RC by R to isolate capacitance, giving C = τ/R.");
+
+derivation("apphys2-u12-004", "A charged particle moving perpendicular to B follows a circle when qvB = mv²/r. Which expression for r follows?", "r = mv/(qB)", ["r = qB/(mv)", "r = mv²/(qB)", "r = qvB/m"], "Set magnetic force equal to centripetal force, cancel one factor of v, and solve for r: qB = mv/r, so r = mv/(qB).");
+derivation("apphys2-u12-008", "For a wire perpendicular to a magnetic field, F = BIL. Which expression gives the current I?", "I = F/(BL)", ["I = FBL", "I = BL/F", "I = B/(FL)"], "Divide F = BIL by BL to isolate current. The symbolic result is I = F/(BL).");
+derivation("apphys2-u12-011", "Faraday's law gives |ε| = N|ΔΦ|/Δt. Which expression gives |ΔΦ|?", "|ΔΦ| = |ε|Δt/N", ["|ΔΦ| = N|ε|/Δt", "|ΔΦ| = |ε|/(NΔt)", "|ΔΦ| = NΔt/|ε|"], "Multiply |ε| = N|ΔΦ|/Δt by Δt and divide by N. This gives |ΔΦ| = |ε|Δt/N.");
+
+derivation("apphys2-u13-004", "Starting from 1/f = 1/do + 1/di, which expression gives di in terms of f and do?", "di = fdo/(do − f)", ["di = fdo/(do + f)", "di = (do − f)/(fdo)", "di = f + do"], "Subtract 1/do from both sides: 1/di = (do − f)/(fdo). Taking the reciprocal gives di = fdo/(do − f).");
+derivation("apphys2-u13-008", "Snell's law is n1 sinθ1 = n2 sinθ2. Which expression gives sinθ2?", "sinθ2 = (n1/n2)sinθ1", ["sinθ2 = (n2/n1)sinθ1", "sinθ2 = n1n2 sinθ1", "sinθ2 = sinθ1/(n1n2)"], "Divide both sides of n1 sinθ1 = n2 sinθ2 by n2. This isolates sinθ2 = (n1/n2)sinθ1.");
+derivation("apphys2-u13-012", "For a thin lens, m = −di/do. Which expression gives di in terms of magnification m and object distance do?", "di = −mdo", ["di = m/do", "di = −do/m", "di = m + do"], "Multiply m = −di/do by do to obtain mdo = −di, then multiply by −1. The result is di = −mdo.");
+
+derivation("apphys2-u14-004", "Period and frequency satisfy T = 1/f. Which expression gives f?", "f = 1/T", ["f = T", "f = T²", "f = 1/T²"], "Taking the reciprocal of T = 1/f gives f = 1/T, expressing the inverse relationship between period and frequency.");
+derivation("apphys2-u14-016", "For a string fixed at both ends, λn = 2L/n and v = fλ. Which expression gives fn?", "fn = nv/(2L)", ["fn = 2Lv/n", "fn = nL/(2v)", "fn = v/(2Ln)"], "Substitute λn = 2L/n into v = fnλn: v = fn(2L/n). Multiplying by n/(2L) gives fn = nv/(2L).");
+derivation("apphys2-u14-022", "Double-slit maxima satisfy d sinθ = mλ. Which expression gives slit separation d?", "d = mλ/sinθ", ["d = sinθ/(mλ)", "d = m sinθ/λ", "d = λ/(m sinθ)"], "Divide d sinθ = mλ by sinθ to isolate the slit separation: d = mλ/sinθ.");
+
+derivation("apphys2-u15-004", "In the Bohr model En = −13.6 eV/n². Which symbolic expression gives n in terms of the magnitude |En|?", "n = √(13.6 eV/|En|)", ["n = 13.6 eV/|En|", "n = √(|En|/13.6 eV)", "n = |En|²/(13.6 eV)"], "Using magnitudes, |En| = 13.6 eV/n². Rearranging gives n² = 13.6 eV/|En|, so n = √(13.6 eV/|En|).");
+derivation("apphys2-u15-012", "At the photoelectric threshold, hf0 = φ. Which expression gives the threshold frequency f0?", "f0 = φ/h", ["f0 = h/φ", "f0 = hφ", "f0 = φh²"], "Divide hf0 = φ by Planck's constant h. The threshold frequency is f0 = φ/h.");
+derivation("apphys2-u15-017", "Mass-energy equivalence gives E = Δmc². Which expression gives the mass defect Δm?", "Δm = E/c²", ["Δm = Ec²", "Δm = c²/E", "Δm = E²/c"], "Divide E = Δmc² by c² to isolate the mass defect, giving Δm = E/c².");
+
+
+// Ensure every symbolic-derivation rationale remains substantively explanatory.
+const PHYS2_DERIVATION_RATIONALE_SUPPLEMENTS = {
+  "apphys2-u9-004": "The dependence also has the expected direction: increasing T2 at fixed other variables requires a larger final volume.",
+  "apphys2-u9-008": "This form shows that a larger heat-transfer rate or slab length requires a larger conductivity when area and temperature difference are fixed.",
+  "apphys2-u9-011": "A positive value of W in this convention represents energy transferred out of the gas by mechanical work.",
+  "apphys2-u9-015": "The expression has units J/(kg·°C), matching the definition of specific heat capacity.",
+  "apphys2-u10-007": "The square root is required because electric-field magnitude varies with the inverse square of distance.",
+  "apphys2-u10-010": "For a magnitude calculation, the separation is positive even when opposite-sign charges make U negative.",
+  "apphys2-u10-013": "The result states that a larger source charge is required to produce the same potential at a larger distance.",
+  "apphys2-u10-016": "This quotient is the defining ratio of stored charge to potential difference for a capacitor.",
+  "apphys2-u11-004": "The expression also shows that current increases with applied voltage and decreases with resistance.",
+  "apphys2-u11-007": "Its units reduce to ohm-meters, the SI unit of resistivity, confirming the rearrangement.",
+  "apphys2-u11-010": "This form predicts greater power at larger voltage and smaller resistance when voltage is the controlled quantity.",
+  "apphys2-u11-021": "The expression shows that a larger resistance requires a smaller capacitance to keep the same time constant.",
+  "apphys2-u12-004": "The result predicts a larger orbit for greater momentum and a smaller orbit for stronger magnetic force per unit speed.",
+  "apphys2-u12-008": "This form makes current directly proportional to force and inversely proportional to field strength and wire length.",
+  "apphys2-u12-011": "The relation shows that the same induced emf corresponds to a smaller flux change when the coil has more turns.",
+  "apphys2-u13-004": "The denominator do − f also captures the image-distance divergence as the object approaches the focal point.",
+  "apphys2-u13-008": "For n2 greater than n1, the ratio n1/n2 is less than one, consistent with bending toward the normal.",
+  "apphys2-u13-012": "The minus sign preserves the standard image-orientation convention encoded in the magnification equation.",
+  "apphys2-u14-004": "The inverse relation means increasing frequency necessarily shortens the period by the same factor.",
+  "apphys2-u14-016": "This expression gives integer harmonics because the fixed ends require an integer number of half-wavelengths along the string.",
+  "apphys2-u14-022": "The expression shows that greater slit separation produces a smaller diffraction angle for the same order and wavelength.",
+  "apphys2-u15-004": "Only positive integer values of n correspond to allowed Bohr energy levels, so the positive square root is used.",
+  "apphys2-u15-012": "Photons below this frequency have energy hf less than the work function and therefore cannot eject electrons.",
+  "apphys2-u15-017": "Because c² is very large, even a small mass defect corresponds to a substantial released energy.",
+};
+for (const question of PHYS2_QUESTIONS) {
+  const supplement = PHYS2_DERIVATION_RATIONALE_SUPPLEMENTS[question.id];
+  if (supplement && question.e.length < 90) question.e += " " + supplement;
+}
 
 window.QUESTIONS_AP_PHYSICS_2 = PHYS2_QUESTIONS;

@@ -7,16 +7,26 @@ const { loadPhysics2Bank } = require("./helpers");
 const subject = AP_SUBJECTS.find((item) => item.id === "ap-physics-2");
 const bank = loadPhysics2Bank();
 
-const EXPECTED_UNIT_TOPICS = {
-  U9: 6, U10: 7, U11: 8, U12: 4, U13: 4, U14: 9, U15: 8,
+const EXPECTED_TOPICS = {
+  U9: ["9.1","9.2","9.3","9.4","9.5","9.6"],
+  U10: ["10.1","10.2","10.3","10.4","10.5","10.6","10.7"],
+  U11: ["11.1","11.2","11.3","11.4","11.5","11.6","11.7","11.8"],
+  U12: ["12.1","12.2","12.3","12.4"],
+  U13: ["13.1","13.2","13.3","13.4"],
+  U14: ["14.1","14.2","14.3","14.4","14.5","14.6","14.7","14.8","14.9"],
+  U15: ["15.1","15.2","15.3","15.4","15.5","15.6","15.7","15.8"],
 };
-const EXPECTED_UNIT_COUNTS = {
-  U9: 20, U10: 20, U11: 22, U12: 14, U13: 15, U14: 27, U15: 22,
-};
+const EXPECTED_UNIT_COUNTS = { U9:20,U10:20,U11:22,U12:14,U13:15,U14:27,U15:22 };
+const ALLOWED_MCQ_SKILLS = new Set(["2.A","2.B","2.C","2.D","3.B","3.C"]);
+
 
 test("AP Physics 2 bank matches its declared CED metadata and unit counts", () => {
   assert.equal(bank.length, 140);
   assert.equal(subject.formatVerified, true);
+  assert.equal(subject.mcqCount, 42);
+  assert.equal(subject.mcqTimeMinutes, 85);
+  assert.equal(subject.freeResponse.timeMinutes, 95);
+  assert.deepEqual(subject.freeResponse.questions, ["Question 1 (Mathematical Routines)", "Question 2 (Translation Between Representations)", "Question 3 (Experimental Design and Analysis)", "Question 4 (Qualitative/Quantitative Translation)"]);
   assert.equal(subject.releaseStatus, "draft", "Physics 2 must stay draft until an independent content review happens");
   assert.deepEqual(
     Object.fromEntries(subject.units.map((unit) => [unit.id, bank.filter((q) => q.unit === unit.id).length])),
@@ -43,7 +53,7 @@ test("AP Physics 2 bank passes schema, id, and CED topic-coverage checks", () =>
       /This reasoning connects the observed or calculated result directly to the physical model in the question\.?$/i,
       `${question.id}: rationale still carries the boilerplate fallback sentence`
     );
-    assert.match(question.skill, /^[1-3](\.[A-D])?$/, `${question.id}: unrecognized science-practice code`);
+    assert.ok(ALLOWED_MCQ_SKILLS.has(question.skill), `${question.id}: ${question.skill} is not assessed in Physics 2 MCQ`);
     assert.match(question.topicCode, new RegExp(`^${question.unit.slice(1)}\\.\\d+$`), `${question.id}: topicCode doesn't match its unit`);
     topicsByUnit.set(question.unit, (topicsByUnit.get(question.unit) || new Set()).add(question.topicCode));
 
@@ -54,9 +64,9 @@ test("AP Physics 2 bank passes schema, id, and CED topic-coverage checks", () =>
     }
   });
 
-  Object.entries(EXPECTED_UNIT_TOPICS).forEach(([unit, expected]) => {
-    const found = topicsByUnit.get(unit) || new Set();
-    assert.equal(found.size, expected, `${unit}: expected ${expected} distinct CED topics, found ${found.size}`);
+  Object.entries(EXPECTED_TOPICS).forEach(([unit, expected]) => {
+    const found = [...(topicsByUnit.get(unit) || new Set())].sort();
+    assert.equal(found.join(","), expected.join(","), `${unit}: exact CED topic set changed`);
   });
 
   for (const [groupId, questions] of variantMap) {
@@ -65,6 +75,26 @@ test("AP Physics 2 bank passes schema, id, and CED topic-coverage checks", () =>
     assert.equal(new Set(questions.map((q) => q.topicCode)).size, 1, `${groupId}: variants must share a topic code`);
     const distinctText = new Set(questions.map((q) => q.q.trim().toLowerCase()));
     assert.equal(distinctText.size, questions.length, `${groupId}: variant questions must be worded differently`);
+  }
+});
+
+test("AP Physics 2 has seven original shared data sets with three linked questions each", () => {
+  const groups = new Map();
+  bank.filter((q) => q.stimulusGroupId).forEach((q) => {
+    if (!groups.has(q.stimulusGroupId)) groups.set(q.stimulusGroupId, []);
+    groups.get(q.stimulusGroupId).push(q);
+  });
+  assert.equal(groups.size, 7);
+  assert.deepEqual([...new Set([...groups.values()].map((items) => items[0].unit))].sort(), ["U10","U11","U12","U13","U14","U15","U9"]);
+  for (const [groupId, questions] of groups) {
+    assert.equal(questions.length, 3, `${groupId}: expected three linked questions`);
+    assert.equal(new Set(questions.map((q) => q.stimulus)).size, 1, `${groupId}: stimulus object is not shared by reference`);
+    const stimulus = questions[0].stimulus;
+    assert.equal(stimulus.type, "table");
+    assert.match(stimulus.source, /^Original simulated data created for AP Exam Practice.$/);
+    assert.ok(stimulus.description.length >= 60, `${groupId}: description is too short`);
+    assert.ok(Array.isArray(stimulus.columns) && stimulus.columns.length >= 2);
+    assert.ok(Array.isArray(stimulus.rows) && stimulus.rows.length >= 3);
   }
 });
 
@@ -106,7 +136,7 @@ test("AP Physics 2 distractors don't stack absolute-language wording", () => {
   });
 });
 
-test("every AP Physics 2 draw matches the configured unit blueprint and science-practice ranges", () => {
+test("every AP Physics 2 draw matches the configured unit, stimulus, and MCQ-skill ranges", () => {
   for (let attempt = 0; attempt < 2000; attempt++) {
     const drawn = drawExam(subject, bank);
     assert.equal(drawn.length, subject.mcqCount);
@@ -114,9 +144,16 @@ test("every AP Physics 2 draw matches the configured unit blueprint and science-
       Object.fromEntries(subject.units.map((unit) => [unit.id, drawn.filter((q) => q.unit === unit.id).length])),
       { U9: 7, U10: 7, U11: 7, U12: 5, U13: 5, U14: 6, U15: 5 }
     );
-    Object.entries(subject.sciencePracticeRanges).forEach(([family, range]) => {
-      const count = drawn.filter((q) => String(q.skill).split(".")[0] === family).length;
-      assert.ok(count >= range[0] && count <= range[1], `science practice ${family}: ${count} outside ${range}`);
+    const stimulusSets = new Set(drawn.filter((q) => q.stimulusGroupId).map((q) => q.stimulusGroupId));
+    assert.ok(stimulusSets.size >= subject.stimulusSetRange[0] && stimulusSets.size <= subject.stimulusSetRange[1], `stimulus sets: ${stimulusSets.size}`);
+    for (const groupId of stimulusSets) {
+      const bankMembers = bank.filter((q) => q.stimulusGroupId === groupId).map((q) => q.id).sort();
+      const drawMembers = drawn.filter((q) => q.stimulusGroupId === groupId).map((q) => q.id).sort();
+      assert.equal(drawMembers.join(","), bankMembers.join(","), `${groupId}: stimulus group was split`);
+    }
+    Object.entries(subject.attributeRanges.skill).forEach(([skill, range]) => {
+      const count = drawn.filter((q) => q.skill === skill).length;
+      assert.ok(count >= range[0] && count <= range[1], `skill ${skill}: ${count} outside ${range}`);
     });
     assert.equal(new Set(drawn.map((q) => q.id)).size, drawn.length, "draw contains duplicate questions");
   }

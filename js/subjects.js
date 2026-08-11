@@ -529,8 +529,11 @@ const AP_SUBJECTS = [
     name: "AP Physics 2: Algebra-Based",
     category: "Sciences",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-2-algebra-based/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score; total duration 3hrs.
+    // VERIFIED 2026-08-11 for the May 2027 exam:
+    // https://apcentral.collegeboard.org/courses/ap-physics-2
+    // https://apcentral.collegeboard.org/media/pdf/ap-physics-2-course-and-exam-description-clarifications.pdf
+    // Fall 2026 clarification changes Section I from 40/80 to 42 questions / 85 minutes
+    // and Section II from 100 to 95 minutes, effective with the May 2027 exam.
     mcqCount: 42,
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
@@ -562,31 +565,32 @@ const AP_SUBJECTS = [
       { id: "U14", name: "Waves, Sound, and Physical Optics", examWeight: 6 / 42, examWeightRange: [0.12, 0.15] },
       { id: "U15", name: "Modern Physics", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
     ],
-    // CED Science Practices for Physics 2 (only three, unlike Chemistry's six):
-    // 1 Creating Representations, 2 Mathematical Routines, 3 Scientific
-    // Questioning and Argumentation. Sub-skill letters (1.A, 2.B, ...) below are
-    // a working draft pending direct verification against the CED's Science
-    // Practices appendix -- flagging this explicitly rather than presenting the
-    // lettering as confirmed. Ranges are a first-pass estimate weighted toward
-    // Mathematical Routines, which dominates a quantitative/algebra-based exam;
-    // re-derive from real released-exam data before this leaves draft.
-    sciencePracticeRanges: {
-      "1": [8, 12],
-      "2": [20, 26],
-      "3": [6, 10],
+    // VERIFIED 2026-08-11 against the current AP Physics 2 course page.
+    // Section I assesses only skills 2.A-2.D and 3.B-3.C. Practice 1 and 3.A are
+    // FRQ-only. Integer ranges below are the published MCQ percentage bands
+    // converted to feasible counts on a 42-question section.
+    attributeRanges: {
+      skill: {
+        "2.A": [7, 8],
+        "2.B": [9, 10],
+        "2.C": [5, 6],
+        "2.D": [5, 6],
+        "3.B": [9, 10],
+        "3.C": [3, 4],
+      },
     },
-    // No stimulus-grouped question sets (shared graphs/data tables) exist in
-    // this initial bank yet -- every question is standalone. The real AP exam
-    // does include such sets; adding them is a follow-up pass, not this one.
-    // stimulusSetRange intentionally omitted so drawConstrainedWeightedExam's
-    // default [0, Infinity] doesn't reject an all-standalone bank.
+    // The live exam uses both discrete items and stimulus/data question sets.
+    // This original bank now carries one 3-question synthetic set per unit;
+    // draws require 2-4 complete sets and never split a group.
+    stimulusSetRange: [2, 4],
+    constraintDrawAttempts: 20000,
     freeResponse: {
-      timeMinutes: 90,
+      timeMinutes: 95,
       questions: [
-        "Question 1 (Experimental Design, 12 pts)",
-        "Question 2 (Quantitative/Qualitative Translation, 12 pts)",
-        "Question 3 (Short Answer, 4 pts)",
-        "Question 4 (Short Answer, 4 pts)",
+        "Question 1 (Mathematical Routines)",
+        "Question 2 (Translation Between Representations)",
+        "Question 3 (Experimental Design and Analysis)",
+        "Question 4 (Qualitative/Quantitative Translation)",
       ],
     },
     dataVar: "QUESTIONS_AP_PHYSICS_2",

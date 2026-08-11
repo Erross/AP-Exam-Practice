@@ -7,7 +7,7 @@ on:
     branches-ignore: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: test-${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -18,25 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          ref: subject/ap-physics-2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Apply independent Physics 2 audit fixes
-        run: |
-          node tools/run-fix-physics2-independent-audit.js
-          node tools/finalize-physics2-independent-audit.js
       - run: npm run check
-      - name: Commit green Physics 2 audit fixes
-        run: |
-          if git diff --quiet && git diff --cached --quiet; then
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Fix AP Physics 2 independent audit findings"
-          git push origin HEAD:subject/ap-physics-2
