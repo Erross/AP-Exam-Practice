@@ -1,0 +1,9 @@
+const fs=require('fs');
+const p='.apstats-repair.js';
+let s=fs.readFileSync(p,'utf8');
+const from=s.indexOf('const closure=');
+const to=s.indexOf("fs.writeFileSync('data/ap-statistics.js'",from);
+if(from<0||to<0) throw new Error('closure block not found');
+const replacement="const closure=','+extraText+'];\\nconst COUNTS={};\\nconst Q=SPECS.map((s,i)=>{const unit=s.unit;COUNTS[unit]=(COUNTS[unit]||0)+1;const c=i%4;const opts=s.distractors.slice();opts.splice(c,0,s.correct);const q={id:\\'apstats-\\'+unit.toLowerCase()+\\'-\\'+String(COUNTS[unit]).padStart(3,\\'0\\'),unit,topicCode:s.topicCode,skill:s.skill,type:\\'s\\',q:s.q,o:opts,c:[c],e:s.e,statsSetType:s.statsSetType||\\'standalone\\'};if(s.variantGroupId)q.variantGroupId=s.variantGroupId;if(s.stimulusGroupId)q.stimulusGroupId=s.stimulusGroupId;if(s.stimulusKey)q.stimulus=STIMULI[s.stimulusKey];return q;});\\nwindow.QUESTIONS_AP_STATISTICS=Q;})();\\n';\n";
+s=s.slice(0,from)+replacement+s.slice(to);
+fs.writeFileSync(p,s);
