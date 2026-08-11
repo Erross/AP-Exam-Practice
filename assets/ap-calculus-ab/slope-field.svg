@@ -119,5 +119,4 @@
 <line x1="446.6" y1="163.6" x2="453.4" y2="136.4" stroke="#1a5fb4" stroke-width="2" stroke-linecap="round" data-x="4" data-y="2" data-slope="4"/>
 <line x1="447.7" y1="113.8" x2="452.3" y2="86.2" stroke="#1a5fb4" stroke-width="2" stroke-linecap="round" data-x="4" data-y="3" data-slope="6"/>
 <line x1="448.3" y1="63.9" x2="451.7" y2="36.1" stroke="#1a5fb4" stroke-width="2" stroke-linecap="round" data-x="4" data-y="4" data-slope="8"/>
-<text x="50" y="486" font-size="12" fill="#333">Slope field for dy/dx = xy/2</text>
 </svg>

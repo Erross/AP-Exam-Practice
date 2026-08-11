@@ -118,6 +118,42 @@ body {
 .timer.timer-amber { background: var(--amber); color: #2a1e00; }
 .timer.timer-red { background: var(--red); color: #2a0500; }
 
+.part-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: var(--panel-alt);
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+}
+
+.part-transition-banner {
+  background: var(--panel-alt);
+  border: 1px solid var(--amber);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.advance-part-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+.advance-part-btn:hover { color: var(--text); border-color: var(--accent); }
+
 .link-btn {
   background: none;
   border: none;
@@ -211,6 +247,7 @@ fieldset.options { display: flex; flex-direction: column; gap: 8px; border: 0; m
 .nav-item.answered { background: var(--accent-dim); }
 .nav-item.flagged { border-color: var(--amber); }
 .nav-item.current { outline: 2px solid var(--accent); }
+.nav-item.locked { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
 
 .navigator-legend { list-style: none; padding: 0; margin: 0 0 14px; font-size: 0.78rem; color: var(--text-dim); }
 .navigator-legend li { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
@@ -339,6 +376,7 @@ button:disabled {
   color: var(--text-dim);
 }
 .stimulus-body { margin: 0; font-size: 0.92rem; line-height: 1.55; }
+.stimulus-note { margin: 8px 0 0; font-size: 0.82rem; font-style: italic; color: var(--text-dim); }
 .stimulus-image {
   display: block;
   width: min(100%, 760px);

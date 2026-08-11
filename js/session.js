@@ -31,6 +31,27 @@
     };
   }
 
+  /**
+   * Subjects whose Section I is split into distinct timed parts (see
+   * subject.examParts, e.g. AP Calculus AB's no-calculator/calculator halves)
+   * rely on js/draw.js's orderByExamParts to deliver each part as one
+   * contiguous, homogeneous run in `questions`. This walks that already-ordered
+   * list once and records each part's [start, end) slice, so both the app and
+   * session-restore validation can agree on part boundaries without either one
+   * re-deriving them differently. Returns null for subjects with no examParts.
+   */
+  function computePartBoundaries(subject, questions) {
+    const config = subject && subject.examParts;
+    if (!config) return null;
+    const field = config.field;
+    let idx = 0;
+    return config.parts.map((partDef) => {
+      const start = idx;
+      while (idx < questions.length && questions[idx][field] === partDef.value) idx++;
+      return { value: partDef.value, label: partDef.label, timeMinutes: partDef.timeMinutes, start, end: idx };
+    });
+  }
+
   function validateSavedSession(saved, subject, bank, now) {
     if (!saved || saved.v !== 2 || !subject || subject.releaseStatus !== "released") return null;
     if (saved.subjectId !== subject.id || !Array.isArray(bank)) return null;
@@ -51,7 +72,18 @@
       questions.push(remapQuestion(original, record.optionOrder));
     }
 
-    if (!isIntegerInRange(saved.current, 0, questions.length - 1)) return null;
+    const parts = computePartBoundaries(subject, questions);
+    let partIndex = 0;
+    if (parts) {
+      if (!isIntegerInRange(saved.partIndex, 0, parts.length - 1)) return null;
+      partIndex = saved.partIndex;
+      const activePart = parts[partIndex];
+      // Once a part has been entered, earlier parts' questions are locked, so a
+      // restored `current` may only point into the active part's slice.
+      if (!isIntegerInRange(saved.current, activePart.start, activePart.end - 1)) return null;
+    } else {
+      if (!isIntegerInRange(saved.current, 0, questions.length - 1)) return null;
+    }
     const answers = {};
     if (!saved.answers || typeof saved.answers !== "object" || Array.isArray(saved.answers)) return null;
     for (const [key, value] of Object.entries(saved.answers)) {
@@ -82,8 +114,10 @@
       current: saved.current,
       createdAt: saved.createdAt,
       endsAt: saved.endsAt,
+      parts,
+      partIndex,
     };
   }
 
-  return { isPermutation, remapQuestion, validateSavedSession };
+  return { isPermutation, remapQuestion, validateSavedSession, computePartBoundaries };
 });
