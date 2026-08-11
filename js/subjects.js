@@ -538,7 +538,57 @@ const AP_SUBJECTS = [
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // VERIFIED 2026-08-11: https://apcentral.collegeboard.org/media/pdf/ap-physics-2-course-at-a-glance.pdf
+    // Physics 2's CED continues Physics 1's unit numbering (Units 9-15; Physics 1
+    // covers 1-8). Published bands: Units 9-11 each 15-18%; Units 12-15 each 12-15%.
+    // With 42 questions, U9-U11's floor (15% of 42 = 6.3, so >=7 each) already
+    // requires 21 of the 42 seats, and U12-U15's floor (12% of 42 = 5.04, so >=6
+    // each) would need another 24 -- 45 total, three more than the exam has. No
+    // integer allocation can satisfy all seven bands simultaneously. The
+    // 7/7/7/5/5/6/5 blueprint below keeps U9-U11 at their exact floor (7 each,
+    // 16.7%) and lets three of the four smaller units land one question under
+    // their floor (5/42 = 11.9% vs. a 12% floor -- 0.1 point short) while U14
+    // (the largest unit, 9 topics) gets the fourth unit's full 6/42 = 14.3%.
+    // That 0.1-point shortfall is far smaller than shorting any U9-U11 unit
+    // would be (14.3% vs. their 15% floor, a 0.7-point gap), so it minimizes
+    // total discrete deviation from the published bands, the same reasoning
+    // AP Chemistry's blueprint comment uses.
+    units: [
+      { id: "U9", name: "Thermodynamics", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U10", name: "Electric Force, Field, and Potential", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U11", name: "Electric Circuits", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U12", name: "Magnetism and Electromagnetism", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U13", name: "Geometric Optics", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U14", name: "Waves, Sound, and Physical Optics", examWeight: 6 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U15", name: "Modern Physics", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+    ],
+    // CED Science Practices for Physics 2 (only three, unlike Chemistry's six):
+    // 1 Creating Representations, 2 Mathematical Routines, 3 Scientific
+    // Questioning and Argumentation. Sub-skill letters (1.A, 2.B, ...) below are
+    // a working draft pending direct verification against the CED's Science
+    // Practices appendix -- flagging this explicitly rather than presenting the
+    // lettering as confirmed. Ranges are a first-pass estimate weighted toward
+    // Mathematical Routines, which dominates a quantitative/algebra-based exam;
+    // re-derive from real released-exam data before this leaves draft.
+    sciencePracticeRanges: {
+      "1": [8, 12],
+      "2": [20, 26],
+      "3": [6, 10],
+    },
+    // No stimulus-grouped question sets (shared graphs/data tables) exist in
+    // this initial bank yet -- every question is standalone. The real AP exam
+    // does include such sets; adding them is a follow-up pass, not this one.
+    // stimulusSetRange intentionally omitted so drawConstrainedWeightedExam's
+    // default [0, Infinity] doesn't reject an all-standalone bank.
+    freeResponse: {
+      timeMinutes: 90,
+      questions: [
+        "Question 1 (Experimental Design, 12 pts)",
+        "Question 2 (Quantitative/Qualitative Translation, 12 pts)",
+        "Question 3 (Short Answer, 4 pts)",
+        "Question 4 (Short Answer, 4 pts)",
+      ],
+    },
     dataVar: "QUESTIONS_AP_PHYSICS_2",
   },
   {
