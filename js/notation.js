@@ -23,10 +23,11 @@
       .replace(/\s<->\s/g, " ↔ ")
       .replace(/\s->\s/g, " → ")
       .replace(/\+\/-/g, "±")
-      // "approaches infinity" is unambiguously mathematical, unlike arbitrary
-      // prose containing the word infinity.
-      .replace(/approaches\s+\+infinity\b/gi, "approaches +∞")
-      .replace(/approaches\s+(?:-|−)infinity\b/gi, "approaches −∞")
+      // Signed infinity is symbolic wherever it appears; unsigned infinity is
+      // normalized only in an explicit "approaches infinity" construction so
+      // ordinary prose such as "a limit at infinity" remains natural English.
+      .replace(/\+infinity\b/gi, "+∞")
+      .replace(/(?:-|−)infinity\b/gi, "−∞")
       .replace(/approaches\s+infinity\b/gi, "approaches ∞")
       .replace(/\bsigma(?=-bonding|-bond|\s+bonding|\s+bond|\s+domains?)/gi, "σ")
       .replace(/\bpi(?=-bonding|-bond|\s+bonding|\s+bond)/gi, "π");
