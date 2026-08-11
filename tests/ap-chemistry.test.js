@@ -1,21 +1,11 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const vm = require("node:vm");
+const { AP_SUBJECTS } = require("../js/subjects");
 const { drawExam, shuffleQuestionOptions } = require("../js/draw");
 const { loadChemistryBank } = require("./helpers");
 
-function loadChemistrySubject() {
-  const sandbox = { module: { exports: {} }, exports: {} };
-  vm.createContext(sandbox);
-  vm.runInContext(fs.readFileSync("js/subjects.js", "utf8"), sandbox);
-  vm.runInContext(fs.readFileSync("js/ap-chemistry-metadata.js", "utf8"), sandbox);
-  const subject = sandbox.module.exports.AP_SUBJECTS.find((item) => item.id === "ap-chemistry");
-  return JSON.parse(JSON.stringify(subject));
-}
-
 const bank = loadChemistryBank();
-const subject = loadChemistrySubject();
+const subject = AP_SUBJECTS.find((item) => item.id === "ap-chemistry");
 const expectedTopicCounts = [8, 7, 13, 9, 11, 9, 12, 11, 11];
 const expectedBankByUnit = { U1: 16, U2: 14, U3: 26, U4: 18, U5: 22, U6: 18, U7: 24, U8: 22, U9: 22 };
 const expectedDrawByUnit = { U1: 6, U2: 6, U3: 13, U4: 6, U5: 5, U6: 5, U7: 5, U8: 9, U9: 5 };
