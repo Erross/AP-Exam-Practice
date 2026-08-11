@@ -102,6 +102,17 @@
     e: "The objection is specifically about after-school child care, so the strongest addition measures that consequence directly and comparatively during the pilot. More sleep evidence or unrelated cost information may support the proposal generally, but neither answers the audience's logistical concern."
   });
 
+  patch("aplang-w-start-06", {
+    o: [
+      "In a similar way,",
+      "Even with these concerns,",
+      "For example, during the pilot,",
+      "As a result of this evidence,"
+    ],
+    c: [1],
+    e: "Sentence 10 turns from the logistical costs and concerns just acknowledged toward the writer's continuing case for a limited pilot. A concessive transition such as 'Even with these concerns' marks that relationship; similarity, example, and simple cause-and-effect do not."
+  });
+
   patch("aplang-w-native-03", {
     o: [
       "a protocol identifying observations and measurements classes could collect in the garden during specific science activities",
