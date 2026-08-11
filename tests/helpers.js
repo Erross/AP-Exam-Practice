@@ -17,4 +17,11 @@ function loadChemistryBank() {
   return sandbox.window.QUESTIONS_AP_CHEMISTRY;
 }
 
-module.exports = { loadGovernmentBank, loadChemistryBank };
+function loadPhysics2Bank() {
+  const sandbox = { window: {} };
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-physics-2.js", "utf8"), sandbox);
+  return sandbox.window.QUESTIONS_AP_PHYSICS_2;
+}
+
+module.exports = { loadGovernmentBank, loadChemistryBank, loadPhysics2Bank };
