@@ -26,7 +26,9 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Apply independent Physics 2 audit fixes
-        run: node tools/run-fix-physics2-independent-audit.js
+        run: |
+          node tools/run-fix-physics2-independent-audit.js
+          node tools/finalize-physics2-independent-audit.js
       - run: npm run check
       - name: Commit green Physics 2 audit fixes
         run: |
