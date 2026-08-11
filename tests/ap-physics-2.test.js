@@ -4,6 +4,7 @@ const { AP_SUBJECTS } = require("../js/subjects");
 const { drawExam } = require("../js/draw");
 const { loadPhysics2Bank } = require("./helpers");
 
+// Independent-audit regression suite for the canonical Physics 2 branch state.
 const subject = AP_SUBJECTS.find((item) => item.id === "ap-physics-2");
 const bank = loadPhysics2Bank();
 
