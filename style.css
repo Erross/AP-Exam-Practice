@@ -371,3 +371,39 @@ blockquote.stimulus-body {
 @media (max-width: 720px) {
   .exam-body { grid-template-columns: 1fr; }
 }
+
+/* ---------- Timed exam parts (AP Calculus AB/BC style sections) ---------- */
+.part-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: var(--panel-alt);
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+}
+.part-transition-banner {
+  background: var(--panel-alt);
+  border: 1px solid var(--amber);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+.advance-part-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+.advance-part-btn:hover { color: var(--text); border-color: var(--accent); }
+.nav-item.locked { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }

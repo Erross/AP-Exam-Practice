@@ -34,10 +34,12 @@
   <div class="exam-topbar">
     <button type="button" id="exam-back-btn" class="link-btn">← Exit</button>
     <span id="exam-subject-name" class="exam-subject-name"></span>
+    <span id="part-label" class="part-label" hidden></span>
     <span id="timer" class="timer" role="timer" aria-live="off" aria-label="Time remaining">0:00</span>
   </div>
 
   <p id="resume-banner" class="resume-banner" hidden>Resumed your in-progress attempt from this browser session.</p>
+  <p id="part-transition-banner" class="part-transition-banner" role="status" hidden></p>
 
   <div class="exam-body">
     <div class="question-panel">
@@ -48,6 +50,7 @@
         <button type="button" id="flag-btn" aria-pressed="false">🚩 Flag for review</button>
         <button type="button" id="next-btn">Next →</button>
       </div>
+      <button type="button" id="advance-part-btn" class="advance-part-btn" hidden>Finish this part early →</button>
     </div>
 
     <aside class="navigator-panel" aria-label="Question navigator">

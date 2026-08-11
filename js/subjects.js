@@ -334,10 +334,18 @@ const AP_SUBJECTS = [
     name: "AP Calculus AB",
     category: "Math & Computer Science",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-calculus-ab/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 40mins (Part A 29 no-calculator,
-    // Part B 13 calculator); total exam duration 3hrs 10mins.
-    // Previous repo value (45 / 105 min) predates the 2025 redesign.
+    // VERIFIED 2026-08-10 against the official AP Calculus AB and BC Course
+    // and Exam Description PDF (apcentral.collegeboard.org/media/pdf/
+    // ap-calculus-ab-and-bc-course-and-exam-description.pdf), "Exam Overview"
+    // and "Exam Weighting for the Multiple-Choice Section" tables — NOT
+    // reconstructed from secondary sources. Section I: 42 multiple-choice
+    // questions, 100 minutes total, split into two timed parts (see
+    // examParts below): Part A, 29 questions/62 minutes/no calculator, and
+    // Part B, 13 questions/38 minutes/calculator required. A prior pass of
+    // this file cited these same 29/13/100 totals but only enforced the
+    // 29/13 *count* split (attributeRanges) without ever separating the two
+    // parts into distinct timed sections in the delivered exam — see
+    // examParts and js/draw.js's orderByExamParts.
     mcqCount: 42,
     mcqTimeMinutes: 100,
     totalExamTimeLabel: "3h 10m",
@@ -345,7 +353,61 @@ const AP_SUBJECTS = [
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // Unit exam weightings, quoted exactly from the CED's "Exam Weighting for
+    // the Multiple-Choice Section of the AP Exam" table (identical figures in
+    // both the Course Framework and Exam Information sections). examWeight is
+    // the midpoint of each published band, shown here so the arithmetic is
+    // reviewable: U1 (10+15)/2=12.5, U2 (10+15)/2=12.5, U3 (5+10)/2=7.5,
+    // U4 (10+15)/2=12.5, U5 (15+20)/2=17.5, U6 (15+20)/2=17.5,
+    // U7 (5+10)/2=7.5, U8 (10+15)/2=12.5 — these sum to exactly 100.
+    // A prior pass of this file used narrower, non-published ranges for
+    // U1, U2, U3, U5, U6, and U7 (e.g. U1 as 10-12% instead of the CED's
+    // published 10-15%); that was a fabricated-precision defect caught on
+    // independent review and corrected here against the primary-source PDF.
+    units: [
+      { id: "U1", name: "Limits and Continuity", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U2", name: "Differentiation: Definition and Fundamental Properties", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U3", name: "Differentiation: Composite, Implicit, and Inverse Functions", examWeight: 0.075, examWeightRange: [0.05, 0.10] },
+      { id: "U4", name: "Contextual Applications of Differentiation", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U5", name: "Analytical Applications of Differentiation", examWeight: 0.175, examWeightRange: [0.15, 0.20] },
+      { id: "U6", name: "Integration and Accumulation of Change", examWeight: 0.175, examWeightRange: [0.15, 0.20] },
+      { id: "U7", name: "Differential Equations", examWeight: 0.075, examWeightRange: [0.05, 0.10] },
+      { id: "U8", name: "Applications of Integration", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+    ],
+    // Mathematical Practice weighting, quoted exactly from the CED: "Mathematical
+    // Practices 1, 2, and 3 are assessed in the multiple-choice section... Practice 4
+    // is not assessed." Practice 1 (Implementing Mathematical Processes) 50-70%,
+    // Practice 2 (Connecting Representations) 15-30%, Practice 3 (Justification)
+    // 10-20%. Integer bounds below are ceil/floor of each percentage times the
+    // 42-question draw: Practice 1 21-29, Practice 2 7-12, Practice 3 5-8. A prior
+    // pass of this file tagged 12 questions as Practice 4 and used only coarse,
+    // un-sub-coded family numbers; every question now carries a real CED skill
+    // sub-code (e.g. "1.C", "2.D", "3.G" — see the CED's Mathematical Practices
+    // skills table) and no question is tagged Practice 4, matching the CED's
+    // explicit statement that Practice 4 is MCQ-exempt.
+    sciencePracticeRanges: {
+      "1": [21, 29],
+      "2": [7, 12],
+      "3": [5, 8],
+    },
+    // Section I is not one undifferentiated 100-minute block: Part A (29
+    // questions, no calculator) is timed and delivered separately from Part B
+    // (13 questions, calculator required), and a student cannot return to
+    // Part A questions once Part B begins — see js/app.js's part-transition
+    // handling. `field` names the question property that determines part
+    // membership; every stimulus set must be homogeneous in that field (see
+    // CONTENT_STANDARDS.md and js/draw.js's orderByExamParts) since a set
+    // straddling both parts could never be delivered as one contiguous block.
+    examParts: {
+      field: "calculatorAllowed",
+      parts: [
+        { value: false, label: "Part A — Calculator not permitted", timeMinutes: 62 },
+        { value: true, label: "Part B — Graphing calculator required", timeMinutes: 38 },
+      ],
+    },
+    attributeRanges: {
+      calculatorAllowed: { false: [29, 29], true: [13, 13] },
+    },
     dataVar: "QUESTIONS_AP_CALCULUS_AB",
   },
   {

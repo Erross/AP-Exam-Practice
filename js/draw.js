@@ -293,6 +293,35 @@
   }
 
   /**
+   * Reorder a fully-drawn exam into named, contiguous parts so a timed
+   * no-calculator/calculator section is delivered in the real exam order.
+   * Every stimulus block must be homogeneous in the configured part field.
+   */
+  function orderByExamParts(subject, questions) {
+    const config = subject.examParts;
+    if (!config) return questions;
+    const field = config.field;
+    const blocks = toBlocks(questions);
+    const buckets = config.parts.map(() => []);
+
+    blocks.forEach((block) => {
+      const value = block[0][field];
+      if (!block.every((question) => question[field] === value)) {
+        throw new Error(
+          `${block[0].stimulusGroupId || block[0].id}: stimulus set has mixed ${field} values and cannot be placed in a single exam part`
+        );
+      }
+      const partIndex = config.parts.findIndex((part) => part.value === value);
+      if (partIndex === -1) {
+        throw new Error(`${block[0].id}: ${field}=${String(value)} does not match any configured exam part`);
+      }
+      buckets[partIndex].push(block);
+    });
+
+    return buckets.flatMap((blockList) => blockList.flat());
+  }
+
+  /**
    * Draw an AP U.S. Government-shaped exam. The blueprint is expressed on the
    * subject record so this remains data-driven and testable. It selects whole
    * sets by stimulus type, then fills the exact unit targets with standalone
@@ -463,67 +492,66 @@
     }
     const drawCount = requestedCount;
     const units = Array.isArray(subject.units) ? subject.units : [];
+    let result;
 
-    if (subject.setBlueprint) return drawSetBlueprintExam(subject, bank, rng);
-
-    // No unit metadata (most subjects, so far): fall back to a flat random draw,
-    // but still keep stimulus sets contiguous.
-    if (units.length === 0) {
+    if (subject.setBlueprint) {
+      result = drawSetBlueprintExam(subject, bank, rng);
+    } else if (units.length === 0) {
       const blocks = drawBlocks(bank, drawCount, rng);
-      return shuffle(blocks, rng).flat();
-    }
-
-    const byUnit = new Map(units.map((u) => [u.id, []]));
-    const orphans = [];
-    bank.forEach((q) => {
-      if (byUnit.has(q.unit)) byUnit.get(q.unit).push(q);
-      else orphans.push(q);
-    });
-
-    const targets = apportion(
-      units.map((u) => ({
-        id: u.id,
-        weight: u.examWeight || 0,
-        capacity: byUnit.get(u.id).length,
-      })),
-      drawCount
-    );
-
-    if (subject.examBlueprint) return drawBlueprintExam(subject, bank, targets, rng);
-
-    if (subject.sciencePracticeRanges || subject.attributeRanges) {
-      return drawConstrainedWeightedExam(subject, byUnit, targets, rng);
-    }
-
-    const setRange = Array.isArray(subject.stimulusSetRange) ? subject.stimulusSetRange : null;
-    const attempts = setRange ? 200 : 1;
-    let lastPlaced = 0;
-
-    for (let attempt = 0; attempt < attempts; attempt++) {
-      let blocks = [];
-      units.forEach((u) => {
-        blocks = blocks.concat(drawBlocks(byUnit.get(u.id), targets[u.id] || 0, rng));
+      result = shuffle(blocks, rng).flat();
+    } else {
+      const byUnit = new Map(units.map((u) => [u.id, []]));
+      bank.forEach((q) => {
+        if (byUnit.has(q.unit)) byUnit.get(q.unit).push(q);
       });
 
-      // If a weighted pool cannot cover the configured draw, try another whole-
-      // block combination before failing. Quietly borrowing from another unit
-      // would make the delivered blueprint untrue.
-      const placed = blocks.reduce((n, b) => n + b.length, 0);
-      lastPlaced = placed;
-      if (placed !== drawCount) continue;
+      const targets = apportion(
+        units.map((u) => ({
+          id: u.id,
+          weight: u.examWeight || 0,
+          capacity: byUnit.get(u.id).length,
+        })),
+        drawCount
+      );
 
-      if (setRange) {
-        const setCount = blocks.filter((block) => block[0] && block[0].stimulusGroupId).length;
-        if (setCount < setRange[0] || setCount > setRange[1]) continue;
+      if (subject.examBlueprint) {
+        result = drawBlueprintExam(subject, bank, targets, rng);
+      } else if (subject.sciencePracticeRanges || subject.attributeRanges) {
+        result = drawConstrainedWeightedExam(subject, byUnit, targets, rng);
+      } else {
+        const setRange = Array.isArray(subject.stimulusSetRange) ? subject.stimulusSetRange : null;
+        const attempts = setRange ? 200 : 1;
+        let lastPlaced = 0;
+        let found = null;
+
+        for (let attempt = 0; attempt < attempts; attempt++) {
+          let blocks = [];
+          units.forEach((u) => {
+            blocks = blocks.concat(drawBlocks(byUnit.get(u.id), targets[u.id] || 0, rng));
+          });
+          const placed = blocks.reduce((n, b) => n + b.length, 0);
+          lastPlaced = placed;
+          if (placed !== drawCount) continue;
+
+          if (setRange) {
+            const setCount = blocks.filter((block) => block[0] && block[0].stimulusGroupId).length;
+            if (setCount < setRange[0] || setCount > setRange[1]) continue;
+          }
+          found = shuffle(blocks, rng).flat();
+          break;
+        }
+
+        if (!found) {
+          if (setRange) {
+            throw new Error(`No whole-set draw satisfied stimulus set range ${setRange[0]}-${setRange[1]}`);
+          }
+          throw new Error(`Weighted draw could place only ${lastPlaced} of ${drawCount} questions`);
+        }
+        result = found;
       }
-
-      return shuffle(blocks, rng).flat();
     }
 
-    if (setRange) {
-      throw new Error(`No whole-set draw satisfied stimulus set range ${setRange[0]}-${setRange[1]}`);
-    }
-    throw new Error(`Weighted draw could place only ${lastPlaced} of ${drawCount} questions`);
+    return subject.examParts ? orderByExamParts(subject, result) : result;
   }
 
   /**
@@ -558,6 +586,7 @@
     drawConstrainedWeightedExam,
     drawBlueprintExam,
     drawSetBlueprintExam,
+    orderByExamParts,
     drawExam,
     shuffleQuestionOptions,
   };
