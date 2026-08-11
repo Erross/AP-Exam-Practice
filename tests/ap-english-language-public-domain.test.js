@@ -7,7 +7,11 @@ const { shuffleQuestionOptions } = require("../js/draw");
 function loadBank() {
   const sandbox = { window: {} };
   vm.createContext(sandbox);
-  for (const file of ["data/ap-english-language.js", "data/ap-english-language-public-domain.js"]) {
+  for (const file of [
+    "data/ap-english-language.js",
+    "data/ap-english-language-public-domain.js",
+    "data/ap-english-language-public-domain-corrections.js",
+  ]) {
     vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
   }
   return sandbox.window.QUESTIONS_AP_ENGLISH_LANGUAGE;
@@ -45,6 +49,12 @@ test("all five AP Language Reading sets use sourced public-domain nonfiction", (
     assert.ok(wordCount(stimulus.text) >= 450, `${setId}: excerpt unexpectedly short (${wordCount(stimulus.text)} words)`);
     assert.ok(wordCount(stimulus.text) <= 850, `${setId}: excerpt unexpectedly long (${wordCount(stimulus.text)} words)`);
   }
+
+  assert.match(questionsFor("r-repair")[0].stimulus.text, /white man’s power to enslave the black man/);
+  assert.match(questionsFor("r-replicas")[0].stimulus.text, /boys’ and girls’ heads/);
+  const addams = questionsFor("r-observers")[0].stimulus.text;
+  assert.match(addams, /because "the old man clogs our earliest years,"/);
+  assert.match(addams, /blacksmith shop was "all there,"/);
 });
 
 test("Language Writing draft sets remain original student-draft material", () => {
