@@ -5,12 +5,29 @@ const vm = require("node:vm");
 function loadAllBanks() {
   const html = fs.readFileSync("index.html", "utf8");
   const scripts = [...html.matchAll(/<script src="(data\/[^"]+\.js)"><\/script>/g)].map((m) => m[1]);
-  const sandbox = { window: {} };
-  vm.createContext(sandbox);
-  scripts.forEach((file) => vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file }));
-  return Object.entries(sandbox.window)
-    .filter(([name, value]) => name.startsWith("QUESTIONS_") && Array.isArray(value))
-    .flatMap(([bank, questions]) => questions.map((q) => ({ bank, q })));
+
+  // Classic bank files intentionally share lexical globals with their own
+  // correction/curation layers (for example CHEM_QUESTIONS), but different
+  // subjects may reuse short helper names such as `q`. Run each subject family
+  // in its own browser-like context so the diagnostic observes effective bank
+  // content without creating artificial cross-course redeclaration failures.
+  const groups = new Map();
+  scripts.forEach((file) => {
+    const key = file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(file);
+  });
+
+  const rows = [];
+  groups.forEach((files) => {
+    const sandbox = { window: {} };
+    vm.createContext(sandbox);
+    files.forEach((file) => vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file }));
+    Object.entries(sandbox.window)
+      .filter(([name, value]) => name.startsWith("QUESTIONS_") && Array.isArray(value))
+      .forEach(([bank, questions]) => questions.forEach((q) => rows.push({ bank, q })));
+  });
+  return rows;
 }
 
 function stringsFor(q) {
