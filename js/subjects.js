@@ -462,10 +462,13 @@ const AP_SUBJECTS = [
     name: "AP Precalculus",
     category: "Math & Computer Science",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-precalculus/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 45mins (Part A 29 no-calculator /
-    // 65 mins, Part B calculator), approximately 63% of score; total duration 2hrs 55mins.
-    // Previous repo value (40 / 80 min) was stale.
+    // VERIFIED 2026-08-11: https://apcentral.collegeboard.org/courses/ap-precalculus/exam
+    // Section I: Multiple Choice, 42 questions, 1h45m (62.5% of score), split into two
+    // timed parts: Part A, 29 questions/65 minutes, calculator not permitted; Part B,
+    // 13 questions/40 minutes, graphing calculator required. Section II: 4 FRQs, 1h10m
+    // (37.5% of score). Total 2h55m. A "Fall 2026 clarification" (effective May 2027
+    // exam, per the same page) changes MCQ/FRQ counts and timing from the prior format;
+    // the values here are the already-current, post-clarification numbers.
     mcqCount: 42,
     mcqTimeMinutes: 105,
     totalExamTimeLabel: "2h 55m",
@@ -473,7 +476,48 @@ const AP_SUBJECTS = [
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // VERIFIED 2026-08-11: https://apcentral.collegeboard.org/media/pdf/ap-precalculus-course-at-a-glance.pdf
+    // The CED's Unit 4 (Functions Involving Parameters, Vectors, and Matrices) is
+    // explicitly published at "0% AP Exam Weighting" -- it is taught but never assessed
+    // on either exam section. Only Units 1-3 are examinable, so only they appear here
+    // and only they have authored questions; a unit that can never be drawn doesn't need
+    // a question bank behind it.
+    // Weight bands, quoted exactly from the Course at a Glance: Unit 1 30-40%,
+    // Unit 2 25-40%, Unit 3 30-35%. examWeight uses each band's midpoint. Largest-remainder
+    // apportionment of 42 seats from these three weights (0.35/0.325/0.325, summing to
+    // exactly 1.0) lands on 15/14/13 (35.7%/33.3%/31.0%) -- inside all three published
+    // bands simultaneously, so no compromise/shortfall reasoning is needed here (unlike
+    // Chemistry/Physics 2). Note this is 15/14/13, not the even 14/14/14 split the equal
+    // Unit 2/3 weights might suggest -- apportion()'s largest-remainder step assigns the
+    // rounding seats by fractional-part size (0.7, 0.65, 0.65), not by weight symmetry.
+    units: [
+      { id: "U1", name: "Polynomial and Rational Functions", examWeight: 0.35, examWeightRange: [0.30, 0.40] },
+      { id: "U2", name: "Exponential and Logarithmic Functions", examWeight: 0.325, examWeightRange: [0.25, 0.40] },
+      { id: "U3", name: "Trigonometric and Polar Functions", examWeight: 0.325, examWeightRange: [0.30, 0.35] },
+    ],
+    // Section I is split into two timed, non-returnable parts, same mechanism as
+    // AP Calculus AB (see js/app.js's part-transition handling and js/draw.js's
+    // orderByExamParts). `field` names the question property that determines part
+    // membership; every stimulus set must be homogeneous in that field.
+    examParts: {
+      field: "calculatorAllowed",
+      parts: [
+        { value: false, label: "Part A — Calculator not permitted", timeMinutes: 65 },
+        { value: true, label: "Part B — Graphing calculator required", timeMinutes: 40 },
+      ],
+    },
+    attributeRanges: {
+      calculatorAllowed: { false: [29, 29], true: [13, 13] },
+    },
+    freeResponse: {
+      timeMinutes: 70,
+      questions: [
+        "Question 1 (Function Concepts)",
+        "Question 2 (Modeling a Non-Periodic Context)",
+        "Question 3 (Modeling a Periodic Context)",
+        "Question 4 (Symbolic Manipulations)",
+      ],
+    },
     dataVar: "QUESTIONS_AP_PRECALCULUS",
   },
   {

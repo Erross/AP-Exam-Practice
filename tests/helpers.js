@@ -24,4 +24,11 @@ function loadPhysics2Bank() {
   return sandbox.window.QUESTIONS_AP_PHYSICS_2;
 }
 
-module.exports = { loadGovernmentBank, loadChemistryBank, loadPhysics2Bank };
+function loadPrecalculusBank() {
+  const sandbox = { window: {} };
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-precalculus.js", "utf8"), sandbox);
+  return sandbox.window.QUESTIONS_AP_PRECALCULUS;
+}
+
+module.exports = { loadGovernmentBank, loadChemistryBank, loadPhysics2Bank, loadPrecalculusBank };
