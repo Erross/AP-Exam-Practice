@@ -1,5 +1,5 @@
-// WIP source-fidelity corrections for AP English Language public-domain excerpts.
-// Fold these exact typography fixes into data/ap-english-language.js before release.
+// WIP corrections for AP English Language public-domain excerpts.
+// Fold these exact source and option fixes into data/ap-english-language.js before release.
 (function () {
   "use strict";
   const bank = window.QUESTIONS_AP_ENGLISH_LANGUAGE;
@@ -26,4 +26,15 @@
     .replace("“Sure!”", "\"Sure!\"")
     .replace("“that makes the iron hard.”", "\"that makes the iron hard.\"")
     .replace("burden of “the winds that come from the fields of sleep”", "burden of \"the winds that come from the fields of sleep\"");
+
+  const shadeThree = bank.find((q) => q.id === "aplang-r-shade-03");
+  shadeThree.o = shadeThree.o.map((option) => {
+    if (option === "certain that nature alone accounts for every inequality she observes") {
+      return "inclined to attribute the inequalities she observes primarily to nature";
+    }
+    if (option === "interested only in the private conduct of individual women") {
+      return "focused mainly on the private conduct of individual women";
+    }
+    return option;
+  });
 })();
