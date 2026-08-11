@@ -62,6 +62,13 @@ literatureTest = literatureTest.replace(
 );
 fs.writeFileSync("tests/ap-english-public-domain.test.js", literatureTest);
 
+let englishTest = fs.readFileSync("tests/ap-english.test.js", "utf8");
+englishTest = englishTest.replace(
+  '  assert.ok(literature.bank.filter((q) => q.setType !== "poetry").every((q) => q.era === "contemporary"));',
+  '  const nonPoetry = literature.bank.filter((q) => q.setType !== "poetry");\n  assert.ok(nonPoetry.every((q) => q.stimulus.source.startsWith("Public-domain text: https://")));\n  assert.ok(new Set(nonPoetry.map((q) => q.era)).size >= 2);',
+);
+fs.writeFileSync("tests/ap-english.test.js", englishTest);
+
 for (const file of [
   "data/ap-english-language-public-domain.js",
   "data/ap-english-language-public-domain-corrections.js",
