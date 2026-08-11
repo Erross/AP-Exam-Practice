@@ -114,7 +114,7 @@ test("Chemistry stimulus groups retain shared synthetic provenance", () => {
 
 test("Chemistry answer construction has no statistical or absolute-language tells", () => {
   const wordCount = (text) => text.trim().split(/\s+/).length;
-  const absolute = /\b(every|always|never|only|entirely|unlimited|identical)\b/i;
+  const absolute = /\b(every|always|never|only|entirely|unlimited|identical|all|none|completely|impossible|guarantee(?:s|d)?)\b/i;
   let uniqueLongest = 0;
   let amongLongest = 0;
   let correctWords = 0;
