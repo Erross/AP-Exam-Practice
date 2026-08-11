@@ -23,7 +23,9 @@ const state = {
   current: 0,
   timerId: null,
   createdAt: null,
-  endsAt: null,             // wall-clock ms timestamp the attempt expires at
+  endsAt: null,             // wall-clock ms timestamp the CURRENT timed section expires at
+  parts: null,               // subject.examParts questions grouped into [{value,label,timeMinutes,start,end}], or null
+  partIndex: 0,                // index into state.parts of the section currently being delivered
 };
 
 // ---------- Small DOM helpers (textContent only, never innerHTML) ----------
@@ -186,9 +188,16 @@ function startExam(subject) {
   state.answers = {};
   state.struckOut = {};
   state.flagged = new Set();
-  state.current = 0;
   state.createdAt = Date.now();
-  state.endsAt = state.createdAt + (subject.mcqTimeMinutes || 0) * 60 * 1000;
+  // Subjects with examParts (e.g. AP Calculus AB's no-calculator/calculator
+  // split) deliver Section I as separate timed sections rather than one block;
+  // js/draw.js's orderByExamParts has already grouped state.questions into
+  // contiguous runs per part, so this just records where each run starts/ends.
+  state.parts = computePartBoundaries(subject, state.questions);
+  state.partIndex = 0;
+  state.current = state.parts ? state.parts[0].start : 0;
+  const firstDurationMinutes = state.parts ? state.parts[0].timeMinutes : subject.mcqTimeMinutes || 0;
+  state.endsAt = state.createdAt + firstDurationMinutes * 60 * 1000;
 
   enterExamScreen();
   persistSession();
@@ -198,10 +207,74 @@ function enterExamScreen() {
   document.getElementById("exam-subject-name").textContent = state.subject.name;
   buildNavigator();
   renderQuestion({ focus: "heading" });
+  updatePartUI();
   startTimer();
   showScreen("screen-exam");
   // Focus has to move off the (now hidden) catalog card that launched the exam.
   focusQuestionHeading();
+}
+
+// ---------- Exam parts (e.g. AP Calculus AB Part A/B) ----------
+
+function currentPart() {
+  return state.parts ? state.parts[state.partIndex] : null;
+}
+
+function isOnFinalPart() {
+  return !state.parts || state.partIndex === state.parts.length - 1;
+}
+
+/** Questions belonging to a part that has already closed can no longer be viewed or edited. */
+function isPartLocked(questionIndex) {
+  const part = currentPart();
+  return !!part && questionIndex < part.start;
+}
+
+function updatePartUI() {
+  const label = document.getElementById("part-label");
+  const advanceBtn = document.getElementById("advance-part-btn");
+  const part = currentPart();
+  if (!label || !advanceBtn) return;
+  if (!part) {
+    label.hidden = true;
+    advanceBtn.hidden = true;
+    return;
+  }
+  label.hidden = false;
+  label.textContent = part.label;
+  advanceBtn.hidden = isOnFinalPart();
+}
+
+function showPartTransitionBanner(part) {
+  const banner = document.getElementById("part-transition-banner");
+  if (!banner) return;
+  banner.textContent = `You've moved on to ${part.label}. Earlier questions are locked and can no longer be viewed or changed.`;
+  banner.hidden = false;
+}
+
+/**
+ * Advances from the current part to the next one, whether triggered by that
+ * part's timer running out or by the student choosing to move on early. Once
+ * called, every question before the new part's start becomes permanently
+ * inaccessible for the rest of this attempt (see isPartLocked).
+ */
+function advanceToNextPart() {
+  if (isOnFinalPart()) {
+    submitExam();
+    return;
+  }
+  state.partIndex++;
+  const part = currentPart();
+  state.current = part.start;
+  state.createdAt = Date.now();
+  state.endsAt = state.createdAt + part.timeMinutes * 60 * 1000;
+
+  showPartTransitionBanner(part);
+  buildNavigator();
+  renderQuestion({ focus: "heading" });
+  updatePartUI();
+  startTimer();
+  persistSession();
 }
 
 function focusQuestionHeading() {
@@ -225,7 +298,9 @@ function startTimer() {
     updateTimerDisplay();
     if (secondsRemaining() <= 0) {
       clearInterval(state.timerId);
-      submitExam();
+      // A part's timer running out advances to the next part (if any) rather
+      // than always submitting — only the final part's timer ends the attempt.
+      advanceToNextPart();
     }
   }, 500);
 }
@@ -250,6 +325,7 @@ function buildNavigator() {
       attrs: { type: "button" },
     });
     btn.addEventListener("click", () => {
+      if (isPartLocked(i)) return;
       state.current = i;
       renderQuestion();
       persistSession();
@@ -265,10 +341,13 @@ function refreshNavigatorState() {
     const isCurrent = i === state.current;
     const isAnswered = state.answers[i] !== undefined;
     const isFlagged = state.flagged.has(i);
+    const isLocked = isPartLocked(i);
 
     item.classList.toggle("current", isCurrent);
     item.classList.toggle("answered", isAnswered);
     item.classList.toggle("flagged", isFlagged);
+    item.classList.toggle("locked", isLocked);
+    item.disabled = isLocked;
 
     // Same information as the CSS classes, exposed to assistive tech.
     if (isCurrent) item.setAttribute("aria-current", "true");
@@ -279,6 +358,7 @@ function refreshNavigatorState() {
     else states.push("not answered");
     if (isFlagged) states.push("flagged for review");
     if (isCurrent) states.push("current question");
+    if (isLocked) states.push("from a closed part, locked");
     item.setAttribute("aria-label", `Question ${i + 1}, ${states.join(", ")}`);
   });
 }
@@ -345,6 +425,9 @@ function renderStimulus(question, index, ranges) {
     wrap.appendChild(el("blockquote", { className: "stimulus-body", text: stim.text || "" }));
   }
 
+  if (stim.note) {
+    wrap.appendChild(el("p", { className: "stimulus-note", text: stim.note }));
+  }
   if (stim.source) {
     wrap.appendChild(el("p", { className: "stimulus-source", text: `— ${stim.source}` }));
   }
@@ -468,8 +551,11 @@ function renderQuestion(opts = {}) {
 function updateNavButtons() {
   const prev = document.getElementById("prev-btn");
   const next = document.getElementById("next-btn");
-  prev.disabled = state.current === 0;
-  next.disabled = state.current >= state.questions.length - 1;
+  const part = currentPart();
+  const lowerBound = part ? part.start : 0;
+  const upperBound = part ? part.end - 1 : state.questions.length - 1;
+  prev.disabled = state.current <= lowerBound;
+  next.disabled = state.current >= upperBound;
 }
 
 function recordAnswer() {
@@ -504,6 +590,9 @@ function toggleFlag() {
 function goToQuestion(delta) {
   const next = state.current + delta;
   if (next < 0 || next >= state.questions.length) return;
+  if (isPartLocked(next)) return;
+  const part = currentPart();
+  if (part && next >= part.end) return; // don't preview the next part before it opens
   state.current = next;
   renderQuestion();
   persistSession();
@@ -524,6 +613,7 @@ function persistSession() {
       createdAt: state.createdAt,
       endsAt: state.endsAt,
       current: state.current,
+      partIndex: state.partIndex,
       questions: state.questions.map((question) => ({
         id: question.id,
         optionOrder: question.optionOrder,
@@ -688,6 +778,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("submit-btn").addEventListener("click", () => {
     if (confirm("Submit exam? You can't change answers after this.")) submitExam();
   });
+  const advanceBtn = document.getElementById("advance-part-btn");
+  if (advanceBtn) {
+    advanceBtn.addEventListener("click", () => {
+      const part = currentPart();
+      const nextPart = state.parts && state.parts[state.partIndex + 1];
+      const warning = nextPart
+        ? `Move on to ${nextPart.label} now? You won't be able to return to ${part.label} questions.`
+        : "Move on now?";
+      if (confirm(warning)) advanceToNextPart();
+    });
+  }
   document.getElementById("results-back-btn").addEventListener("click", backToCatalog);
   document.getElementById("exam-back-btn").addEventListener("click", () => {
     if (confirm("Leave this exam? Your progress will be lost.")) backToCatalog();

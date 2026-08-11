@@ -110,7 +110,7 @@ function assertSetSequencing(groups) {
 test("English Language bank matches the current five-set CED structure", () => {
   assert.equal(language.bank.length, 115);
   assert.equal(language.subject.formatVerified, true);
-  assert.equal(language.subject.releaseStatus, "released");
+  assert.equal(language.subject.releaseStatus, "released", "reviewed public-domain English should be released");
   assert.ok(language.subject.units.every((unit) => unit.examWeight === undefined && unit.examWeightRange === undefined),
     "Language Big Ideas are reporting groups, not College Board-published weighting bands");
   const skills = new Set(["1.A", "1.B", "3.A", "3.B", "3.C", "5.A", "5.B", "5.C", "7.A", "7.B", "7.C",
@@ -148,7 +148,7 @@ test("every English Language draw has the configured 24 Reading / 21 Writing fiv
 test("English Literature bank covers the required prose, poetry, and drama composition", () => {
   assert.equal(literature.bank.length, 142);
   assert.equal(literature.subject.formatVerified, true);
-  assert.equal(literature.subject.releaseStatus, "released");
+  assert.equal(literature.subject.releaseStatus, "released", "reviewed public-domain English should be released");
   const skills = new Set(["1.A", "1.B", "1.C", "1.D", "1.E", "2.B", "3.C", "3.D", "3.E",
     "4.A", "4.B", "4.C", "5.B", "5.C", "5.D", "6.A", "6.B", "6.C", "6.D", "7.B", "7.C", "7.D"]);
   const groups = assertCommonSchema(literature.bank, /^aplit-[a-z-]+-\d{2}$/, skills);
@@ -158,7 +158,9 @@ test("English Literature bank covers the required prose, poetry, and drama compo
     assert.equal(questions.length, sizes[questions[0].setType], `${groupId}: wrong set size`);
   }
   assert.equal(new Set(literature.bank.filter((q) => q.setType === "poetry").map((q) => q.stimulusGroupId)).size, 5);
-  assert.ok(literature.bank.filter((q) => q.setType !== "poetry").every((q) => q.era === "contemporary"));
+  const nonPoetry = literature.bank.filter((q) => q.setType !== "poetry");
+  assert.ok(nonPoetry.every((q) => q.stimulus.source.startsWith("Public-domain text: https://")));
+  assert.ok(new Set(nonPoetry.map((q) => q.era)).size >= 2);
   assert.ok(literature.bank.filter((q) => q.setType === "poetry").every((q) => q.stimulus.source.startsWith("Public-domain text: https://")));
   assert.ok(literature.bank.filter((q) => q.era.startsWith("pre-20th")).length > 0);
   for (const questions of groups.values()) {

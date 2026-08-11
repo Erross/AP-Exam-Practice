@@ -334,18 +334,80 @@ const AP_SUBJECTS = [
     name: "AP Calculus AB",
     category: "Math & Computer Science",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-calculus-ab/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 40mins (Part A 29 no-calculator,
-    // Part B 13 calculator); total exam duration 3hrs 10mins.
-    // Previous repo value (45 / 105 min) predates the 2025 redesign.
+    // VERIFIED 2026-08-10 against the official AP Calculus AB and BC Course
+    // and Exam Description PDF (apcentral.collegeboard.org/media/pdf/
+    // ap-calculus-ab-and-bc-course-and-exam-description.pdf), "Exam Overview"
+    // and "Exam Weighting for the Multiple-Choice Section" tables — NOT
+    // reconstructed from secondary sources. Section I: 42 multiple-choice
+    // questions, 100 minutes total, split into two timed parts (see
+    // examParts below): Part A, 29 questions/62 minutes/no calculator, and
+    // Part B, 13 questions/38 minutes/calculator required. A prior pass of
+    // this file cited these same 29/13/100 totals but only enforced the
+    // 29/13 *count* split (attributeRanges) without ever separating the two
+    // parts into distinct timed sections in the delivered exam — see
+    // examParts and js/draw.js's orderByExamParts.
     mcqCount: 42,
     mcqTimeMinutes: 100,
     totalExamTimeLabel: "3h 10m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // Unit exam weightings, quoted exactly from the CED's "Exam Weighting for
+    // the Multiple-Choice Section of the AP Exam" table (identical figures in
+    // both the Course Framework and Exam Information sections). examWeight is
+    // the midpoint of each published band, shown here so the arithmetic is
+    // reviewable: U1 (10+15)/2=12.5, U2 (10+15)/2=12.5, U3 (5+10)/2=7.5,
+    // U4 (10+15)/2=12.5, U5 (15+20)/2=17.5, U6 (15+20)/2=17.5,
+    // U7 (5+10)/2=7.5, U8 (10+15)/2=12.5 — these sum to exactly 100.
+    // A prior pass of this file used narrower, non-published ranges for
+    // U1, U2, U3, U5, U6, and U7 (e.g. U1 as 10-12% instead of the CED's
+    // published 10-15%); that was a fabricated-precision defect caught on
+    // independent review and corrected here against the primary-source PDF.
+    units: [
+      { id: "U1", name: "Limits and Continuity", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U2", name: "Differentiation: Definition and Fundamental Properties", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U3", name: "Differentiation: Composite, Implicit, and Inverse Functions", examWeight: 0.075, examWeightRange: [0.05, 0.10] },
+      { id: "U4", name: "Contextual Applications of Differentiation", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+      { id: "U5", name: "Analytical Applications of Differentiation", examWeight: 0.175, examWeightRange: [0.15, 0.20] },
+      { id: "U6", name: "Integration and Accumulation of Change", examWeight: 0.175, examWeightRange: [0.15, 0.20] },
+      { id: "U7", name: "Differential Equations", examWeight: 0.075, examWeightRange: [0.05, 0.10] },
+      { id: "U8", name: "Applications of Integration", examWeight: 0.125, examWeightRange: [0.10, 0.15] },
+    ],
+    // Mathematical Practice weighting, quoted exactly from the CED: "Mathematical
+    // Practices 1, 2, and 3 are assessed in the multiple-choice section... Practice 4
+    // is not assessed." Practice 1 (Implementing Mathematical Processes) 50-70%,
+    // Practice 2 (Connecting Representations) 15-30%, Practice 3 (Justification)
+    // 10-20%. Integer bounds below are ceil/floor of each percentage times the
+    // 42-question draw: Practice 1 21-29, Practice 2 7-12, Practice 3 5-8. A prior
+    // pass of this file tagged 12 questions as Practice 4 and used only coarse,
+    // un-sub-coded family numbers; every question now carries a real CED skill
+    // sub-code (e.g. "1.C", "2.D", "3.G" — see the CED's Mathematical Practices
+    // skills table) and no question is tagged Practice 4, matching the CED's
+    // explicit statement that Practice 4 is MCQ-exempt.
+    sciencePracticeRanges: {
+      "1": [21, 29],
+      "2": [7, 12],
+      "3": [5, 8],
+    },
+    // Section I is not one undifferentiated 100-minute block: Part A (29
+    // questions, no calculator) is timed and delivered separately from Part B
+    // (13 questions, calculator required), and a student cannot return to
+    // Part A questions once Part B begins — see js/app.js's part-transition
+    // handling. `field` names the question property that determines part
+    // membership; every stimulus set must be homogeneous in that field (see
+    // CONTENT_STANDARDS.md and js/draw.js's orderByExamParts) since a set
+    // straddling both parts could never be delivered as one contiguous block.
+    examParts: {
+      field: "calculatorAllowed",
+      parts: [
+        { value: false, label: "Part A — Calculator not permitted", timeMinutes: 62 },
+        { value: true, label: "Part B — Graphing calculator required", timeMinutes: 38 },
+      ],
+    },
+    attributeRanges: {
+      calculatorAllowed: { false: [29, 29], true: [13, 13] },
+    },
     dataVar: "QUESTIONS_AP_CALCULUS_AB",
   },
   {
@@ -480,14 +542,53 @@ const AP_SUBJECTS = [
     name: "AP Chemistry",
     category: "Sciences",
     tier: 1,
+    // VERIFIED 2026-08-10:
+    // https://apcentral.collegeboard.org/courses/ap-chemistry/exam
+    // AP Chemistry Course and Exam Description effective Fall 2024:
+    // https://apcentral.collegeboard.org/media/pdf/ap-chemistry-course-and-exam-description.pdf
+    // Section I: 60 single-select MCQs in 90 minutes, 50% of score; discrete and
+    // stimulus/data-set questions. Calculators are permitted throughout.
+    // Section II: 7 FRQs (3 long, 4 short) in 105 minutes, 50% of score.
     mcqCount: 60,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 15m",
-    formatVerified: false,
-    releaseStatus: "draft",
+    formatVerified: true,
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // Published CED MCQ ranges are preserved exactly. With a 60-question integer
+    // draw no allocation can satisfy all nine ranges simultaneously: the seven
+    // 7–9% units contribute at most 5 each, U3 at most 13, and U8 at most 9, for
+    // a strict-band maximum of 57. This 6/6/13/6/5/5/5/9/5 blueprint minimizes
+    // total discrete deviation; U1/U2/U4 are each one question above 9%.
+    units: [
+      { id: "U1", name: "Atomic Structure and Properties", examWeight: 6 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U2", name: "Compound Structure and Properties", examWeight: 6 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U3", name: "Properties of Substances and Mixtures", examWeight: 13 / 60, examWeightRange: [0.18, 0.22] },
+      { id: "U4", name: "Chemical Reactions", examWeight: 6 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U5", name: "Kinetics", examWeight: 5 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U6", name: "Thermochemistry", examWeight: 5 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U7", name: "Equilibrium", examWeight: 5 / 60, examWeightRange: [0.07, 0.09] },
+      { id: "U8", name: "Acids and Bases", examWeight: 9 / 60, examWeightRange: [0.11, 0.15] },
+      { id: "U9", name: "Thermodynamics and Electrochemistry", examWeight: 5 / 60, examWeightRange: [0.07, 0.09] },
+    ],
+    // CED Section I science-practice weights converted to inclusive integer
+    // counts for 60 questions. Practice 3 is assessed in free response, not MCQ.
+    sciencePracticeRanges: {
+      "1": [5, 7],
+      "2": [5, 7],
+      "4": [14, 18],
+      "5": [21, 25],
+      "6": [5, 7],
+    },
+    stimulusSetRange: [2, 5],
+    freeResponse: {
+      timeMinutes: 105,
+      questions: [
+        "Long Answer 1", "Long Answer 2", "Long Answer 3",
+        "Short Answer 1", "Short Answer 2", "Short Answer 3", "Short Answer 4",
+      ],
+    },
     dataVar: "QUESTIONS_AP_CHEMISTRY",
   },
   {
@@ -529,16 +630,70 @@ const AP_SUBJECTS = [
     name: "AP Physics 2: Algebra-Based",
     category: "Sciences",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-2-algebra-based/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score; total duration 3hrs.
+    // VERIFIED 2026-08-11 for the May 2027 exam:
+    // https://apcentral.collegeboard.org/courses/ap-physics-2
+    // https://apcentral.collegeboard.org/media/pdf/ap-physics-2-course-and-exam-description-clarifications.pdf
+    // Fall 2026 clarification changes Section I from 40/80 to 42 questions / 85 minutes
+    // and Section II from 100 to 95 minutes, effective with the May 2027 exam.
     mcqCount: 42,
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    // VERIFIED 2026-08-11: https://apcentral.collegeboard.org/media/pdf/ap-physics-2-course-at-a-glance.pdf
+    // Physics 2's CED continues Physics 1's unit numbering (Units 9-15; Physics 1
+    // covers 1-8). Published bands: Units 9-11 each 15-18%; Units 12-15 each 12-15%.
+    // With 42 questions, U9-U11's floor (15% of 42 = 6.3, so >=7 each) already
+    // requires 21 of the 42 seats, and U12-U15's floor (12% of 42 = 5.04, so >=6
+    // each) would need another 24 -- 45 total, three more than the exam has. No
+    // integer allocation can satisfy all seven bands simultaneously. The
+    // 7/7/7/5/5/6/5 blueprint below keeps U9-U11 at their exact floor (7 each,
+    // 16.7%) and lets three of the four smaller units land one question under
+    // their floor (5/42 = 11.9% vs. a 12% floor -- 0.1 point short) while U14
+    // (the largest unit, 9 topics) gets the fourth unit's full 6/42 = 14.3%.
+    // That 0.1-point shortfall is far smaller than shorting any U9-U11 unit
+    // would be (14.3% vs. their 15% floor, a 0.7-point gap), so it minimizes
+    // total discrete deviation from the published bands, the same reasoning
+    // AP Chemistry's blueprint comment uses.
+    units: [
+      { id: "U9", name: "Thermodynamics", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U10", name: "Electric Force, Field, and Potential", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U11", name: "Electric Circuits", examWeight: 7 / 42, examWeightRange: [0.15, 0.18] },
+      { id: "U12", name: "Magnetism and Electromagnetism", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U13", name: "Geometric Optics", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U14", name: "Waves, Sound, and Physical Optics", examWeight: 6 / 42, examWeightRange: [0.12, 0.15] },
+      { id: "U15", name: "Modern Physics", examWeight: 5 / 42, examWeightRange: [0.12, 0.15] },
+    ],
+    // VERIFIED 2026-08-11 against the current AP Physics 2 course page.
+    // Section I assesses only skills 2.A-2.D and 3.B-3.C. Practice 1 and 3.A are
+    // FRQ-only. Integer ranges below are the published MCQ percentage bands
+    // converted to feasible counts on a 42-question section.
+    attributeRanges: {
+      skill: {
+        "2.A": [7, 8],
+        "2.B": [9, 10],
+        "2.C": [5, 6],
+        "2.D": [5, 6],
+        "3.B": [9, 10],
+        "3.C": [3, 4],
+      },
+    },
+    // The live exam uses both discrete items and stimulus/data question sets.
+    // This original bank now carries one 3-question synthetic set per unit;
+    // draws require 2-4 complete sets and never split a group.
+    stimulusSetRange: [2, 4],
+    constraintDrawAttempts: 20000,
+    freeResponse: {
+      timeMinutes: 95,
+      questions: [
+        "Question 1 (Mathematical Routines)",
+        "Question 2 (Translation Between Representations)",
+        "Question 3 (Experimental Design and Analysis)",
+        "Question 4 (Qualitative/Quantitative Translation)",
+      ],
+    },
     dataVar: "QUESTIONS_AP_PHYSICS_2",
   },
   {
