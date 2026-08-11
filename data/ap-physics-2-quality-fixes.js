@@ -81,8 +81,8 @@
     q: "A thin film with index 1.33 lies on glass with index 1.50, with air above the film. Comparing the two rays reflected from the film's top and bottom surfaces, what is the net reflection phase-shift difference?",
     o: [
       "Zero, because each reflection is from a lower-index to a higher-index medium and each gains a 180° shift",
-      "180°, because only the air-to-film reflection gains a phase shift",
-      "180°, because only the film-to-glass reflection gains a phase shift",
+      "180°, because the air-to-film reflection gains a phase shift whereas the film-to-glass reflection does not",
+      "180°, because the film-to-glass reflection gains a phase shift whereas the air-to-film reflection does not",
       "360°, because the second reflected ray gains two separate 180° shifts at the lower surface"
     ],
     c: [0],
