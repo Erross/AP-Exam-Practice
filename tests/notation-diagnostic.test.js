@@ -41,11 +41,15 @@ function stringsFor(q) {
 }
 
 const patterns = {
-  caretExponent: /\^(?:\{|\(|[+\-−]?\d|[+\-−]|[nxykt])/,
+  caretExponent: /\^(?:\{|\(|[+\-−]?\d|[+\-−]|[A-Za-z])/,
   rawSqrt: /\bsqrt\s*\(/i,
   asciiArrow: /<->|->/,
   asciiInequality: /<=|>=/,
+  asciiPlusMinus: /\+\/-/,
+  asciiSubscript: /\b[A-Za-z]_[A-Za-z0-9]+\b/,
+  plainInfinity: /(?:^|[\s=(])(?:\+|-|−)?infinity\b/i,
   greekWord: /\b(?:Delta|theta|lambda|sigma)\b/,
+  plainIonicCharge: /\b(?:H|Li|Na|K|Mg|Ca|Al|Fe|Cu|Zn|Ag|F|Cl|Br|O|N|S)\d*[+−-](?=\s|,|\.|\)|\/|$)/,
   plainChemFormula: /\b(?:H2O|CO2|O2|N2|H2|NH3|CH4|H2SO4|HNO3|NO2|SO2|SO3|CaCO3|Na2CO3|NaOH|HCl|Cl2|Br2|I2|Fe2O3|Al2O3)\b/,
 };
 
