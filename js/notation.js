@@ -1,7 +1,7 @@
 // Safe notation renderer: converts common math/science plain-text notation into
 // semantic DOM without innerHTML. This keeps question-bank source readable while
-// presenting powers, ionic charges, and chemical subscripts the way students
-// normally see them in AP course materials.
+// presenting powers, ionic charges, chemical subscripts, radicals, and common
+// mathematical symbols the way students normally see them in AP course materials.
 (function (root) {
   "use strict";
 
@@ -18,7 +18,13 @@
   const ELEMENT_PART_PATTERN = new RegExp(`(${ELEMENT})(\\d*)`, "g");
 
   function normalizePlainText(text) {
-    return text.replace(/\bsqrt\s*\(/gi, "√(");
+    return String(text)
+      .replace(/\bsqrt\s*\(/gi, "√(")
+      // Deliberately require surrounding whitespace for ASCII arrows so Java or
+      // other programming syntax is not silently rewritten.
+      .replace(/\s<->\s/g, " ↔ ")
+      .replace(/\s->\s/g, " → ")
+      .replace(/\+\/-/g, "±");
   }
 
   function tokenizeChemistry(text) {
