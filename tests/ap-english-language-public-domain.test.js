@@ -73,6 +73,7 @@ test("new AP Language Reading questions satisfy rationale and answer-constructio
   let correctWords = 0;
   let distractorWords = 0;
   const rawPositions = [0, 0, 0, 0];
+  const problems = [];
 
   for (const q of questions) {
     assert.match(q.id, /^aplang-r-[a-z]+-\d{2}$/);
@@ -83,8 +84,8 @@ test("new AP Language Reading questions satisfy rationale and answer-constructio
     const shuffled = shuffleQuestionOptions(q);
     assert.equal(shuffled.o[shuffled.c[0]], q.o[q.c[0]], `${q.id}: shuffle loses semantic key`);
     const distractors = q.o.filter((_, i) => i !== q.c[0]);
-    assert.ok(distractors.filter((option) => absolute.test(option)).length <= 1,
-      `${q.id}: multiple absolute-language distractors`);
+    const absoluteCount = distractors.filter((option) => absolute.test(option)).length;
+    if (absoluteCount > 1) problems.push(`${q.id}: ${absoluteCount} absolute-language distractors`);
 
     rawPositions[q.c[0]]++;
     const lengths = q.o.map(wordCount);
@@ -96,16 +97,18 @@ test("new AP Language Reading questions satisfy rationale and answer-constructio
     lengths.forEach((n, i) => { if (i !== q.c[0]) distractorWords += n; });
   }
 
+  const uniqueShare = uniqueLongest / questions.length;
+  const amongShare = amongLongest / questions.length;
   const correctAverage = correctWords / questions.length;
   const distractorAverage = distractorWords / (questions.length * 3);
-  assert.ok(uniqueLongest / questions.length <= 0.25,
-    `unique-longest share ${(100 * uniqueLongest / questions.length).toFixed(1)}%`);
-  assert.ok(amongLongest / questions.length <= 0.58,
-    `among-longest share ${(100 * amongLongest / questions.length).toFixed(1)}%`);
-  assert.ok(Math.abs(correctAverage - distractorAverage) / distractorAverage <= 0.12,
-    `correct/distractor length delta ${(100 * Math.abs(correctAverage - distractorAverage) / distractorAverage).toFixed(1)}%`);
+  const lengthDelta = Math.abs(correctAverage - distractorAverage) / distractorAverage;
+  if (uniqueShare > 0.25) problems.push(`unique-longest share ${(100 * uniqueShare).toFixed(1)}%`);
+  if (amongShare > 0.58) problems.push(`among-longest share ${(100 * amongShare).toFixed(1)}%`);
+  if (lengthDelta > 0.12) problems.push(`correct/distractor length delta ${(100 * lengthDelta).toFixed(1)}%`);
   rawPositions.forEach((count, position) => {
     const share = count / questions.length;
-    assert.ok(share >= 0.15 && share <= 0.35, `raw answer position ${position}: ${(100 * share).toFixed(1)}%`);
+    if (share < 0.15 || share > 0.35) problems.push(`raw answer position ${position}: ${(100 * share).toFixed(1)}%`);
   });
+
+  assert.deepEqual(problems, [], `Language Reading construction defects:\n${problems.join("\n")}`);
 });
