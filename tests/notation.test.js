@@ -22,7 +22,8 @@ test("notation tokenizer handles powers, units, and caret ionic charges", () => 
 test("notation tokenizer renders whitelisted scientific subscripts", () => {
   assert.equal(compact("f(x_i) Δx and q_p"), "text:f(|text:x|sub:i|text:) Δx and |text:q|sub:p");
   assert.equal(compact("H_products − H_reactants"), "text:H|sub:products|text: − |text:H|sub:reactants");
-  assert.equal(compact("ΔH_vap and K_eq"), "text:ΔH|sub:vap|text: and |text:K|sub:eq");
+  assert.equal(compact("ΔH_vap and K_eq"), "text:Δ|text:H|sub:vap|text: and |text:K|sub:eq");
+  assert.equal(compact("R_total, V_parallel, v_sound, K_new"), "text:R|sub:total|text:, |text:V|sub:parallel|text:, |text:v|sub:sound|text:, |text:K|sub:new");
 });
 
 test("notation tokenizer renders chemical subscripts and common plain ionic charges", () => {
@@ -33,10 +34,11 @@ test("notation tokenizer renders chemical subscripts and common plain ionic char
   assert.equal(compact("sigma bonds and pi-bonding"), "text:σ bonds and π-bonding");
 });
 
-test("notation tokenizer uses familiar radical and arrow symbols", () => {
+test("notation tokenizer uses familiar radical, arrow, plus-minus, and infinity symbols", () => {
   assert.equal(compact("sqrt([A]) and sqrt (K)"), "text:√([A]) and √(K)");
   assert.equal(compact("x -> 0 and A <-> B"), "text:x → 0 and A ↔ B");
   assert.equal(compact("5 +/- 0.2"), "text:5 ± 0.2");
+  assert.equal(compact("x approaches +infinity, y approaches -infinity, n approaches infinity"), "text:x approaches +∞, y approaches −∞, n approaches ∞");
 });
 
 test("notation tokenizer leaves programming/unit-like text alone", () => {
