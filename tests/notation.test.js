@@ -7,14 +7,8 @@ function compact(text) {
 }
 
 test("notation tokenizer turns scientific-notation powers into superscripts", () => {
-  assert.equal(
-    compact("3.0×10^-4 J"),
-    "text:3.0×10|sup:−4|text: J"
-  );
-  assert.equal(
-    compact("3.0×10^−4 J"),
-    "text:3.0×10|sup:−4|text: J"
-  );
+  assert.equal(compact("3.0×10^-4 J"), "text:3.0×10|sup:−4|text: J");
+  assert.equal(compact("3.0×10^−4 J"), "text:3.0×10|sup:−4|text: J");
 });
 
 test("notation tokenizer handles powers, units, and caret ionic charges", () => {
@@ -32,11 +26,15 @@ test("notation tokenizer renders chemical subscripts and common plain ionic char
   assert.equal(compact("NH4+ and SO4^2−"), "text:N|text:H|sub:4|sup:+|text: and |text:S|text:O|sub:4|sup:2−");
 });
 
-test("notation tokenizer uses a radical sign for raw sqrt notation", () => {
+test("notation tokenizer uses familiar radical and arrow symbols", () => {
   assert.equal(compact("sqrt([A]) and sqrt (K)"), "text:√([A]) and √(K)");
+  assert.equal(compact("x -> 0 and A <-> B"), "text:x → 0 and A ↔ B");
+  assert.equal(compact("5 +/- 0.2"), "text:5 ± 0.2");
 });
 
 test("notation tokenizer leaves programming/unit-like text alone", () => {
   assert.deepEqual(tokenizeNotation("value = a ^ b;"), [{ type: "text", value: "value = a ^ b;" }]);
   assert.deepEqual(tokenizeNotation("Unit U2"), [{ type: "text", value: "Unit U2" }]);
+  assert.deepEqual(tokenizeNotation("node->next"), [{ type: "text", value: "node->next" }]);
+  assert.deepEqual(tokenizeNotation("i <= n"), [{ type: "text", value: "i <= n" }]);
 });
