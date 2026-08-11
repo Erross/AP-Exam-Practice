@@ -7,8 +7,8 @@ const { shuffleQuestionOptions } = require("../js/draw");
 function loadLiteratureWithReplacements() {
   const sandbox = { window: {} };
   vm.createContext(sandbox);
-  for (const file of ["data/ap-english-literature.js", "data/ap-english-literature-public-domain.js"]) {
-    vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
+  for (const file of ["data/ap-english-literature.js", "data/ap-english-literature-public-domain.js", "data/ap-english-public-domain-corrections.js"]) {
+    if (fs.existsSync(file)) vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
   }
   return sandbox.window.QUESTIONS_AP_ENGLISH_LITERATURE;
 }
@@ -34,7 +34,7 @@ test("all eight AP Literature prose/drama sets use real public-domain sources", 
     const groupId = `aplit-g-${setId}`;
     const questions = bank.filter((q) => q.stimulusGroupId === groupId).sort((a, b) => a.id.localeCompare(b.id));
     assert.equal(questions.length, expectedSkills.length, `${setId}: wrong question count`);
-    assert.deepEqual(questions.map((q) => q.topicCode), expectedSkills, `${setId}: skill sequence changed`);
+    assert.equal(questions.map((q) => q.topicCode).join(","), expectedSkills.join(","), `${setId}: skill sequence changed`);
     assert.equal(new Set(questions.map((q) => q.stimulus)).size, 1, `${setId}: stimulus object is not shared`);
     const stimulus = questions[0].stimulus;
     assert.match(stimulus.source, /^Public-domain text: https:\/\/www\.gutenberg\.org\//);
@@ -49,14 +49,14 @@ test("the five already-authentic poetry sets are unchanged by the replacement la
   const poetry = bank.filter((q) => q.setType === "poetry");
   assert.equal(new Set(poetry.map((q) => q.stimulusGroupId)).size, 5);
   assert.ok(poetry.every((q) => q.stimulus.source.startsWith("Public-domain text: https://en.wikisource.org/")));
-  const titles = new Set(poetry.map((q) => q.stimulus.title));
-  assert.deepEqual([...titles].sort(), [
+  const titles = [...new Set(poetry.map((q) => q.stimulus.title))].sort().join("\n");
+  assert.equal(titles, [
     "“A narrow Fellow in the Grass” — Emily Dickinson",
     "“The Darkling Thrush” — Thomas Hardy",
     "“The Tyger” — William Blake",
     "“Up-Hill” — Christina Rossetti",
     "“We Wear the Mask” — Paul Laurence Dunbar",
-  ].sort());
+  ].sort().join("\n"));
 });
 
 test("new Literature questions meet rationale, key, absolute-language, and bias standards", () => {
