@@ -1,5 +1,6 @@
-// WIP corrections for AP English Language public-domain excerpts.
-// Fold these exact source and option fixes into data/ap-english-language.js before release.
+// WIP corrections for AP English Language public-domain Reading excerpts.
+// Validated by tests/ap-english-language-public-domain.test.js. Fold these exact
+// source and option fixes into data/ap-english-language.js before release.
 (function () {
   "use strict";
   const bank = window.QUESTIONS_AP_ENGLISH_LANGUAGE;
