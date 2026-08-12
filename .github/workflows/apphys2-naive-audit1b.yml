@@ -1,0 +1,29 @@
+name: AP Physics 2 Semantic Audit 1B
+on:
+  push:
+    branches: [audit/ap-physics-2-iterative]
+    paths: [.github/workflows/apphys2-naive-audit1b.yml]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: 22}
+      - run: npm ci
+      - name: Browser-effective semantic inventory
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm'),crypto=require('crypto');
+          const {loadPhysics2Bank}=require('./tests/helpers');
+          const s={window:{}};vm.createContext(s);for(const f of ['data/ap-physics-2.js','data/ap-physics-2-quality-fixes.js'])vm.runInContext(fs.readFileSync(f,'utf8'),s);const bank=s.window.QUESTIONS_AP_PHYSICS_2;
+          const h=x=>crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex');
+          console.log('FINAL_HASH',h(bank),'HELPER_HASH',h(loadPhysics2Bank()),'IDENTICAL',h(bank)===h(loadPhysics2Bank()));
+          console.log('COUNTS',Object.fromEntries(['2.A','2.B','2.C','2.D','3.B','3.C'].map(sk=>[sk,bank.filter(q=>q.skill===sk).length])));
+          for(const sk of ['2.A','2.B','2.C','2.D','3.B','3.C']){
+            console.log('\n###',sk);
+            for(const q of bank.filter(q=>q.skill===sk)) console.log(`${q.id}\t${q.topicCode}\t${q.q}\tKEY=${q.o[q.c[0]]}`);
+          }
+          NODE
