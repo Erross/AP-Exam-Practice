@@ -1,0 +1,25 @@
+name: AP Statistics inventory
+on:
+  workflow_dispatch:
+  push:
+    branches: [subject/ap-statistics]
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Inventory Statistics bank
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const sandbox={window:{}}; vm.createContext(sandbox);
+          vm.runInContext(fs.readFileSync('data/ap-statistics.js','utf8'),sandbox);
+          for (const q of sandbox.window.QUESTIONS_AP_STATISTICS) {
+            console.log(JSON.stringify({id:q.id,topic:q.topicCode,skill:q.skill,stem:q.q,correct:q.o[q.c[0]],stimulusGroupId:q.stimulusGroupId||null,statsSetType:q.statsSetType||null,stimulusTitle:q.stimulus?.title||null}));
+          }
+          NODE
