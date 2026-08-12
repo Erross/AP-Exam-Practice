@@ -12,10 +12,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with: {node-version: 22}
       - run: npm ci
-      - name: Inspect raw key positions for repair targets
+      - name: Inspect watch and room source language
         run: |
           node - <<'NODE'
           const fs=require('fs'),vm=require('vm'),{AP_SUBJECTS}=require('./js/subjects');const s={window:{}};vm.createContext(s);vm.runInContext(fs.readFileSync('data/ap-english-literature.js','utf8'),s);const bank=s.window[AP_SUBJECTS.find(x=>x.id==='ap-english-literature').dataVar];
-          const ids=['aplit-sf-watch-03','aplit-sf-snow-03','aplit-sf-bell-08','aplit-sf-supper-08','aplit-po-snake-06','aplit-po-snake-07','aplit-po-tyger-04','aplit-po-uphill-02','aplit-sf-bell-10','aplit-ld-clock-07','aplit-ld-kitchen-07','aplit-ld-orbit-05','aplit-sf-watch-11','aplit-sf-snow-11','aplit-sf-supper-06','aplit-sf-room-08','aplit-ld-clock-09','aplit-ld-kitchen-09','aplit-ld-orbit-09'];
-          for(const id of ids){const q=bank.find(x=>x.id===id);console.log(id,'c='+q.c[0],'topic='+q.topicCode,'key='+JSON.stringify(q.o[q.c[0]]))}
+          for(const gid of ['aplit-g-sf-watch','aplit-g-sf-room']){const qs=bank.filter(q=>q.stimulusGroupId===gid); console.log('\nGROUP',gid);console.log(qs[0].stimulus.text);for(const q of qs)console.log(q.id,q.topicCode,'c='+q.c[0],q.q,'=>',q.o[q.c[0]])}
           NODE
