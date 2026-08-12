@@ -1,0 +1,32 @@
+name: AP Biology Naive Fix 1
+on:
+  push:
+    branches:
+      - audit/ap-biology-iterative
+    paths:
+      - .github/workflows/apbio-naive-fix1.yml
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: audit/ap-biology-iterative
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Apply Biology cycle 1 repairs
+        run: python tools/tmp-apbio-fix1.py
+      - name: Full repository validation
+        run: npm run check
+      - name: Commit repaired Biology bank
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ap-biology.js tests/ap-biology-naive-audit-regressions.test.js
+          git diff --cached --quiet && exit 1
+          git commit -m "Repair AP Biology audit findings"
+          git push origin HEAD:audit/ap-biology-iterative
