@@ -481,9 +481,14 @@ const AP_SUBJECTS = [
     name: "AP Statistics",
     category: "Math & Computer Science",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-statistics/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 30mins, 50% of score;
-    // total duration 3hrs. Previous repo value (40 questions) was stale.
+    // VERIFIED 2026-08-11 against the AP Statistics CED, Effective Fall 2026:
+    // https://apcentral.collegeboard.org/media/pdf/ap-statistics-course-and-exam-description.pdf
+    // and the AP Statistics revisions page for the May 2027 redesign. Section I has
+    // 42 four-option MCQs in 90 minutes, including one 3-question probability set and
+    // one 3-question regression set; calculators are permitted throughout.
+    // College Board publishes unit bands, not exact counts. Midpoints are 25/20/20/15/15
+    // (sum 95); normalizing those midpoints to 42 questions and applying Hamilton
+    // apportionment gives 11/9/9/7/6, with the U4/U5 remainder tie resolved by unit order.
     mcqCount: 42,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
@@ -491,7 +496,24 @@ const AP_SUBJECTS = [
     releaseStatus: "draft",
     allowsMultiSelect: false,
     tierNote: null,
-    units: [],
+    calculatorExpected: true,
+    units: [
+      { id: "U1", name: "Exploring One-Variable Data and Collecting Data", examWeight: 11/42, examWeightRange: [0.20, 0.30] },
+      { id: "U2", name: "Probability, Random Variables, and Probability Distributions", examWeight: 9/42, examWeightRange: [0.15, 0.25] },
+      { id: "U3", name: "Inference for Categorical Data: Proportions", examWeight: 9/42, examWeightRange: [0.15, 0.25] },
+      { id: "U4", name: "Inference for Quantitative Data: Means", examWeight: 7/42, examWeightRange: [0.10, 0.20] },
+      { id: "U5", name: "Regression Analysis", examWeight: 6/42, examWeightRange: [0.10, 0.20] },
+    ],
+    sciencePracticeRanges: { "1": [3,4], "2": [9,12], "3": [11,14], "4": [11,14] },
+    stimulusSetRange: [2,2],
+    attributeRanges: { statsSetType: { probability: [3,3], regression: [3,3] } },
+    constraintDrawAttempts: 20000,
+    freeResponse: { timeMinutes: 90, questions: [
+      "Question 1 (Multi-Focus on Practices 1 and 2)",
+      "Question 2 (Multi-Focus on Practices 3 and 4)",
+      "Question 3 (Inference: Hypothesis Test or Confidence Interval)",
+      "Question 4 (Multi-Focus on Practices 2, 3, and 4)",
+    ] },
     dataVar: "QUESTIONS_AP_STATISTICS",
   },
   {
