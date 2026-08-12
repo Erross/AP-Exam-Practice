@@ -32,12 +32,12 @@ jobs:
           const ca=cw/180,da=dw/540;console.log('BIAS',{uniqueLongest:ul/180,amongLongest:al/180,correctAvg:ca,distractorAvg:da,keyPositions:pos});if(ul/180>.25||al/180>.58||Math.abs(ca-da)/da>.12||pos.some(n=>n!==45))fail('answer construction');
           const byId=new Map(bank.map(q=>[q.id,q]));
           const taskChecks={
-            'apbio-u6-010':[/predicts/i,/result would support/i,'3.B'],
-            'apbio-u5-006':[/claim is best supported/i,/evidence/i,'6.B'],
-            'apbio-u8-006':[/claim is best supported/i,/evidence/i,'6.B'],
-            'apbio-u5-019':[/reasoning/i,/population-level|homologous/i,'6.C'],
-            'apbio-u7-017':[/reasoning/i,/heritable|allele/i,'6.C'],
-            'apbio-u8-019':[/reasoning/i,/density|contact/i,'6.C']
+            'apbio-u6-010':[/predicts.*single-base substitution|result would support/i,/codons differ.*same amino acid/i,'3.B'],
+            'apbio-u5-006':[/claim is best supported.*evidence/i,/heterozygous.*recessive/i,'6.B'],
+            'apbio-u8-006':[/claim is best supported.*evidence/i,/genetic diversity.*persistence.*alleles/i,'6.B'],
+            'apbio-u5-019':[/reasoning/i,/population-level.*homologous/i,'6.C'],
+            'apbio-u7-017':[/reasoning/i,/heritable.*alleles.*increase/i,'6.C'],
+            'apbio-u8-019':[/reasoning/i,/drought.*crowding.*density.*contact/i,'6.C']
           };
           for(const [id,[stemRe,keyRe,skill]] of Object.entries(taskChecks)){const q=byId.get(id);if(q.skill!==skill||!stemRe.test(q.q)||!keyRe.test(q.o[q.c[0]]))fail(`${id} semantic regression`)}
           const tok=x=>new Set(String(x).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(t=>t.length>3)),jac=(a,b)=>{const A=tok(a),B=tok(b),u=new Set([...A,...B]);return u.size?[...A].filter(x=>B.has(x)).length/u.size:0};const st=bank.filter(q=>!q.stimulusGroupId),near=[];for(let i=0;i<st.length;i++)for(let j=i+1;j<st.length;j++){const a=st[i],b=st[j];if(a.unit!==b.unit||a.topicCode!==b.topicCode)continue;const z=jac(a.q,b.q);if(z>=.55){near.push([+z.toFixed(3),a.id,b.id,a.variantGroupId||null,b.variantGroupId||null]);if(!a.variantGroupId||a.variantGroupId!==b.variantGroupId)fail(`near duplicate ${a.id}/${b.id}`)}}console.log('NEAR',near);
