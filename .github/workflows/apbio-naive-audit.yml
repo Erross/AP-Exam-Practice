@@ -1,0 +1,58 @@
+name: AP Biology Naive Audit
+on:
+  push:
+    branches:
+      - audit/ap-biology-iterative
+    paths:
+      - .github/workflows/apbio-naive-audit.yml
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Full repository validation
+        run: npm run check
+      - name: Independent clean-room Biology audit
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');const {AP_SUBJECTS}=require('./js/subjects');const {drawExam}=require('./js/draw');
+          const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-biology.js','utf8'),sb);const bank=sb.window.QUESTIONS_AP_BIOLOGY,sub=AP_SUBJECTS.find(s=>s.id==='ap-biology');const hard=[],notes=[],bad=m=>{hard.push(m);console.log('DEFECT',m)},note=m=>{notes.push(m);console.log('NOTE',m)};
+          if(bank.length!==180||new Set(bank.map(q=>q.id)).size!==180)bad('cardinality/ids');if(sub.mcqCount!==60||sub.mcqTimeMinutes!==90)bad('format');
+          const topicMax=[7,10,5,6,5,8,12,7],allowed=new Set();topicMax.forEach((n,i)=>{for(let t=1;t<=n;t++)allowed.add(`${i+1}.${t}`)});const seen=new Map(),groups=new Map(),variants=new Map();
+          const wc=x=>String(x).trim().split(/\s+/).filter(Boolean).length,abs=/\b(always|never|every|entirely|completely|impossible|guarantee[sd]?|automatically|all|none|identical|unlimited)\b/i;let ul=0,al=0,cw=0,dw=0;const pos=[0,0,0,0];
+          const semantic=[];
+          for(const q of bank){if(q.o.length!==4||q.c.length!==1||q.e.length<90)bad(`${q.id} schema/rationale`);if(new Set(q.o.map(x=>x.trim().toLowerCase())).size!==4)bad(`${q.id} duplicate options`);if(!allowed.has(q.topicCode))bad(`${q.id} invalid topic ${q.topicCode}`);seen.set(q.topicCode,(seen.get(q.topicCode)||0)+1);if(!/^[1-6]\.[A-E]$/.test(q.skill))bad(`${q.id} invalid skill ${q.skill}`);
+            const c=q.c[0],ls=q.o.map(wc),m=Math.max(...ls);pos[c]++;cw+=ls[c];ls.forEach((n,i)=>{if(i!==c)dw+=n});if(ls[c]===m)al++;if(ls[c]===m&&ls.filter(x=>x===m).length===1)ul++;const ax=q.o.filter((o,i)=>i!==c&&abs.test(o));if(ax.length>=2)bad(`${q.id} stacked absolute distractors`);
+            if(q.skill.startsWith('2.')&&q.stimulus?.type!=='visual')bad(`${q.id} Practice 2 without visual`);
+            const text=`${q.q} ${q.o[q.c[0]]}`.toLowerCase();
+            if(q.skill==='3.A'&&!/(question|investigat|testable|ask|determine whether)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='3.B'&&!/(predict|hypothesis|null|result|expected|would)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='3.C'&&!/(control|variable|procedure|method|treatment|experimental|sample|replicate)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='3.D'&&!/(new|next|further|follow-up|investigat|experiment|study)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='4.A'&&!/(graph|plot|axis|axes|represent|display)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='4.B'&&!/(table|graph|data|trend|pattern|relationship|value|results)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='5.A'&&!/(calculate|ratio|rate|percent|mean|probab|frequency|surface|volume|chi|value|number|how many|how much)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='5.B'&&!/(confidence|error bar|interval|overlap|significant|uncertainty)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='5.C'&&!/(chi|expected|observed|degrees of freedom|p-value)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='5.D'&&!/(hypothesis|prediction|support|reject|null|evidence|results)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='6.A'&&!/(claim|conclusion|most likely|best explains|supports)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='6.B'&&!/(support|evidence|data|results|observation|indicate|components|claim)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='6.C'&&!/(reason|because|explain|justify|evidence|mechanism)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='6.D'&&!/(result|larger|concept|process|relationship|evidence|data|indicate)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.skill==='6.E'&&!/(predict|would|effect|affect|change|increase|decrease|alter|disrupt|most likely)/.test(text))semantic.push([q.id,q.skill,q.q]);
+            if(q.stimulusGroupId){if(!groups.has(q.stimulusGroupId))groups.set(q.stimulusGroupId,[]);groups.get(q.stimulusGroupId).push(q)}if(q.variantGroupId){if(!variants.has(q.variantGroupId))variants.set(q.variantGroupId,[]);variants.get(q.variantGroupId).push(q)}
+          }
+          for(const t of allowed)if((seen.get(t)||0)<2)bad(`${t} has fewer than 2 items`);for(const [g,qs] of groups){if(qs.length<4||qs.length>5)bad(`${g} set size ${qs.length}`);if(new Set(qs.map(q=>q.stimulus)).size!==1)bad(`${g} stimulus not shared`);const s=qs[0].stimulus;if(s?.image&&!fs.existsSync(s.image))bad(`${g} missing image`);if(s?.type==='visual'&&(!s.alt||s.alt.length<60))bad(`${g} weak alt`)}for(const [g,qs] of variants){if(qs.length<2)bad(`${g} singleton`);if(new Set(qs.map(q=>q.unit)).size!==1||new Set(qs.map(q=>q.topicCode)).size!==1)bad(`${g} crosses unit/topic`);if(qs.some(q=>q.stimulusGroupId))bad(`${g} variant stimulus`)}
+          const ca=cw/180,da=dw/540;console.log('BIAS',{uniqueLongest:ul/180,amongLongest:al/180,correctAvg:ca,distractorAvg:da,keyPositions:pos});if(ul/180>.25||al/180>.58||Math.abs(ca-da)/da>.12||pos.some(n=>n!==45))bad('answer-construction bias');
+          console.log('SEMANTIC_CANDIDATES',JSON.stringify(semantic,null,2));if(semantic.length)note(`${semantic.length} exact-skill semantic candidates require review`);
+          for(let p=1;p<=6;p++){console.log(`\n===== PRACTICE ${p} =====`);for(const q of bank.filter(x=>x.skill.startsWith(`${p}.`)))console.log(`${q.id} [${q.topicCode} ${q.skill}] ${q.q} => ${q.o[q.c[0]]}`)}
+          const tok=x=>new Set(String(x).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(t=>t.length>3)),jac=(a,b)=>{const A=tok(a),B=tok(b),u=new Set([...A,...B]);return u.size?[...A].filter(x=>B.has(x)).length/u.size:0};const st=bank.filter(q=>!q.stimulusGroupId),near=[];for(let i=0;i<st.length;i++)for(let j=i+1;j<st.length;j++){const a=st[i],b=st[j];if(a.unit!==b.unit||a.topicCode!==b.topicCode)continue;const z=jac(a.q,b.q);if(z>=.55){near.push([+z.toFixed(3),a.id,b.id,a.variantGroupId||null,b.variantGroupId||null]);if(!a.variantGroupId||a.variantGroupId!==b.variantGroupId)bad(`near duplicate ${a.id}/${b.id}`)}}console.log('NEAR',near);
+          const expected={U1:6,U2:7,U3:8,U4:8,U5:6,U6:8,U7:10,U8:7};for(let i=0;i<10000;i++){const d=drawExam(sub,bank);if(d.length!==60)bad('draw length');for(const [u,n] of Object.entries(expected))if(d.filter(q=>q.unit===u).length!==n)bad(`${u} draw count`);const gs=new Set(d.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId));if(gs.size<4||gs.size>8)bad(`set count ${gs.size}`);for(const g of gs)if(d.filter(q=>q.stimulusGroupId===g).length!==bank.filter(q=>q.stimulusGroupId===g).length)bad(`${g} split`);const pc={},v=new Set();for(const q of d){const f=q.skill[0];pc[f]=(pc[f]||0)+1;if(q.variantGroupId){if(v.has(q.variantGroupId))bad(`variant collision ${q.variantGroupId}`);v.add(q.variantGroupId)}}for(const [p,r] of Object.entries(sub.sciencePracticeRanges))if(pc[p]<r[0]||pc[p]>r[1])bad(`practice ${p} ${pc[p]}`);if(hard.length)break}
+          let ov=0;for(let i=0;i<10000;i++){const a=new Set(drawExam(sub,bank).map(q=>q.id));ov+=drawExam(sub,bank).filter(q=>a.has(q.id)).length/60}ov/=10000;console.log('OVERLAP',ov);if(ov>.40)bad(`overlap ${ov}`);console.log('HARD_DEFECTS',hard);console.log('REVIEW_NOTES',notes);if(hard.length)throw new Error(hard.join('\n'));console.log('FINAL_BIO_MECHANICAL_PASS_WITH_REVIEW_NOTES');
+          NODE
