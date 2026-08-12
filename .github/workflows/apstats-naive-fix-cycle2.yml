@@ -1,0 +1,97 @@
+name: AP Statistics Naive Fix Cycle 2
+on:
+  push:
+    branches: [subject/ap-statistics]
+    paths: [.github/workflows/apstats-naive-fix-cycle2.yml]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-statistics
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Correct semantic construct and simulation tasks
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('data/ap-statistics.js'); s=p.read_text()
+          def edit(qid,qtext,opts,correct,expl):
+              global s
+              pat=r'(\{\n    "id": "'+re.escape(qid)+r'"[\s\S]*?\n  \})'
+              m=re.search(pat,s); assert m,qid
+              x=m.group(1)
+              x=re.sub(r'"q": ".*?",\n    "o": \[[\s\S]*?\n    \],\n    "c": \[[\s\S]*?\n    \],\n    "e": ".*?",',
+                '"q": '+repr(qtext).replace("'",'"')+',\n    "o": [\n'+''.join('      '+repr(o).replace("'",'"')+(',' if i<3 else '')+'\n' for i,o in enumerate(opts))+'    ],\n    "c": [\n      '+str(correct)+'\n    ],\n    "e": '+repr(expl).replace("'",'"')+',',x,count=1)
+              s=s[:m.start(1)]+x+s[m.end(1):]
+
+          edit('apstats-u1-007',
+            'A club survey records preferred after-school activity: sports 12, art 8, robotics 5, and music 10. Which description corresponds to a correctly constructed bar chart of the frequencies?',
+            ['Four separated bars labeled sports, art, robotics, and music with heights 12, 8, 5, and 10, respectively',
+             'Four touching bars labeled sports, art, robotics, and music with heights 12, 8, 5, and 10, respectively',
+             'Four separated bars with heights 12, 10, 8, and 5 assigned alphabetically to the activity labels',
+             'A continuous horizontal scale from 5 to 12 divided into four equal-width numerical bins'],0,
+            'A bar chart for categorical data uses a separate bar for each category, and each bar height must equal that category’s frequency. Sports, art, robotics, and music therefore require separated bars of heights 12, 8, 5, and 10 in the stated label order.')
+          edit('apstats-u1-009',
+            'Five quiz scores are 2, 2, 3, 5, and 5. Which description corresponds to the correctly constructed dotplot?',
+            ['Two dots at 2, one dot at 3, and two dots at 5',
+             'One dot at 2, two dots at 3, and two dots at 5',
+             'Two dots at 2, two dots at 3, and one dot at 5',
+             'One dot at each integer from 1 through 5'],0,
+            'A dotplot places one dot for every observation at its observed value. Because the data contain two 2s, one 3, no 4s, and two 5s, the correct plot has two dots at 2, one at 3, and two at 5.')
+          edit('apstats-u2-007',
+            'A simulation models shipments of five items, with digits 0–2 representing a defective item and 3–9 a nondefective item. In 200 simulated shipments, at least two defective items occurred 34 times. What probability does the simulation estimate for a shipment having at least two defective items?',
+            ['0.17','0.34','0.068','0.83'],0,
+            'A simulation estimates the probability of an event by the event’s relative frequency across trials. The event occurred in 34 of 200 simulated shipments, so the estimated probability is 34/200 = 0.17.')
+          edit('apstats-u2-010',
+            'For events A and B, P(A) = 0.40, P(B) = 0.35, and P(A ∩ B) = 0. Which conclusion is justified by the joint probability?',
+            ['A and B are mutually exclusive because P(A ∩ B)=0.',
+             'A and B are independent because P(A ∩ B)=0.',
+             'A and B must have equal probabilities because they cannot occur together.',
+             'A is a subset of B because P(A) is greater than P(B).'],0,
+            'Mutually exclusive events cannot occur together, which is exactly the condition P(A ∩ B)=0. Independence would instead require P(A ∩ B)=P(A)P(B)=0.14, and neither equal probabilities nor a subset relationship follows from the given values.')
+          edit('apstats-u2-017',
+            'A game pays X = $0, $5, or $20 with probabilities 0.70, 0.25, and 0.05. Which cumulative probability distribution is correctly constructed?',
+            ['P(X≤0)=0.70, P(X≤5)=0.95, P(X≤20)=1.00',
+             'P(X≤0)=0.70, P(X≤5)=0.25, P(X≤20)=0.05',
+             'P(X≤0)=0.30, P(X≤5)=0.75, P(X≤20)=0.95',
+             'P(X≤0)=0.05, P(X≤5)=0.30, P(X≤20)=1.00'],0,
+            'A cumulative distribution adds probabilities through each listed value. Thus P(X≤0)=0.70, P(X≤5)=0.70+0.25=0.95, and P(X≤20)=0.70+0.25+0.05=1.00.')
+          p.write_text(s)
+
+          q=Path('tests/ap-statistics-quantitative-audit.test.js'); z=q.read_text()
+          z=z.replace("'apstats-u1-005','apstats-u1-006','apstats-u1-008'","'apstats-u1-005','apstats-u1-006','apstats-u1-007','apstats-u1-008','apstats-u1-009'")
+          z=z.replace("'apstats-u2-002','apstats-u2-003','apstats-u2-005','apstats-u2-006','apstats-u2-008'","'apstats-u2-002','apstats-u2-003','apstats-u2-005','apstats-u2-006','apstats-u2-007','apstats-u2-008'")
+          z=z.replace("'apstats-u2-014','apstats-u2-015','apstats-u2-016','apstats-u2-018'","'apstats-u2-014','apstats-u2-015','apstats-u2-016','apstats-u2-017','apstats-u2-018'")
+          a="assert.match(answer('apstats-u1-008'), /third category/);"
+          b="assert.match(answer('apstats-u1-007'), /heights 12, 8, 5, and 10/);\n  assert.match(answer('apstats-u1-008'), /third category/);\n  assert.equal(answer('apstats-u1-009'),'Two dots at 2, one dot at 3, and two dots at 5');"
+          assert a in z; z=z.replace(a,b,1)
+          a="assert.equal(answer('apstats-u2-006'), (0.18/0.30).toFixed(2));"
+          b=a+"\n  assert.equal(answer('apstats-u2-007'),(34/200).toFixed(2));"
+          z=z.replace(a,b,1)
+          a="assert.match(answer('apstats-u2-016'), /C\\(10,3\\)\\(0\\.30\\)\\^3\\(0\\.70\\)\\^7/);"
+          b=a+"\n  assert.match(answer('apstats-u2-017'),/0\\.70.*0\\.95.*1\\.00/); assert.equal(.70+.25,.95); assert.equal(.70+.25+.05,1);"
+          assert a in z; z=z.replace(a,b,1)
+          q.write_text(z)
+
+          t=Path('tests/ap-statistics.test.js'); z=t.read_text()
+          marker="test('Statistics semantic near-duplicates are variant-grouped'"
+          insert="""test('Statistics construction skills require constructing or selecting a concrete representation', () => {\n  const q=id=>bank.find(x=>x.id===id);\n  assert.match(q('apstats-u1-007').q,/correctly constructed bar chart/i);\n  assert.match(q('apstats-u1-009').q,/correctly constructed dotplot/i);\n  assert.match(q('apstats-u2-017').q,/cumulative probability distribution/i);\n  assert.match(q('apstats-u2-007').q,/200 simulated shipments/i);\n  assert.match(q('apstats-u2-010').o[q('apstats-u2-010').c[0]],/because P\(A ∩ B\)=0/);\n});\n\n"""
+          assert marker in z and 'Statistics construction skills require constructing' not in z
+          t.write_text(z.replace(marker,insert+marker,1))
+          PY
+      - name: Validate cycle 2 fixes
+        run: npm run check
+      - name: Commit cycle 2 fixes
+        run: |
+          git config user.name Erross
+          git config user.email 33665337+Erross@users.noreply.github.com
+          git add data/ap-statistics.js tests/ap-statistics.test.js tests/ap-statistics-quantitative-audit.test.js
+          git commit -m "Align Statistics construction tasks to CED objectives"
+          git push origin HEAD:subject/ap-statistics
