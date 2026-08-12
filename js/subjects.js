@@ -481,10 +481,14 @@ const AP_SUBJECTS = [
     name: "AP Statistics",
     category: "Math & Computer Science",
     tier: 1,
-    // VERIFIED 2026-08-11 against the revised AP Statistics Course and Exam Description
-    // effective for the 2026-27 school year / May 2027 exam. Section I has 42 MCQs
-    // in 90 minutes; the redesign includes one 3-question probability set and one
-    // 3-question regression set. Calculators are permitted throughout.
+    // VERIFIED 2026-08-11 against the AP Statistics CED, Effective Fall 2026:
+    // https://apcentral.collegeboard.org/media/pdf/ap-statistics-course-and-exam-description.pdf
+    // and the AP Statistics revisions page for the May 2027 redesign. Section I has
+    // 42 four-option MCQs in 90 minutes, including one 3-question probability set and
+    // one 3-question regression set; calculators are permitted throughout.
+    // College Board publishes unit bands, not exact counts. Midpoints are 25/20/20/15/15
+    // (sum 95); normalizing those midpoints to 42 questions and applying Hamilton
+    // apportionment gives 11/9/9/7/6, with the U4/U5 remainder tie resolved by unit order.
     mcqCount: 42,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
