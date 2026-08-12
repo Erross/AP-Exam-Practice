@@ -607,7 +607,8 @@ const Q=[
       2
     ],
     "e": "Participants self-select into a voluntary-response sample. People with stronger opinions or different online behavior can be overrepresented, producing systematic bias that sample size alone does not remove.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u1-voluntary-response"
   },
   {
     "id": "apstats-u1-024",
@@ -995,17 +996,17 @@ const Q=[
     "topicCode": "2.9",
     "skill": "3.B",
     "type": "s",
-    "q": "A random variable X takes values 0, 2, and 5 with probabilities 0.50, 0.30, and 0.20. What is E(X)?",
+    "q": "A random variable X takes values 0, 2, and 5 with probabilities 0.50, 0.30, and 0.20. The mean is 1.6. What is the standard deviation of X?",
     "o": [
-      "2.0",
-      "2.5",
-      "0.8",
-      "1.6"
+      "1.91",
+      "1.60",
+      "3.64",
+      "2.20"
     ],
     "c": [
-      3
+      0
     ],
-    "e": "Expected value is the probability-weighted average: E(X)=0(0.50)+2(0.30)+5(0.20)=0+0.6+1.0=1.6. It is a long-run mean and need not be one of the possible single-trial outcomes.",
+    "e": "Using μ=1.6, the variance is 0.50(0−1.6)^2 + 0.30(2−1.6)^2 + 0.20(5−1.6)^2 = 3.64, so the standard deviation is √3.64 ≈ 1.91. The value 1.60 is the mean, while 3.64 is the variance rather than the standard deviation.",
     "statsSetType": "standalone"
   },
   {
@@ -1063,7 +1064,8 @@ const Q=[
       2
     ],
     "e": "For independent sampling, x̄ is centered at μ with standard deviation σ/√n. The central limit theorem says its distribution becomes approximately normal for sufficiently large n even when the population is skewed.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u2-clt-shape"
   },
   {
     "id": "apstats-u2-022",
@@ -1101,7 +1103,8 @@ const Q=[
       0
     ],
     "e": "The central limit theorem says that, under appropriate random/independence conditions, the sampling distribution of x̄ becomes approximately normal as sample size grows, even for a skewed population.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u2-clt-shape"
   },
   {
     "id": "apstats-u2-024",
@@ -1367,7 +1370,8 @@ const Q=[
       2
     ],
     "e": "Under H₀, SE = √[0.50(0.50)/200] ≈ 0.03536. Thus z = (0.57−0.50)/0.03536 ≈ 1.98. The positive statistic reflects that the observed sample proportion is above the null value.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u3-one-proportion-z-stat"
   },
   {
     "id": "apstats-u3-014",
@@ -1386,7 +1390,8 @@ const Q=[
       3
     ],
     "e": "The test statistic is z=(p̂−p₀)/SE₀=(0.36−0.30)/0.025=0.06/0.025=2.4. It measures how many null-model standard errors the observed sample proportion lies above the hypothesized value.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u3-one-proportion-z-stat"
   },
   {
     "id": "apstats-u3-015",
@@ -1880,7 +1885,8 @@ const Q=[
       0
     ],
     "e": "For a small sample, a one-sample t procedure requires data without strong skewness or outliers. Random sampling addresses randomization, but it does not repair a severe small-sample shape problem.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u4-one-mean-conditions"
   },
   {
     "id": "apstats-u4-009",
@@ -1899,7 +1905,8 @@ const Q=[
       2
     ],
     "e": "The standard error is 8/√16=2. The test statistic is (53−50)/2=1.5, measuring the observed mean 1.5 standard errors above the null value.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u4-one-mean-t-stat"
   },
   {
     "id": "apstats-u4-010",
@@ -2013,7 +2020,8 @@ const Q=[
       0
     ],
     "e": "Before and after measurements on the same patient are paired. Subtracting within each patient produces one sample of differences, so a one-sample t interval for the population mean difference is appropriate.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u4-paired-ci-procedure"
   },
   {
     "id": "apstats-u4-016",
@@ -2146,7 +2154,8 @@ const Q=[
       3
     ],
     "e": "For a small sample, a t procedure is sensitive to strong skewness and extreme outliers. Unknown population standard deviation is expected in a t procedure, the response should be quantitative, and the sample mean need not equal the null value.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u4-one-mean-conditions"
   },
   {
     "id": "apstats-u4-023",
@@ -2165,7 +2174,8 @@ const Q=[
       0
     ],
     "e": "The t statistic is (x̄−μ₀)/SE=(43−40)/1.2=3/1.2=2.5. Standardizing by the estimated standard error expresses the sample-mean departure from the null value in t-statistic units.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u4-one-mean-t-stat"
   },
   {
     "id": "apstats-u4-024",
@@ -2184,7 +2194,8 @@ const Q=[
       1
     ],
     "e": "Each person supplies a matched pair. The appropriate confidence interval is a one-sample t interval applied to the within-person differences, preserving the dependence between the two measurements.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u4-paired-ci-procedure"
   },
   {
     "id": "apstats-u4-025",
@@ -2819,17 +2830,17 @@ const Q=[
     "topicCode": "1.10",
     "skill": "1.A",
     "type": "s",
-    "q": "A health researcher wants to describe weekly exercise time among adults in a county. Which investigative question is statistical and identifies the quantitative variable of interest?",
+    "q": "An ecologist wants to describe germination time for seeds from a native plant population. Which investigative question is statistical and identifies the quantitative variable of interest?",
     "o": [
       "What proportion of adults belong to a local recreation center?",
-      "How is weekly exercise time distributed among adults in the county?",
+      "How is germination time distributed among seeds from the native plant population?",
       "Did one selected adult exercise yesterday?",
       "At what time does the recreation center open on Saturday?"
     ],
     "c": [
       1
     ],
-    "e": "Weekly exercise time is quantitative and is expected to vary across adults, so a question about its population distribution is statistical and directly matches the goal. The other choices address a different categorical variable, one individual, or a fixed facility schedule.",
+    "e": "Germination time is a quantitative variable, and asking how it is distributed across a population anticipates variability among seeds and therefore requires a statistical investigation rather than a single factual lookup.",
     "statsSetType": "standalone"
   },
   {
@@ -2868,7 +2879,8 @@ const Q=[
       3
     ],
     "e": "A voluntary-response sample is self-selected. People motivated to answer can differ systematically from those who do not respond, so the resulting sample may not represent the target population.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u1-voluntary-response"
   }
 ];
 for(const q of Q){if(Number.isInteger(q.__stimulusIndex)){q.stimulus=STIMULI[q.__stimulusIndex];delete q.__stimulusIndex;}}

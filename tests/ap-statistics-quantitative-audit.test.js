@@ -52,7 +52,7 @@ test('every calculation-bearing Statistics item independently recomputes', () =>
   assert.match(answer('apstats-u2-014'), /0\.50,0\.30,0\.20/); assert.equal(0.50+0.30+0.20,1);
   assert.equal(answer('apstats-u2-015'), String(0*0.50+1*0.30+2*0.15+3*0.05));
   assert.match(answer('apstats-u2-016'), /C\(10,3\)\(0\.30\)\^3\(0\.70\)\^7/);
-  assert.equal(answer('apstats-u2-018'), String(0*0.50+2*0.30+5*0.20));
+  const mu18=0*0.50+2*0.30+5*0.20, var18=0.50*(0-mu18)**2+0.30*(2-mu18)**2+0.20*(5-mu18)**2; assert.ok(Math.abs(var18-3.64)<1e-12); assert.equal(answer('apstats-u2-018'),Math.sqrt(var18).toFixed(2));
   assert.match(answer('apstats-u2-019'), /μ = 20.*3\.87/); assert.ok(Math.abs(Math.sqrt(80*0.25*0.75)-3.872983346)<1e-6);
   assert.equal(answer('apstats-u2-020'),'About 95%'); assert.equal((182-170)/6,2); assert.equal((170-158)/6,2);
   assert.match(answer('apstats-u2-022'), /half the standard deviation/); assert.equal((18/Math.sqrt(64))/(18/Math.sqrt(16)),0.5);

@@ -294,6 +294,19 @@ test('Statistics variant groups are valid and prevent same-exam near duplicates'
   for(let i=0;i<500;i++){const d=drawExam(subject,bank);for(const id of groups.keys())assert.ok(d.filter(q=>q.variantGroupId===id).length<=1);}
 });
 
+test('Statistics semantic near-duplicates are variant-grouped', () => {
+  const byId=new Map(bank.map(q=>[q.id,q]));
+  for(const ids of [
+    ['apstats-u3-013','apstats-u3-014'],
+    ['apstats-u4-008','apstats-u4-022'],
+    ['apstats-u4-009','apstats-u4-023'],
+    ['apstats-u4-015','apstats-u4-024'],
+    ['apstats-u2-021','apstats-u2-023'],
+    ['apstats-u1-023','apstats-u1-036'],
+  ]) { const a=byId.get(ids[0]),b=byId.get(ids[1]); assert.ok(a.variantGroupId); assert.equal(a.variantGroupId,b.variantGroupId); }
+  assert.match(byId.get('apstats-u2-018').q,/standard deviation/i);
+});
+
 test('Statistics shared stimulus sets, provenance, and visual accessibility are sound', () => {
   const groups = new Map();
   for(const q of bank.filter(q=>q.stimulusGroupId))(groups.get(q.stimulusGroupId)??groups.set(q.stimulusGroupId,[]).get(q.stimulusGroupId)).push(q);
