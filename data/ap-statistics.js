@@ -950,7 +950,8 @@ const Q=[
       1
     ],
     "e": "The expected value is the probability-weighted mean: 0(0.50)+1(0.30)+2(0.15)+3(0.05)=0.75. It represents the long-run average value of X.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u2-rv-parameters"
   },
   {
     "id": "apstats-u2-016",
@@ -1007,7 +1008,8 @@ const Q=[
       0
     ],
     "e": "Using μ=1.6, the variance is 0.50(0−1.6)^2 + 0.30(2−1.6)^2 + 0.20(5−1.6)^2 = 3.64, so the standard deviation is √3.64 ≈ 1.91. The value 1.60 is the mean, while 3.64 is the variance rather than the standard deviation.",
-    "statsSetType": "standalone"
+    "statsSetType": "standalone",
+    "variantGroupId": "apstats-v-u2-rv-parameters"
   },
   {
     "id": "apstats-u2-019",

@@ -325,6 +325,7 @@ test('Statistics semantic near-duplicates are variant-grouped', () => {
     ['apstats-u4-008','apstats-u4-022'],
     ['apstats-u4-009','apstats-u4-023'],
     ['apstats-u4-015','apstats-u4-024'],
+    ['apstats-u2-015','apstats-u2-018'],
     ['apstats-u2-021','apstats-u2-023'],
     ['apstats-u1-023','apstats-u1-036'],
   ]) { const a=byId.get(ids[0]),b=byId.get(ids[1]); assert.ok(a.variantGroupId); assert.equal(a.variantGroupId,b.variantGroupId); }
