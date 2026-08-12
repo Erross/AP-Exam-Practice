@@ -15,7 +15,7 @@ const EXPECTED_IDS = [...ids('u1',36), ...ids('u2',33), ...ids('u3',32), ...ids(
 const CALC_IDS = new Set([
   'apstats-u1-005','apstats-u1-006','apstats-u1-007','apstats-u1-008','apstats-u1-009','apstats-u1-013','apstats-u1-014','apstats-u1-015','apstats-u1-016','apstats-u1-017','apstats-u1-018',
   'apstats-u2-002','apstats-u2-003','apstats-u2-005','apstats-u2-006','apstats-u2-007','apstats-u2-008','apstats-u2-009','apstats-u2-011','apstats-u2-012','apstats-u2-013','apstats-u2-014','apstats-u2-015','apstats-u2-016','apstats-u2-017','apstats-u2-018','apstats-u2-019','apstats-u2-020','apstats-u2-022','apstats-u2-024','apstats-u2-025','apstats-u2-026','apstats-u2-027','apstats-u2-028','apstats-u2-029','apstats-u2-030','apstats-u2-031','apstats-u2-032','apstats-u2-033',
-  'apstats-u3-001','apstats-u3-002','apstats-u3-003','apstats-u3-004','apstats-u3-006','apstats-u3-008','apstats-u3-010','apstats-u3-012','apstats-u3-013','apstats-u3-014','apstats-u3-017','apstats-u3-018','apstats-u3-020','apstats-u3-025','apstats-u3-026','apstats-u3-029','apstats-u3-030',
+  'apstats-u3-001','apstats-u3-002','apstats-u3-003','apstats-u3-004','apstats-u3-006','apstats-u3-008','apstats-u3-010','apstats-u3-012','apstats-u3-013','apstats-u3-014','apstats-u3-017','apstats-u3-018','apstats-u3-020','apstats-u3-024','apstats-u3-025','apstats-u3-026','apstats-u3-029','apstats-u3-030',
   'apstats-u4-002','apstats-u4-004','apstats-u4-009','apstats-u4-011','apstats-u4-014','apstats-u4-019','apstats-u4-021','apstats-u4-023','apstats-u4-025',
   'apstats-u5-001','apstats-u5-002','apstats-u5-003','apstats-u5-004','apstats-u5-007','apstats-u5-008','apstats-u5-009','apstats-u5-010','apstats-u5-011',
 ]);
@@ -86,6 +86,7 @@ test('every calculation-bearing Statistics item independently recomputes', () =>
   assert.equal(answer('apstats-u3-017'),'0.15'); assert.ok(Math.abs(.40-.25-.15)<1e-12);
   assert.match(answer('apstats-u3-018'),/√\[p₁\(1−p₁\)\/n₁ \+ p₂\(1−p₂\)\/n₂\]/);
   assert.equal(answer('apstats-u3-020'),'0.08'); assert.ok(Math.abs(.62-.54-.08)<1e-12);
+  assert.match(answer('apstats-u3-024'),/34\.1.*45\.9.*29\.9.*40\.1/); const pc=64/150; assert.ok([80*pc,80*(1-pc),70*pc,70*(1-pc)].every(v=>v>=10));
   assert.match(answer('apstats-u3-025'),/147\/230 ≈ 0\.639/); assert.ok(Math.abs((84+63)/(120+110)-.639130435)<1e-9);
   assert.match(answer('apstats-u3-026'),/0\.014 > 0\.01/); assert.ok(.014>.01);
   assert.equal(answer('apstats-u3-029'),String(80*45/200)); assert.deepEqual([q('apstats-u3-029').topicCode,q('apstats-u3-029').skill],['3.15','3.C']);

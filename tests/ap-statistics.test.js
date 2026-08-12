@@ -294,6 +294,13 @@ test('Statistics variant groups are valid and prevent same-exam near duplicates'
   for(let i=0;i<500;i++){const d=drawExam(subject,bank);for(const id of groups.keys())assert.ok(d.filter(q=>q.variantGroupId===id).length<=1);}
 });
 
+test('Statistics inference interpretation and condition skills match the exact task', () => {
+  const q=id=>bank.find(x=>x.id===id);
+  assert.deepEqual([q('apstats-u4-010').topicCode,q('apstats-u4-010').skill],['4.5','4.G']);
+  assert.match(q('apstats-u3-024').q,/verifies the normality condition/i);
+  assert.match(q('apstats-u4-018').q,/roughly symmetric.*no extreme outliers/i);
+});
+
 test('Statistics exact justify and estimator objectives are semantic, not family-only matches', () => {
   const q=id=>bank.find(x=>x.id===id);
   assert.match(q('apstats-u1-022').q,/and why/i);

@@ -1570,17 +1570,17 @@ const Q=[
     "topicCode": "3.12",
     "skill": "4.E",
     "type": "s",
-    "q": "For a two-proportion z-test of H₀: p₁ = p₂, which proportion is used in the standard error of the test statistic?",
+    "q": "For a two-proportion z-test of H₀: p₁=p₂, independent random samples give x₁=36 of n₁=80 and x₂=28 of n₂=70. The pooled proportion is 64/150≈0.427. Which statement correctly verifies the normality condition?",
     "o": [
-      "Each sample proportion separately, exactly as in a confidence interval",
-      "The pooled sample proportion because H₀ assumes a common population proportion",
-      "The arithmetic mean (p̂₁+p̂₂)/2 regardless of sample sizes",
-      "The null difference 0 used as though it were a probability"
+      "All four pooled expected counts—about 34.1, 45.9, 29.9, and 40.1—are at least 10, so the normality condition is satisfied.",
+      "Only the two observed success counts matter; because 36 and 28 exceed 10, the normality condition is automatically satisfied.",
+      "The condition fails because the pooled proportion is less than 0.50.",
+      "The condition fails because the two sample sizes are unequal."
     ],
     "c": [
-      1
+      0
     ],
-    "e": "Under H₀ the groups share one common proportion, estimated by pooling successes across both samples. A confidence interval does not impose equality and therefore uses separate sample proportions in its standard error.",
+    "e": "Under H₀ the large-counts check uses the pooled proportion. The expected successes and failures are 80(0.427)≈34.1, 80(0.573)≈45.9, 70(0.427)≈29.9, and 70(0.573)≈40.1; all exceed 10, so the normality condition is met.",
     "statsSetType": "standalone"
   },
   {
@@ -1912,7 +1912,7 @@ const Q=[
     "id": "apstats-u4-010",
     "unit": "U4",
     "topicCode": "4.5",
-    "skill": "4.F",
+    "skill": "4.G",
     "type": "s",
     "q": "A one-sample t test for H₀: μ=50 versus Hₐ: μ>50 gives p=0.21. Which interpretation of the test result is appropriate?",
     "o": [
@@ -2067,7 +2067,7 @@ const Q=[
     "topicCode": "4.9",
     "skill": "4.E",
     "type": "s",
-    "q": "Two groups were formed by random assignment of 20 subjects to each treatment. Their quantitative responses show no extreme outliers. What supports use of a two-sample t test?",
+    "q": "Two groups were formed by random assignment of 20 subjects to each treatment. Both response distributions are roughly symmetric and show no extreme outliers. What supports use of a two-sample t test?",
     "o": [
       "Knowing both population standard deviations exactly",
       "Having categorical rather than quantitative responses",
