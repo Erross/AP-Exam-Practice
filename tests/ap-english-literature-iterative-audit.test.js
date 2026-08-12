@@ -21,3 +21,7 @@ test('AP Literature metaphor, allusion, word-choice, and imagery items assess th
   assert.equal(q('aplit-po-mask-06').topicCode,'5.B');assert.match(q('aplit-po-mask-06').q,/word “Nay”/i);
   assert.equal(q('aplit-sf-supper-10').topicCode,'5.D');assert.match(q('aplit-sf-supper-10').q,/visual image/i);
 });
+test('AP Literature silent communion item explicitly assesses metaphor',()=>{
+  assert.equal(q('aplit-sf-supper-06').topicCode,'6.B');
+  assert.match(q('aplit-sf-supper-06').q,/metaphorical phrase/i);
+});

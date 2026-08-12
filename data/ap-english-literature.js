@@ -1215,7 +1215,7 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/269, 1914."
     },
     "sequence": 2,
-    "q": "The phrase “silent communion” is comic chiefly because it",
+    "q": "The metaphorical phrase “silent communion” is comic chiefly because it",
     "o": [
       "shows that Framton and the niece agree without speaking",
       "elevates an awkward pause into language of intimate connection",
