@@ -14,3 +14,10 @@ test('AP Literature grammar and weak-distractor repairs hold',()=>{
 test('AP Literature raw skill-category inventory remains unchanged by semantic repairs',()=>{
   const counts={};for(const x of bank)counts[x.skill]=(counts[x.skill]||0)+1;assert.deepEqual(counts,{'1':24,'2':8,'3':26,'4':35,'5':18,'6':15,'7':16});
 });
+test('AP Literature metaphor, allusion, word-choice, and imagery items assess their exact CED objectives',()=>{
+  assert.equal(q('aplit-po-thrush-03').topicCode,'6.B');assert.match(q('aplit-po-thrush-03').q,/extended metaphor/i);
+  assert.equal(q('aplit-po-uphill-10').topicCode,'6.B');assert.match(q('aplit-po-uphill-10').q,/extended journey metaphor/i);
+  assert.equal(q('aplit-po-tyger-09').topicCode,'6.D');assert.match(q('aplit-po-tyger-09').q,/allusion/i);
+  assert.equal(q('aplit-po-mask-06').topicCode,'5.B');assert.match(q('aplit-po-mask-06').q,/word “Nay”/i);
+  assert.equal(q('aplit-sf-supper-10').topicCode,'5.D');assert.match(q('aplit-sf-supper-10').q,/visual image/i);
+});

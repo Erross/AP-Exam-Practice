@@ -1331,17 +1331,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/269, 1914."
     },
     "sequence": 9,
-    "q": "The open French window chiefly functions as",
+    "q": "The repeated visual image of the open French window chiefly functions to",
     "o": [
-      "proof that Mrs. Sappleton's relatives actually died",
-      "an ordinary object turned into narrative evidence",
-      "a symbol Framton immediately recognizes from local legend",
-      "a barrier that prevents anyone from entering the lawn"
+      "establish that the household has deliberately left the room unsecured for expected strangers",
+      "turn an ordinary household detail into narrative evidence that makes the niece’s invented story seem plausible",
+      "show that Framton recognizes the niece’s story as fabricated before Mrs. Sappleton enters",
+      "provide a purely decorative image whose chief purpose is to brighten the room’s physical description"
     ],
     "c": [
       1
     ],
-    "e": "The window initially needs only the warm weather to explain it; the niece deliberately assigns it a tragic meaning, making its interpretation central to her control of Framton."
+    "e": "The open window is first an ordinary domestic image, but the niece incorporates it into her fiction so that a visible detail appears to corroborate the invented tragedy. The imagery therefore becomes persuasive evidence inside her story."
   },
   {
     "id": "aplit-sf-supper-11",
@@ -2317,17 +2317,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/Songs_of_Innocence_and_of_Experience_(1826)/Songs_of_Experience/The_Tyger"
     },
     "sequence": 5,
-    "q": "The question about the maker of “the Lamb” chiefly compares",
+    "q": "The allusion to “the Lamb” chiefly functions to",
     "o": [
-      "two predators competing in the same forest",
-      "human craftsmanship with animal instinct",
-      "nighttime darkness with daylight",
-      "gentleness and vulnerability with terrifying strength"
+      "identify the tiger and lamb as animals created for exactly the same earthly purpose",
+      "resolve the poem’s questions by proving that gentleness must defeat destructive power",
+      "shift attention away from creation toward a literal pastoral scene containing both animals",
+      "place Christian associations of gentleness and innocence beside the tiger’s terrifying strength, sharpening the question of a single creator"
     ],
     "c": [
       3
     ],
-    "e": "Invoking the Lamb brings an emblem of innocence and meekness beside the tiger, intensifying the theological problem of one creator encompassing apparent opposites."
+    "e": "“The Lamb” carries recognizable Christian associations with innocence and sacrificial gentleness. Setting that allusion beside the tiger intensifies the poem’s puzzle about a creator responsible for radically different forms of life."
   },
   {
     "id": "aplit-po-tyger-10",
@@ -2462,17 +2462,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/The_Darkling_Thrush"
     },
     "sequence": 1,
-    "q": "The first two stanzas develop primarily by",
+    "q": "The extended metaphor that makes the landscape “The Century’s corpse” and the sky its “crypt” chiefly functions to",
     "o": [
-      "projecting the ending of a century onto a winter landscape",
-      "describing the speaker's journey from home into a forest",
-      "presenting scientific evidence of ecological decline",
-      "recounting the thrush's earlier life"
+      "project the ending of a century onto a winter landscape so historical exhaustion feels physically present",
+      "suggest that the speaker expects the winter landscape to revive before evening",
+      "turn the thrush itself into a symbol of political authority over the countryside",
+      "present the natural scene as visually cheerful despite the speaker’s private melancholy"
     ],
     "c": [
       0
     ],
-    "e": "Frost, weakening day, broken lyres, corpse, crypt, and lament turn seasonal observation into an imaginative death scene for the century."
+    "e": "Calling the landscape the Century’s corpse and the cloudy sky its crypt maps historical decline onto winter scenery. The metaphor makes an abstract sense of an ending materially visible and oppressive."
   },
   {
     "id": "aplit-po-thrush-04",
@@ -2868,17 +2868,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/We_Wear_the_Mask"
     },
     "sequence": 9,
-    "q": "The exclamation point in the final refrain most plausibly intensifies",
+    "q": "The word “Nay” at the beginning of the final stanza chiefly functions to",
     "o": [
-      "a joyful decision to abandon concealment",
-      "a request that the world provide a new mask",
-      "the force and cost of continuing the declaration",
-      "uncertainty about whether the mask exists"
+      "signal that the speakers are abandoning concealment and preparing to confess publicly to the world",
+      "soften the preceding rhetorical question by conceding that outside observers deserve a fuller explanation",
+      "sharply reject the idea that the world should inspect the speakers’ suffering before redirecting disclosure toward Christ",
+      "introduce a change from collective speech to the private feelings of a single speaker"
     ],
     "c": [
       2
     ],
-    "e": "After the stanza exposes tortured souls and a vile road, the emphatic refrain sounds both resolute and painful, not celebratory or doubtful."
+    "e": "“Nay” is a compact verbal refusal. It rejects the world’s claim to scrutinize the speakers’ pain and prepares the stanza’s contrast between concealment from society and direct appeal to Christ."
   },
   {
     "id": "aplit-po-mask-07",
@@ -3303,17 +3303,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/Poems_(Rossetti%2C_1901)/Up-Hill"
     },
     "sequence": 8,
-    "q": "“Those who have gone before” compares the traveler with",
+    "q": "Within the poem’s extended journey metaphor, the phrase “Those who have gone before” chiefly functions to",
     "o": [
-      "guides who abandoned the road midway",
-      "earlier wayfarers who have completed the same journey",
-      "strangers traveling in the opposite direction",
-      "travelers who chose a different destination"
+      "separate the questioner from travelers whose journeys led toward different forms of rest",
+      "suggest that earlier travelers have completed the same journey, making the promised rest feel established rather than hypothetical",
+      "suggest that earlier travelers left the road unfinished because endurance mattered more than arrival",
+      "suggest that the speaker must travel in the opposite direction from those who reached the inn"
     ],
     "c": [
       1
     ],
-    "e": "The phrase reassures the questioner that arrival joins a prior community, situating the individual journey within a shared human path."
+    "e": "Within the extended journey metaphor, earlier wayfarers make the destination feel tried and known. Their prior arrival strengthens the answering voice’s reassurance that rest awaits after the difficult road."
   },
   {
     "id": "aplit-po-uphill-11",
