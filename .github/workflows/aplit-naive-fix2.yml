@@ -1,0 +1,104 @@
+name: AP English Literature Audit Fix 2
+on:
+  push:
+    branches: [audit/ap-english-literature-iterative]
+    paths: [.github/workflows/aplit-naive-fix2.yml]
+permissions: {contents: write}
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: 22}
+      - run: npm ci
+      - name: Apply Literature semantic repairs
+        run: |
+          python - <<'PY'
+          import re,json
+          p='data/ap-english-literature.js'; s=open(p,encoding='utf-8').read()
+          def edit(qid, **kw):
+            global s
+            a=s.index('    "id": '+json.dumps(qid)); b=s.find('\n  },\n  {\n    "id":',a)
+            if b<0:b=s.find('\n  }\n];',a)
+            block=s[a:b]
+            for field,val in kw.items():
+              if field=='o':
+                rendered=json.dumps(val,ensure_ascii=False,indent=2).replace('\n','\n    ')
+                block,n=re.subn(r'(    "o": )\[[\s\S]*?\](?=,\n    "c")',lambda m:m.group(1)+rendered,block,count=1)
+              else:
+                rendered=json.dumps(val,ensure_ascii=False)
+                block,n=re.subn(r'(    "'+re.escape(field)+r'": )("(?:[^"\\]|\\.)*"|\d+)',lambda m:m.group(1)+rendered,block,count=1)
+              if n!=1: raise SystemExit(f'{qid}:{field}')
+            s=s[:a]+block+s[b:]
+          # Character objectives.
+          edit('aplit-sf-watch-03',q='The narrator’s repeated return to “what is one to do?” chiefly emphasizes that she',o=['grows less interested in questioning John as the treatment continues','moves from private hesitation toward confidence in John’s judgment','remains constrained even as her disagreement with John’s treatment becomes clearer','shifts from indirect disagreement to openly rejecting John’s authority'],e='The repeated question marks persistence rather than a new decision: her disagreement with John becomes clearer, yet his authority continues to limit what she feels able to do.')
+          edit('aplit-sf-bell-03',topicCode='1.C')
+          edit('aplit-sf-room-03',topicCode='1.A')
+          edit('aplit-sf-snow-03',q='Fortunato’s continued pride in his wine expertise chiefly functions to show that he',o=['gradually abandons his claim to expertise as Montresor praises Luchesi','begins to suspect Montresor’s purpose and tests the story he has been told','remains vulnerable to the same flattery Montresor uses to guide him onward','treats the contest as trivial and stops trying to prove himself'],e='Fortunato does not revise the pride Montresor targets; his continuing need to prove superior expertise leaves him vulnerable to the same manipulation throughout the encounter.')
+          edit('aplit-sf-supper-02',topicCode='1.A'); edit('aplit-sf-room-02',topicCode='1.A')
+          # Structure objectives.
+          for qid,code in {'aplit-sf-watch-05':'3.C','aplit-sf-bell-05':'3.B','aplit-sf-room-05':'3.C','aplit-sf-snow-05':'3.B','aplit-ld-clock-04':'3.C','aplit-ld-clock-05':'3.B'}.items(): edit(qid,topicCode=code)
+          # Narrator/speaker perspective stays Category 4 within each set.
+          edit('aplit-sf-bell-08',q='The narrator’s comparison of Armand’s falling in love to being “struck by a pistol shot” most clearly reveals a perspective on his passion that is',o=['dismissive of its intensity because the courtship develops gradually','primarily concerned with the legal consequences of the marriage','detached from the speed and force with which Armand acts','impressed by its romantic force while alert to its sudden violence'],e='The violent simile is delivered within an energetic courtship account. It reveals a narrator who registers the romance while also signaling the dangerous suddenness of Armand’s passion.')
+          edit('aplit-sf-supper-08',q='The narrator’s phrase that Framton speaks “in a tone of distinct regret” most clearly reveals a perspective on his social situation that is',o=['admiring of his eagerness to make as many new acquaintances as possible','surprised that he already knows the household and its recent history','critical of his decision to reject his sister’s introductions before using them','dryly aware that the introductions burden rather than reassure him'],e='The narrator notices Framton’s regret instead of treating the introduction as a welcome opportunity. That dry observation frames his social visit as an obligation that heightens his unease.')
+          edit('aplit-po-snake-06',q='The parenthetical phrase “Attended or alone” most clearly reveals that the speaker views her fear as',o=['a response she performs more strongly when other people are watching','an involuntary reaction that persists whether or not she has companions','a judgment she reaches after another observer identifies the creature','a childhood memory whose force depends on being retold to an audience'],e='By explicitly including both accompanied and solitary encounters, the speaker presents the bodily chill as her own persistent response rather than something produced by an audience.')
+          edit('aplit-po-snake-07',q='Calling the snake a “fellow” most clearly reveals a speaker who regards the creature as',o=['too ordinary to deserve the careful attention given elsewhere in the poem','a humanlike companion whose behavior can be predicted with confidence','familiar enough for kinship language yet still capable of provoking visceral fear','an enemy whose presence overrides the speaker’s broader affinity with nature'],e='“Fellow” is intimate, almost companionable language, but the poem also records a bodily chill. The word therefore reveals a perspective that holds familiarity and instinctive fear together.')
+          edit('aplit-po-tyger-04',q='The speaker’s repeated direct address to the tiger most clearly reveals a perspective that treats it as',o=['a distant example used mainly to settle an abstract philosophical argument','a familiar domestic creature whose origins require little explanation','an immediate presence that draws the speaker into awed questioning','a silent witness expected to answer each question with factual information'],e='Direct address makes the tiger feel present before the questioning speaker. The form therefore reveals an absorbed, awed perspective rather than detached analysis or an expectation of literal replies.')
+          edit('aplit-po-uphill-02',q='The progression from questions about the road to questions about the inn most clearly reveals a speaker who is',o=['interested mainly in describing scenery encountered during the journey','anxious about both enduring the journey and finding welcome at its end','confident from the opening that effort and arrival require little reassurance','more concerned with other travelers than with the destination or rest'],e='The questions move from whether the road is difficult and lengthy to whether shelter, beds, and welcome await. That progression reveals anxiety about both endurance and eventual acceptance.')
+          edit('aplit-sf-room-08',q='The description of the sentinels as “statues to adorn the bridge” most clearly reveals a narrator who views the military scene as',o=['casual and improvised despite the presence of armed soldiers','primarily confusing because the guards have unclear duties','energetic and disorderly as the execution approaches','ceremonially still and impersonal despite the human violence at its center'],e='The narrator notices how living soldiers resemble decorative statues. That diction reveals a perspective attuned to the ceremonial stillness and impersonality surrounding an imminent human death.')
+          # Comparison / symbol / imagery distinctions, preserving each set's category totals.
+          edit('aplit-sf-watch-11',topicCode='6.B',q='The phrase “height of romantic felicity” functions as a metaphor that chiefly',o=['suggests the narrator expects the estate to improve John’s medical authority','presents the house as physically elevated above every nearby building','casts Gothic excitement as an imagined peak of pleasurable experience','shows the narrator has confused romantic fiction with the estate’s legal history'],e='“Height” turns the narrator’s delight in Gothic possibility into an imagined peak that can be reached. The metaphor conveys her self-aware pleasure in the conventions of romantic fiction.')
+          edit('aplit-sf-bell-10',q='The cowl-and-pall description makes L’Abri most plausibly symbolize',o=['the excitement and openness associated with Désirée’s childhood home','a household overshadowed by enclosure, gloom, and death','the economic opportunity Armand expects marriage to create','a refuge that protects Désirée from uncertainty about her origins'],e='The cowl and pall evoke covering, mourning, and death. Applied to L’Abri, they make the plantation a symbolic embodiment of enclosure and foreboding rather than a neutral backdrop.')
+          edit('aplit-sf-supper-10',topicCode='5.D')
+          edit('aplit-sf-snow-10',topicCode='5.D',o=['showing that Fortunato is employed as a court jester','visually turning the respected man into a fool','suggesting that Montresor chose Fortunato’s costume for the encounter','indicating that Fortunato has already left the carnival behind'])
+          edit('aplit-ld-clock-07',q='The cucumber sandwiches most plausibly symbolize',o=['Lane’s quiet authority over Algernon’s household decisions','the ordinary appetites beneath Algernon’s philosophical performance','a larger scarcity that threatens the household’s social position','the formal hospitality Algernon consistently places above self-interest'],e='The sandwiches repeatedly interrupt Algernon’s lofty claims with appetite and etiquette. They therefore become a comic symbol of ordinary self-interest beneath his philosophical performance.')
+          edit('aplit-ld-kitchen-07',q='The fire in the kitchen most plausibly symbolizes',o=['the investigators’ confidence that the stove explains the crime','the household prosperity that existed before Mr. Wright’s death','a fragile domestic warmth within an otherwise cold investigative setting','Mrs. Peters’s intention to alter the physical evidence in the room'],e='The fire provides literal warmth in a room repeatedly described as cold and uneasy. It can therefore symbolize a limited domestic comfort within an emotionally and institutionally cold setting.')
+          edit('aplit-ld-orbit-05',topicCode='5.C',q='The hidden macaroons most plausibly symbolize',o=['the household’s inability to afford ordinary food during the holidays','a small private autonomy Nora conceals from Helmer','Helmer’s unspoken plan to restrict the family’s Christmas celebration','Nora’s desire to end the playful intimacy of the household'],e='Nora deliberately hides a minor pleasure that Helmer would police. The macaroons therefore symbolically condense the small private autonomy she preserves within his affectionate control.')
+          edit('aplit-sf-snow-11',topicCode='6.B',q='Montresor’s use of “immolation” functions as a metaphor that casts Fortunato’s death as',o=['a public contest in which the two men openly test their courage','an accidental consequence of carnival excess and confusion','a sacrificial destruction concealed beneath the language of friendship','a legal punishment carried out by an acknowledged public authority'],e='“Immolation” invokes sacrificial destruction rather than ordinary killing. Montresor’s private use of the term metaphorically reframes his friendly smile as concealment for a ritualized vision of Fortunato’s death.')
+          edit('aplit-sf-supper-06',topicCode='6.B')
+          # Grammar and weak-option repairs.
+          edit('aplit-ld-orbit-03',o=['proving that the household has no economic concerns','placing the characters in a public workplace','showing that Helmer dislikes Christmas traditions','framing financial negotiation within festive domestic abundance'])
+          edit('aplit-ld-orbit-04',o=['Nora’s private freedom to Helmer’s scrutiny','financial anxiety to complete agreement','Christmas preparation to a discussion with the porter','domestic life to an unrelated business meeting'])
+          edit('aplit-po-tyger-06',o=['treats the tiger as a mystery that inquiry deepens','has forgotten the questions immediately after asking them','expects the tiger to provide a theological explanation','regards the questions as less important than the tiger’s appearance'])
+          edit('aplit-po-uphill-10',o=['guides who abandoned the road midway','earlier wayfarers who have completed the same journey','strangers traveling in the opposite direction','travelers who chose a different destination'])
+          # 7.C exact commentary tasks, preserving raw keys 3/0/1.
+          edit('aplit-ld-clock-09',q='Which commentary best explains how the scene’s polished manners support a claim that it satirizes social convention?',o=['Formal courtesy softens the disagreement, suggesting that social rules can make difficult conversations productive and sincere.','The restrained diction makes the exchange seem serious, suggesting that the scene values decorum more than comic contradiction.','Lane’s careful replies preserve professional distance, suggesting that class roles can contain tension without challenging the hierarchy itself.','The mismatch between formal courtesy and irreverent ideas makes respectable behavior look performative rather than reliably moral.'],e='The scene repeatedly pairs polished address with selfish, irreverent, or contradictory claims. Explaining that mismatch connects specific evidence to the interpretive claim that conventional respectability is being satirized.')
+          edit('aplit-ld-kitchen-09',q='Which commentary best explains how the kitchen details support a claim that the scene questions what official investigators count as evidence?',o=['Placing unfinished domestic work beside the formal inquiry suggests that procedure may overlook evidence whose meaning is rooted in household life.','The disorder makes the room harder to search, suggesting that investigators need a more systematic method for cataloging physical objects.','The men’s attention to the stove suggests that official inquiry can recognize domestic evidence when its practical importance is immediately visible.','The contrast between kitchen work and legal business suggests that the activities occupy separate spheres with different purposes.'],e='The stage directions foreground unfinished domestic work while the men privilege formal procedure. The correct commentary explains how that juxtaposition supports the claim that official methods may miss household meanings.')
+          edit('aplit-ld-orbit-09',q='Which commentary best explains how Helmer’s pet names and Nora’s concealed behavior support a claim that their playful intimacy contains unequal authority?',o=['Their playful language makes financial disagreement seem temporary, suggesting that affection readily resolves the couple’s differences about spending.','His affection accompanies correction while her secrecy preserves small choices, showing that warmth and control operate together in the marriage.','Nora’s secrecy gives her leverage in the exchange, suggesting that she directs the household more strongly than Helmer recognizes.','The pet names make the disagreement comic, suggesting that money functions mainly as a shared source of entertainment for the couple.'],e='The scene combines affectionate language with Helmer’s regulation and Nora’s concealment. The correct commentary connects those details to the claim that intimacy and unequal authority coexist.')
+          open(p,'w',encoding='utf-8').write(s)
+          PY
+      - name: Update exact skill expectations and regressions
+        run: |
+          python - <<'PY'
+          p='tests/ap-english.test.js'; s=open(p,encoding='utf-8').read(); s=s.replace('"2.B", "3.C", "3.D", "3.E",','"2.B", "3.B", "3.C", "3.D", "3.E",'); open(p,'w',encoding='utf-8').write(s)
+          p='tests/ap-english-public-domain.test.js'; s=open(p,encoding='utf-8').read(); a=s.index('const targets = {'); b=s.index('\n};',a)+3
+          new='''const targets = {\n  "sf-watch": ["1.A","1.D","1.B","2.B","3.C","3.C","4.B","4.C","4.C","5.C","6.B","7.B"],\n  "sf-bell": ["1.A","1.D","1.C","2.B","3.B","3.C","4.B","4.C","4.C","5.C","6.A","7.B"],\n  "sf-room": ["1.A","1.A","1.A","2.B","3.C","3.C","4.B","4.C","4.C","5.C","6.B","7.B"],\n  "sf-supper": ["1.A","1.A","1.E","2.B","3.E","6.B","4.B","4.C","4.C","5.D","3.D","7.B"],\n  "sf-snow": ["1.A","1.D","1.B","2.B","3.B","3.C","4.B","4.C","4.C","5.D","6.B","7.B"],\n  "ld-clock": ["1.A","1.C","2.B","3.C","3.B","1.E","5.C","7.D","7.C"],\n  "ld-kitchen": ["1.A","1.C","2.B","3.E","3.D","1.E","5.C","7.D","7.C"],\n  "ld-orbit": ["1.A","1.C","2.B","3.E","5.C","3.D","1.E","7.D","7.C"],\n};'''
+          s=s[:a]+new+s[b:]; open(p,'w',encoding='utf-8').write(s)
+          PY
+          cat > tests/ap-english-literature-iterative-audit.test.js <<'EOF'
+          const test=require('node:test'),assert=require('node:assert/strict'),fs=require('fs'),vm=require('vm');
+          const {AP_SUBJECTS}=require('../js/subjects');const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-english-literature.js','utf8'),sb);const bank=sb.window[AP_SUBJECTS.find(s=>s.id==='ap-english-literature').dataVar];const q=id=>bank.find(x=>x.id===id);
+          test('AP Literature exact CED skill repairs remain semantic',()=>{
+            assert.equal(q('aplit-sf-bell-03').topicCode,'1.C');assert.equal(q('aplit-sf-room-03').topicCode,'1.A');
+            assert.match(q('aplit-sf-watch-03').o[q('aplit-sf-watch-03').c[0]],/remains constrained/);assert.match(q('aplit-sf-snow-03').o[q('aplit-sf-snow-03').c[0]],/remains vulnerable/);
+            for(const id of ['aplit-ld-clock-09','aplit-ld-kitchen-09','aplit-ld-orbit-09']){assert.equal(q(id).topicCode,'7.C');assert.match(q(id).q,/commentary best explains/i)}
+            for(const id of ['aplit-sf-bell-08','aplit-sf-supper-08','aplit-po-snake-06','aplit-po-snake-07','aplit-po-tyger-04','aplit-po-uphill-02','aplit-sf-room-08']) assert.equal(q(id).topicCode,'4.C',id);
+            assert.equal(q('aplit-sf-watch-11').topicCode,'6.B');assert.equal(q('aplit-sf-bell-10').topicCode,'5.C');assert.equal(q('aplit-sf-supper-06').topicCode,'6.B');
+          });
+          test('AP Literature grammar and weak-distractor repairs hold',()=>{
+            assert.equal(q('aplit-ld-orbit-03').o[q('aplit-ld-orbit-03').c[0]],'framing financial negotiation within festive domestic abundance');
+            assert.match(q('aplit-sf-snow-10').o[q('aplit-sf-snow-10').c[0]],/^visually turning/);assert.doesNotMatch(q('aplit-po-uphill-10').o.join(' '),/never traveled/);assert.match(q('aplit-po-tyger-06').o[q('aplit-po-tyger-06').c[0]],/mystery that inquiry deepens/);
+          });
+          test('AP Literature raw skill-category inventory remains unchanged by semantic repairs',()=>{
+            const counts={};for(const x of bank)counts[x.skill]=(counts[x.skill]||0)+1;assert.deepEqual(counts,{'1':24,'2':8,'3':26,'4':35,'5':18,'6':15,'7':16});
+          });
+          EOF
+      - run: npm run check
+      - name: Commit
+        run: |
+          git config user.name OpenAI; git config user.email openai@users.noreply.github.com
+          git add data/ap-english-literature.js tests/ap-english.test.js tests/ap-english-public-domain.test.js tests/ap-english-literature-iterative-audit.test.js
+          git commit -m 'Repair AP English Literature exact skill alignment'
+          git push origin HEAD:audit/ap-english-literature-iterative
