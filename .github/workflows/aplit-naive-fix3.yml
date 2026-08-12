@@ -44,7 +44,7 @@ jobs:
           rewrite('aplit-po-uphill-10',
             'Within the poem’s extended journey metaphor, the phrase “Those who have gone before” chiefly functions to',
             'suggest that earlier travelers have completed the same journey, making the promised rest feel established rather than hypothetical',
-            ['separate the questioner from every traveler who previously chose a different destination','imply that guides abandoned the road because its difficulty made arrival impossible','suggest that the speaker must travel in the opposite direction from those who reached the inn'],
+            ['separate the questioner from travelers whose journeys led toward different forms of rest','suggest that earlier travelers left the road unfinished because endurance mattered more than arrival','suggest that the speaker must travel in the opposite direction from those who reached the inn'],
             'Within the extended journey metaphor, earlier wayfarers make the destination feel tried and known. Their prior arrival strengthens the answering voice’s reassurance that rest awaits after the difficult road.')
           rewrite('aplit-po-tyger-09',
             'The allusion to “the Lamb” chiefly functions to',
