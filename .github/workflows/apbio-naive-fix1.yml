@@ -19,7 +19,9 @@ jobs:
           node-version: 22
       - run: npm ci
       - name: Apply Biology cycle 1 repairs
-        run: python tools/tmp-apbio-fix1.py
+        run: |
+          sed -i "s/parent's genotype/parent genotype/" tools/tmp-apbio-fix1.py
+          python tools/tmp-apbio-fix1.py
       - name: Full repository validation
         run: npm run check
       - name: Commit repaired Biology bank
