@@ -1,0 +1,14 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const {AP_SUBJECTS}=require('../js/subjects');
+const {drawExam}=require('../js/draw');
+const {loadStatisticsBank}=require('./helpers');
+const subject=AP_SUBJECTS.find(s=>s.id==='ap-statistics');
+const bank=loadStatisticsBank();
+const TOPICS={U1:13,U2:12,U3:15,U4:10,U5:5};
+test('Statistics metadata and bank',()=>{assert.equal(bank.length,140);assert.equal(subject.releaseStatus,'draft');assert.equal(subject.mcqCount,42);assert.equal(subject.mcqTimeMinutes,90);assert.equal(subject.units.length,5);assert.deepEqual(subject.stimulusSetRange,[2,2]);});
+test('Statistics schema and topic coverage',()=>{const seen={};for(const q of bank){assert.match(q.id,/^apstats-u[1-5]-\d{3}$/);assert.equal(q.type,'s');assert.equal(q.o.length,4);assert.equal(q.c.length,1);assert.match(q.skill,/^[1-4]\.[A-G]$/);assert.ok(q.e.length>=90,q.id);(seen[q.unit]??=new Set()).add(q.topicCode);}for(const [u,n] of Object.entries(TOPICS))assert.equal(seen[u].size,n,u);});
+test('Statistics answer construction bias',()=>{const wc=s=>s.trim().split(/\s+/).length;let ul=0,al=0,cw=0,dw=0;const keys=[0,0,0,0];for(const q of bank){keys[q.c[0]]++;const ls=q.o.map(wc),mx=Math.max(...ls),cl=ls[q.c[0]];if(cl===mx)al++;if(cl===mx&&ls.filter(x=>x===mx).length===1)ul++;cw+=cl;ls.forEach((x,i)=>{if(i!==q.c[0])dw+=x;});}assert.ok(ul/bank.length<=.25);assert.ok(al/bank.length<=.58);assert.ok(Math.abs(cw/bank.length-dw/(bank.length*3))/(dw/(bank.length*3))<=.12);for(const k of keys)assert.ok(k/bank.length>=.15&&k/bank.length<=.35);});
+test('Statistics draws obey blueprint',()=>{for(let i=0;i<1000;i++){const d=drawExam(subject,bank);assert.equal(d.length,42);const uc=Object.fromEntries(subject.units.map(u=>[u.id,d.filter(q=>q.unit===u.id).length]));assert.deepEqual(uc,{U1:11,U2:9,U3:9,U4:7,U5:6});assert.equal(d.filter(q=>q.statsSetType==='probability').length,3);assert.equal(d.filter(q=>q.statsSetType==='regression').length,3);const pc={1:0,2:0,3:0,4:0};d.forEach(q=>pc[q.skill[0]]++);for(const [p,[lo,hi]] of Object.entries(subject.sciencePracticeRanges))assert.ok(pc[p]>=lo&&pc[p]<=hi);}});
+test('Statistics retake overlap',()=>{let total=0;const pairs=800;for(let i=0;i<pairs;i++){const a=new Set(drawExam(subject,bank).map(q=>q.id));total+=drawExam(subject,bank).filter(q=>a.has(q.id)).length/42;}assert.ok(total/pairs<=.40,`overlap \OVERLAP`);});
+test('selected quantitative answers',()=>{const by=q=>bank.find(x=>x.q.includes(q));assert.ok(by('x₁=84').o[by('x₁=84').c[0]].includes('147/230'));assert.ok(by('observed difference is 6').o[by('observed difference is 6').c[0]]==='3');assert.ok(by('9-mile delivery').o[by('9-mile delivery').c[0]].includes('36.9'));});
