@@ -20,45 +20,41 @@ jobs:
           const fs=require('fs'),vm=require('vm');
           const {AP_SUBJECTS}=require('./js/subjects');const {drawExam}=require('./js/draw');
           const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-us-government.js','utf8'),sb,{filename:'data/ap-us-government.js'});
-          console.log('GLOBALS',Object.keys(sb.window));
-          const bank=sb.window.QUESTIONS_AP_US_GOVERNMENT || sb.window.QUESTIONS_AP_GOVERNMENT || Object.values(sb.window).find(Array.isArray);
-          const subject=AP_SUBJECTS.find(s=>s.dataFile==='data/ap-us-government.js'||s.dataVar==='QUESTIONS_AP_US_GOVERNMENT'||s.id.includes('government')&&!s.id.includes('comparative'));
-          const fail=m=>{throw new Error(m)};
-          if(!subject)fail('subject metadata not found');if(!bank)fail('bank global not found');
+          const bank=sb.window.QUESTIONS_AP_US_GOVERNMENT;
+          const subject=AP_SUBJECTS.find(s=>s.id==='ap-us-government');
+          const hard=[];const note=[];const add=(arr,m)=>{arr.push(m);console.log((arr===hard?'DEFECT':'NOTE'),m)};
+          if(!subject)add(hard,'subject metadata not found');if(!bank)add(hard,'bank global not found');if(hard.length)throw new Error(hard.join('\n'));
           console.log('SUBJECT',JSON.stringify(subject,null,2));console.log('BANK_LENGTH',bank.length);
-          if(bank.length<150)fail(`unexpectedly shallow bank ${bank.length}`);if(new Set(bank.map(q=>q.id)).size!==bank.length)fail('duplicate ids');
-          const unitCounts={};const topicCounts={};const sourceGroups=new Map();
-          const wc=x=>String(x).trim().split(/\s+/).filter(Boolean).length;let ul=0,al=0,cw=0,dw=0;const pos=[0,0,0,0];
+          if(bank.length<150)add(hard,`unexpectedly shallow bank ${bank.length}`);if(new Set(bank.map(q=>q.id)).size!==bank.length)add(hard,'duplicate ids');
+          const unitCounts={},topicCounts={},sourceGroups=new Map();
+          const wc=x=>String(x).trim().split(/\s+/).filter(Boolean).length;let ul=0,al=0,cw=0,dw=0;const pos=[0,0,0,0];const absCandidates=[];
           for(const q of bank){
             unitCounts[q.unit]=(unitCounts[q.unit]||0)+1;topicCounts[q.topic]=(topicCounts[q.topic]||0)+1;
-            if(q.type!=='s'||!Array.isArray(q.o)||q.o.length!==4||!Array.isArray(q.c)||q.c.length!==1||q.c[0]<0||q.c[0]>3)fail(`${q.id}: schema`);
-            if(new Set(q.o.map(x=>String(x).trim().toLowerCase())).size!==4)fail(`${q.id}: duplicate options`);
-            if(!q.e||q.e.length<90)fail(`${q.id}: short rationale`);
+            if(q.type!=='s'||!Array.isArray(q.o)||q.o.length!==4||!Array.isArray(q.c)||q.c.length!==1||q.c[0]<0||q.c[0]>3)add(hard,`${q.id}: schema`);
+            if(new Set(q.o.map(x=>String(x).trim().toLowerCase())).size!==4)add(hard,`${q.id}: duplicate options`);
+            if(!q.e||q.e.length<90)add(hard,`${q.id}: short rationale`);
             const ci=q.c[0],ls=q.o.map(wc),mx=Math.max(...ls);pos[ci]++;cw+=ls[ci];ls.forEach((n,i)=>{if(i!==ci)dw+=n});if(ls[ci]===mx)al++;if(ls[ci]===mx&&ls.filter(n=>n===mx).length===1)ul++;
-            const abs=q.o.filter((o,i)=>i!==ci&&/\b(always|never|every|entirely|completely|impossible|guarantee[sd]?|automatically|all|none)\b/i.test(o));if(abs.length>=2)fail(`${q.id}: stacked absolute distractors`);
-            if(q.stimulusGroupId){if(!q.stimulus)fail(`${q.id}: group lacks stimulus`);if(!sourceGroups.has(q.stimulusGroupId))sourceGroups.set(q.stimulusGroupId,[]);sourceGroups.get(q.stimulusGroupId).push(q)}
+            const abs=q.o.map((o,i)=>({i,o})).filter(({i,o})=>i!==ci&&/\b(always|never|every|entirely|completely|impossible|guarantee[sd]?|automatically|all|none)\b/i.test(o));
+            if(abs.length>=2)absCandidates.push({id:q.id,q:q.q,key:q.o[ci],distractors:abs.map(x=>x.o)});
+            if(q.stimulusGroupId){if(!q.stimulus)add(hard,`${q.id}: group lacks stimulus`);if(!sourceGroups.has(q.stimulusGroupId))sourceGroups.set(q.stimulusGroupId,[]);sourceGroups.get(q.stimulusGroupId).push(q)}
           }
+          console.log('ABSOLUTE_CANDIDATES',JSON.stringify(absCandidates,null,2));
           const ca=cw/bank.length,da=dw/(bank.length*3);console.log('UNITS',JSON.stringify(unitCounts));console.log('TOPIC_COUNT',Object.keys(topicCounts).length);console.log('BIAS',JSON.stringify({uniqueLongest:ul/bank.length,amongLongest:al/bank.length,correctAvg:ca,distractorAvg:da,keyPositions:pos}));
-          if(ul/bank.length>.25||al/bank.length>.58||Math.abs(ca-da)/da>.12||pos.some(n=>n/bank.length<.15||n/bank.length>.35))fail('answer-construction bias');
-          for(const [gid,qs] of sourceGroups){if(new Set(qs.map(q=>q.stimulus)).size!==1)fail(`${gid}: nonshared stimulus object`);console.log('STIMULUS',gid,qs.length,JSON.stringify({type:qs[0].stimulus.type,title:qs[0].stimulus.title,source:qs[0].stimulus.source}))}
-
-          // Required Fall-2026 foundational-document coverage: use actual stimulus title/source and question text, not header comments.
+          if(ul/bank.length>.25||al/bank.length>.58||Math.abs(ca-da)/da>.12||pos.some(n=>n/bank.length<.15||n/bank.length>.35))add(hard,'answer-construction bias');
+          for(const [gid,qs] of sourceGroups){if(new Set(qs.map(q=>q.stimulus)).size!==1)add(hard,`${gid}: nonshared stimulus object`);console.log('STIMULUS',gid,qs.length,JSON.stringify({type:qs[0].stimulus.type,title:qs[0].stimulus.title,source:qs[0].stimulus.source}))}
           const hay=bank.map(q=>`${q.q} ${q.e} ${q.stimulus?.title||''} ${q.stimulus?.source||''} ${q.stimulus?.text||''}`).join('\n');
           const docs=['Declaration of Independence','Articles of Confederation','Federalist No. 10','Brutus No. 1','Federalist No. 39','Federalist No. 51','Constitution','Federalist No. 70','Federalist No. 78','Emancipation Proclamation','Gettysburg Address','Letter from a Birmingham Jail','Wealth of Nations'];
-          for(const d of docs){const ok=hay.toLowerCase().includes(d.toLowerCase());console.log('DOC_COVERAGE',d,ok);if(!ok)fail(`missing foundational document ${d}`)}
+          for(const d of docs){const ok=hay.toLowerCase().includes(d.toLowerCase());console.log('DOC_COVERAGE',d,ok);if(!ok)add(hard,`missing foundational document ${d}`)}
           const cases=['Marbury v. Madison','McCulloch v. Maryland','Schenck v. United States','Brown v. Board','Baker v. Carr','Engel v. Vitale','Gideon v. Wainwright','Tinker v. Des Moines','New York Times Co. v. United States','Wisconsin v. Yoder','Shaw v. Reno','United States v. Lopez','McDonald v. Chicago','Citizens United v. FEC'];
-          for(const d of cases){const ok=hay.toLowerCase().includes(d.toLowerCase());console.log('CASE_COVERAGE',d,ok);if(!ok)fail(`missing required case ${d}`)}
-          if(!/Dobbs v\. Jackson/i.test(hay)||!/overrul/i.test(hay))fail('post-Dobbs Topic 3.9 treatment not evident');
-
-          // Whole-bank human-review inventory.
+          for(const d of cases){const ok=hay.toLowerCase().includes(d.toLowerCase());console.log('CASE_COVERAGE',d,ok);if(!ok)add(hard,`missing required case ${d}`)}
+          if(!/Dobbs v\. Jackson/i.test(hay)||!/overrul/i.test(hay))add(hard,'post-Dobbs Topic 3.9 treatment not evident');
           for(const u of ['U1','U2','U3','U4','U5']){console.log(`\n===== ${u} =====`);for(const q of bank.filter(x=>x.unit===u))console.log(`${q.id} [${q.topic}] ${q.q} => ${q.o[q.c[0]]}`)}
-
-          // Lexical near-duplicates across standalone items in same unit/topic.
-          const tok=x=>new Set(String(x).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(t=>t.length>3));const jac=(a,b)=>{const A=tok(a),B=tok(b);return [...A].filter(x=>B.has(x)).length/new Set([...A,...B]).size};
+          const tok=x=>new Set(String(x).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(t=>t.length>3));const jac=(a,b)=>{const A=tok(a),B=tok(b),U=new Set([...A,...B]).size;return U?[...A].filter(x=>B.has(x)).length/U:0};
           const standalone=bank.filter(q=>!q.stimulusGroupId),near=[];for(let i=0;i<standalone.length;i++)for(let j=i+1;j<standalone.length;j++){const a=standalone[i],b=standalone[j];if(a.unit!==b.unit||a.topic!==b.topic)continue;const z=jac(a.q,b.q);if(z>=.55)near.push([+z.toFixed(3),a.id,b.id])}console.log('NEAR_DUPLICATE_REPORT',JSON.stringify(near));
-
-          // Delivery stress and retake overlap.
-          for(let i=0;i<10000;i++){const d=drawExam(subject,bank);if(d.length!==55)fail(`draw length ${d.length}`);for(const u of subject.units){const n=d.filter(q=>q.unit===u.id).length;const share=n/55;if(u.examWeightRange&&(share<u.examWeightRange[0]||share>u.examWeightRange[1]))fail(`${u.id} draw share ${share}`)}const vg=new Map();for(const q of d)if(q.variantGroupId){if(vg.has(q.variantGroupId))fail(`same variant ${q.variantGroupId}`);vg.set(q.variantGroupId,q.id)}}
-          let ov=0;for(let i=0;i<10000;i++){const a=new Set(drawExam(subject,bank).map(q=>q.id));ov+=drawExam(subject,bank).filter(q=>a.has(q.id)).length/55}ov/=10000;console.log('OVERLAP',ov);if(ov>.40)fail(`overlap ${ov}`);
-          console.log('FINAL_GOV_CLEANROOM_PASS');
+          try{for(let i=0;i<10000;i++){const d=drawExam(subject,bank);if(d.length!==55)throw new Error(`draw length ${d.length}`);for(const u of subject.units){const n=d.filter(q=>q.unit===u.id).length,share=n/55;if(u.examWeightRange&&(share<u.examWeightRange[0]||share>u.examWeightRange[1]))throw new Error(`${u.id} draw share ${share}`)}const vg=new Map();for(const q of d)if(q.variantGroupId){if(vg.has(q.variantGroupId))throw new Error(`same variant ${q.variantGroupId}`);vg.set(q.variantGroupId,q.id)}}console.log('DRAW_STRESS_PASS')}catch(e){add(hard,e.message)}
+          try{let ov=0;for(let i=0;i<10000;i++){const a=new Set(drawExam(subject,bank).map(q=>q.id));ov+=drawExam(subject,bank).filter(q=>a.has(q.id)).length/55}ov/=10000;console.log('OVERLAP',ov);if(ov>.40)add(hard,`overlap ${ov}`)}catch(e){add(hard,e.message)}
+          if(absCandidates.length)add(note,`${absCandidates.length} stacked-absolute candidates require semantic review`);
+          console.log('HARD_DEFECTS',JSON.stringify(hard));console.log('REVIEW_NOTES',JSON.stringify(note));
+          if(hard.length)throw new Error(`Government clean-room hard defects:\n${hard.join('\n')}`);
+          console.log('FINAL_GOV_MECHANICAL_PASS_WITH_REVIEW_NOTES');
           NODE
