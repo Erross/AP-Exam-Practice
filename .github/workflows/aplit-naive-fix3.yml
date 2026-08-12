@@ -1,0 +1,83 @@
+name: AP English Literature Audit Fix 3
+on:
+  push:
+    branches: [audit/ap-english-literature-iterative]
+    paths: [.github/workflows/aplit-naive-fix3.yml]
+permissions: {contents: write}
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: 22}
+      - run: npm ci
+      - name: Repair remaining exact-objective mismatches
+        run: |
+          python - <<'PY'
+          import re,json
+          p='data/ap-english-literature.js'; s=open(p,encoding='utf-8').read()
+          def bounds(qid):
+            a=s.index('    "id": '+json.dumps(qid)); b=s.find('\n  },\n  {\n    "id":',a)
+            if b<0:b=s.find('\n  }\n];',a)
+            return a,b
+          def rewrite(qid,q,correct,distractors,e):
+            global s
+            a,b=bounds(qid); block=s[a:b]
+            m=re.search(r'    "c": \[\s*(\d+)\s*\]',block)
+            if not m: raise SystemExit(qid+': c')
+            ci=int(m.group(1)); opts=[]; di=iter(distractors)
+            for i in range(4): opts.append(correct if i==ci else next(di))
+            def repl(field,val,block):
+              if field=='o':
+                rendered=json.dumps(val,ensure_ascii=False,indent=2).replace('\n','\n    ')
+                return re.sub(r'(    "o": )\[[\s\S]*?\](?=,\n    "c")',lambda m:m.group(1)+rendered,block,count=1)
+              return re.sub(r'(    "'+field+r'": )"(?:[^"\\]|\\.)*"',lambda m:m.group(1)+json.dumps(val,ensure_ascii=False),block,count=1)
+            block=repl('q',q,block);block=repl('o',opts,block);block=repl('e',e,block)
+            s=s[:a]+block+s[b:]
+          rewrite('aplit-po-thrush-03',
+            'The extended metaphor that makes the landscape “The Century’s corpse” and the sky its “crypt” chiefly functions to',
+            'project the ending of a century onto a winter landscape so historical exhaustion feels physically present',
+            ['suggest that the speaker expects the winter landscape to revive before evening','turn the thrush itself into a symbol of political authority over the countryside','present the natural scene as visually cheerful despite the speaker’s private melancholy'],
+            'Calling the landscape the Century’s corpse and the cloudy sky its crypt maps historical decline onto winter scenery. The metaphor makes an abstract sense of an ending materially visible and oppressive.')
+          rewrite('aplit-po-uphill-10',
+            'Within the poem’s extended journey metaphor, the phrase “Those who have gone before” chiefly functions to',
+            'suggest that earlier travelers have completed the same journey, making the promised rest feel established rather than hypothetical',
+            ['separate the questioner from every traveler who previously chose a different destination','imply that guides abandoned the road because its difficulty made arrival impossible','suggest that the speaker must travel in the opposite direction from those who reached the inn'],
+            'Within the extended journey metaphor, earlier wayfarers make the destination feel tried and known. Their prior arrival strengthens the answering voice’s reassurance that rest awaits after the difficult road.')
+          rewrite('aplit-po-tyger-09',
+            'The allusion to “the Lamb” chiefly functions to',
+            'place Christian associations of gentleness and innocence beside the tiger’s terrifying strength, sharpening the question of a single creator',
+            ['identify the tiger and lamb as animals created for exactly the same earthly purpose','resolve the poem’s questions by proving that gentleness must defeat destructive power','shift attention away from creation toward a literal pastoral scene containing both animals'],
+            '“The Lamb” carries recognizable Christian associations with innocence and sacrificial gentleness. Setting that allusion beside the tiger intensifies the poem’s puzzle about a creator responsible for radically different forms of life.')
+          rewrite('aplit-po-mask-06',
+            'The word “Nay” at the beginning of the final stanza chiefly functions to',
+            'sharply reject the idea that the world should inspect the speakers’ suffering before redirecting disclosure toward Christ',
+            ['signal that the speakers are abandoning concealment and preparing to confess publicly to the world','soften the preceding rhetorical question by conceding that outside observers deserve a fuller explanation','introduce a change from collective speech to the private feelings of a single speaker'],
+            '“Nay” is a compact verbal refusal. It rejects the world’s claim to scrutinize the speakers’ pain and prepares the stanza’s contrast between concealment from society and direct appeal to Christ.')
+          rewrite('aplit-sf-supper-10',
+            'The repeated visual image of the open French window chiefly functions to',
+            'turn an ordinary household detail into narrative evidence that makes the niece’s invented story seem plausible',
+            ['establish that the household has deliberately left the room unsecured for expected strangers','show that Framton recognizes the niece’s story as fabricated before Mrs. Sappleton enters','provide a purely decorative image whose chief purpose is to brighten the room’s physical description'],
+            'The open window is first an ordinary domestic image, but the niece incorporates it into her fiction so that a visible detail appears to corroborate the invented tragedy. The imagery therefore becomes persuasive evidence inside her story.')
+          open(p,'w',encoding='utf-8').write(s)
+          PY
+      - name: Add exact-objective permanent regressions
+        run: |
+          cat >> tests/ap-english-literature-iterative-audit.test.js <<'EOF'
+          test('AP Literature metaphor, allusion, word-choice, and imagery items assess their exact CED objectives',()=>{
+            assert.equal(q('aplit-po-thrush-03').topicCode,'6.B');assert.match(q('aplit-po-thrush-03').q,/extended metaphor/i);
+            assert.equal(q('aplit-po-uphill-10').topicCode,'6.B');assert.match(q('aplit-po-uphill-10').q,/extended journey metaphor/i);
+            assert.equal(q('aplit-po-tyger-09').topicCode,'6.D');assert.match(q('aplit-po-tyger-09').q,/allusion/i);
+            assert.equal(q('aplit-po-mask-06').topicCode,'5.B');assert.match(q('aplit-po-mask-06').q,/word “Nay”/i);
+            assert.equal(q('aplit-sf-supper-10').topicCode,'5.D');assert.match(q('aplit-sf-supper-10').q,/visual image/i);
+          });
+          EOF
+      - run: npm run check
+      - name: Commit
+        run: |
+          git config user.name OpenAI; git config user.email openai@users.noreply.github.com
+          git add data/ap-english-literature.js tests/ap-english-literature-iterative-audit.test.js
+          git commit -m 'Tighten AP Literature exact skill semantics'
+          git push origin HEAD:audit/ap-english-literature-iterative
