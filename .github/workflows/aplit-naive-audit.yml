@@ -1,3 +1,4 @@
+# Clean-room cycle after metaphor clarification
 name: AP English Literature Naive Audit
 on:
   push:
@@ -40,23 +41,16 @@ jobs:
           if(groups.size!==13)fail(`group count ${groups.size}`);
           const types={};for(const qs of groups.values()){const t=qs[0].setType;types[t]=(types[t]||0)+1;if(new Set(qs.map(q=>q.stimulus)).size!==1)fail(`${qs[0].stimulusGroupId}: stimulus object mismatch`)}
           if(JSON.stringify(types)!==JSON.stringify({'short-fiction':5,'poetry':5,'longer-drama':3}))fail(`set composition ${JSON.stringify(types)}`);
-
           const wc=s=>s.trim().split(/\s+/).length;let uniqueLongest=0,amongLongest=0,cw=0,dw=0;const pos=[0,0,0,0];
           for(const q of bank){const ls=q.o.map(wc),mx=Math.max(...ls),ci=q.c[0];pos[ci]++;cw+=ls[ci];ls.forEach((n,i)=>{if(i!==ci)dw+=n});if(ls[ci]===mx)amongLongest++;if(ls[ci]===mx&&ls.filter(n=>n===mx).length===1)uniqueLongest++;const abs=q.o.filter((o,i)=>i!==ci&&/\b(every|always|never|unlimited|identical|entirely|certainly|definitely|guarantee[sd]?|impossible|completely|none)\b/i.test(o));if(abs.length>=2)fail(`${q.id}: stacked absolute distractors`)}
           const ca=cw/bank.length,da=dw/(bank.length*3);console.log('BIAS',JSON.stringify({uniqueLongest:uniqueLongest/bank.length,amongLongest:amongLongest/bank.length,correctAvg:ca,distractorAvg:da,keyPositions:pos}));
           if(uniqueLongest/bank.length>.25||amongLongest/bank.length>.58||Math.abs(ca-da)/da>.12)fail('answer-length bias threshold exceeded');
           for(const n of pos)if(n/bank.length<.15||n/bank.length>.35)fail('raw key position imbalance');
-
           const toks=s=>new Set(s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(x=>x.length>3));
           const jac=(a,b)=>{const A=toks(a),B=toks(b),I=[...A].filter(x=>B.has(x)).length,U=new Set([...A,...B]).size;return U?I/U:0};
           const suspects=[];for(const qs of groups.values())for(let i=0;i<qs.length;i++)for(let j=i+1;j<qs.length;j++){const z=jac(qs[i].q,qs[j].q);if(z>=.58)suspects.push([z.toFixed(3),qs[i].id,qs[j].id])}
           console.log('NEAR_DUPLICATE_REPORT',JSON.stringify(suspects));
-
-          for(const skill of [...allowed].sort()){
-            console.log(`\n=== SKILL ${skill} ===`);
-            for(const q of bank.filter(x=>x.topicCode===skill))console.log(`${q.id} :: ${q.q} => ${q.o[q.c[0]]}`);
-          }
-
+          for(const skill of [...allowed].sort()){console.log(`\n=== SKILL ${skill} ===`);for(const q of bank.filter(x=>x.topicCode===skill))console.log(`${q.id} :: ${q.q} => ${q.o[q.c[0]]}`)}
           const text=q=>`${q.q} ${q.o[q.c[0]]} ${q.e}`;
           for(const q of bank.filter(x=>x.topicCode==='2.B'))if(!/setting|place|estate|house|room|bridge|kitchen|domestic|environment|L['’]Abri|country spot|carnival|flat|Christmas/i.test(text(q)))fail(`${q.id}: 2.B setting semantics weak`);
           for(const q of bank.filter(x=>x.topicCode==='5.C'))if(!/symbol|symboliz|repres|embod|stands for/i.test(text(q)))fail(`${q.id}: 5.C symbol semantics weak`);
@@ -67,14 +61,7 @@ jobs:
           for(const q of bank.filter(x=>x.topicCode==='6.D'))if(!/allusion/i.test(text(q)))fail(`${q.id}: 6.D allusion semantics weak`);
           for(const q of bank.filter(x=>x.topicCode==='7.C'))if(!/commentary/i.test(q.q)||!/claim|thesis|evidence|reason/i.test(text(q)))fail(`${q.id}: 7.C commentary reasoning semantics weak`);
           for(const q of bank.filter(x=>x.topicCode==='7.D'))if(!/detail|evidence/i.test(q.q)||!/support/i.test(q.q))fail(`${q.id}: 7.D evidence-selection semantics weak`);
-
-          for(let i=0;i<10000;i++){
-            const d=drawExam(subject,bank);if(d.length!==55)fail('draw length');
-            const t={};for(const x of d){t[x.setType]=(t[x.setType]||new Set());t[x.setType].add(x.stimulusGroupId)}
-            const counts=Object.fromEntries(Object.entries(t).map(([k,v])=>[k,v.size]));if(JSON.stringify(counts)!==JSON.stringify({'short-fiction':2,'poetry':2,'longer-drama':1}))fail(`draw set composition ${JSON.stringify(counts)}`);
-            const cats={};for(const x of d)cats[x.skill]=(cats[x.skill]||0)+1;
-            if(JSON.stringify(cats)!==JSON.stringify({'1':9,'2':3,'3':10,'4':14,'5':7,'6':6,'7':6}))fail(`draw skill blueprint ${JSON.stringify(cats)}`);
-          }
+          for(let i=0;i<10000;i++){const d=drawExam(subject,bank);if(d.length!==55)fail('draw length');const t={};for(const x of d){t[x.setType]=(t[x.setType]||new Set());t[x.setType].add(x.stimulusGroupId)}const counts=Object.fromEntries(Object.entries(t).map(([k,v])=>[k,v.size]));if(JSON.stringify(counts)!==JSON.stringify({'short-fiction':2,'poetry':2,'longer-drama':1}))fail(`draw set composition ${JSON.stringify(counts)}`);const cats={};for(const x of d)cats[x.skill]=(cats[x.skill]||0)+1;if(JSON.stringify(cats)!==JSON.stringify({'1':9,'2':3,'3':10,'4':14,'5':7,'6':6,'7':6}))fail(`draw skill blueprint ${JSON.stringify(cats)}`)}
           let ov=0;const pairs=10000;for(let i=0;i<pairs;i++){const a=new Set(drawExam(subject,bank).map(q=>q.id));ov+=drawExam(subject,bank).filter(q=>a.has(q.id)).length/55}ov/=pairs;console.log('OVERLAP',ov);if(ov>.42)fail(`overlap ${ov}`);
           console.log('FINAL_CLEANROOM_PASS');
           NODE
