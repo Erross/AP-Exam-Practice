@@ -1,0 +1,94 @@
+name: AP English Language Audit Fix 1
+on:
+  push:
+    branches: [audit/ap-english-language-iterative]
+    paths: [.github/workflows/aplang-naive-fix1.yml]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: 22}
+      - run: npm ci
+      - name: Apply clean-room English Language fixes
+        run: |
+          python - <<'PY'
+          import re, json
+          p='data/ap-english-language.js'
+          s=open(p,encoding='utf-8').read()
+          def edit(qid, fields):
+              global s
+              marker='    "id": '+json.dumps(qid)
+              a=s.index(marker)
+              b=s.find('\n  },\n  {\n    "id":',a)
+              if b<0: b=s.find('\n  }\n];',a)
+              block=s[a:b]
+              for key,val in fields.items():
+                  pat=r'(    "'+re.escape(key)+r'": )(\[[\s\S]*?\]|"(?:\\.|[^"\\])*"|\d+)'
+                  rep=r'\1'+json.dumps(val,ensure_ascii=False,indent=2).replace('\n','\n    ')
+                  block2,n=re.subn(pat,rep,block,count=1)
+                  if n!=1: raise SystemExit(f'{qid}: failed field {key}')
+                  block=block2
+              s=s[:a]+block+s[b:]
+          # Exact CED semantic alignment.
+          edit('aplang-r-repair-03', {'unit':'STL','topicCode':'7.A','topic':'Style — Reading','skill':'7'})
+          edit('aplang-r-replicas-03', {
+            'unit':'REO','topicCode':'5.C','topic':'Reasoning and Organization — Reading','skill':'5',
+            'q':'The schoolhouse anecdote functions chiefly to',
+            'o':['ground the abstract idea of the veil in a concrete experience of exclusion','show that Du Bois learned racial theory through formal classroom instruction','establish that every classmate consciously intended to exclude Du Bois','replace the broader analysis of racial consciousness with a childhood memoir'],
+            'c':[0],
+            'e':'The visiting-card episode is a method of development that gives concrete form to the abstract social barrier Du Bois later calls the veil. It illustrates the argument rather than merely establishing biographical authority.'
+          })
+          # Revision questions must offer actual prose, not editorial commands.
+          edits={
+          'aplang-w-fridge-01': {'o':['Each evening, safe surplus food is discarded near residents who could use reliable access to it.','Our neighborhood has long valued generosity, a principle the council should affirm.','Food insecurity has persisted throughout history in communities of every size.','A shared refrigerator would eliminate local hunger without additional services.']},
+          'aplang-w-fridge-05': {'o':['Recording predefined measures would give the council objective evidence for deciding whether the pilot should continue.','Records are useful because writing numbers down is usually better than remembering them.','The council should approve the project permanently before reviewing any pilot data.','Volunteers will collect several kinds of information during the three months.']},
+          'aplang-w-start-01': {'o':["As the district reviews transportation plans for next year, it should also reconsider when the secondary-school day begins.",'District schedules shape when students arrive for classes throughout the school year.','Communities have long debated how schools should organize the instructional day.','Early schedules create difficulties that the district can no longer justify.']},
+          'aplang-w-history-01': {'o':["Many of the library's unidentified mill photographs can still be explained by residents who remember the people and places they depict.",'The mill photographs document a vanished industry and should be digitized before the paper images deteriorate.','The library should invite former mill workers to identify photographs during a single public scanning day.','Because the mills closed in the 1980s, the library should prioritize acquiring additional industrial artifacts.']},
+          'aplang-w-dark-01': {'o':['As the town plans its facilities budget, it can improve public lighting gradually by coordinating upgrades with scheduled replacements.','The town already regulates outdoor-light brightness, so its lighting policy requires no further review.','Public lighting affects visibility, energy use, and nighttime conditions in several different ways.','The town should replace every public fixture during the coming budget year.']},
+          'aplang-w-native-01': {'o':['The underused strip behind the science building consumes staff mowing time without serving a regular instructional purpose.','The maintained turf behind the science building provides open space that students occasionally cross.','Converting campus turf to gardens can reduce mowing after plants are fully established.','Science classes need additional outdoor activities that can be completed during normal class periods.']},
+          'aplang-ws-refill-01': {'o':['Students depend on bottle fillers throughout the day, especially after physical activity.','Students in the athletic wing face long refill lines because the school’s two bottle fillers are far away.','The athletic wing is one of the school’s busiest areas during practices and events.','Two existing bottle fillers serve most classrooms adequately but receive heavy use at passing periods.'],'c':[1]},
+          'aplang-w-dark-03': {'o':['A survey comparing residents’ preferences for warmer and cooler lamp colors','Maintenance records showing the average service life of current fixtures','Photometric diagrams comparing where shielded and unshielded fixtures distribute the same lumen output','A map showing the locations of all publicly funded outdoor fixtures'],'c':[2]},
+          'aplang-w-native-03': {'o':['A list of native species recommended for the region','Records comparing annual mowing hours before and after conversion','A protocol specifying measurements classes could collect at the site','A survey of students’ preferences for the garden’s appearance'],'c':[2]}
+          }
+          for qid,f in edits.items(): edit(qid,f)
+          open(p,'w',encoding='utf-8').write(s)
+          PY
+      - name: Add permanent regression tests
+        run: |
+          cat > tests/ap-english-language-iterative-audit.test.js <<'EOF'
+          const test=require('node:test');
+          const assert=require('node:assert/strict');
+          const fs=require('node:fs'),vm=require('node:vm');
+          const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-english-language.js','utf8'),sb);
+          const bank=sb.window.QUESTIONS_AP_ENGLISH_LANGUAGE;
+          const byId=id=>bank.find(q=>q.id===id);
+          test('English Language clean-room semantic skill fixes remain aligned',()=>{
+            assert.equal(byId('aplang-r-repair-03').topicCode,'7.A');
+            assert.equal(byId('aplang-r-repair-03').unit,'STL');
+            assert.equal(byId('aplang-r-replicas-03').topicCode,'5.C');
+            assert.match(byId('aplang-r-replicas-03').q,/functions chiefly/);
+          });
+          test('English Language sentence-revision keys are actual proposed prose',()=>{
+            const ids=['aplang-w-fridge-01','aplang-w-fridge-05','aplang-w-start-01','aplang-w-history-01','aplang-w-dark-01','aplang-w-native-01','aplang-ws-refill-01'];
+            for(const id of ids){const q=byId(id),ans=q.o[q.c[0]];assert.match(ans,/^[A-Z]/,id);assert.match(ans,/[.!?,]$/,id);assert.doesNotMatch(ans,/^(connect|explain|introduce|identify)\b/i,id)}
+          });
+          test('English Language hardened writing distractors remain relevant competitors',()=>{
+            for(const id of ['aplang-w-history-01','aplang-w-dark-03','aplang-w-native-03','aplang-ws-refill-01']){
+              const q=byId(id);assert.equal(q.o.length,4);assert.ok(q.o.every(x=>x.length>=45),id);
+            }
+          });
+          EOF
+      - name: Validate
+        run: npm run check
+      - name: Commit fixes
+        run: |
+          git config user.name 'OpenAI'
+          git config user.email 'openai@users.noreply.github.com'
+          git add data/ap-english-language.js tests/ap-english-language-iterative-audit.test.js
+          git commit -m 'Fix AP English Language clean-room audit findings'
+          git push origin HEAD:audit/ap-english-language-iterative
