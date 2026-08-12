@@ -16,7 +16,9 @@ jobs:
           node-version: 22
           cache: npm
       - name: Apply exact CED repair
-        run: node tools/apstats-exact-ced-repair.js
+        run: |
+          node tools/apstats-exact-ced-repair.js
+          node tools/apstats-exact-ced-repair-2.js
       - name: Full validation and Monte Carlo
         run: |
           npm ci
@@ -41,7 +43,7 @@ jobs:
           NODE
       - name: Commit repaired files and remove temporary tooling
         run: |
-          rm tools/apstats-exact-ced-repair.js .github/workflows/apstats-exact-ced-repair.yml .github/workflows/apstats-inventory.yml
+          rm tools/apstats-exact-ced-repair.js tools/apstats-exact-ced-repair-2.js .github/workflows/apstats-exact-ced-repair.yml .github/workflows/apstats-inventory.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
