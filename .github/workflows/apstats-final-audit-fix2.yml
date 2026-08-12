@@ -1,0 +1,55 @@
+name: AP Statistics Final Audit Fix Retry
+on:
+  push:
+    branches: [subject/ap-statistics]
+    paths: [.github/workflows/apstats-final-audit-fix2.yml]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-statistics
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Apply audited content fixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('data/ap-statistics.js'); s=p.read_text()
+          def patch(qid, pairs):
+              global s
+              a=s.index(f'"id": "{qid}"'); b=s.index('\n  },',a); block=s[a:b]
+              for old,new in pairs:
+                  assert old in block,(qid,old); block=block.replace(old,new,1)
+              s=s[:a]+block+s[b:]
+          patch('apstats-u3-029', [('"topicCode": "3.14"','"topicCode": "3.15"'),('"skill": "4.E"','"skill": "3.C"')])
+          patch('apstats-u5-007', [('software gives r≈0.996','software gives r≈0.9955')])
+          p.write_text(s)
+          t=Path('tests/ap-statistics.test.js'); s=t.read_text()
+          needle="  assert.deepEqual([q('apstats-u5-013').topicCode,q('apstats-u5-013').skill],['5.2','4.D']);\n"
+          insert="  assert.deepEqual([q('apstats-u3-029').topicCode,q('apstats-u3-029').skill],['3.15','3.C']);\n"
+          assert needle in s and insert not in s; t.write_text(s.replace(needle,needle+insert,1))
+          PY
+      - name: Recover exhaustive audit and fix numeric tolerance
+        run: |
+          awk '/cat > tests\/ap-statistics-quantitative-audit.test.js <<'\''EOF'\''/{f=1;next} f && /^          EOF$/{exit} f{sub(/^          /,"");print}' .github/workflows/apstats-final-audit-fix.yml > tests/ap-statistics-quantitative-audit.test.js
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/ap-statistics-quantitative-audit.test.js'); s=p.read_text()
+          old="assert.equal(answer('apstats-u2-008'), '11/36'); assert.equal(1-(5/6)**2,11/36);"
+          new="assert.equal(answer('apstats-u2-008'), '11/36'); assert.ok(Math.abs((1-(5/6)**2)-11/36)<1e-15);"
+          assert old in s; p.write_text(s.replace(old,new,1))
+          PY
+      - name: Run targeted Statistics checks
+        run: node --test tests/ap-statistics-quantitative-audit.test.js tests/ap-statistics.test.js tests/ap-statistics-stimulus-exclusivity.test.js
+      - name: Commit and push fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ap-statistics.js tests/ap-statistics.test.js tests/ap-statistics-quantitative-audit.test.js
+          git commit -m "Complete AP Statistics quantitative audit"
+          git push origin HEAD:subject/ap-statistics
