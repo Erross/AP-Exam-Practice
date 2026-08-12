@@ -126,6 +126,30 @@
     e: "A negative ΔG indicates thermodynamic favorability of the forward change under the stated conditions. Reaction speed depends on kinetics and activation energy, so a thermodynamically favorable process can nevertheless be extremely slow."
   });
 
+  patch("apchem-u5-018", {
+    q: "Which reasoning best explains why the pre-equilibrium approximation can eliminate an intermediate when deriving an experimentally testable rate law?",
+    o: [
+      "The slow step is treated as reversible, so its reverse-rate term can be omitted from the measured rate law",
+      "The intermediate concentration is assumed to remain zero, so it contributes no factor to any elementary-step rate law",
+      "The activation energies of the fast forward and reverse steps cancel, leaving only reactant concentrations in the rate law",
+      "The fast equilibrium relates the intermediate concentration to reactant concentrations, so the intermediate can be replaced in the final rate law"
+    ],
+    c: [3],
+    e: "A rapidly established equilibrium gives an equilibrium-constant relation between the intermediate and reactant concentrations. Substituting that relation removes the intermediate, which cannot remain in an experimentally testable overall rate law."
+  });
+
+  patch("apchem-u9-014", {
+    q: "Which reasoning best justifies how coupling a thermodynamically unfavorable reaction to a favorable reaction can make the combined process thermodynamically favorable?",
+    o: [
+      "The positive ΔG of the unfavorable step is canceled whenever both reactions have similar activation energies",
+      "The ΔG values add, so a sufficiently negative ΔG for the favorable reaction can make the summed ΔG negative",
+      "A catalyst supplied by the favorable reaction changes the equilibrium constant until the unfavorable step becomes spontaneous",
+      "The favorable reaction transfers entropy directly to the unfavorable reaction, making each individual ΔG value negative"
+    ],
+    c: [1],
+    e: "Gibbs free-energy changes are additive for coupled reactions. If the favorable reaction has a negative ΔG whose magnitude exceeds the positive ΔG of the unfavorable reaction, the combined ΔG is negative and the coupled process is thermodynamically favorable."
+  });
+
   patch("apchem-u9-018", {
     q: "For a galvanic-cell reaction transferring n = 2 mol e− per mole of reaction, E°cell = +1.10 V. Using F = 96485 C mol−1 e−, what is ΔG° to three significant figures?",
     o: ["−212 kJ/mol", "+212 kJ/mol", "−106 kJ/mol", "+106 kJ/mol"],

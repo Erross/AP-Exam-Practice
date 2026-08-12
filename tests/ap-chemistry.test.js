@@ -28,7 +28,7 @@ function stimulusGroups() {
 
 test("Chemistry metadata and 91-topic CED coverage are complete", () => {
   assert.equal(bank.length, 182);
-  assert.equal(subject.releaseStatus, "released");
+  assert.equal(subject.releaseStatus, "draft");
   assert.equal(subject.formatVerified, true);
   assert.equal(subject.mcqCount, 60);
   assert.equal(subject.mcqTimeMinutes, 90);
@@ -83,7 +83,7 @@ test("Chemistry metadata and 91-topic CED coverage are complete", () => {
     Object.fromEntries(subject.units.map((u) => [u.id, bank.filter((q) => q.unit === u.id).length])),
     expectedBankByUnit
   );
-  assert.deepEqual(practiceCounts, { "1": 16, "2": 15, "4": 53, "5": 76, "6": 22 });
+  assert.deepEqual(practiceCounts, { "1": 16, "2": 14, "4": 50, "5": 80, "6": 22 });
 
   assert.equal(variants.size, 69);
   assert.equal([...variants.values()].flat().length, 138);
@@ -149,16 +149,16 @@ test("semantic-key regressions remain fixed after curation and rebalance", () =>
     "apchem-u3-022": "An upward arrow connecting the lower level to the upper level",
     "apchem-u6-010": "Particles become farther apart while individual molecules remain intact",
     "apchem-u7-002": "Forward rate falls and reverse rate rises until the two become equal and nonzero",
-    "apchem-u3-020": "Add equal excess dye to equal solvent volumes at the same temperature, equilibrate, then measure dissolved concentration in each filtered liquid",
+    "apchem-u3-020": "Add equal excess dye to equal solvent volumes at one temperature, equilibrate, filter, and measure dissolved concentration",
     "apchem-u4-002": "Run the reaction in a sealed flexible container and measure the total mass before and after",
-    "apchem-u4-014": "Pass the gas through a validated CO2 indicator or absorbent and compare with a blank control",
+    "apchem-u4-014": "Pass the gas through a selective CO2 indicator while running a blank and a known-CO2 positive control",
     "apchem-u5-014": "Measure initial rates while independently varying reactant concentrations and compare the observed rate law with each mechanism's prediction",
     "apchem-u5-022": "Compare time courses with and without the substance from identical starting mixtures, then verify both approach the same equilibrium composition",
-    "apchem-u6-002": "Measure solution temperature before and after dissolving a known amount in an insulated cup while minimizing heat exchange with the surroundings",
-    "apchem-u6-018": "Measure calorimetric enthalpies for accessible reactions that algebraically sum to the target reaction, then add the corresponding ΔH values",
+    "apchem-u6-002": "The solution temperature decreases after the salt dissolves even though the cup is thermally insulated",
+    "apchem-u6-018": "Measure ΔH for auxiliary reactions that sum algebraically to the target, scaling equations and ΔH values together",
     "apchem-u7-004": "Determine forward and reverse rates over time and show they become equal while both remain nonzero",
-    "apchem-u7-018": "Prepare identical equilibrium mixtures at one temperature, add a measured reactant amount to the treatment only, and compare compositions after re-equilibration",
-    "apchem-u8-002": "Show that it accepts H+ from a suitable proton donor and forms its conjugate acid",
+    "apchem-u7-018": "Prepare matched equilibrium mixtures, add a known reactant amount to one, keep temperature and volume fixed, then compare re-equilibrated compositions",
+    "apchem-u8-002": "Mix it with a suitable proton donor and test whether its conjugate acid forms",
     "apchem-u8-016": "Add equal small amounts of strong acid to equal volumes and compare the resulting pH changes",
     "apchem-u8-022": "Equilibrate excess solid with solutions spanning controlled pH values at one temperature and measure dissolved-ion concentration",
   };
