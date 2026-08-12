@@ -59,15 +59,13 @@ jobs:
             ['apphys2-u15-014',2*1.60e-19/6.63e-34,/4\.8×10\^14 Hz/],
             ['apphys2-u15-022',(0.5)**3,/1\/8/],
           ];
-          const ids2B=bank.filter(q=>q.skill==='2.B').map(q=>q.id).sort(); assert.deepEqual(ids2B,expected2B.map(x=>x[0]).sort(),'2.B inventory changed');
+          const ids2B=Array.from(bank).filter(q=>q.skill==='2.B').map(q=>q.id).sort(); assert.equal(JSON.stringify(ids2B),JSON.stringify(expected2B.map(x=>x[0]).sort()),'2.B inventory changed');
           for(const [id,value,re] of expected2B){assert.ok(Number.isFinite(value),`${id} recomputation nonfinite`);assert.match(ans(id),re,`${id}: recomputed ${value}, key ${ans(id)}`)}
           console.log('2B_RECOMPUTED',expected2B.length);
-          // Verify the three retags and semantic prediction tasks survived the final layer.
           assert.equal(byId.get('apphys2-u11-009').skill,'2.C'); assert.equal(byId.get('apphys2-u13-011').skill,'2.C'); assert.equal(byId.get('apphys2-u14-026').skill,'2.C');
           for(const id of ['apphys2-u9-013','apphys2-u12-013','apphys2-u13-009','apphys2-u14-007','apphys2-u14-013','apphys2-u15-015']) assert.equal(byId.get(id).skill,'2.D');
-          // Construction and duplicate scan.
           const wc=t=>String(t).trim().split(/\s+/).filter(Boolean).length, abs=/\b(always|never|every|only|entirely|unlimited|none|all|impossible|guarantee[sd]?|completely|identical)\b/i;let ul=0,al=0,cw=0,dw=0;const pos=[0,0,0,0],issues=[];
-          for(const q of bank){const ls=q.o.map(wc),m=Math.max(...ls),cl=ls[q.c[0]];if(cl===m)al++;if(cl===m&&ls.filter(x=>x===m).length===1)ul++;cw+=cl;ls.forEach((x,i)=>{if(i!==q.c[0])dw+=x});pos[q.c[0]]++;if(q.o.filter((x,i)=>i!==q.c[0]&&abs.test(x)).length>=2)issues.push(`${q.id} stacked absolutes`)}
+          for(const q of bank){const ls=Array.from(q.o).map(wc),m=Math.max(...ls),cl=ls[q.c[0]];if(cl===m)al++;if(cl===m&&ls.filter(x=>x===m).length===1)ul++;cw+=cl;ls.forEach((x,i)=>{if(i!==q.c[0])dw+=x});pos[q.c[0]]++;if(Array.from(q.o).filter((x,i)=>i!==q.c[0]&&abs.test(x)).length>=2)issues.push(`${q.id} stacked absolutes`)}
           console.log('BIAS',ul/bank.length,al/bank.length,cw/bank.length,dw/(bank.length*3),'KEYS',pos);assert.ok(ul/bank.length<=.25);assert.ok(al/bank.length<=.58);assert.ok(Math.abs(cw/bank.length-dw/(bank.length*3))/(dw/(bank.length*3))<=.12);assert.deepEqual(pos,[35,35,35,35]);assert.deepEqual(issues,[]);
           const toks=t=>new Set(String(t).toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(x=>x.length>3));const sim=(a,b)=>{const A=toks(a),B=toks(b),i=[...A].filter(x=>B.has(x)).length;return i/Math.max(1,new Set([...A,...B]).size)};const near=[];for(let i=0;i<bank.length;i++)for(let j=i+1;j<bank.length;j++){if(bank[i].topicCode!==bank[j].topicCode)continue;const v=sim(bank[i].q,bank[j].q);if(v>=.55)near.push([v,bank[i],bank[j]])}console.log('NEAR',near.map(x=>[x[0].toFixed(3),x[1].id,x[2].id,x[1].variantGroupId,x[2].variantGroupId]));for(const [,a,b] of near)assert.ok(a.variantGroupId&&a.variantGroupId===b.variantGroupId,`${a.id}/${b.id} ungrouped near duplicate`);
           const subject=AP_SUBJECTS.find(x=>x.id==='ap-physics-2'),exp={U9:7,U10:7,U11:7,U12:5,U13:5,U14:6,U15:5};
