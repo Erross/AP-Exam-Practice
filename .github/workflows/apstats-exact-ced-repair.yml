@@ -1,0 +1,49 @@
+name: AP Statistics exact CED repair
+on:
+  push:
+    branches: [subject/ap-statistics]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply exact CED repair
+        run: node tools/apstats-exact-ced-repair.js
+      - name: Full validation and Monte Carlo
+        run: |
+          npm ci
+          npm run check
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const {AP_SUBJECTS}=require('./js/subjects');
+          const {drawExam}=require('./js/draw');
+          const s={window:{}};vm.createContext(s);vm.runInContext(fs.readFileSync('data/ap-statistics.js','utf8'),s);
+          const bank=s.window.QUESTIONS_AP_STATISTICS, subject=AP_SUBJECTS.find(x=>x.id==='ap-statistics');
+          let overlap=0; const n=5000;
+          for(let i=0;i<n;i++){
+            const a=drawExam(subject,bank), b=drawExam(subject,bank), ids=new Set(a.map(q=>q.id));
+            overlap += b.filter(q=>ids.has(q.id)).length/42;
+            for(const q of a.filter(q=>q.stimulusGroupId)){
+              const same=a.filter(x=>x.stimulus===q.stimulus);
+              const group=a.filter(x=>x.stimulusGroupId===q.stimulusGroupId);
+              if(same.length!==group.length) throw new Error('stimulus leak '+q.stimulusGroupId);
+            }
+          }
+          console.log('EXACT-HEAD-CANDIDATE overlap', (100*overlap/n).toFixed(2)+'%');
+          NODE
+      - name: Commit repaired files and remove temporary tooling
+        run: |
+          rm tools/apstats-exact-ced-repair.js .github/workflows/apstats-exact-ced-repair.yml .github/workflows/apstats-inventory.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Enforce exact AP Statistics CED alignment"
+          git push
