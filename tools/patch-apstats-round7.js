@@ -1,0 +1,8 @@
+const fs=require('node:fs');
+const p='tools/fix-ap-statistics-audit.js';
+let s=fs.readFileSync(p,'utf8');
+const marker='// Validate CED topic/practice pairing after repairs before writing anything.';
+const patch=`{\n  const q=bank.find(x=>x.id==='apstats-u1-032');\n  if(!q) throw new Error('apstats-u1-032 not found');\n  q.unit='U1'; q.topicCode='1.13'; q.skill='2.B'; q.type='s';\n  q.q='A manufacturer compares two battery-saving settings by randomly assigning 120 otherwise identical phones to Setting A or Setting B, then running the same workload on each phone. What is the main statistical purpose of random assignment?';\n  const correct='It helps balance other phone-to-phone differences between the treatment groups, supporting a causal comparison of the settings.';\n  const wrong=['It makes the tested phones representative of future customers’ phones.','It forces the two treatment groups to have matching average battery life.','It makes control of the workload unnecessary once the settings have been assigned.'];\n  const idx=bank.indexOf(q)%4; const opts=wrong.slice(); opts.splice(idx,0,correct); q.o=opts; q.c=[idx];\n  q.e='Random assignment tends to balance lurking phone-to-phone characteristics across the treatment groups, so a difference in battery life can be attributed more credibly to the assigned setting. It does not create population representativeness, force equal outcomes, or replace experimental control.';\n  delete q.variantGroupId; delete q.stimulusGroupId; delete q.stimulus; q.statsSetType='standalone';\n}\n\n`;
+if(!s.includes(marker))throw new Error('round7 insertion marker missing');
+s=s.replace(marker,patch+marker);
+fs.writeFileSync(p,s);
