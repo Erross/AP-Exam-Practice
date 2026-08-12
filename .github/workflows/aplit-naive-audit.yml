@@ -12,13 +12,10 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with: {node-version: 22}
       - run: npm ci
-      - run: npm run check
-      - name: Inspect semantic suspects
+      - name: Inspect raw key positions for repair targets
         run: |
           node - <<'NODE'
           const fs=require('fs'),vm=require('vm'),{AP_SUBJECTS}=require('./js/subjects');const s={window:{}};vm.createContext(s);vm.runInContext(fs.readFileSync('data/ap-english-literature.js','utf8'),s);const bank=s.window[AP_SUBJECTS.find(x=>x.id==='ap-english-literature').dataVar];
-          const ids=['aplit-po-uphill-10','aplit-ld-orbit-03','aplit-ld-orbit-04','aplit-sf-snow-10','aplit-po-tyger-06','aplit-ld-clock-09','aplit-ld-kitchen-09','aplit-ld-orbit-09'];
-          for(const id of ids){const q=bank.find(x=>x.id===id);console.log('\nTARGET',id);console.log(JSON.stringify({topicCode:q.topicCode,skill:q.skill,q:q.q,o:q.o,c:q.c,e:q.e},null,2))}
-          const skills=['1.B','1.C','1.D','1.E','2.B','3.C','3.D','3.E','4.A','4.B','4.C','5.B','5.C','5.D','6.A','6.B','6.C','6.D','7.B','7.C','7.D'];
-          for(const k of skills){console.log('\nSEMANTIC',k);for(const q of bank.filter(x=>x.topicCode===k))console.log(q.id,'::',q.q,'=>',q.o[q.c[0]])}
+          const ids=['aplit-sf-watch-03','aplit-sf-snow-03','aplit-sf-bell-08','aplit-sf-supper-08','aplit-po-snake-06','aplit-po-snake-07','aplit-po-tyger-04','aplit-po-uphill-02','aplit-sf-bell-10','aplit-ld-clock-07','aplit-ld-kitchen-07','aplit-ld-orbit-05','aplit-sf-watch-11','aplit-sf-snow-11','aplit-sf-supper-06','aplit-sf-room-08','aplit-ld-clock-09','aplit-ld-kitchen-09','aplit-ld-orbit-09'];
+          for(const id of ids){const q=bank.find(x=>x.id===id);console.log(id,'c='+q.c[0],'topic='+q.topicCode,'key='+JSON.stringify(q.o[q.c[0]]))}
           NODE
