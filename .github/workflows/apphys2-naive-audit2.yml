@@ -1,0 +1,77 @@
+name: AP Physics 2 Naive Audit 2
+on:
+  push:
+    branches: [audit/ap-physics-2-iterative]
+    paths: [.github/workflows/apphys2-naive-audit2.yml]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: 22, cache: npm}
+      - run: npm ci
+      - name: Full repository gate
+        run: npm run check
+      - name: Independent Physics 2 certification
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm'),crypto=require('crypto'),assert=require('node:assert/strict');
+          const {AP_SUBJECTS}=require('./js/subjects'); const {drawExam}=require('./js/draw'); const {loadPhysics2Bank}=require('./tests/helpers');
+          const s={window:{}};vm.createContext(s);for(const f of ['data/ap-physics-2.js','data/ap-physics-2-quality-fixes.js'])vm.runInContext(fs.readFileSync(f,'utf8'),s);const browser=s.window.QUESTIONS_AP_PHYSICS_2,bank=loadPhysics2Bank();
+          const hash=x=>crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex'); assert.equal(hash(bank),hash(browser),'browser/helper bank mismatch');
+          assert.equal(bank.length,140); assert.equal(new Set(bank.map(q=>q.id)).size,140);
+          const byId=new Map(bank.map(q=>[q.id,q])); const ans=id=>byId.get(id).o[byId.get(id).c[0]];
+          const expected2B=[
+            ['apphys2-u9-005',2.00e5,/2\.00×10\^5 Pa/],
+            ['apphys2-u9-006',(2e5*.5*450)/(300*1e5),/1\.5 m\^3/],
+            ['apphys2-u9-016',(0.2*80+0.1*20)/0.3,/60°C/],
+            ['apphys2-u9-019',1200/300,/4 J\/K/],
+            ['apphys2-u10-006',-5-4+7,/−2\.0 μC/],
+            ['apphys2-u10-008',2e-6*5e4,/0\.10 N/],
+            ['apphys2-u10-012',3e-4,/\+3\.0×10\^−4 J/],
+            ['apphys2-u10-014',3e-6*(500-200),/9\.0×10\^−4 J/],
+            ['apphys2-u10-017',0.5*4e-6*12**2,/2\.9×10\^−4 J/],
+            ['apphys2-u10-019',1.60e-19*1000,/1\.60×10\^−16 J/],
+            ['apphys2-u11-001',36,/36 W/],
+            ['apphys2-u11-005',9/3,/3\.0 A/],
+            ['apphys2-u11-011',12*3,/36 W/],
+            ['apphys2-u11-013',12/(4+1/(1/6+1/3)),/2\.0 A/],
+            ['apphys2-u11-014',(12/(4+2))*2/3,/1\.33 A/],
+            ['apphys2-u11-016',9/(2+3+4),/1\.0 A/],
+            ['apphys2-u11-017',1*3,/3\.0 V/],
+            ['apphys2-u11-019',3-1.5,/1\.5 A/],
+            ['apphys2-u12-007',0,/Zero/i],
+            ['apphys2-u13-005',-30/30,/−1/],
+            ['apphys2-u13-006',-20,/di = −20 cm.*m = \+2/],
+            ['apphys2-u13-010',Math.asin(1/1.5)*180/Math.PI,/41\.8°/],
+            ['apphys2-u13-013',-16.7/25,/−0\.67/],
+            ['apphys2-u14-001',150*2,/300 m\/s/],
+            ['apphys2-u14-005',340/425,/0\.80 m/],
+            ['apphys2-u14-011',3e8/1e6,/300 m/],
+            ['apphys2-u14-014',500*340/(340+30),/459 Hz/],
+            ['apphys2-u14-017',340/(4*.85),/100 Hz/],
+            ['apphys2-u14-025',2*1.33*200,/532 nm/],
+            ['apphys2-u15-001',6.63e-34*7e14/1.60e-19,/2\.9 eV/],
+            ['apphys2-u15-005',3.4-1.51,/1\.89 eV/],
+            ['apphys2-u15-014',2*1.60e-19/6.63e-34,/4\.8×10\^14 Hz/],
+            ['apphys2-u15-022',(0.5)**3,/1\/8/],
+          ];
+          const ids2B=bank.filter(q=>q.skill==='2.B').map(q=>q.id).sort(); assert.deepEqual(ids2B,expected2B.map(x=>x[0]).sort(),'2.B inventory changed');
+          for(const [id,value,re] of expected2B){assert.ok(Number.isFinite(value),`${id} recomputation nonfinite`);assert.match(ans(id),re,`${id}: recomputed ${value}, key ${ans(id)}`)}
+          console.log('2B_RECOMPUTED',expected2B.length);
+          // Verify the three retags and semantic prediction tasks survived the final layer.
+          assert.equal(byId.get('apphys2-u11-009').skill,'2.C'); assert.equal(byId.get('apphys2-u13-011').skill,'2.C'); assert.equal(byId.get('apphys2-u14-026').skill,'2.C');
+          for(const id of ['apphys2-u9-013','apphys2-u12-013','apphys2-u13-009','apphys2-u14-007','apphys2-u14-013','apphys2-u15-015']) assert.equal(byId.get(id).skill,'2.D');
+          // Construction and duplicate scan.
+          const wc=t=>String(t).trim().split(/\s+/).filter(Boolean).length, abs=/\b(always|never|every|only|entirely|unlimited|none|all|impossible|guarantee[sd]?|completely|identical)\b/i;let ul=0,al=0,cw=0,dw=0;const pos=[0,0,0,0],issues=[];
+          for(const q of bank){const ls=q.o.map(wc),m=Math.max(...ls),cl=ls[q.c[0]];if(cl===m)al++;if(cl===m&&ls.filter(x=>x===m).length===1)ul++;cw+=cl;ls.forEach((x,i)=>{if(i!==q.c[0])dw+=x});pos[q.c[0]]++;if(q.o.filter((x,i)=>i!==q.c[0]&&abs.test(x)).length>=2)issues.push(`${q.id} stacked absolutes`)}
+          console.log('BIAS',ul/bank.length,al/bank.length,cw/bank.length,dw/(bank.length*3),'KEYS',pos);assert.ok(ul/bank.length<=.25);assert.ok(al/bank.length<=.58);assert.ok(Math.abs(cw/bank.length-dw/(bank.length*3))/(dw/(bank.length*3))<=.12);assert.deepEqual(pos,[35,35,35,35]);assert.deepEqual(issues,[]);
+          const toks=t=>new Set(String(t).toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(x=>x.length>3));const sim=(a,b)=>{const A=toks(a),B=toks(b),i=[...A].filter(x=>B.has(x)).length;return i/Math.max(1,new Set([...A,...B]).size)};const near=[];for(let i=0;i<bank.length;i++)for(let j=i+1;j<bank.length;j++){if(bank[i].topicCode!==bank[j].topicCode)continue;const v=sim(bank[i].q,bank[j].q);if(v>=.55)near.push([v,bank[i],bank[j]])}console.log('NEAR',near.map(x=>[x[0].toFixed(3),x[1].id,x[2].id,x[1].variantGroupId,x[2].variantGroupId]));for(const [,a,b] of near)assert.ok(a.variantGroupId&&a.variantGroupId===b.variantGroupId,`${a.id}/${b.id} ungrouped near duplicate`);
+          const subject=AP_SUBJECTS.find(x=>x.id==='ap-physics-2'),exp={U9:7,U10:7,U11:7,U12:5,U13:5,U14:6,U15:5};
+          for(let n=0;n<3000;n++){const d=drawExam(subject,bank);assert.equal(d.length,42);for(const [u,v] of Object.entries(exp))assert.equal(d.filter(q=>q.unit===u).length,v);for(const [sk,r] of Object.entries(subject.attributeRanges.skill)){const c=d.filter(q=>q.skill===sk).length;assert.ok(c>=r[0]&&c<=r[1],`${sk}=${c}`)}}
+          let ov=0;for(let n=0;n<3000;n++){const a=new Set(drawExam(subject,bank).map(q=>q.id));ov+=drawExam(subject,bank).filter(q=>a.has(q.id)).length/42;}ov/=3000;console.log('RETAKE_OVERLAP',ov);assert.ok(ov<=.40);
+          console.log('PHYSICS2_AUDIT2_PASS');
+          NODE
