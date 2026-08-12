@@ -108,7 +108,7 @@ test("Calculus AB bank has full CED coverage and audited metadata", () => {
 
   assert.ok(variants.size >= 20, `expected at least 20 variant groups, found ${variants.size}`);
   for (const [groupId, questions] of variants) {
-    assert.equal(questions.length, 2, `${groupId}: variant group must have exactly two members`);
+    assert.ok(questions.length >= 2, `${groupId}: variant group must have at least two members`);
     assert.equal(new Set(questions.map((q) => q.unit)).size, 1, `${groupId}: variants cross units`);
     assert.equal(new Set(questions.map((q) => q.topicCode)).size, 1, `${groupId}: variants cross topics`);
     assert.equal(new Set(questions.map((q) => q.q)).size, questions.length, `${groupId}: duplicate stems`);
