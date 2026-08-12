@@ -22,6 +22,12 @@ jobs:
           new='  vm.runInContext(fs.readFileSync("data/ap-physics-2.js", "utf8"), sandbox);\n  vm.runInContext(fs.readFileSync("data/ap-physics-2-quality-fixes.js", "utf8"), sandbox);\n  return sandbox.window.QUESTIONS_AP_PHYSICS_2;'
           if old not in s: raise SystemExit('Physics 2 helper insertion point missing')
           p.write_text(s.replace(old,new))
+
+          p=Path('tests/ap-physics-2-quality-fixes.test.js'); s=p.read_text()
+          old='  assert.match(answer("apphys2-u13-015"), /real, inverted image 60 cm.*magnification −2/i);'
+          new='  assert.match(answer("apphys2-u13-015"), /60 cm.*twice.*inversion/i);'
+          if old not in s: raise SystemExit('Physics 2 stale lens regression missing')
+          p.write_text(s.replace(old,new))
           PY
           cat >> data/ap-physics-2-quality-fixes.js <<'JS'
 
@@ -35,7 +41,12 @@ jobs:
 
             patch("apphys2-u10-019", {
               q: "A proton released from rest accelerates through a potential drop of 1000 V. What kinetic energy does the proton gain? Use e = 1.60×10^−19 C.",
-              o: ["1.60×10^−16 J (1000 eV)", "1.60×10^−22 J", "6.25×10^21 J", "1000 J"], c:[0],
+              o: [
+                "1.60×10^−16 J (1000 eV)",
+                "1.60×10^−19 J (1 eV), as if the 1000 V drop were ignored",
+                "1.60×10^−13 J (1.0 MeV), from applying an extra factor of 1000",
+                "6.25×10^21 J, from dividing the voltage by the elementary charge"
+              ], c:[0],
               e: "The work done by the electric field becomes kinetic energy: ΔK=q|ΔV|=(1.60×10^−19 C)(1000 V)=1.60×10^−16 J. Dividing by 1.60×10^−19 J/eV gives 1000 eV."
             });
             patch("apphys2-u13-006", {
@@ -45,17 +56,32 @@ jobs:
             });
             patch("apphys2-u10-004", {
               q: "A neutral metal sphere briefly touches a positively charged rod and is then separated. Compared with the sphere before contact and the rod before contact, which charge comparison is correct afterward?",
-              o: ["The sphere changes from zero net charge to positive charge, while the rod remains positive with less charge than before", "The sphere becomes negative while the rod becomes more positive", "The sphere remains neutral while the rod keeps exactly its original charge", "Both objects become neutral because contact removes net charge"], c:[0],
+              o: [
+                "The sphere changes from zero net charge to positive charge, while the rod remains positive with less charge than before",
+                "The sphere changes from zero net charge to negative charge, while the rod remains positive with a larger positive charge than before",
+                "The sphere remains neutral after contact, while the rod remains positive with essentially its original net charge",
+                "The sphere becomes positive, while the rod becomes neutral because the rod transfers its full net charge to the sphere"
+              ], c:[0],
               e: "Conduction allows electrons to redistribute between touching conductors. Electrons leave the initially neutral sphere for the positively charged rod, so the sphere becomes positive while the rod remains positive but with a smaller net positive charge than it had initially."
             });
             patch("apphys2-u13-015", {
               q: "An object is 30 cm in front of a converging thin lens with focal length +20 cm. How do the image distance and image size compare with the object's distance and size?",
-              o: ["The image is 60 cm from the lens and twice the object's size, with inversion", "The image is 15 cm from the lens and half the object's size, upright", "The image is 30 cm from the lens and the same size, upright", "The image is 60 cm from the lens and half the object's size, with inversion"], c:[0],
+              o: [
+                "The image is 60 cm from the lens and twice the object's size, with inversion",
+                "The image is 15 cm from the lens and half the object's size, with upright orientation on the far side",
+                "The image is 30 cm from the lens and the same size as the object, with upright orientation",
+                "The image is 60 cm from the lens but half the object's size, with inversion relative to the object"
+              ], c:[0],
               e: "The thin-lens equation gives di=+60 cm, which is twice the 30 cm object distance. Magnification is m=−di/do=−2, so the image is inverted and has twice the object's linear size."
             });
             patch("apphys2-u15-008", {
               q: "White light passes through a cool, low-density gas. Compared with the incident continuous spectrum, how does the transmitted intensity vary with wavelength?",
-              o: ["It is reduced at discrete absorption wavelengths but remains comparatively high between those wavelengths", "It is greater at every wavelength because the gas adds thermal radiation", "It becomes zero at every wavelength except a few bright emission lines", "It is uniformly reduced by the same fraction at all wavelengths"], c:[0],
+              o: [
+                "It is reduced at discrete absorption wavelengths but remains comparatively high between those wavelengths",
+                "It is enhanced at discrete wavelengths because the cool gas contributes emission at its strongest transition energies",
+                "It is reduced across broad wavelength intervals because absorption is determined mainly by photon intensity rather than transition energy",
+                "It develops a smooth wavelength-dependent reduction that follows the gas temperature without narrow absorption features"
+              ], c:[0],
               e: "Atoms in the cool gas absorb photons at specific transition energies. Relative to the incident continuous spectrum, transmitted intensity is therefore selectively lower at those discrete wavelengths while most other wavelengths remain comparatively unaffected."
             });
             patch("apphys2-u9-013", {
@@ -93,7 +119,6 @@ jobs:
             byId.get("apphys2-u13-011").skill="2.C";
             byId.get("apphys2-u14-026").skill="2.C";
 
-            // Restore deterministic raw-key balance after replacements; runtime delivery shuffles independently.
             bank.forEach((item,index)=>{const target=index%4,current=item.c[0];if(current===target)return;const correct=item.o[current];item.o.splice(current,1);item.o.splice(target,0,correct);item.c=[target];});
           })();
           JS
@@ -122,6 +147,6 @@ jobs:
         run: |
           git config user.name "Erross"
           git config user.email "33665337+Erross@users.noreply.github.com"
-          git add data/ap-physics-2-quality-fixes.js tests/helpers.js tests/ap-physics-2-naive-audit-regressions.test.js
+          git add data/ap-physics-2-quality-fixes.js tests/helpers.js tests/ap-physics-2-quality-fixes.test.js tests/ap-physics-2-naive-audit-regressions.test.js
           git commit -m "Repair Physics 2 exact skill semantics and loader parity"
           git push origin HEAD:audit/ap-physics-2-iterative
