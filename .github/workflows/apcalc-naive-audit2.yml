@@ -1,0 +1,66 @@
+name: AP Calculus AB Naive Audit 2
+on:
+  push:
+    branches:
+      - audit/ap-calculus-ab-iterative
+    paths:
+      - .github/workflows/apcalc-naive-audit2.yml
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Full repository validation
+        run: npm run check
+      - name: Independent clean-room Calculus AB audit
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const {AP_SUBJECTS}=require('./js/subjects');
+          const {drawExam}=require('./js/draw');
+          const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-calculus-ab.js','utf8'),sb);
+          const bank=sb.window.QUESTIONS_AP_CALCULUS_AB, subject=AP_SUBJECTS.find(s=>s.id==='ap-calculus-ab');
+          const fail=m=>{throw new Error(m)};
+          if(bank.length!==120||new Set(bank.map(q=>q.id)).size!==120)fail('bank cardinality/ids');
+          if(subject.mcqCount!==42||subject.mcqTimeMinutes!==100)fail('May-2027 format');
+          const expected={U1:5,U2:5,U3:3,U4:5,U5:8,U6:8,U7:3,U8:5};
+          const topics={U1:[...Array(16)].map((_,i)=>`1.${i+1}`),U2:[...Array(10)].map((_,i)=>`2.${i+1}`),U3:[...Array(6)].map((_,i)=>`3.${i+1}`),U4:[...Array(7)].map((_,i)=>`4.${i+1}`),U5:[...Array(12)].map((_,i)=>`5.${i+1}`),U6:[1,2,3,4,5,6,7,8,9,10,14].map(i=>`6.${i}`),U7:[1,2,3,4,6,7,8].map(i=>`7.${i}`),U8:[...Array(13)].map((_,i)=>`8.${i+1}`)};
+          const allowed=new Set(Object.values(topics).flat()),seen=new Set(),groups=new Map(),variants=new Map();
+          const abs=/\b(always|never|every|entirely|completely|impossible|guarantee[sd]?|automatically|all|none|identical)\b/i;
+          const wc=x=>String(x).trim().split(/\s+/).filter(Boolean).length;let ul=0,rawAL=0,exploitAL=0,cw=0,dw=0;const pos=[0,0,0,0];
+          for(const q of bank){
+            if(q.o.length!==4||q.c.length!==1||q.e.length<90)fail(`${q.id} schema/rationale`);
+            if(new Set(q.o.map(x=>x.trim().toLowerCase())).size!==4)fail(`${q.id} duplicate options`);
+            if(!/^[123]\.[A-G]$/.test(q.skill))fail(`${q.id} invalid skill ${q.skill}`);
+            if(!allowed.has(q.topicCode))fail(`${q.id} invalid topic ${q.topicCode}`);seen.add(q.topicCode);
+            if(typeof q.calculatorAllowed!=='boolean')fail(`${q.id} calculator flag`);
+            const c=q.c[0],ls=q.o.map(wc),m=Math.max(...ls),ties=ls.filter(x=>x===m).length;pos[c]++;cw+=ls[c];ls.forEach((n,i)=>{if(i!==c)dw+=n});if(ls[c]===m)rawAL++;if(ls[c]===m&&ties===1)ul++;if(ls[c]===m&&ties<4)exploitAL++;
+            const bad=q.o.filter((o,i)=>i!==c&&abs.test(o));if(bad.length>=2)fail(`${q.id} stacked absolutes: ${JSON.stringify(bad)}`);
+            if(q.stimulusGroupId){if(!groups.has(q.stimulusGroupId))groups.set(q.stimulusGroupId,[]);groups.get(q.stimulusGroupId).push(q)}
+            if(q.variantGroupId){if(!variants.has(q.variantGroupId))variants.set(q.variantGroupId,[]);variants.get(q.variantGroupId).push(q)}
+          }
+          for(const t of allowed)if(!seen.has(t))fail(`missing topic ${t}`);
+          for(const [g,qs] of groups){if(new Set(qs.map(q=>q.stimulus)).size!==1)fail(`${g} stimulus sharing`);if(new Set(qs.map(q=>q.calculatorAllowed)).size!==1)fail(`${g} crosses parts`);const s=qs[0].stimulus;if(s?.image&&!fs.existsSync(s.image))fail(`${g} missing image`)}
+          for(const [g,qs] of variants){if(qs.length<2)fail(`${g} singleton`);if(new Set(qs.map(q=>q.unit)).size!==1||new Set(qs.map(q=>q.topicCode)).size!==1)fail(`${g} crosses unit/topic`);if(qs.some(q=>q.stimulusGroupId))fail(`${g} stimulus variant`)}
+          const ca=cw/120,da=dw/360;console.log('BIAS',{uniqueLongest:ul/120,rawAmongLongest:rawAL/120,exploitableAmongLongest:exploitAL/120,correctAvg:ca,distractorAvg:da,keyPositions:pos});
+          if(ul/120>.25||exploitAL/120>.58||Math.abs(ca-da)/da>.12||pos.some(n=>n/120<.15||n/120>.35))fail('exploitable answer-construction bias');
+          const tok=x=>new Set(String(x).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(t=>t.length>3));const jac=(a,b)=>{const A=tok(a),B=tok(b),u=new Set([...A,...B]);return u.size?[...A].filter(x=>B.has(x)).length/u.size:0};
+          const st=bank.filter(q=>!q.stimulusGroupId),near=[];for(let i=0;i<st.length;i++)for(let j=i+1;j<st.length;j++){const a=st[i],b=st[j];if(a.unit!==b.unit||a.topicCode!==b.topicCode)continue;const z=jac(a.q,b.q);if(z>=.55){near.push([z,a.id,b.id,a.variantGroupId,b.variantGroupId]);if(!a.variantGroupId||a.variantGroupId!==b.variantGroupId)fail(`near duplicate ${a.id}/${b.id}`)}}console.log('NEAR',near);
+          const byId=new Map(bank.map(q=>[q.id,q]));
+          const close=(a,b,t=5e-4)=>Math.abs(a-b)<=t;
+          const key=id=>byId.get(id).o[byId.get(id).c[0]];
+          const u39=Math.exp(6)*(3*Math.sqrt(5)+2/Math.sqrt(5));if(!close(u39,3067.1,.06)||key('apcalc-u3-009')!=='3067.1')fail('u3-009 recomputation');
+          const p=x=>x**3-4*x*x+2;if(!close(p(8/3),-202/27,1e-10)||!key('apcalc-u5-008').includes('-202/27'))fail('u5-008 recomputation');
+          const alpha=Math.asin(.4),beta=Math.PI-alpha,F=t=>-5*Math.cos(t)-2*t;const dist=Math.abs(F(alpha)-F(0))+Math.abs(F(beta)-F(alpha))+Math.abs(F(3)-F(beta));if(!close(dist,5.106,.0015))fail(`u8-003 recomputation ${dist}`);
+          const tank=50+200+10*(1-Math.cos(5));if(!close(tank,257.163,.0015))fail(`u8-004 recomputation ${tank}`);
+          const simpson=(f,a,b,n=20000)=>{if(n%2)n++;const h=(b-a)/n;let s=f(a)+f(b);for(let i=1;i<n;i++)s+=(i%2?4:2)*f(a+i*h);return s*h/3};const arc=simpson(x=>Math.sqrt(1+Math.cos(x)**2),0,Math.PI/2);if(!close(arc,1.910,.0015))fail(`u8-018 recomputation ${arc}`);
+          for(let i=0;i<10000;i++){const d=drawExam(subject,bank);if(d.length!==42)fail('draw length');for(const [u,n] of Object.entries(expected))if(d.filter(q=>q.unit===u).length!==n)fail(`${u} draw count`);if(d.slice(0,29).some(q=>q.calculatorAllowed)||d.slice(29).some(q=>!q.calculatorAllowed))fail('part ordering');const pc={1:0,2:0,3:0},v=new Set();for(const q of d){pc[q.skill[0]]++;if(q.variantGroupId){if(v.has(q.variantGroupId))fail(`variant collision ${q.variantGroupId}`);v.add(q.variantGroupId)}}for(const [p,r] of Object.entries(subject.sciencePracticeRanges))if(pc[p]<r[0]||pc[p]>r[1])fail(`practice ${p} ${pc[p]}`)}
+          let ov=0;for(let i=0;i<10000;i++){const a=new Set(drawExam(subject,bank).map(q=>q.id));ov+=drawExam(subject,bank).filter(q=>a.has(q.id)).length/42}ov/=10000;console.log('OVERLAP',ov);if(ov>.40)fail(`overlap ${ov}`);
+          console.log('FINAL_CALCULUS_CLEANROOM_PASS');
+          NODE
