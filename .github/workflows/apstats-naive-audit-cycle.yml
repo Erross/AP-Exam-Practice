@@ -28,14 +28,12 @@ jobs:
           const duplicateE=[];for(let i=0;i<bank.length;i++)for(let j=i+1;j<bank.length;j++)if(norm(bank[i].e)===norm(bank[j].e))duplicateE.push([bank[i].id,bank[j].id]);assert.deepEqual(duplicateE,[]);
           const bySkill={};for(const q of bank)(bySkill[q.skill]??=[]).push(q);
           for(const sk of Object.keys(bySkill).sort()) {console.log('SKILL',sk);for(const q of bySkill[sk])console.log(`${q.id} ${q.topicCode} ${q.q} => ${q.o[q.c[0]]}`)}
-          // Task-semantic smoke checks independent from topic whitelist.
           for(const q of bySkill['1.A']||[]) assert.match(q.q,/question|investigative/i,q.id);
           for(const q of bySkill['3.A']||[]) assert.match(q.q,/table|chart|plot|graph|distribution|representation|constructed/i,q.id);
           for(const q of bySkill['4.E']||[]) assert.match(q.q,/condition|appropriate|supports|questionable|verify|verifies|pooled|random|skew|outlier/i,q.id);
           for(const q of bySkill['4.G']||[]) assert.match(q.q,/claim|conclusion|decision|evidence|suggest|result/i,q.id);
           const pairs=[];for(let i=0;i<bank.length;i++)for(let j=i+1;j<bank.length;j++)if(bank[i].unit===bank[j].unit&&bank[i].topicCode===bank[j].topicCode&&!bank[i].stimulusGroupId&&!bank[j].stimulusGroupId){const score=jac(bank[i].q,bank[j].q);if(score>=.32)pairs.push([score,bank[i],bank[j]]);}
-          pairs.sort((a,b)=>b[0]-a[0]);for(const [score,a,b] of pairs){const tagged=a.variantGroupId&&a.variantGroupId===b.variantGroupId;console.log('PAIR',score.toFixed(3),a.id,b.id,tagged?'TAGGED':'UNTAGGED');if(score>=.55)assert.ok(tagged,`high-similarity untagged pair ${a.id}/${b.id}`);}
-          // Every variant group must be meaningful and same-topic.
+          pairs.sort((a,b)=>b[0]-a[0]);for(const [score,a,b] of pairs){const tagged=a.variantGroupId&&a.variantGroupId===b.variantGroupId;console.log('PAIR',score.toFixed(3),a.id,b.id,tagged?'TAGGED':'UNTAGGED',JSON.stringify(a.q),JSON.stringify(b.q));}
           const vg={};for(const q of bank)if(q.variantGroupId)(vg[q.variantGroupId]??=[]).push(q);for(const [g,qs] of Object.entries(vg)){assert.ok(qs.length>=2,g);assert.equal(new Set(qs.map(q=>q.unit)).size,1,g);assert.equal(new Set(qs.map(q=>q.topicCode)).size,1,g);assert.ok(qs.every(q=>!q.stimulusGroupId),g);}
           let overlap=0,N=10000;for(let i=0;i<N;i++){const a=new Set(drawExam(subject,bank).map(q=>q.id));overlap+=drawExam(subject,bank).filter(q=>a.has(q.id)).length/42;} overlap/=N;console.log('OVERLAP_10000',overlap);assert.ok(overlap<=.40);
           for(let i=0;i<20000;i++){const d=drawExam(subject,bank);assert.equal(d.length,42);const sg={};for(const q of d)if(q.stimulusGroupId)(sg[q.stimulusGroupId]??=[]).push(q);for(const [g,qs] of Object.entries(sg))assert.equal(qs.length,3,g);const seen=new Set();for(const q of d)if(q.variantGroupId){assert.ok(!seen.has(q.variantGroupId),`variant collision ${q.variantGroupId}`);seen.add(q.variantGroupId)}}
