@@ -1,0 +1,31 @@
+name: AP Statistics audit repair
+on:
+  push:
+    branches: [subject/ap-statistics]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply independent-audit repairs
+        run: node tools/fix-ap-statistics-audit.js
+      - name: Full validation
+        run: |
+          npm ci
+          npm run check
+      - name: Commit repaired shipping files and remove one-shot tooling
+        run: |
+          rm tools/fix-ap-statistics-audit.js .github/workflows/apstats-audit-fix.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Harden AP Statistics against independent audit"
+          git push
