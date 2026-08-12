@@ -32,11 +32,18 @@ jobs:
           new='  vm.runInContext(fs.readFileSync("data/ap-chemistry-corrections.js", "utf8"), sandbox);\n  vm.runInContext(fs.readFileSync("data/ap-chemistry-quality-fixes.js", "utf8"), sandbox);\n  return sandbox.window.QUESTIONS_AP_CHEMISTRY;'
           if old not in s: raise SystemExit('Chemistry helper insertion point missing')
           p.write_text(s.replace(old,new))
+
           p=Path('index.html'); s=p.read_text()
           old='<script src="data/ap-chemistry-corrections.js"></script>\n<script src="data/ap-environmental-science.js"></script>'
           new='<script src="data/ap-chemistry-corrections.js"></script>\n<script src="data/ap-chemistry-quality-fixes.js"></script>\n<script src="data/ap-environmental-science.js"></script>'
           if old not in s: raise SystemExit('Chemistry browser insertion point missing')
           p.write_text(s.replace(old,new))
+
+          p=Path('tests/ap-chemistry.test.js'); s=p.read_text()
+          old='assert.equal(subject.releaseStatus, "released");'
+          new='assert.equal(subject.releaseStatus, "draft");'
+          if old not in s: raise SystemExit('Chemistry release-status assertion missing')
+          p.write_text(s.replace(old,new,1))
           PY
           rm -f .github/workflows/apchem-certified-transfer.yml
       - name: Verify Chemistry stays draft
