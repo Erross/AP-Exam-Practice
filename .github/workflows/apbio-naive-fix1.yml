@@ -21,7 +21,15 @@ jobs:
       - name: Apply Biology cycle 1 repairs
         run: |
           sed -i "s/parent's genotype/parent genotype/" tools/tmp-apbio-fix1.py
-          python tools/tmp-apbio-fix1.py
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('tools/tmp-apbio-fix1.py')
+          src=path.read_text()
+          start=src.index('exp_repls=[')
+          end=src.index('p.write_text(s)', start)
+          src=src[:start]+src[end:]
+          exec(compile(src, str(path), 'exec'))
+          PY
       - name: Full repository validation
         run: npm run check
       - name: Commit repaired Biology bank
