@@ -1,0 +1,98 @@
+name: AP English Literature Audit Fix 1
+on:
+  push:
+    branches: [audit/ap-english-literature-iterative]
+    paths: [.github/workflows/aplit-naive-fix1.yml]
+permissions: {contents: write}
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: 22}
+      - run: npm ci
+      - name: Repair exact CED semantics and weak options
+        run: |
+          python - <<'PY'
+          import re,json
+          p='data/ap-english-literature.js'; s=open(p,encoding='utf-8').read()
+          def block_bounds(qid):
+            a=s.index('    "id": '+json.dumps(qid)); b=s.find('\n  },\n  {\n    "id":',a)
+            if b<0:b=s.find('\n  }\n];',a)
+            return a,b
+          def edit(qid, **kw):
+            global s
+            a,b=block_bounds(qid); block=s[a:b]
+            for field,val in kw.items():
+              if field=='o':
+                rendered=json.dumps(val,ensure_ascii=False,indent=2).replace('\n','\n    ')
+                block,n=re.subn(r'(    "o": )\[[\s\S]*?\](?=,\n    "c")',lambda m:m.group(1)+rendered,block,count=1)
+              else:
+                rendered=json.dumps(val,ensure_ascii=False)
+                block,n=re.subn(r'(    "'+re.escape(field)+r'": )("(?:[^"\\]|\\.)*"|\d+)',lambda m:m.group(1)+rendered,block,count=1)
+              if n!=1: raise SystemExit(f'{qid}:{field}')
+            s=s[:a]+block+s[b:]
+          # Character skills: preserve genuine 1.B coverage by making persistence explicit.
+          edit('aplit-sf-watch-03',q='The narrator’s repeated return to “what is one to do?” chiefly emphasizes that she',o=["remains constrained even as her disagreement with John’s treatment becomes clearer","becomes steadily more convinced that John’s treatment is correct","abandons her interest in the house as her condition improves","changes from private skepticism to open defiance of John"],e='The repeated question marks persistence rather than a new decision: she increasingly voices disagreement with John, yet his authority still limits what she feels able to do.')
+          edit('aplit-sf-bell-03',topicCode='1.C')
+          edit('aplit-sf-room-03',topicCode='1.A')
+          edit('aplit-sf-snow-03',q='Fortunato’s continued pride in his wine expertise chiefly functions to show that he',o=["remains vulnerable to the same flattery Montresor uses to guide him onward","becomes suspicious enough to abandon the contest with Luchesi","changes from confidence in his palate to embarrassment about it","recognizes that Montresor has greater expertise and yields to him"],e='Fortunato does not revise the pride Montresor targets; his continuing need to prove superior expertise lets Montresor keep directing his choices without open force.')
+          edit('aplit-sf-supper-02',topicCode='1.A')
+          edit('aplit-sf-room-02',topicCode='1.A')
+          # Structure: distinguish structure/sequence from significant plot events.
+          for qid,code in {'aplit-sf-watch-05':'3.C','aplit-sf-bell-05':'3.B','aplit-sf-room-05':'3.C','aplit-sf-snow-05':'3.B','aplit-ld-clock-04':'3.C','aplit-ld-clock-05':'3.B'}.items(): edit(qid,topicCode=code)
+          # Narration vs figurative language / structure.
+          edit('aplit-sf-bell-08',topicCode='6.A',skill='6')
+          edit('aplit-sf-room-08',topicCode='6.B',skill='6')
+          edit('aplit-sf-supper-08',topicCode='1.A',skill='1')
+          edit('aplit-po-snake-06',topicCode='3.D',skill='3')
+          edit('aplit-po-snake-07',topicCode='5.B',skill='5')
+          edit('aplit-po-tyger-04',topicCode='5.B',skill='5')
+          edit('aplit-po-uphill-02',topicCode='3.C',skill='3')
+          # Symbol / imagery / comparison distinctions.
+          edit('aplit-sf-bell-10',topicCode='6.A',skill='6')
+          edit('aplit-sf-supper-10',topicCode='5.D')
+          edit('aplit-sf-snow-10',topicCode='5.D',o=["showing that Fortunato is employed as a court jester","visually turning the respected man into a fool","proving that Montresor selected Fortunato’s clothing","indicating that the carnival has already ended"])
+          edit('aplit-ld-clock-07',q='The cucumber sandwiches most plausibly symbolize',o=["the trivial appetites beneath Algernon’s philosophical pose","Lane’s desire to replace Algernon as master of the flat","a shortage of food throughout Victorian London","Algernon’s rejection of all social hospitality"],e='The sandwiches repeatedly interrupt Algernon’s lofty claims with appetite and etiquette, making them a comic symbol of the ordinary self-interest beneath his philosophical performance.')
+          edit('aplit-ld-kitchen-07',q='The fire in the kitchen most plausibly symbolizes',o=["a fragile source of domestic comfort within a cold investigative setting","the investigators’ certainty that the stove caused the crime","Mrs. Peters’s wish to destroy evidence before the men return","the household’s prosperity before Mr. Wright’s death"],e='The fire offers literal warmth in a room repeatedly described as cold and uneasy, so it can symbolize limited domestic comfort within an emotionally and institutionally cold setting.')
+          edit('aplit-ld-orbit-05',topicCode='5.C',q='The hidden macaroons most plausibly symbolize',o=["a small private autonomy Nora conceals from Helmer","the household’s inability to afford ordinary food","Helmer’s secret plan to leave the family","Nora’s rejection of every Christmas tradition"],e='The macaroons are a minor pleasure Nora deliberately hides after Helmer polices her habits, so they symbolically condense the private autonomy she maintains inside his affectionate control.')
+          edit('aplit-sf-watch-11',topicCode='5.B',skill='5')
+          edit('aplit-sf-snow-11',topicCode='5.B',skill='5')
+          edit('aplit-sf-supper-06',topicCode='6.B')
+          # Grammar / precision repairs.
+          edit('aplit-ld-orbit-03',o=["proving that the household has no economic concerns","placing the characters in a public workplace","showing that Helmer dislikes Christmas traditions","framing financial negotiation within festive domestic abundance"])
+          edit('aplit-ld-orbit-04',o=["Nora’s private freedom to Helmer’s scrutiny","financial anxiety to complete agreement","Christmas preparation to a discussion with the porter","domestic life to an unrelated business meeting"])
+          edit('aplit-po-tyger-06',o=["treats the tiger as a mystery that inquiry deepens","has forgotten the questions immediately after asking them","expects the tiger to provide a theological explanation","believes the questions are unimportant"])
+          edit('aplit-po-uphill-10',o=["guides who abandoned the road midway","earlier wayfarers who have completed the same journey","strangers traveling in the opposite direction","travelers who chose a different destination"])
+          # 7.C must develop commentary linking evidence to an interpretive claim.
+          edit('aplit-ld-clock-09',q='Which commentary best explains how the scene’s polished manners support a claim that it satirizes social convention?',o=["The mismatch between formal courtesy and irreverent ideas makes respectable behavior look performative rather than reliably moral.","Because the characters speak politely, the scene ultimately endorses every convention they mention.","The formal diction proves that Algernon and Lane share identical social status and obligations.","Courtesy matters chiefly because it prevents the audience from noticing any contradiction in the dialogue."],e='The scene repeatedly pairs polished address with selfish, irreverent, or contradictory claims; explaining that mismatch connects textual evidence to the interpretive claim that conventional respectability is being satirized.')
+          edit('aplit-ld-kitchen-09',q='Which commentary best explains how the kitchen details support a claim that the scene questions what official investigators count as evidence?',o=["Placing unfinished domestic work beside the men’s formal inquiry suggests that institutional procedure may overlook evidence whose meaning is rooted in everyday household life.","The disorder proves that the kitchen itself is legally inadmissible and therefore irrelevant to any investigation.","Because the men notice the stove, the scene shows that official procedure already understands every domestic detail fully.","The household objects matter only as scenery, so their presence separates the investigation from any broader interpretation."],e='The stage directions foreground domestic details while the men privilege formal procedure. The correct commentary explicitly explains how that evidence supports the claim that official methods may miss household meanings.')
+          edit('aplit-ld-orbit-09',q='Which commentary best explains how Helmer’s pet names and Nora’s concealed behavior support a claim that their playful intimacy contains unequal authority?',o=["His affectionate language accompanies financial correction while her secrecy preserves small choices, showing that warmth and control operate together in the marriage.","Their playful language proves that neither character exercises influence over the other’s choices.","Nora’s secrecy matters only because Helmer has no interest in household spending or personal habits.","The pet names establish equality because they remove every disagreement about money from the scene."],e='The evidence combines affection with regulation and concealment. The correct commentary explains that relationship and thereby connects specific details to the interpretive claim about unequal authority within intimacy.')
+          open(p,'w',encoding='utf-8').write(s)
+          PY
+      - name: Add permanent Literature regressions
+        run: |
+          cat > tests/ap-english-literature-iterative-audit.test.js <<'EOF'
+          const test=require('node:test'),assert=require('node:assert/strict'),fs=require('fs'),vm=require('vm');
+          const {AP_SUBJECTS}=require('../js/subjects');const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-english-literature.js','utf8'),sb);const bank=sb.window[AP_SUBJECTS.find(s=>s.id==='ap-english-literature').dataVar];const q=id=>bank.find(x=>x.id===id);
+          test('AP Literature exact CED skill repairs remain semantic',()=>{
+            assert.equal(q('aplit-sf-bell-03').topicCode,'1.C');assert.equal(q('aplit-sf-room-03').topicCode,'1.A');
+            assert.match(q('aplit-sf-watch-03').o[q('aplit-sf-watch-03').c[0]],/remains constrained/);assert.match(q('aplit-sf-snow-03').o[q('aplit-sf-snow-03').c[0]],/remains vulnerable/);
+            for(const id of ['aplit-ld-clock-09','aplit-ld-kitchen-09','aplit-ld-orbit-09']){assert.equal(q(id).topicCode,'7.C');assert.match(q(id).q,/commentary best explains/i)}
+            assert.equal(q('aplit-sf-bell-10').topicCode,'6.A');assert.equal(q('aplit-sf-supper-06').topicCode,'6.B');assert.equal(q('aplit-po-snake-07').topicCode,'5.B');
+          });
+          test('AP Literature audit grammar and distractor repairs hold',()=>{
+            assert.equal(q('aplit-ld-orbit-03').o[q('aplit-ld-orbit-03').c[0]],'framing financial negotiation within festive domestic abundance');
+            assert.match(q('aplit-sf-snow-10').o[q('aplit-sf-snow-10').c[0]],/^visually turning/);assert.doesNotMatch(q('aplit-po-uphill-10').o.join(' '),/never traveled/);
+            assert.match(q('aplit-po-tyger-06').o[q('aplit-po-tyger-06').c[0]],/mystery that inquiry deepens/);
+          });
+          EOF
+      - run: npm run check
+      - name: Commit
+        run: |
+          git config user.name OpenAI; git config user.email openai@users.noreply.github.com
+          git add data/ap-english-literature.js tests/ap-english-literature-iterative-audit.test.js
+          git commit -m 'Repair AP English Literature exact skill alignment'
+          git push origin HEAD:audit/ap-english-literature-iterative
