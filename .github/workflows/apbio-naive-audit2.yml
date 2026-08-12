@@ -1,0 +1,52 @@
+name: AP Biology Naive Audit 2
+on:
+  push:
+    branches:
+      - audit/ap-biology-iterative
+    paths:
+      - .github/workflows/apbio-naive-audit2.yml
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Full repository validation
+        run: npm run check
+      - name: Independent clean-room Biology audit
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const {AP_SUBJECTS}=require('./js/subjects');const {drawExam}=require('./js/draw');
+          const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-biology.js','utf8'),sb);const bank=sb.window.QUESTIONS_AP_BIOLOGY,sub=AP_SUBJECTS.find(s=>s.id==='ap-biology'),fail=m=>{throw new Error(m)};
+          if(bank.length!==180||new Set(bank.map(q=>q.id)).size!==180)fail('bank cardinality/ids');if(sub.mcqCount!==60||sub.mcqTimeMinutes!==90)fail('format');
+          const max=[7,10,5,6,5,8,12,7],allowed=new Set();max.forEach((n,i)=>{for(let j=1;j<=n;j++)allowed.add(`${i+1}.${j}`)});const seen=new Map(),groups=new Map(),variants=new Map();
+          const wc=x=>String(x).trim().split(/\s+/).filter(Boolean).length,abs=/\b(always|never|every|entirely|completely|impossible|guarantee[sd]?|automatically|all|none|identical|unlimited)\b/i;let ul=0,al=0,cw=0,dw=0;const pos=[0,0,0,0];
+          for(const q of bank){if(q.o.length!==4||q.c.length!==1||q.e.length<90)fail(`${q.id} schema/rationale`);if(new Set(q.o.map(x=>x.trim().toLowerCase())).size!==4)fail(`${q.id} duplicate options`);if(!allowed.has(q.topicCode))fail(`${q.id} topic ${q.topicCode}`);seen.set(q.topicCode,(seen.get(q.topicCode)||0)+1);if(!/^[1-6]\.[A-E]$/.test(q.skill))fail(`${q.id} skill ${q.skill}`);const c=q.c[0],ls=q.o.map(wc),m=Math.max(...ls);pos[c]++;cw+=ls[c];ls.forEach((n,i)=>{if(i!==c)dw+=n});if(ls[c]===m)al++;if(ls[c]===m&&ls.filter(x=>x===m).length===1)ul++;if(q.o.filter((o,i)=>i!==c&&abs.test(o)).length>=2)fail(`${q.id} stacked absolutes`);if(q.skill.startsWith('2.')&&q.stimulus?.type!=='visual')fail(`${q.id} Practice 2 lacks visual/model`);if(q.stimulusGroupId){if(!groups.has(q.stimulusGroupId))groups.set(q.stimulusGroupId,[]);groups.get(q.stimulusGroupId).push(q)}if(q.variantGroupId){if(!variants.has(q.variantGroupId))variants.set(q.variantGroupId,[]);variants.get(q.variantGroupId).push(q)}}
+          for(const t of allowed)if((seen.get(t)||0)<2)fail(`${t} fewer than two items`);for(const [g,qs] of groups){if(qs.length<4||qs.length>5)fail(`${g} size`);if(new Set(qs.map(q=>q.stimulus)).size!==1)fail(`${g} not shared`);const s=qs[0].stimulus;if(s?.image&&!fs.existsSync(s.image))fail(`${g} missing image`);if(s?.type==='visual'&&(!s.alt||s.alt.length<60))fail(`${g} alt`)}for(const [g,qs] of variants){if(qs.length<2)fail(`${g} singleton`);if(new Set(qs.map(q=>q.unit)).size!==1||new Set(qs.map(q=>q.topicCode)).size!==1)fail(`${g} crosses unit/topic`);if(qs.some(q=>q.stimulusGroupId))fail(`${g} stimulus variant`)}
+          const ca=cw/180,da=dw/540;console.log('BIAS',{uniqueLongest:ul/180,amongLongest:al/180,correctAvg:ca,distractorAvg:da,keyPositions:pos});if(ul/180>.25||al/180>.58||Math.abs(ca-da)/da>.12||pos.some(n=>n!==45))fail('answer construction');
+          const byId=new Map(bank.map(q=>[q.id,q]));
+          const taskChecks={
+            'apbio-u6-010':[/predicts/i,/result would support/i,'3.B'],
+            'apbio-u5-006':[/claim is best supported/i,/evidence/i,'6.B'],
+            'apbio-u8-006':[/claim is best supported/i,/evidence/i,'6.B'],
+            'apbio-u5-019':[/reasoning/i,/population-level|homologous/i,'6.C'],
+            'apbio-u7-017':[/reasoning/i,/heritable|allele/i,'6.C'],
+            'apbio-u8-019':[/reasoning/i,/density|contact/i,'6.C']
+          };
+          for(const [id,[stemRe,keyRe,skill]] of Object.entries(taskChecks)){const q=byId.get(id);if(q.skill!==skill||!stemRe.test(q.q)||!keyRe.test(q.o[q.c[0]]))fail(`${id} semantic regression`)}
+          const tok=x=>new Set(String(x).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(t=>t.length>3)),jac=(a,b)=>{const A=tok(a),B=tok(b),u=new Set([...A,...B]);return u.size?[...A].filter(x=>B.has(x)).length/u.size:0};const st=bank.filter(q=>!q.stimulusGroupId),near=[];for(let i=0;i<st.length;i++)for(let j=i+1;j<st.length;j++){const a=st[i],b=st[j];if(a.unit!==b.unit||a.topicCode!==b.topicCode)continue;const z=jac(a.q,b.q);if(z>=.55){near.push([+z.toFixed(3),a.id,b.id,a.variantGroupId||null,b.variantGroupId||null]);if(!a.variantGroupId||a.variantGroupId!==b.variantGroupId)fail(`near duplicate ${a.id}/${b.id}`)}}console.log('NEAR',near);
+          const key=id=>byId.get(id).o[byId.get(id).c[0]];
+          if(key('apbio-u2-007')!=='Into the cell, because water moves from higher to lower water potential')fail('u2-007 key');const psi=-0.7+0.3;if(Math.abs(psi+0.4)>1e-12||!(-0.2>psi))fail('u2-007 recomputation');
+          if(key('apbio-u3-012')!=='32 percent'||Math.abs((7/22)*100-31.8181818)>.001)fail('u3-012 recomputation');
+          if(key('apbio-u5-012')!=='19 percent'||(94+96)/1000!==0.19)fail('u5-012 recomputation');
+          if(key('apbio-u7-004')!=='0.50'||(60+2*20)/(2*100)!==0.5)fail('u7-004 recomputation');
+          if(key('apbio-u8-018')!=='0.30'||(260-200)/200!==0.3)fail('u8-018 recomputation');
+          const expected={U1:6,U2:7,U3:8,U4:8,U5:6,U6:8,U7:10,U8:7};for(let i=0;i<10000;i++){const d=drawExam(sub,bank);if(d.length!==60)fail('draw length');for(const [u,n] of Object.entries(expected))if(d.filter(q=>q.unit===u).length!==n)fail(`${u} draw count`);const gs=new Set(d.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId));if(gs.size<4||gs.size>8)fail(`set count ${gs.size}`);for(const g of gs)if(d.filter(q=>q.stimulusGroupId===g).length!==bank.filter(q=>q.stimulusGroupId===g).length)fail(`${g} split`);const pc={},v=new Set();for(const q of d){pc[q.skill[0]]=(pc[q.skill[0]]||0)+1;if(q.variantGroupId){if(v.has(q.variantGroupId))fail(`variant ${q.variantGroupId}`);v.add(q.variantGroupId)}}for(const [p,r] of Object.entries(sub.sciencePracticeRanges))if(pc[p]<r[0]||pc[p]>r[1])fail(`practice ${p} ${pc[p]}`)}
+          let ov=0;for(let i=0;i<10000;i++){const a=new Set(drawExam(sub,bank).map(q=>q.id));ov+=drawExam(sub,bank).filter(q=>a.has(q.id)).length/60}ov/=10000;console.log('OVERLAP',ov);if(ov>.40)fail(`overlap ${ov}`);console.log('FINAL_BIO_CLEANROOM_PASS');
+          NODE
