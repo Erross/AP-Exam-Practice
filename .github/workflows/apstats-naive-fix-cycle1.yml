@@ -1,0 +1,94 @@
+name: AP Statistics Naive Fix Cycle 1
+on:
+  push:
+    branches: [subject/ap-statistics]
+    paths: [.github/workflows/apstats-naive-fix-cycle1.yml]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-statistics
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Apply clean-room duplicate and coverage fixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('data/ap-statistics.js'); s=p.read_text()
+          def block(qid):
+              a=s.index(f'"id": "{qid}"'); b=s.index('\n  },',a); return a,b,s[a:b]
+          def replace(qid, old, new):
+              global s
+              a,b,x=block(qid); assert old in x,(qid,old); x=x.replace(old,new,1); s=s[:a]+x+s[b:]
+          def add_variant(qid,gid):
+              global s
+              a,b,x=block(qid)
+              assert '"stimulusGroupId"' not in x
+              if '"variantGroupId"' in x:
+                  return
+              anchor='"statsSetType": "standalone"'
+              assert anchor in x,qid
+              x=x.replace(anchor,anchor+',\n    "variantGroupId": "'+gid+'"',1)
+              s=s[:a]+x+s[b:]
+
+          # Topic 2.9 requires mean AND standard deviation; replace a duplicate E(X) item with SD(X).
+          a,b,x=block('apstats-u2-018')
+          import re
+          x=re.sub(r'"q": "[^"]+",', '"q": "A random variable X takes values 0, 2, and 5 with probabilities 0.50, 0.30, and 0.20. The mean is 1.6. What is the standard deviation of X?",', x, count=1)
+          ostart=x.index('"o": ['); oend=x.index('    ],',ostart)+6
+          x=x[:ostart]+'"o": [\n      "1.91",\n      "1.60",\n      "3.64",\n      "2.20"\n    ],'+x[oend:]
+          cstart=x.index('"c": ['); cend=x.index('    ],',cstart)+6
+          x=x[:cstart]+'"c": [\n      0\n    ],'+x[cend:]
+          estart=x.index('"e": "'); eend=x.index('",',estart)+2
+          explanation='"e": "Using μ=1.6, the variance is 0.50(0−1.6)^2 + 0.30(2−1.6)^2 + 0.20(5−1.6)^2 = 3.64, so the standard deviation is √3.64 ≈ 1.91. The value 1.60 is the mean, while 3.64 is the variance rather than the standard deviation.",'
+          x=x[:estart]+explanation+x[eend:]
+          s=s[:a]+x+s[b:]
+
+          # Same-topic alternate forms that should never appear together in one exam.
+          for qid in ['apstats-u3-013','apstats-u3-014']:
+              add_variant(qid,'apstats-v-u3-one-proportion-z-stat')
+          for qid in ['apstats-u4-008','apstats-u4-022']:
+              add_variant(qid,'apstats-v-u4-one-mean-conditions')
+          for qid in ['apstats-u4-009','apstats-u4-023']:
+              add_variant(qid,'apstats-v-u4-one-mean-t-stat')
+          for qid in ['apstats-u4-015','apstats-u4-024']:
+              add_variant(qid,'apstats-v-u4-paired-ci-procedure')
+          for qid in ['apstats-u2-021','apstats-u2-023']:
+              add_variant(qid,'apstats-v-u2-clt-shape')
+          for qid in ['apstats-u1-023','apstats-u1-036']:
+              add_variant(qid,'apstats-v-u1-voluntary-response')
+
+          # Remove an unnecessary same-scenario echo in Topic 1.10 while preserving the LO.
+          replace('apstats-u1-034','A health researcher wants to describe weekly exercise time among adults in a county. Which investigative question is statistical and identifies the quantitative variable of interest?','An ecologist wants to describe germination time for seeds from a native plant population. Which investigative question is statistical and identifies the quantitative variable of interest?')
+          replace('apstats-u1-034','How is weekly exercise time distributed among adults in the county?','How is germination time distributed among seeds from the native plant population?')
+          replace('apstats-u1-034','The question identifies weekly exercise time as a quantitative variable and asks about its distribution across a population, so it anticipates variability and requires a statistical investigation.','The question identifies germination time as a quantitative variable and asks about its distribution across a population, so it anticipates variability and requires a statistical investigation.')
+          p.write_text(s)
+
+          # Preserve the newly identified semantic variant relationships as regression checks.
+          t=Path('tests/ap-statistics.test.js'); z=t.read_text()
+          marker="test('Statistics shared stimulus sets, provenance, and visual accessibility are sound'"
+          insert="""test('Statistics semantic near-duplicates are variant-grouped', () => {\n  const byId=new Map(bank.map(q=>[q.id,q]));\n  for(const ids of [\n    ['apstats-u3-013','apstats-u3-014'],\n    ['apstats-u4-008','apstats-u4-022'],\n    ['apstats-u4-009','apstats-u4-023'],\n    ['apstats-u4-015','apstats-u4-024'],\n    ['apstats-u2-021','apstats-u2-023'],\n    ['apstats-u1-023','apstats-u1-036'],\n  ]) { const a=byId.get(ids[0]),b=byId.get(ids[1]); assert.ok(a.variantGroupId); assert.equal(a.variantGroupId,b.variantGroupId); }\n  assert.match(byId.get('apstats-u2-018').q,/standard deviation/i);\n});\n\n"""
+          assert marker in z and 'Statistics semantic near-duplicates are variant-grouped' not in z
+          z=z.replace(marker,insert+marker,1); t.write_text(z)
+
+          # Update exhaustive quantitative audit for rewritten U2-018.
+          q=Path('tests/ap-statistics-quantitative-audit.test.js'); z=q.read_text()
+          old="assert.equal(answer('apstats-u2-018'), String(0*0.50+2*0.30+5*0.20));"
+          new="const mu18=0*0.50+2*0.30+5*0.20, var18=0.50*(0-mu18)**2+0.30*(2-mu18)**2+0.20*(5-mu18)**2; assert.ok(Math.abs(var18-3.64)<1e-12); assert.equal(answer('apstats-u2-018'),Math.sqrt(var18).toFixed(2));"
+          assert old in z; q.write_text(z.replace(old,new,1))
+          PY
+      - name: Validate fixes
+        run: npm run check
+      - name: Commit fixes
+        run: |
+          git config user.name Erross
+          git config user.email 33665337+Erross@users.noreply.github.com
+          git add data/ap-statistics.js tests/ap-statistics.test.js tests/ap-statistics-quantitative-audit.test.js
+          git commit -m "Fix Statistics duplicate coverage audit findings"
+          git push origin HEAD:subject/ap-statistics
