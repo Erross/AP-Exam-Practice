@@ -27,35 +27,14 @@ jobs:
               block=s[a:b]
               for key,val in fields.items():
                   pat=r'(    "'+re.escape(key)+r'": )(\[[\s\S]*?\]|"(?:\\.|[^"\\])*"|\d+)'
-                  rep=r'\1'+json.dumps(val,ensure_ascii=False,indent=2).replace('\n','\n    ')
-                  block,n=re.subn(pat,rep,block,count=1)
+                  rendered=json.dumps(val,ensure_ascii=False,indent=2).replace('\n','\n    ')
+                  block,n=re.subn(pat,lambda m:m.group(1)+rendered,block,count=1)
                   if n!=1: raise SystemExit(f'{qid}: failed {key}')
               s=s[:a]+block+s[b:]
-          # Douglass: swap 1.A / 7.A roles without changing sorted category sequence.
           edit('aplang-r-repair-03', {'unit':'STL','topicCode':'7.A','topic':'Style — Reading','skill':'7','sequence':10})
-          edit('aplang-r-repair-10', {
-            'unit':'RHS','topicCode':'1.A','topic':'Rhetorical Situation — Reading','skill':'1','sequence':6,
-            'q':'The passage presents literacy chiefly as',
-            'o':['a private accomplishment with little connection to social power','a form of agency that slavery depends on suppressing','a source of unhappiness that Douglass ultimately rejects','a legal privilege available only through formal schooling'],
-            'c':[1],
-            'e':'Douglass interprets Auld’s warning as a revelation that literacy threatens the control slavery requires. The passage therefore presents reading as intellectual agency with direct implications for freedom.'
-          })
-          # Du Bois: remove duplicate method question and swap 1.A / 5.C roles.
-          edit('aplang-r-replicas-03', {
-            'unit':'REO','topicCode':'5.C','topic':'Reasoning and Organization — Reading','skill':'5','sequence':10,
-            'q':'The schoolhouse anecdote functions chiefly to',
-            'o':['ground the abstract idea of the veil in a concrete experience of exclusion','show that Du Bois learned racial theory through formal classroom instruction','establish that every classmate consciously intended to exclude Du Bois','replace the broader analysis of racial consciousness with a childhood memoir'],
-            'c':[0],
-            'e':'The visiting-card episode is a method of development that gives concrete form to the abstract social barrier Du Bois later calls the veil. It illustrates the argument rather than merely establishing biographical authority.'
-          })
-          edit('aplang-r-replicas-09', {
-            'unit':'RHS','topicCode':'1.A','topic':'Rhetorical Situation — Reading','skill':'1','sequence':2,
-            'q':'Which statement best identifies the message Du Bois develops from the schoolhouse episode?',
-            'o':['Ordinary social exclusion can force a child to recognize how a racial boundary shapes identity.','Childhood competition can remove the social barriers created by race.','The most important source of racial identity is formal instruction in school.','Personal ambition makes broader social judgments irrelevant to self-understanding.'],
-            'c':[0],
-            'e':'The refused visiting card becomes the moment when Du Bois recognizes the veil between himself and the white world. The episode establishes the message that racial identity is shaped partly through exclusion and others’ judgments.'
-          })
-          # Writing questions that ask for revisions/openings must key actual usable prose.
+          edit('aplang-r-repair-10', {'unit':'RHS','topicCode':'1.A','topic':'Rhetorical Situation — Reading','skill':'1','sequence':6,'q':'The passage presents literacy chiefly as','o':['a private accomplishment with little connection to social power','a form of agency that slavery depends on suppressing','a source of unhappiness that Douglass ultimately rejects','a legal privilege available only through formal schooling'],'c':[1],'e':'Douglass interprets Auld’s warning as a revelation that literacy threatens the control slavery requires. The passage therefore presents reading as intellectual agency with direct implications for freedom.'})
+          edit('aplang-r-replicas-03', {'unit':'REO','topicCode':'5.C','topic':'Reasoning and Organization — Reading','skill':'5','sequence':10,'q':'The schoolhouse anecdote functions chiefly to','o':['ground the abstract idea of the veil in a concrete experience of exclusion','show that Du Bois learned racial theory through formal classroom instruction','establish that every classmate consciously intended to exclude Du Bois','replace the broader analysis of racial consciousness with a childhood memoir'],'c':[0],'e':'The visiting-card episode is a method of development that gives concrete form to the abstract social barrier Du Bois later calls the veil. It illustrates the argument rather than merely establishing biographical authority.'})
+          edit('aplang-r-replicas-09', {'unit':'RHS','topicCode':'1.A','topic':'Rhetorical Situation — Reading','skill':'1','sequence':2,'q':'Which statement best identifies the message Du Bois develops from the schoolhouse episode?','o':['Ordinary social exclusion can force a child to recognize how a racial boundary shapes identity.','Childhood competition can remove the social barriers created by race.','The most important source of racial identity is formal instruction in school.','Personal ambition makes broader social judgments irrelevant to self-understanding.'],'c':[0],'e':'The refused visiting card becomes the moment when Du Bois recognizes the veil between himself and the white world. The episode establishes the message that racial identity is shaped partly through exclusion and others’ judgments.'})
           edits={
           'aplang-w-fridge-01': {'o':['Each evening, safe surplus food is discarded near residents who could use reliable access to it.','Our neighborhood has long valued generosity, a principle the council should affirm.','Food insecurity has persisted throughout history in communities of every size.','A shared refrigerator would eliminate local hunger without additional services.']},
           'aplang-w-fridge-05': {'o':['Recording predefined measures would give the council objective evidence for deciding whether the pilot should continue.','Records are useful because writing numbers down is usually better than remembering them.','The council should approve the project permanently before reviewing any pilot data.','Volunteers will collect several kinds of information during the three months.']},
