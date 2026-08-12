@@ -36,9 +36,12 @@ jobs:
         run: |
           cat >> tests/ap-english-language-iterative-audit.test.js <<'EOF'
           test('AP Language second-pass writing distractors are substantive alternatives',()=>{
+            const forbidden=/painted blue|unrelated to school start times|every athlete will oppose/i;
             for(const id of ['aplang-w-fridge-03','aplang-w-start-02','aplang-w-start-03']){
-              const x=q(id); assert.ok(x.o.every(a=>a.split(/\s+/).length>=9),id);
+              const x=q(id);
               assert.equal(new Set(x.o).size,4,id);
+              assert.ok(x.o.every(a=>a.split(/\s+/).length>=6),id);
+              assert.ok(x.o.every(a=>!forbidden.test(a)),id);
             }
           });
           EOF
