@@ -545,10 +545,15 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     topic: "1.6 Principles of American government: separation of powers and checks and balances",
     type: "s",
     stimulusGroupId: null,
-    q: "Which pairing correctly matches a constitutional check to the branch that exercises it?",
-    o: ["Judicial review — exercised by the Senate over rulings of the lower federal courts", "The pocket veto — exercised by the House over the president's executive appointments", "Impeachment and removal — exercised by the president over the federal judiciary", "Advice and consent on nominations — exercised by the Senate over the executive"],
+    q: "Which statement best applies Madison’s argument in Federalist No. 51 to the Constitution’s system of checks and balances?",
+    o: [
+      "Federalist No. 51 argues that state governments should exercise the principal check on each branch of the national government",
+      "Federalist No. 51 argues that frequent national referenda should resolve conflicts among the branches before policy can take effect",
+      "Federalist No. 51 argues that Congress should control appointments in the executive and judicial branches to preserve legislative supremacy",
+      "Federalist No. 51 argues that separated institutions should have constitutional means and personal motives to check one another"
+    ],
     c: [3],
-    e: "The Senate's advice-and-consent power over appointments is a legislative check on the executive. Judicial review belongs to the courts rather than the Senate, the pocket veto belongs to the president acting on legislation, and impeachment and removal belong to the House and Senate respectively.",
+    e: "In Federalist No. 51, Madison argues that each department must have both constitutional means and incentives to resist encroachments by the others. That logic underlies checks and balances among separately staffed institutions.",
   },
 
   {
@@ -714,7 +719,12 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     stimulusGroupId: "apgov-g-grants",
     stimulus: S_GRANTS,
     q: "Which conclusion about federal influence over state policy can be drawn most defensibly from this table alone?",
-    o: ["The national government gained greater policy control because every dollar shown carried a categorical condition", "States became fiscally dependent because grants exceeded half of all state and local revenue by 2020", "The nominal scale of federal support grew, but the table alone does not show the conditions attached or states' dependence", "The federal balance shifted toward states because larger grant totals necessarily indicate greater state discretion"],
+    o: [
+      "The national government gained greater policy control because most of the grant growth shown must have come from narrowly conditioned programs",
+      "States became fiscally dependent because the grant totals grew faster than some state revenue sources over the period shown",
+      "The nominal scale of federal support grew, but the table alone does not show the conditions attached or states' dependence",
+      "The federal balance shifted toward states because larger grant totals necessarily indicate greater state discretion"
+    ],
     c: [2],
     e: "The table establishes growth in nominal grant outlays. It does not distinguish categorical from block grants, report state and local revenue, or measure the conditions attached, so broader claims about control or dependence require additional evidence.",
   },
@@ -1638,7 +1648,12 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     id: "apgov-u4-016", unit: "U4", topic: "4.4 Influence of Political Events on Ideology", topicCode: "4.4", skill: "3",
     type: "s", stimulusGroupId: "apgov-g-trust", stimulus: S_TRUST,
     q: "Which course concept offers the strongest explanation for the partisan gap shown in the table?",
-    o: ["People often evaluate institutions differently depending on whether their party controls the presidency", "Political socialization produces identical institutional attitudes within every generation", "Random sampling guarantees that partisan groups will report the same level of trust", "Federalism causes national institutions to receive lower ratings than every state institution"],
+    o: [
+      "People often evaluate institutions differently depending on whether their party controls the presidency",
+      "Federalism tends to produce lower evaluations of national institutions than of state institutions, regardless of partisan control",
+      "Political socialization tends to make people within the same generation hold very similar evaluations of national institutions",
+      "Random sampling makes partisan subgroup estimates converge toward the same reported level of trust"
+    ],
     c: [0],
     e: "Public trust often shifts with partisan control of the presidency: identifiers of the president's party tend to express greater trust than identifiers of the out-party. Sampling does not force identical subgroup views, and the table makes no state-national comparison.",
   },
@@ -1662,7 +1677,12 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
     id: "apgov-u5-017", unit: "U5", topic: "5.11 Campaign Finance", topicCode: "5.11", skill: "3",
     type: "s", stimulusGroupId: "apgov-g-campaign-finance", stimulus: S_CAMPAIGN_FINANCE,
     q: "Which limitation most constrains using this table to determine who had the greatest influence on election outcomes?",
-    o: ["The dollar totals do not reveal persuasion effects, coordination rules, electoral targets, or whether spending changed votes", "The table reports both receipts and spending, making comparisons between political actors impossible", "The FEC lacks constitutional authority to collect campaign-finance reports from federal committees", "The totals exclude all spending by congressional candidates and national political parties"],
+    o: [
+      "The dollar totals do not reveal persuasion effects, coordination rules, electoral targets, or whether spending changed votes",
+      "Reporting both receipts and spending makes it difficult to compare actors whose money flows are organized differently",
+      "The totals omit some forms of campaign activity that could also affect electoral outcomes",
+      "The totals exclude all spending by congressional candidates and national political parties"
+    ],
     c: [0],
     e: "Financial volume is not a direct measure of political effect. The table does not show targeting, message effectiveness, coordination status for each expenditure, or counterfactual election outcomes.",
   },
@@ -1703,7 +1723,12 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
   {
     id: "apgov-u5-023", unit: "U5", topic: "5.9 Congressional Elections", topicCode: "5.9", skill: "1", type: "s", stimulusGroupId: null,
     q: "Which factor most directly contributes to the incumbency advantage in congressional elections?",
-    o: ["Incumbents can claim credit for constituent service and district projects while benefiting from name recognition", "Incumbents automatically receive their party's nomination without facing a primary challenger", "Federal law gives incumbents more broadcast advertising time than challengers at the same price", "The Constitution allows incumbents to redraw their own districts before every election"],
+    o: [
+      "Incumbents can claim credit for constituent service and district projects while benefiting from name recognition",
+      "Incumbents usually face fewer serious primary challenges because party organizations often prefer candidates who already hold the seat",
+      "District boundaries can sometimes favor an incumbent party, but incumbents do not personally control when or how maps are redrawn",
+      "The Constitution allows incumbents to redraw their own districts before every election"
+    ],
     c: [0], e: "Casework, credit claiming, fundraising networks, and name recognition benefit incumbents. They can face primaries, receive no special advertising allotment, and do not individually control redistricting.",
   },
   {
@@ -1805,7 +1830,12 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
   {
     id: "apgov-u1-032", unit: "U1", topic: "1.9 Federalism in Action", topicCode: "1.9", skill: "3", type: "s", stimulusGroupId: "apgov-g-fedrevshare", stimulus: S_FED_REVENUE_SHARE,
     q: "The federal share reached 25% in 2011 and a table high of 27% in 2021. Which explanation is most directly supported by the historical pattern in the table?",
-    o: ["Federal transfers rose again by 2011 amid 2009 recession relief spending", "Federal transfers have declined in every recorded year since the 1970s", "State governments have steadily reduced their own tax collection since 1977", "The federal share was below 20% in every year before 2011"],
+    o: [
+      "Federal transfers rose again by 2011 amid 2009 recession relief spending",
+      "Federal transfers generally trended downward after the 1970s, with only short-lived interruptions",
+      "The federal share remained below one-fifth through most of the years shown before 2011",
+      "The federal share was below 20% in every year before 2011"
+    ],
     c: [0], e: "The 2011 figure reflects a known pattern of federal transfers rising during emergency relief spending, foreshadowing the 2021 pandemic-era peak. The table shows increases as well as decreases rather than a steady decline, no data on states' own tax collection appears at all, and the federal share was actually above 20% in two of the three years before 2011 (1977 and 2003, both at 22%).",
   },
   {
@@ -2063,7 +2093,12 @@ window.QUESTIONS_AP_US_GOVERNMENT = [
   {
     id: "apgov-u5-032", unit: "U5", topic: "5.4 How and Why Political Parties Change and Adapt", topicCode: "5.4", skill: "1", type: "s", stimulusGroupId: null,
     q: "A major political party gradually shifts its platform on an issue after a significant, sustained increase in public support for the opposing position. This best illustrates which dynamic of party behavior?",
-    o: ["Parties adapt their platforms over time to remain competitive with shifting public opinion", "Parties are constitutionally required to update platforms every four years", "Party platforms are legally binding on all of a party's elected officials", "Party positions are set permanently by the party's founding documents"],
+    o: [
+      "Parties adapt their platforms over time to remain competitive with shifting public opinion",
+      "Parties face regular electoral incentives to reconsider platforms, but no constitutional rule dictates a fixed revision schedule",
+      "Party platforms guide candidates and coalitions politically without operating as legally enforceable instructions to officeholders",
+      "Party positions are set permanently by the party's founding documents"
+    ],
     c: [0], e: "Parties are office-seeking coalitions that adjust positions to stay competitive as opinion shifts; platforms are not constitutionally mandated, legally binding, or permanently fixed.",
   },
   {
