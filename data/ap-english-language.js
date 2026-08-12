@@ -1763,10 +1763,10 @@
     "sequence": 3,
     "q": "Which sentence would provide the most relevant evidence after sentence 6?",
     "o": [
-      "Commercial refrigerators are available in several colors and door styles.",
-      "Many volunteers say that helping neighbors is personally rewarding.",
-      "Nearby programs' longest interruptions followed missed temperature checks.",
-      "The recreation center was painted blue during its last renovation."
+      "A health-department report showing that monitored refrigerators stayed within safe temperature ranges",
+      "A survey showing that recreation-center visitors support reducing food waste",
+      "Records from nearby programs showing that their longest interruptions followed missed temperature checks",
+      "A budget estimate showing that electricity for the refrigerator would be a small share of recreation-center operating costs"
     ],
     "c": [
       2
@@ -1959,10 +1959,10 @@
     "sequence": 3,
     "q": "To respond to parents worried about after-school child care, the writer should add",
     "o": [
-      "a claim that after-school schedules are unrelated to school start times",
-      "surveying families and reporting child-care conflicts among pilot outcomes",
-      "a description of the writer's own preferred morning routine",
-      "an assurance that no family will experience any inconvenience"
+      "an estimate of how many families currently rely on dismissal-time child-care arrangements",
+      "a survey of families about conflicts a later dismissal could create for after-school care",
+      "a comparison of athletic-practice start times at neighboring districts with later school starts",
+      "a statement from transportation staff about whether existing bus routes could accommodate a later dismissal"
     ],
     "c": [
       1
@@ -1987,10 +1987,10 @@
     "sequence": 2,
     "q": "Which evidence would best support sentence 5?",
     "o": [
-      "A poll asking seniors whether they enjoy sleeping on weekends",
-      "The number of classrooms in North Valley High",
-      "A sleep-medicine review of adolescent circadian shifts",
-      "A coach's prediction that every athlete will oppose the change"
+      "A sleep-medicine review explaining adolescent circadian shifts and recommended sleep duration",
+      "Attendance records comparing first-period tardiness with later-period tardiness",
+      "A student survey reporting average bedtime and wake time on school nights",
+      "A district report comparing academic outcomes before and after a previous schedule adjustment"
     ],
     "c": [
       2
