@@ -14,31 +14,14 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - name: Whole-bank independent heuristics
+      - name: Deep same-topic duplicate audit
         run: |
           node - <<'NODE'
-          const {loadStatisticsBank}=require('./tests/helpers');
-          const {AP_SUBJECTS}=require('./js/subjects'); const {drawExam}=require('./js/draw');
-          const bank=loadStatisticsBank(), subject=AP_SUBJECTS.find(s=>s.id==='ap-statistics');
-          const norm=s=>s.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\b(the|a|an|of|to|and|for|is|are|in|that|with|which|what|does|when|from|be|by|on|it|this|as|at|or)\b/g,' ').replace(/\s+/g,' ').trim();
-          const toks=s=>new Set(norm(s).split(' ').filter(x=>x.length>2));
-          const jac=(a,b)=>{a=toks(a);b=toks(b);let i=0;for(const x of a)if(b.has(x))i++;return i/(a.size+b.size-i||1)};
-          console.log('BANK',bank.length);
-          const topicCounts={}; for(const q of bank) topicCounts[q.topicCode]=(topicCounts[q.topicCode]||0)+1;
-          console.log('TOPIC_COUNTS',JSON.stringify(topicCounts));
-          const skillCounts={}; for(const q of bank) skillCounts[q.skill]=(skillCounts[q.skill]||0)+1;
-          console.log('SKILL_COUNTS',JSON.stringify(skillCounts));
-          const shortE=bank.filter(q=>q.e.trim().length<90); console.log('SHORT_RATIONALES',JSON.stringify(shortE.map(q=>[q.id,q.e.length])));
-          const duplicateE=[]; for(let i=0;i<bank.length;i++)for(let j=i+1;j<bank.length;j++)if(norm(bank[i].e)===norm(bank[j].e))duplicateE.push([bank[i].id,bank[j].id]);
-          console.log('DUP_RATIONALES',JSON.stringify(duplicateE));
-          const optionCollision=bank.filter(q=>new Set(q.o.map(norm)).size!==4); console.log('OPTION_COLLISIONS',JSON.stringify(optionCollision.map(q=>q.id)));
-          const near=[]; for(let i=0;i<bank.length;i++)for(let j=i+1;j<bank.length;j++){
-            const s=jac(bank[i].q,bank[j].q); if(s>=.47){const sameVG=bank[i].variantGroupId&&bank[i].variantGroupId===bank[j].variantGroupId; near.push([s.toFixed(3),bank[i].id,bank[j].id,sameVG?'TAGGED':'UNTAGGED']);}
-          }
-          near.sort((a,b)=>+b[0]-+a[0]); console.log('NEAR_Q',JSON.stringify(near.slice(0,80)));
-          const stemsByTopic={}; for(const q of bank)(stemsByTopic[q.topicCode]??=[]).push(`${q.id} [${q.skill}] ${q.q} => ${q.o[q.c[0]]}`);
-          for(const t of Object.keys(stemsByTopic).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))) console.log(`TOPIC ${t}\n${stemsByTopic[t].join('\n')}`);
-          let overlap=0, trials=5000; for(let i=0;i<trials;i++){const a=new Set(drawExam(subject,bank).map(q=>q.id)); overlap+=drawExam(subject,bank).filter(q=>a.has(q.id)).length/42;} console.log('OVERLAP_5000',overlap/trials);
-          for(let i=0;i<10000;i++){const d=drawExam(subject,bank); if(d.length!==42) throw Error('bad draw'); const gs={}; for(const q of d) if(q.stimulusGroupId)(gs[q.stimulusGroupId]??=[]).push(q); for(const [g,qs] of Object.entries(gs)) if(qs.length!==3) throw Error(`split group ${g} ${qs.length}`);}
-          console.log('DRAWS_10000 PASS');
+          const {loadStatisticsBank}=require('./tests/helpers'); const bank=loadStatisticsBank();
+          const norm=s=>s.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\b(the|a|an|of|to|and|for|is|are|in|that|with|which|what|does|when|from|be|by|on|it|this|as|at|or|has|have)\b/g,' ').replace(/\s+/g,' ').trim();
+          const toks=s=>new Set(norm(s).split(' ').filter(x=>x.length>2)); const jac=(a,b)=>{a=toks(a);b=toks(b);let i=0;for(const x of a)if(b.has(x))i++;return i/(a.size+b.size-i||1)};
+          const pairs=[]; for(let i=0;i<bank.length;i++)for(let j=i+1;j<bank.length;j++)if(bank[i].unit===bank[j].unit&&bank[i].topicCode===bank[j].topicCode&&!bank[i].stimulusGroupId&&!bank[j].stimulusGroupId){const s=jac(bank[i].q,bank[j].q); if(s>=.18)pairs.push([s,bank[i],bank[j]]);}
+          pairs.sort((a,b)=>b[0]-a[0]); for(const [s,a,b] of pairs){console.log(`PAIR ${s.toFixed(3)} ${a.id} ${b.id} VG=${a.variantGroupId||'-'}/${b.variantGroupId||'-'}\n A ${a.q} => ${a.o[a.c[0]]}\n B ${b.q} => ${b.o[b.c[0]]}`)}
+          const groups={}; for(const q of bank)if(q.variantGroupId)(groups[q.variantGroupId]??=[]).push(q.id); console.log('VARIANT_GROUPS',JSON.stringify(groups));
+          for(const q of bank){const n=q.o.map(norm); if(new Set(n).size!==4) console.log('NORM_COLLISION',q.id,JSON.stringify(q.o));}
           NODE
