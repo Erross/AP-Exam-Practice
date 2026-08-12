@@ -417,17 +417,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/23, 1845."
     },
     "sequence": 6,
-    "q": "The phrase “by the merest accident” highlights the irony that",
+    "q": "Which statement best identifies the message Douglass develops from Auld’s warning about literacy?",
     "o": [
-      "Mrs. Auld secretly arranges for her husband to encourage him",
-      "Douglass learns to read without encountering any resistance",
-      "Auld unintentionally teaches Douglass why reading matters",
-      "the prohibition convinces Douglass that literacy is useless"
+      "Literacy gives enslaved people intellectual agency that threatens the control slavery requires.",
+      "Literacy matters mainly because it improves a worker’s economic value to an enslaver.",
+      "Formal schooling is the only reliable path by which an enslaved person can gain freedom.",
+      "Auld’s warning persuades Douglass that reading is too dangerous to continue pursuing."
     ],
     "c": [
-      2
+      0
     ],
-    "e": "Auld intends to stop instruction, yet his explanation gives Douglass a more consequential lesson than the alphabet: literacy undermines the condition of slavery."
+    "e": "Auld argues that literacy would make an enslaved person unmanageable, and Douglass immediately recognizes the implication. The message Douglass develops is that literacy creates intellectual agency incompatible with the control slavery depends on."
   },
   {
     "id": "aplang-r-repair-04",
@@ -1089,17 +1089,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/408, 1903."
     },
     "sequence": 2,
-    "q": "The schoolhouse anecdote chiefly establishes Du Bois's authority by",
+    "q": "Which statement best identifies the message Du Bois develops from the schoolhouse episode?",
     "o": [
-      "showing that he learned racial theory from formal classroom instruction",
-      "presenting himself as detached from the consequences of exclusion",
-      "grounding an abstract claim in personal experience",
-      "proving that every classmate deliberately rejected him"
+      "Ordinary social exclusion can force a child to recognize how a racial boundary shapes identity.",
+      "Childhood competition can remove the social barriers created by race.",
+      "The most important source of racial identity is formal instruction in school.",
+      "Personal ambition makes broader social judgments irrelevant to self-understanding."
     ],
     "c": [
-      2
+      0
     ],
-    "e": "The rejected visiting card gives a concrete origin story for the 'veil,' allowing Du Bois to move from individual memory to a larger analysis of racial consciousness."
+    "e": "The refused visiting card becomes the moment when Du Bois recognizes the veil between himself and the white world. The episode establishes the message that racial identity is shaped partly through exclusion and others’ judgments."
   },
   {
     "id": "aplang-r-replicas-04",
@@ -1707,7 +1707,7 @@
     "sequence": 0,
     "q": "Which revision of sentence 1 would best introduce the proposal to a city-council audience?",
     "o": [
-      "connect nearby food waste with need for supervised refrigerator access",
+      "Each evening, safe surplus food is discarded near residents who could use reliable access to it.",
       "Our neighborhood has long valued generosity, a principle the council should affirm.",
       "Food insecurity has persisted throughout history in communities of every size.",
       "A shared refrigerator would eliminate local hunger without additional services."
@@ -1819,7 +1819,7 @@
     "sequence": 6,
     "q": "Which sentence best states the reasoning that connects the proposed records in sentence 10 to the decision in sentence 11?",
     "o": [
-      "explain how predefined measures let the council judge the pilot objectively",
+      "Recording predefined measures would give the council objective evidence for deciding whether the pilot should continue.",
       "Records are useful because writing numbers down is usually better than remembering them.",
       "The council should approve the project permanently before reviewing any pilot data.",
       "Volunteers will collect several kinds of information during the three months."
@@ -1931,7 +1931,7 @@
     "sequence": 0,
     "q": "Which sentence would best precede sentence 1 to establish the broader rhetorical situation?",
     "o": [
-      "connect next year's transportation review with reconsidering secondary-school start times",
+      "As the district reviews transportation plans for next year, it should also reconsider when the secondary-school day begins.",
       "District schedules shape when students arrive for classes throughout the school year.",
       "Communities have long debated how schools should organize the instructional day.",
       "Early schedules create difficulties that the district can no longer justify."
@@ -2155,10 +2155,10 @@
     "sequence": 0,
     "q": "Which opening would best engage local library trustees while preserving the draft's professional tone?",
     "o": [
-      "introduce trustees to photographs whose identifying knowledge remains in residents' memories",
-      "Old pictures are awesome, and everybody loves hearing stories about the past.",
-      "The library must save every memory before all history disappears forever.",
-      "Have you ever wondered whether photographs can become lonely?"
+      "Many of the library's unidentified mill photographs can still be explained by residents who remember the people and places they depict.",
+      "The mill photographs document a vanished industry and should be digitized before the paper images deteriorate.",
+      "The library should invite former mill workers to identify photographs during a single public scanning day.",
+      "Because the mills closed in the 1980s, the library should prioritize acquiring additional industrial artifacts."
     ],
     "c": [
       0
@@ -2379,10 +2379,10 @@
     "sequence": 0,
     "q": "Which introductory sentence would best clarify the memo's context for town officials?",
     "o": [
-      "connect scheduled facilities budgeting with a phased lighting improvement",
-      "The night sky has inspired cultural works for centuries and remains worth protecting.",
-      "Excessive outdoor lighting has become an urgent problem for towns across the region.",
-      "This memo offers several observations about the town's existing light fixtures."
+      "As the town plans its facilities budget, it can improve public lighting gradually by coordinating upgrades with scheduled replacements.",
+      "The town already regulates outdoor-light brightness, so its lighting policy requires no further review.",
+      "Public lighting affects visibility, energy use, and nighttime conditions in several different ways.",
+      "The town should replace every public fixture during the coming budget year."
     ],
     "c": [
       0
@@ -2435,10 +2435,10 @@
     "sequence": 2,
     "q": "Which evidence would most strengthen the distinction made in sentences 4–5?",
     "o": [
-      "A list of streets named after local historical figures",
-      "A survey asking residents whether they prefer summer or winter nights",
+      "A survey comparing residents’ preferences for warmer and cooler lamp colors",
+      "Maintenance records showing the average service life of current fixtures",
       "Photometric diagrams comparing where shielded and unshielded fixtures distribute the same lumen output",
-      "The purchase date of the town's oldest maintenance truck"
+      "A map showing the locations of all publicly funded outdoor fixtures"
     ],
     "c": [
       2
@@ -2603,10 +2603,10 @@
     "sequence": 0,
     "q": "Which revision of sentences 1–2 would best establish a problem worth addressing?",
     "o": [
-      "identify underused turf whose upkeep consumes instructional space and staff time",
-      "The campus lawn is a familiar feature that contributes to the school's appearance.",
-      "Routine mowing makes turf less desirable than gardens throughout the campus.",
-      "The strip behind the science building occupies part of the school grounds."
+      "The underused strip behind the science building consumes staff mowing time without serving a regular instructional purpose.",
+      "The maintained turf behind the science building provides open space that students occasionally cross.",
+      "Converting campus turf to gardens can reduce mowing after plants are fully established.",
+      "Science classes need additional outdoor activities that can be completed during normal class periods."
     ],
     "c": [
       0
@@ -2659,10 +2659,10 @@
     "sequence": 2,
     "q": "Which evidence would best support sentence 5?",
     "o": [
-      "A national list of every known pollinating insect",
-      "A photograph of a garden at an unrelated private home",
+      "A list of native species recommended for the region",
+      "Records comparing annual mowing hours before and after conversion",
       "A protocol specifying measurements classes could collect at the site",
-      "The price of repainting the science building hallway"
+      "A survey of students’ preferences for the garden’s appearance"
     ],
     "c": [
       2
@@ -2967,10 +2967,10 @@
     "sequence": 0,
     "q": "Which revision of sentence 1 best introduces the access problem?",
     "o": [
-      "Water is a substance that all living things need in some form.",
-      "identify long athletic-wing lines caused by distant bottle fillers",
-      "Students have complained about many different features of the building.",
-      "The gym is an exciting place where teams sometimes win games."
+      "Students depend on bottle fillers throughout the day, especially after physical activity.",
+      "Students in the athletic wing face long refill lines because the school’s two bottle fillers are far away.",
+      "The athletic wing is one of the school’s busiest areas during practices and events.",
+      "Two existing bottle fillers serve most classrooms adequately but receive heavy use at passing periods."
     ],
     "c": [
       1
