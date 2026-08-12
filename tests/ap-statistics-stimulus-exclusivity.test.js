@@ -21,11 +21,10 @@ test('AP Statistics candidate-set stimuli remain exclusive in the bank and deliv
     assert.equal(questions.length, 3, `${groupId}: expected exactly three linked questions`);
     const stimulus = questions[0].stimulus;
     assert.ok(questions.every((q) => q.stimulus === stimulus));
-    assert.deepEqual(
-      bank.filter((q) => q.stimulus === stimulus).map((q) => q.stimulusGroupId),
-      [groupId, groupId, groupId],
-      `${groupId}: stimulus reused outside its candidate set`,
-    );
+    const users = bank.filter((q) => q.stimulus === stimulus);
+    assert.equal(users.length, 3, `${groupId}: stimulus reused outside its candidate set`);
+    assert.ok(users.every((q) => q.stimulusGroupId === groupId),
+      `${groupId}: stimulus reused by a question outside its candidate set`);
   }
 
   for (let i = 0; i < 1000; i += 1) {
