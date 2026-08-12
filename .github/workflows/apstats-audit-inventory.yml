@@ -1,0 +1,26 @@
+name: AP Statistics Audit Inventory
+on:
+  push:
+    branches: [subject/ap-statistics]
+    paths: [.github/workflows/apstats-audit-inventory.yml]
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Print Statistics inventory
+        run: |
+          node - <<'NODE'
+          const { loadStatisticsBank } = require('./tests/helpers');
+          const bank = loadStatisticsBank();
+          for (const q of bank) {
+            const key = q.o[q.c[0]].replace(/\s+/g,' ');
+            console.log(`${q.id}\t${q.topicCode}\t${q.skill}\t${q.q.replace(/\s+/g,' ')}\t=> ${key}`);
+          }
+          console.log(`TOTAL\t${bank.length}`);
+          NODE
