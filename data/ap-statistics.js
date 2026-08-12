@@ -292,17 +292,17 @@ const Q=[
     "topicCode": "1.4",
     "skill": "3.A",
     "type": "s",
-    "q": "A school surveys students about one of four preferred after-school activities. Which display is most appropriate for showing the relative frequencies of the four categories?",
+    "q": "A club survey records preferred after-school activity: sports 12, art 8, robotics 5, and music 10. Which description corresponds to a correctly constructed bar chart of the frequencies?",
     "o": [
-      "A histogram with touching bars",
-      "A scatterplot of activity versus frequency",
-      "A bar chart with one bar for each activity",
-      "A normal probability plot"
+      "Four separated bars labeled sports, art, robotics, and music with heights 12, 8, 5, and 10, respectively",
+      "Four touching bars labeled sports, art, robotics, and music with heights 12, 8, 5, and 10, respectively",
+      "Four separated bars with heights 12, 10, 8, and 5 assigned alphabetically to the activity labels",
+      "A continuous horizontal scale from 5 to 12 divided into four equal-width numerical bins"
     ],
     "c": [
-      2
+      0
     ],
-    "e": "Preferred activity is categorical. A bar chart appropriately displays category frequencies or relative frequencies; histograms are for quantitative variables and scatterplots require two quantitative variables.",
+    "e": "A bar chart for categorical data uses a separate bar for each category, and each bar height must equal that category’s frequency. Sports, art, robotics, and music therefore require separated bars of heights 12, 8, 5, and 10 in the stated label order.",
     "statsSetType": "standalone"
   },
   {
@@ -330,17 +330,17 @@ const Q=[
     "topicCode": "1.5",
     "skill": "3.A",
     "type": "s",
-    "q": "A teacher wants a display that preserves the individual values of 22 quiz scores while also showing the shape of their distribution. Which display is best suited?",
+    "q": "Five quiz scores are 2, 2, 3, 5, and 5. Which description corresponds to the correctly constructed dotplot?",
     "o": [
-      "A dotplot",
-      "A pie chart",
-      "A segmented bar chart",
-      "A mosaic plot"
+      "Two dots at 2, one dot at 3, and two dots at 5",
+      "One dot at 2, two dots at 3, and two dots at 5",
+      "Two dots at 2, two dots at 3, and one dot at 5",
+      "One dot at each integer from 1 through 5"
     ],
     "c": [
       0
     ],
-    "e": "A dotplot places a mark for each quantitative observation, preserving individual values while revealing clusters, gaps, and shape. The other displays are designed for categorical data.",
+    "e": "A dotplot places one dot for every observation at its observed value. Because the data contain two 2s, one 3, no 4s, and two 5s, the correct plot has two dots at 2, one at 3, and two at 5.",
     "statsSetType": "standalone"
   },
   {
@@ -787,17 +787,17 @@ const Q=[
     "topicCode": "2.3",
     "skill": "3.C",
     "type": "s",
-    "q": "A simulation uses digits 0–9, with 0–2 representing a defective item and 3–9 representing a nondefective item. Five digits form one simulated shipment. What event should be counted to estimate the probability a shipment has at least two defective items?",
+    "q": "A simulation models shipments of five items, with digits 0–2 representing a defective item and 3–9 a nondefective item. In 200 simulated shipments, at least two defective items occurred 34 times. What probability does the simulation estimate for a shipment having at least two defective items?",
     "o": [
-      "Trials in which at least two of the five digits are 0, 1, or 2",
-      "Trials in which exactly two digits are 0, 1, or 2",
-      "Trials in which the first two digits are both 0, 1, or 2",
-      "Trials in which at least two digits are 3 through 9"
+      "0.17",
+      "0.34",
+      "0.068",
+      "0.83"
     ],
     "c": [
       0
     ],
-    "e": "Digits 0–2 model defect with probability 0.3, and a five-digit trial models five items. 'At least two' includes two, three, four, or five defective outcomes, not only exactly two.",
+    "e": "A simulation estimates the probability of an event by the event’s relative frequency across trials. The event occurred in 34 of 200 simulated shipments, so the estimated probability is 34/200 = 0.17.",
     "statsSetType": "standalone"
   },
   {
@@ -844,17 +844,17 @@ const Q=[
     "topicCode": "2.5",
     "skill": "4.B",
     "type": "s",
-    "q": "For events A and B, P(A) = 0.40, P(B) = 0.35, and P(A ∩ B) = 0. Which statement is correct?",
+    "q": "For events A and B, P(A) = 0.40, P(B) = 0.35, and P(A ∩ B) = 0. Which conclusion is justified by the joint probability?",
     "o": [
-      "A and B are independent.",
-      "P(A ∪ B) = 0.14.",
-      "A and B must have equal probabilities.",
-      "A and B are mutually exclusive."
+      "A and B are mutually exclusive because P(A ∩ B)=0.",
+      "A and B are independent because P(A ∩ B)=0.",
+      "A and B must have equal probabilities because they cannot occur together.",
+      "A is a subset of B because P(A) is greater than P(B)."
     ],
     "c": [
-      3
+      0
     ],
-    "e": "Events are mutually exclusive when they cannot occur together, so P(A ∩ B)=0. Because both events have positive probability, independence would require P(A ∩ B)=0.40(0.35)=0.14, not zero.",
+    "e": "Mutually exclusive events cannot occur together, which is exactly the condition P(A ∩ B)=0. Independence would instead require P(A ∩ B)=P(A)P(B)=0.14, and neither equal probabilities nor a subset relationship follows from the given values.",
     "statsSetType": "standalone"
   },
   {
@@ -977,17 +977,17 @@ const Q=[
     "topicCode": "2.8",
     "skill": "3.A",
     "type": "s",
-    "q": "A game pays X = $0, $5, or $20 with probabilities 0.70, 0.25, and 0.05, respectively. Which quantity is a random variable?",
+    "q": "A game pays X = $0, $5, or $20 with probabilities 0.70, 0.25, and 0.05. Which cumulative probability distribution is correctly constructed?",
     "o": [
-      "The fixed probability 0.70",
-      "The list of all three probabilities",
-      "The dollar amount X paid on one play",
-      "The statement that the game has three outcomes"
+      "P(X≤0)=0.70, P(X≤5)=0.95, P(X≤20)=1.00",
+      "P(X≤0)=0.70, P(X≤5)=0.25, P(X≤20)=0.05",
+      "P(X≤0)=0.30, P(X≤5)=0.75, P(X≤20)=0.95",
+      "P(X≤0)=0.05, P(X≤5)=0.30, P(X≤20)=1.00"
     ],
     "c": [
-      2
+      0
     ],
-    "e": "A random variable assigns a numerical value to the outcome of a random process. The payment X varies from play to play according to the stated probability distribution.",
+    "e": "A cumulative distribution adds probabilities through each listed value. Thus P(X≤0)=0.70, P(X≤5)=0.70+0.25=0.95, and P(X≤20)=0.70+0.25+0.05=1.00.",
     "statsSetType": "standalone"
   },
   {

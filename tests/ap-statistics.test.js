@@ -294,6 +294,15 @@ test('Statistics variant groups are valid and prevent same-exam near duplicates'
   for(let i=0;i<500;i++){const d=drawExam(subject,bank);for(const id of groups.keys())assert.ok(d.filter(q=>q.variantGroupId===id).length<=1);}
 });
 
+test('Statistics construction skills require constructing or selecting a concrete representation', () => {
+  const q=id=>bank.find(x=>x.id===id);
+  assert.match(q('apstats-u1-007').q,/correctly constructed bar chart/i);
+  assert.match(q('apstats-u1-009').q,/correctly constructed dotplot/i);
+  assert.match(q('apstats-u2-017').q,/cumulative probability distribution/i);
+  assert.match(q('apstats-u2-007').q,/200 simulated shipments/i);
+  assert.match(q('apstats-u2-010').o[q('apstats-u2-010').c[0]],/because P\(A ∩ B\)=0/);
+});
+
 test('Statistics semantic near-duplicates are variant-grouped', () => {
   const byId=new Map(bank.map(q=>[q.id,q]));
   for(const ids of [

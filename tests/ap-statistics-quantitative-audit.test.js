@@ -13,8 +13,8 @@ const ids = (unit, count) => Array.from({ length: count }, (_, i) => `apstats-${
 // on computing, transforming, or numerically reading a supplied quantity.
 const EXPECTED_IDS = [...ids('u1',36), ...ids('u2',33), ...ids('u3',32), ...ids('u4',25), ...ids('u5',14)];
 const CALC_IDS = new Set([
-  'apstats-u1-005','apstats-u1-006','apstats-u1-008','apstats-u1-013','apstats-u1-014','apstats-u1-015','apstats-u1-016','apstats-u1-017','apstats-u1-018',
-  'apstats-u2-002','apstats-u2-003','apstats-u2-005','apstats-u2-006','apstats-u2-008','apstats-u2-009','apstats-u2-011','apstats-u2-012','apstats-u2-013','apstats-u2-014','apstats-u2-015','apstats-u2-016','apstats-u2-018','apstats-u2-019','apstats-u2-020','apstats-u2-022','apstats-u2-024','apstats-u2-025','apstats-u2-026','apstats-u2-027','apstats-u2-028','apstats-u2-029','apstats-u2-030','apstats-u2-031','apstats-u2-032','apstats-u2-033',
+  'apstats-u1-005','apstats-u1-006','apstats-u1-007','apstats-u1-008','apstats-u1-009','apstats-u1-013','apstats-u1-014','apstats-u1-015','apstats-u1-016','apstats-u1-017','apstats-u1-018',
+  'apstats-u2-002','apstats-u2-003','apstats-u2-005','apstats-u2-006','apstats-u2-007','apstats-u2-008','apstats-u2-009','apstats-u2-011','apstats-u2-012','apstats-u2-013','apstats-u2-014','apstats-u2-015','apstats-u2-016','apstats-u2-017','apstats-u2-018','apstats-u2-019','apstats-u2-020','apstats-u2-022','apstats-u2-024','apstats-u2-025','apstats-u2-026','apstats-u2-027','apstats-u2-028','apstats-u2-029','apstats-u2-030','apstats-u2-031','apstats-u2-032','apstats-u2-033',
   'apstats-u3-001','apstats-u3-002','apstats-u3-003','apstats-u3-004','apstats-u3-006','apstats-u3-008','apstats-u3-010','apstats-u3-012','apstats-u3-013','apstats-u3-014','apstats-u3-017','apstats-u3-018','apstats-u3-020','apstats-u3-025','apstats-u3-026','apstats-u3-029','apstats-u3-030',
   'apstats-u4-002','apstats-u4-004','apstats-u4-009','apstats-u4-011','apstats-u4-014','apstats-u4-019','apstats-u4-021','apstats-u4-023','apstats-u4-025',
   'apstats-u5-001','apstats-u5-002','apstats-u5-003','apstats-u5-004','apstats-u5-007','apstats-u5-008','apstats-u5-009','apstats-u5-010','apstats-u5-011',
@@ -31,7 +31,9 @@ test('every calculation-bearing Statistics item independently recomputes', () =>
   // Unit 1: numerical summaries and standardization.
   assert.equal(answer('apstats-u1-005'), `Public transit: ${96}; Other mode: ${240-96}`);
   assert.match(answer('apstats-u1-006'), new RegExp(String(Math.max(85,210,160,45))));
+  assert.match(answer('apstats-u1-007'), /heights 12, 8, 5, and 10/);
   assert.match(answer('apstats-u1-008'), /third category/);
+  assert.equal(answer('apstats-u1-009'),'Two dots at 2, one dot at 3, and two dots at 5');
   assert.equal(answer('apstats-u1-013'), `${(18+20+21+21+30)/5} minutes`);
   assert.equal(answer('apstats-u1-014'), String([4,6,7,8,9,12,30][3]));
   const iqr=27-12, upperFence=27+1.5*iqr; assert.equal(upperFence,49.5); assert.equal(answer('apstats-u1-015'),'52');
@@ -44,6 +46,7 @@ test('every calculation-bearing Statistics item independently recomputes', () =>
   assert.equal(answer('apstats-u2-003'), (0.18/0.30).toFixed(2));
   assert.equal(answer('apstats-u2-005'), (90/300).toFixed(2));
   assert.equal(answer('apstats-u2-006'), (0.18/0.30).toFixed(2));
+  assert.equal(answer('apstats-u2-007'),(34/200).toFixed(2));
   assert.equal(answer('apstats-u2-008'), '11/36'); assert.ok(Math.abs((1-(5/6)**2)-11/36)<1e-15);
   assert.equal(answer('apstats-u2-009'), (1-0.27).toFixed(2));
   assert.equal(answer('apstats-u2-011'), (0.55+0.30).toFixed(2));
@@ -52,6 +55,7 @@ test('every calculation-bearing Statistics item independently recomputes', () =>
   assert.match(answer('apstats-u2-014'), /0\.50,0\.30,0\.20/); assert.equal(0.50+0.30+0.20,1);
   assert.equal(answer('apstats-u2-015'), String(0*0.50+1*0.30+2*0.15+3*0.05));
   assert.match(answer('apstats-u2-016'), /C\(10,3\)\(0\.30\)\^3\(0\.70\)\^7/);
+  assert.match(answer('apstats-u2-017'),/0\.70.*0\.95.*1\.00/); assert.equal(.70+.25,.95); assert.equal(.70+.25+.05,1);
   const mu18=0*0.50+2*0.30+5*0.20, var18=0.50*(0-mu18)**2+0.30*(2-mu18)**2+0.20*(5-mu18)**2; assert.ok(Math.abs(var18-3.64)<1e-12); assert.equal(answer('apstats-u2-018'),Math.sqrt(var18).toFixed(2));
   assert.match(answer('apstats-u2-019'), /μ = 20.*3\.87/); assert.ok(Math.abs(Math.sqrt(80*0.25*0.75)-3.872983346)<1e-6);
   assert.equal(answer('apstats-u2-020'),'About 95%'); assert.equal((182-170)/6,2); assert.equal((170-158)/6,2);
