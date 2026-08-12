@@ -1657,8 +1657,8 @@ const Q=[
   {
     "id": "apstats-u3-029",
     "unit": "U3",
-    "topicCode": "3.14",
-    "skill": "4.E",
+    "topicCode": "3.15",
+    "skill": "3.C",
     "type": "s",
     "q": "For a chi-square test of independence, a row total is 80, a column total is 45, and the grand total is 200. Which expected count should be used for that cell when checking the expected-count condition?",
     "o": [
@@ -2390,7 +2390,7 @@ const Q=[
     "topicCode": "5.5",
     "skill": "4.D",
     "type": "s",
-    "q": "For the delivery data, software gives r≈0.996. What is the best interpretation of r²?",
+    "q": "For the delivery data, software gives r≈0.9955. What is the best interpretation of r²?",
     "o": [
       "About 99.1% of the variability in delivery time is explained by its linear relationship with distance.",
       "About 99.6% of deliveries take the same amount of time.",

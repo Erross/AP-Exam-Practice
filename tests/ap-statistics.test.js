@@ -357,5 +357,6 @@ test('exact CED regression fixes remain aligned to their learning objectives', (
   assert.deepEqual([q('apstats-u5-005').topicCode,q('apstats-u5-005').skill],['5.3','3.B']);
   assert.deepEqual([q('apstats-u5-007').topicCode,q('apstats-u5-007').skill],['5.5','4.D']);
   assert.deepEqual([q('apstats-u5-013').topicCode,q('apstats-u5-013').skill],['5.2','4.D']);
+  assert.deepEqual([q('apstats-u3-029').topicCode,q('apstats-u3-029').skill],['3.15','3.C']);
   for(const x of bank.filter(x=>x.stimulus && !x.stimulusGroupId)) assert.fail(x.id+': standalone item retains candidate-set stimulus');
 });
