@@ -73,7 +73,7 @@ test('every calculation-bearing Statistics item independently recomputes', () =>
   assert.equal(answer('apstats-u2-033'),'50'); assert.ok(sim.every(r=>Math.abs(Number(r[1])-50)<=0.1000001));
 
   // Unit 3: sampling distributions and categorical inference.
-  assert.equal(answer('apstats-u3-001'),'2/3'); assert.equal(0.030/0.045,2/3);
+  assert.equal(answer('apstats-u3-001'),'0.60'); assert.equal(72/120,0.60);
   assert.match(answer('apstats-u3-002'),/biased upward by 4/);
   assert.match(answer('apstats-u3-003'),/Mean 0\.36.*0\.048/); assert.equal(Math.sqrt(0.36*0.64/100),0.048);
   assert.match(answer('apstats-u3-004'),/np = 3\.2/); assert.ok(Math.abs(40*0.08-3.2)<1e-12);

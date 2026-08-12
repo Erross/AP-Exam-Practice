@@ -294,6 +294,14 @@ test('Statistics variant groups are valid and prevent same-exam near duplicates'
   for(let i=0;i<500;i++){const d=drawExam(subject,bank);for(const id of groups.keys())assert.ok(d.filter(q=>q.variantGroupId===id).length<=1);}
 });
 
+test('Statistics exact justify and estimator objectives are semantic, not family-only matches', () => {
+  const q=id=>bank.find(x=>x.id===id);
+  assert.match(q('apstats-u1-022').q,/and why/i);
+  assert.match(q('apstats-u1-022').o[q('apstats-u1-022').c[0]],/because stratification/i);
+  assert.match(q('apstats-u3-001').q,/point estimate/i);
+  assert.match(q('apstats-u3-002').o[q('apstats-u3-002').c[0]],/because its sampling-distribution center/i);
+});
+
 test('Statistics construction skills require constructing or selecting a concrete representation', () => {
   const q=id=>bank.find(x=>x.id===id);
   assert.match(q('apstats-u1-007').q,/correctly constructed bar chart/i);

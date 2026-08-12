@@ -577,17 +577,17 @@ const Q=[
     "topicCode": "1.11",
     "skill": "2.B",
     "type": "s",
-    "q": "A district wants student opinions represented from elementary, middle, and high schools even though the groups differ greatly in size. Which design best guarantees representation from all three levels?",
+    "q": "A district wants student opinions represented from elementary, middle, and high schools even though the three groups differ greatly in size. Which sampling design is most appropriate, and why?",
     "o": [
-      "Randomly choose several schools and survey the students present in those schools.",
-      "Take a random sample separately within each school level.",
-      "Post an online survey and analyze the first 500 responses.",
-      "Select every 50th student from one alphabetized district list without stratifying by level."
+      "Take a random sample separately within each school level because stratification ensures that every level is represented.",
+      "Randomly choose one school level and survey everyone in it because one cluster can represent all three levels.",
+      "Take a simple random sample from the full district because it guarantees equal numbers from every school level.",
+      "Survey the same number of volunteers from each level because voluntary participation removes selection bias."
     ],
     "c": [
-      1
+      0
     ],
-    "e": "Stratifying by school level and randomly sampling within every level guarantees each level is represented. Cluster, voluntary-response, or unstratified systematic designs do not provide that guarantee.",
+    "e": "A stratified random sample divides the population into the relevant school-level strata and samples randomly within each one. That design guarantees representation from elementary, middle, and high school students while retaining random selection within each group.",
     "statsSetType": "standalone"
   },
   {
@@ -1131,17 +1131,17 @@ const Q=[
     "topicCode": "3.1",
     "skill": "3.D",
     "type": "s",
-    "q": "Estimator A has sampling-distribution standard deviation 0.030 and Estimator B has standard deviation 0.045. What is the ratio SD(A)/SD(B)?",
+    "q": "A random sample of 120 voters contains 72 who support a proposal. What point estimate should be used for the population proportion p who support the proposal?",
     "o": [
-      "3/2",
-      "0.015",
-      "2/3",
-      "1.5"
+      "0.60",
+      "0.40",
+      "72",
+      "1.67"
     ],
     "c": [
-      2
+      0
     ],
-    "e": "The requested ratio is 0.030/0.045=30/45=2/3. The smaller sampling-distribution standard deviation indicates less sampling variability, but the calculation itself is simply the ratio of the two reported spreads.",
+    "e": "The sample proportion is the point estimator for a population proportion. Here p̂ = 72/120 = 0.60, so 0.60 is the estimate of the unknown population proportion p.",
     "statsSetType": "standalone"
   },
   {
@@ -1150,17 +1150,17 @@ const Q=[
     "topicCode": "3.1",
     "skill": "4.B",
     "type": "s",
-    "q": "A statistic T has a sampling distribution centered 4 units above the parameter it estimates. What does this indicate?",
+    "q": "A statistic T has a sampling distribution centered 4 units above the population parameter it estimates. Which conclusion about the estimator is justified?",
     "o": [
-      "T is unbiased because its sampling distribution has a fixed center.",
-      "T has a standard error of 4 units.",
-      "T overestimates the parameter in every possible sample.",
-      "T is biased upward by 4 units."
+      "T is biased upward by 4 units because its sampling-distribution center exceeds the parameter by 4.",
+      "T is unbiased because its sampling distribution has a well-defined center.",
+      "T is biased downward by 4 units because the parameter lies below the sampling-distribution center.",
+      "T must have a standard error of 4 units because its center differs from the parameter by 4."
     ],
     "c": [
-      3
+      0
     ],
-    "e": "Bias is the difference between the expected value of an estimator and the parameter. A center 4 units too high indicates upward bias of 4; individual samples may still fall below the parameter.",
+    "e": "An estimator is unbiased when the center of its sampling distribution equals the parameter. Because the center for T is 4 units above the parameter, T systematically overestimates by 4 units and is biased upward by 4.",
     "statsSetType": "standalone"
   },
   {
