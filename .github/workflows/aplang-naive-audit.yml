@@ -1,0 +1,30 @@
+name: AP English Language Naive Audit
+on:
+  push:
+    branches: [audit/ap-english-language-iterative]
+    paths: [.github/workflows/aplang-naive-audit.yml]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: 22}
+      - run: npm ci
+      - name: Full repository validation
+        run: npm run check
+      - name: Clean-room English Language inventory
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-english-language.js','utf8'),sb);const bank=sb.window.QUESTIONS_AP_ENGLISH_LANGUAGE;
+          const groups=new Map();for(const q of bank){if(!groups.has(q.stimulusGroupId))groups.set(q.stimulusGroupId,[]);groups.get(q.stimulusGroupId).push(q)}
+          console.log('BANK',bank.length,'GROUPS',groups.size);
+          for(const [g,qs] of groups){const s=qs[0].stimulus;console.log(`\n=== GROUP ${g} type=${qs[0].setType} source=${s.source} words=${s.text.trim().split(/\s+/).length} ===`);console.log('TITLE',s.title||'');console.log('TEXT',s.text);for(const q of qs.sort((a,b)=>a.sequence-b.sequence)){console.log(`\n${q.id} seq=${q.sequence} skill=${q.topicCode} unit=${q.unit}`);console.log('Q',q.q);q.o.forEach((o,i)=>console.log(`${i===q.c[0]?'*':' '} ${i}: ${o}`));console.log('WHY',q.e)}}
+          const norm=s=>s.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\b(the|a|an|of|to|and|for|is|are|in|that|with|which|what|does|when|from|be|by|on|it|this|as|at|or|has|have)\b/g,' ').replace(/\s+/g,' ').trim();
+          const toks=s=>new Set(norm(s).split(' ').filter(x=>x.length>2)); const jac=(a,b)=>{a=toks(a);b=toks(b);let n=0;for(const x of a)if(b.has(x))n++;return n/(a.size+b.size-n||1)};
+          const pairs=[];for(let i=0;i<bank.length;i++)for(let j=i+1;j<bank.length;j++){const s=jac(bank[i].q,bank[j].q);if(s>=.45)pairs.push([s,bank[i].id,bank[j].id])}pairs.sort((a,b)=>b[0]-a[0]);console.log('\nSIMILAR',JSON.stringify(pairs));
+          const wc=s=>s.trim().split(/\s+/).length;let ul=0,al=0,cw=0,dw=0;for(const q of bank){const ls=q.o.map(wc),m=Math.max(...ls),c=ls[q.c[0]];if(c===m)al++;if(c===m&&ls.filter(x=>x===m).length===1)ul++;cw+=c;ls.forEach((x,i)=>{if(i!==q.c[0])dw+=x})}console.log('BIAS',JSON.stringify({uniqueLongest:ul/bank.length,amongLongest:al/bank.length,correctAvg:cw/bank.length,distractorAvg:dw/(bank.length*3)}));
+          NODE
