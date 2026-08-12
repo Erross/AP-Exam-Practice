@@ -29,6 +29,20 @@ jobs:
           end=src.index('p.write_text(s)', start)
           src=src[:start]+src[end:]
           exec(compile(src, str(path), 'exec'))
+          p=Path('data/ap-biology.js')
+          s=p.read_text()
+          replacements={
+            '"The tester must be heterozygous because two offspring phenotypes occurred."':'"The tester must be heterozygous because producing two offspring phenotypes requires it to contribute both allele types."',
+            '"The DNA substitution is removed before the gene is transcribed."':'"The DNA substitution is removed by repair before transcription, so the resulting mRNA retains the original codon sequence."',
+            '"A population persists only when all individuals use the same resources in the same way."':'"A population persists only when most individuals share the same resource use and therefore respond similarly to environmental change."',
+            '"Having more than two population alleles means that the trait must be controlled by several genes."':'"Having more than two alleles in the population means that each individual must inherit additional copies of the same locus."',
+            '"Hard seeds induce the same beneficial beak mutation in each bird before reproduction."':'"Hard seeds induce the same beneficial beak mutation in each bird, so allele frequencies change without differential reproduction."',
+            '"Density dependence can be determined only from whether a factor changes carrying capacity, not from how its effect varies with density."':'"Density dependence can be determined from whether a factor reduces population size, regardless of how strongly its effect changes with density."'
+          }
+          for old,new in replacements.items():
+              if old not in s: raise SystemExit('missing balancing target: '+old)
+              s=s.replace(old,new,1)
+          p.write_text(s)
           PY
       - name: Full repository validation
         run: npm run check
