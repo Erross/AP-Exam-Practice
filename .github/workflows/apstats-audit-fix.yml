@@ -23,6 +23,7 @@ jobs:
           node tools/patch-apstats-round3.js
           node tools/patch-apstats-round4.js
           node tools/patch-apstats-round5.js
+          node tools/patch-apstats-round6.js
           node tools/fix-ap-statistics-audit.js
           node tools/diagnose-apstats-draw.js
       - name: Full validation
@@ -31,7 +32,7 @@ jobs:
           npm run check
       - name: Commit repaired shipping files and remove one-shot tooling
         run: |
-          rm tools/fix-ap-statistics-audit.js tools/patch-apstats-audit-fix.js tools/patch-apstats-test-quote.js tools/patch-apstats-round2.js tools/patch-apstats-round3.js tools/patch-apstats-round4.js tools/patch-apstats-round5.js tools/diagnose-apstats-draw.js .github/workflows/apstats-audit-fix.yml
+          rm tools/fix-ap-statistics-audit.js tools/patch-apstats-audit-fix.js tools/patch-apstats-test-quote.js tools/patch-apstats-round2.js tools/patch-apstats-round3.js tools/patch-apstats-round4.js tools/patch-apstats-round5.js tools/patch-apstats-round6.js tools/diagnose-apstats-draw.js .github/workflows/apstats-audit-fix.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
