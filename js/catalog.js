@@ -215,7 +215,9 @@
     parts.textContent = partText;
     parts.hidden = !partText;
     const calculator = document.getElementById("preflight-calculator");
-    const calculatorText = subject.calculatorExpected === true
+    const calculatorText = subject.calculatorAllowed === false
+      ? "Calculator not permitted for this AP exam."
+      : subject.calculatorExpected === true
       ? "Calculator expected/permitted throughout this practice section."
       : (partText && /calculator/i.test(partText) ? "Calculator rules change by part; see the timed-part details above." : "");
     calculator.textContent = calculatorText;

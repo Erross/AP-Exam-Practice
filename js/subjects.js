@@ -212,6 +212,7 @@ const AP_SUBJECTS = [
     formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
+    calculatorAllowed: false,
     tierNote: null,
     units: [
       { id: "U1", name: "Thinking Geographically", examWeight: 0.09, examWeightRange: [0.08, 0.10] },
