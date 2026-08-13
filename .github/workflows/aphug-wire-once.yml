@@ -1,0 +1,26 @@
+name: Wire AP Human Geography
+on:
+  push:
+    branches: [subject/ap-human-geography]
+permissions:
+  contents: write
+jobs:
+  wire:
+    if: contains(github.event.head_commit.message, '[wire-aphug]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-human-geography
+      - name: Apply wiring
+        run: |
+          base64 -d .aphug-wire.b64 > /tmp/aphug-wire.py
+          python /tmp/aphug-wire.py
+          rm -f .aphug-wire.b64 .aphug-payload.bin .aphug-payload-* .github/workflows/aphug-materialize-once.yml
+      - name: Commit wiring
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Wire AP Human Geography bank and metadata"
+          git push origin HEAD:subject/ap-human-geography
