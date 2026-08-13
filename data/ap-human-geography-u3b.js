@@ -1,0 +1,10 @@
+// AP Human Geography profile layer — U3 B
+(function () {
+  "use strict";
+  window.__APHUG_ADD_TOPICS__([
+    { unit:"U3", code:"3.5", title:"Historical Causes of Diffusion", core:"Colonialism, imperialism, trade, and migration spread languages, religions, technologies, and cultural practices and helped create present-day cultural patterns.", scenario:"A former colony uses the language of a distant European country in government and higher education.", application:"The language pattern reflects historical diffusion associated with colonial rule and later institutional persistence." },
+    { unit:"U3", code:"3.6", title:"Contemporary Causes of Diffusion", core:"Globalization, urbanization, communications technology, migration, tourism, and multinational firms accelerate contemporary cultural diffusion.", scenario:"A music style created in one city becomes popular worldwide through streaming platforms and social media.", application:"Rapid global communication enables expansion diffusion across great distances without requiring large-scale relocation." },
+    { unit:"U3", code:"3.7", title:"Diffusion of Religion and Language", core:"Universalizing religions often spread through expansion and relocation diffusion, while languages spread through migration, conquest, trade, institutions, and communication networks.", scenario:"Migrants establish places of worship and language schools in destination cities while maintaining ties to their region of origin.", application:"Relocation diffusion carries religious and linguistic traits to new locations where they may subsequently spread further." },
+    { unit:"U3", code:"3.8", title:"Effects of Diffusion", core:"Diffusion can produce assimilation, acculturation, syncretism, multicultural landscapes, cultural convergence, or resistance depending on local context.", scenario:"A community blends an introduced religious celebration with older local rituals and foods.", application:"The blended practice is an example of syncretism produced by interaction between incoming and local cultural traditions." }
+  ]);
+})();
