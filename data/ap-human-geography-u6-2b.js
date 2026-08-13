@@ -1,4 +1,0 @@
-(function(){"use strict";window.__APHUG_ADD_TOPICS__([
-{unit:"U6",code:"6.6",title:"Density and Land Use",core:"Population density, land values, zoning, transportation, and accessibility shape the intensity and spatial arrangement of urban land uses.",scenario:"Land near a transit hub contains high-rise apartments and offices while lower-density housing dominates farther away.",application:"High accessibility and land values near the hub encourage more intensive land use and higher density."},
-{unit:"U6",code:"6.7",title:"Infrastructure",core:"Transportation, water, sanitation, energy, communications, schools, and other infrastructure influence urban development and connectivity.",scenario:"Peripheral neighborhoods grow faster than the municipal water and sewer network can expand.",application:"Infrastructure capacity can shape where urban growth is sustainable and how evenly services are available."}
-]);})();
