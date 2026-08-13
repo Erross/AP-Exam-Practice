@@ -5,7 +5,7 @@ on:
     branches:
       - release/ap-precalculus-2027-quality
 
-# Clean-room restart after rationale repair.
+# Final clean-room restart after content and test-plumbing repairs.
 jobs:
   audit:
     runs-on: ubuntu-latest
