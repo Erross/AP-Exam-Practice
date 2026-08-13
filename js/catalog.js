@@ -1,10 +1,20 @@
-// Catalog presentation helper: released courses first, drafts collapsed, and a
-// confirmation screen before the timed exam begins.
+// Catalog presentation helper: released courses first, drafts collapsed, a
+// stronger first-visit value proposition, and a confirmation screen before the
+// timed exam begins.
 (function () {
   "use strict";
 
   let selectedSubject = null;
   let beginExam = null;
+
+  function updateHeroCopy() {
+    const heading = document.querySelector(".site-header h1");
+    const tagline = document.querySelector(".site-header .tagline");
+    if (heading) heading.textContent = "Practice AP exams in the format you’ll actually see.";
+    if (tagline) {
+      tagline.textContent = "Full-length Section I practice built around current AP formats, unit weighting, skills, and stimulus sets. Free, original questions — no account required. Saves locally in your browser.";
+    }
+  }
 
   function organizeCatalog() {
     const container = document.getElementById("catalog-categories");
@@ -114,6 +124,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    updateHeroCopy();
     ensurePreflight();
     queueMicrotask(organizeCatalog);
     const search = document.getElementById("catalog-search");
