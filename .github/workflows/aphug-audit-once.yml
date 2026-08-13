@@ -1,0 +1,19 @@
+name: AP Human Geography released-mode gate
+on:
+  push:
+    branches: [subject/ap-human-geography]
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.event.head_commit.message == 'Run Human Geography released-mode gate'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run release:audit -- --subject ap-human-geography --trials 5000 --overlap-trials 5000
+      - run: npm run check
