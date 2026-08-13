@@ -16,14 +16,14 @@ function loadLiteratureWithReplacements() {
 
 const bank = loadLiteratureWithReplacements();
 const targets = {
-  "sf-watch": ["1.A","1.D","1.B","2.B","3.E","3.C","4.B","4.C","4.C","5.C","6.A","7.B"],
-  "sf-bell": ["1.A","1.D","1.B","2.B","3.E","3.C","4.B","4.C","4.C","5.C","6.A","7.B"],
-  "sf-room": ["1.A","1.D","1.B","2.B","3.E","3.C","4.B","4.C","4.C","5.C","6.B","7.B"],
-  "sf-supper": ["1.A","1.C","1.E","2.B","3.E","6.C","4.B","4.C","4.C","5.C","3.D","7.B"],
-  "sf-snow": ["1.A","1.D","1.B","2.B","3.E","3.C","4.B","4.C","4.C","5.C","6.A","7.B"],
-  "ld-clock": ["1.A","1.C","2.B","3.E","3.E","1.E","5.C","7.D","7.C"],
+  "sf-watch": ["1.A","1.D","1.B","2.B","3.C","3.C","4.B","4.C","4.C","5.C","6.B","7.B"],
+  "sf-bell": ["1.A","1.D","1.C","2.B","3.B","3.C","4.B","4.C","4.C","5.C","6.A","7.B"],
+  "sf-room": ["1.A","1.A","1.A","2.B","3.C","3.C","4.B","4.C","4.C","5.C","6.B","7.B"],
+  "sf-supper": ["1.A","1.A","1.E","2.B","3.E","6.B","4.B","4.C","4.C","5.D","3.D","7.B"],
+  "sf-snow": ["1.A","1.D","1.B","2.B","3.B","3.C","4.B","4.C","4.C","5.D","6.B","7.B"],
+  "ld-clock": ["1.A","1.C","2.B","3.C","3.B","1.E","5.C","7.D","7.C"],
   "ld-kitchen": ["1.A","1.C","2.B","3.E","3.D","1.E","5.C","7.D","7.C"],
-  "ld-orbit": ["1.A","1.C","2.B","3.E","5.D","3.D","1.E","7.D","7.C"],
+  "ld-orbit": ["1.A","1.C","2.B","3.E","5.C","3.D","1.E","7.D","7.C"],
 };
 const fakeTitles = /Watchmaker|Crossing Bell|West Room|Committee Supper|Snow Fence|Late Clock|Second Service|Assistant's Name/i;
 const absolute = /\b(every|always|never|only|entirely|unlimited|all|none|completely|impossible|certainly|definitely|guarantee[sd]?)\b/i;

@@ -84,17 +84,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/1952, 1892."
     },
     "sequence": 9,
-    "q": "The repeated question “what is one to do?” most clearly characterizes the narrator as",
+    "q": "The narrator’s repeated return to “what is one to do?” chiefly emphasizes that she",
     "o": [
-      "unable to form any opinion about her treatment",
-      "eager to surrender all decisions to her brother",
-      "aware of disagreement but constrained from acting",
-      "certain that open rebellion would immediately cure her"
+      "grows less interested in questioning John as the treatment continues",
+      "moves from private hesitation toward confidence in John’s judgment",
+      "remains constrained even as her disagreement with John’s treatment becomes clearer",
+      "shifts from indirect disagreement to openly rejecting John’s authority"
     ],
     "c": [
       2
     ],
-    "e": "She states clear personal beliefs about work and stimulation but frames herself as unable to act against a husband and brother whose medical and social authority supports the prescribed rest."
+    "e": "The repeated question marks persistence rather than a new decision: her disagreement with John becomes clearer, yet his authority continues to limit what she feels able to do."
   },
   {
     "id": "aplit-sf-watch-04",
@@ -128,7 +128,7 @@
   {
     "id": "aplit-sf-watch-05",
     "unit": "SF",
-    "topicCode": "3.E",
+    "topicCode": "3.C",
     "topic": "Structure",
     "skill": "3",
     "setType": "short-fiction",
@@ -302,7 +302,7 @@
   {
     "id": "aplit-sf-watch-11",
     "unit": "SF",
-    "topicCode": "6.A",
+    "topicCode": "6.B",
     "topic": "Comparison",
     "skill": "6",
     "setType": "short-fiction",
@@ -316,17 +316,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/1952, 1892."
     },
     "sequence": 7,
-    "q": "The phrase “height of romantic felicity” chiefly conveys the narrator's",
+    "q": "The phrase “height of romantic felicity” functions as a metaphor that chiefly",
     "o": [
-      "literal conviction that a ghost has already appeared",
-      "disgust with fiction and inherited estates",
-      "self-aware pleasure in Gothic conventions",
-      "belief that romance requires medical supervision"
+      "suggests the narrator expects the estate to improve John’s medical authority",
+      "presents the house as physically elevated above every nearby building",
+      "casts Gothic excitement as an imagined peak of pleasurable experience",
+      "shows the narrator has confused romantic fiction with the estate’s legal history"
     ],
     "c": [
       2
     ],
-    "e": "She playfully imagines that calling the mansion haunted would perfect a familiar romantic scenario, showing literary self-awareness rather than simple credulity."
+    "e": "“Height” turns the narrator’s delight in Gothic possibility into an imagined peak that can be reached. The metaphor conveys her self-aware pleasure in the conventions of romantic fiction."
   },
   {
     "id": "aplit-sf-watch-12",
@@ -418,7 +418,7 @@
   {
     "id": "aplit-sf-bell-03",
     "unit": "SF",
-    "topicCode": "1.B",
+    "topicCode": "1.C",
     "topic": "Character",
     "skill": "1",
     "setType": "short-fiction",
@@ -476,7 +476,7 @@
   {
     "id": "aplit-sf-bell-05",
     "unit": "SF",
-    "topicCode": "3.E",
+    "topicCode": "3.B",
     "topic": "Structure",
     "skill": "3",
     "setType": "short-fiction",
@@ -577,17 +577,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/160, 1893."
     },
     "sequence": 3,
-    "q": "The narrator's description of the Aubignys falling in love “as if struck by a pistol shot” chiefly",
+    "q": "The narrator’s comparison of Armand’s falling in love to being “struck by a pistol shot” most clearly reveals a perspective on his passion that is",
     "o": [
-      "proves that Aubigny courtships usually end in physical conflict",
-      "presents Armand's affection as slow and carefully reasoned",
-      "suggests Monsieur Valmondé shoots at unwelcome suitors",
-      "adds ironic violence and suddenness to Armand's passion"
+      "dismissive of its intensity because the courtship develops gradually",
+      "primarily concerned with the legal consequences of the marriage",
+      "detached from the speed and force with which Armand acts",
+      "impressed by its romantic force while alert to its sudden violence"
     ],
     "c": [
       3
     ],
-    "e": "The simile makes love instantaneous and forceful, anticipating the later avalanche and prairie-fire comparisons that stress Armand's impulsive intensity."
+    "e": "The violent simile is delivered within an energetic courtship account. It reveals a narrator who registers the romance while also signaling the dangerous suddenness of Armand’s passion."
   },
   {
     "id": "aplit-sf-bell-09",
@@ -635,17 +635,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/160, 1893."
     },
     "sequence": 10,
-    "q": "The cowl and pall similes in the description of L'Abri most strongly associate the plantation with",
+    "q": "The cowl-and-pall description makes L’Abri most plausibly symbolize",
     "o": [
-      "religious celebration and public festivity",
-      "gloom, enclosure, and death",
-      "agricultural abundance and freedom",
-      "youthful play and domestic comfort"
+      "the excitement and openness associated with Désirée’s childhood home",
+      "a household overshadowed by enclosure, gloom, and death",
+      "the economic opportunity Armand expects marriage to create",
+      "a refuge that protects Désirée from uncertainty about her origins"
     ],
     "c": [
       1
     ],
-    "e": "A cowl visually darkens and encloses the roof, while a pall is a funeral covering; together they make the house ominous rather than welcoming."
+    "e": "The cowl and pall evoke covering, mourning, and death. Applied to L’Abri, they make the plantation a symbolic embodiment of enclosure and foreboding rather than a neutral backdrop."
   },
   {
     "id": "aplit-sf-bell-11",
@@ -737,7 +737,7 @@
   {
     "id": "aplit-sf-room-02",
     "unit": "SF",
-    "topicCode": "1.D",
+    "topicCode": "1.A",
     "topic": "Character",
     "skill": "1",
     "setType": "short-fiction",
@@ -766,7 +766,7 @@
   {
     "id": "aplit-sf-room-03",
     "unit": "SF",
-    "topicCode": "1.B",
+    "topicCode": "1.A",
     "topic": "Character",
     "skill": "1",
     "setType": "short-fiction",
@@ -824,7 +824,7 @@
   {
     "id": "aplit-sf-room-05",
     "unit": "SF",
-    "topicCode": "3.E",
+    "topicCode": "3.C",
     "topic": "Structure",
     "skill": "3",
     "setType": "short-fiction",
@@ -925,17 +925,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/375, 1890."
     },
     "sequence": 3,
-    "q": "Calling the sentinels “statues to adorn the bridge” chiefly",
+    "q": "The description of the sentinels as “statues to adorn the bridge” most clearly reveals a narrator who views the military scene as",
     "o": [
-      "suggests that the sentinels are decorative sculptures rather than people",
-      "shows that the bridge was built as a monument",
-      "indicates that the soldiers have fallen asleep on duty",
-      "turns living soldiers into images of ceremonial immobility"
+      "casual and improvised despite the presence of armed soldiers",
+      "primarily confusing because the guards have unclear duties",
+      "energetic and disorderly as the execution approaches",
+      "ceremonially still and impersonal despite the human violence at its center"
     ],
     "c": [
       3
     ],
-    "e": "The comparison heightens their rigid stillness and the scene's ritual quality; it is figurative, not a literal claim about statues."
+    "e": "The narrator notices how living soldiers resemble decorative statues. That diction reveals a perspective attuned to the ceremonial stillness and impersonality surrounding an imminent human death."
   },
   {
     "id": "aplit-sf-room-09",
@@ -1085,7 +1085,7 @@
   {
     "id": "aplit-sf-supper-02",
     "unit": "SF",
-    "topicCode": "1.C",
+    "topicCode": "1.A",
     "topic": "Character",
     "skill": "1",
     "setType": "short-fiction",
@@ -1201,7 +1201,7 @@
   {
     "id": "aplit-sf-supper-06",
     "unit": "SF",
-    "topicCode": "6.C",
+    "topicCode": "6.B",
     "topic": "Comparison",
     "skill": "6",
     "setType": "short-fiction",
@@ -1215,7 +1215,7 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/269, 1914."
     },
     "sequence": 2,
-    "q": "The phrase “silent communion” is comic chiefly because it",
+    "q": "The metaphorical phrase “silent communion” is comic chiefly because it",
     "o": [
       "shows that Framton and the niece agree without speaking",
       "elevates an awkward pause into language of intimate connection",
@@ -1273,17 +1273,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/269, 1914."
     },
     "sequence": 5,
-    "q": "The narrator's remark that Framton made his last statement “in a tone of distinct regret” suggests",
+    "q": "The narrator’s phrase that Framton speaks “in a tone of distinct regret” most clearly reveals a perspective on his social situation that is",
     "o": [
-      "he regrets failing to meet Mrs. Sappleton years earlier",
-      "he wants the niece to leave before her aunt arrives",
-      "he is ashamed that he already knows the family's secret",
-      "his sister's introductions feel obligatory, not comforting"
+      "admiring of his eagerness to make as many new acquaintances as possible",
+      "surprised that he already knows the household and its recent history",
+      "critical of his decision to reject his sister’s introductions before using them",
+      "dryly aware that the introductions burden rather than reassure him"
     ],
     "c": [
       3
     ],
-    "e": "The regret follows his explanation that the letters are his only connection to local people, reinforcing his discomfort with a therapeutic program based on visiting strangers."
+    "e": "The narrator notices Framton’s regret instead of treating the introduction as a welcome opportunity. That dry observation frames his social visit as an obligation that heightens his unease."
   },
   {
     "id": "aplit-sf-supper-09",
@@ -1317,7 +1317,7 @@
   {
     "id": "aplit-sf-supper-10",
     "unit": "SF",
-    "topicCode": "5.C",
+    "topicCode": "5.D",
     "topic": "Word Choice, Imagery, and Symbol",
     "skill": "5",
     "setType": "short-fiction",
@@ -1331,17 +1331,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/269, 1914."
     },
     "sequence": 9,
-    "q": "The open French window chiefly functions as",
+    "q": "The repeated visual image of the open French window chiefly functions to",
     "o": [
-      "proof that Mrs. Sappleton's relatives actually died",
-      "an ordinary object turned into narrative evidence",
-      "a symbol Framton immediately recognizes from local legend",
-      "a barrier that prevents anyone from entering the lawn"
+      "establish that the household has deliberately left the room unsecured for expected strangers",
+      "turn an ordinary household detail into narrative evidence that makes the niece’s invented story seem plausible",
+      "show that Framton recognizes the niece’s story as fabricated before Mrs. Sappleton enters",
+      "provide a purely decorative image whose chief purpose is to brighten the room’s physical description"
     ],
     "c": [
       1
     ],
-    "e": "The window initially needs only the warm weather to explain it; the niece deliberately assigns it a tragic meaning, making its interpretation central to her control of Framton."
+    "e": "The open window is first an ordinary domestic image, but the niece incorporates it into her fiction so that a visible detail appears to corroborate the invented tragedy. The imagery therefore becomes persuasive evidence inside her story."
   },
   {
     "id": "aplit-sf-supper-11",
@@ -1476,17 +1476,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/1063, 1846."
     },
     "sequence": 8,
-    "q": "Fortunato's pride in wine is introduced primarily as",
+    "q": "Fortunato’s continued pride in his wine expertise chiefly functions to show that he",
     "o": [
-      "evidence that Fortunato is intellectually superior in every art",
-      "the original insult that caused Montresor's anger",
-      "a vulnerability Montresor understands how to exploit",
-      "a reason Montresor abandons his revenge"
+      "gradually abandons his claim to expertise as Montresor praises Luchesi",
+      "begins to suspect Montresor’s purpose and tests the story he has been told",
+      "remains vulnerable to the same flattery Montresor uses to guide him onward",
+      "treats the contest as trivial and stops trying to prove himself"
     ],
     "c": [
       2
     ],
-    "e": "Montresor calls wine connoisseurship Fortunato's “weak point” and immediately uses Amontillado to engage him, linking characterization to the revenge plan."
+    "e": "Fortunato does not revise the pride Montresor targets; his continuing need to prove superior expertise leaves him vulnerable to the same manipulation throughout the encounter."
   },
   {
     "id": "aplit-sf-snow-04",
@@ -1520,7 +1520,7 @@
   {
     "id": "aplit-sf-snow-05",
     "unit": "SF",
-    "topicCode": "3.E",
+    "topicCode": "3.B",
     "topic": "Structure",
     "skill": "3",
     "setType": "short-fiction",
@@ -1665,7 +1665,7 @@
   {
     "id": "aplit-sf-snow-10",
     "unit": "SF",
-    "topicCode": "5.C",
+    "topicCode": "5.D",
     "topic": "Word Choice, Imagery, and Symbol",
     "skill": "5",
     "setType": "short-fiction",
@@ -1682,9 +1682,9 @@
     "q": "Fortunato's motley costume and bells most strongly contribute to the passage by",
     "o": [
       "showing that Fortunato is employed as a court jester",
-      "visually turns the respected man into a fool",
-      "proving that Montresor selected Fortunato's clothing",
-      "indicating that the carnival has already ended"
+      "visually turning the respected man into a fool",
+      "suggesting that Montresor chose Fortunato’s costume for the encounter",
+      "indicating that Fortunato has already left the carnival behind"
     ],
     "c": [
       1
@@ -1694,7 +1694,7 @@
   {
     "id": "aplit-sf-snow-11",
     "unit": "SF",
-    "topicCode": "6.A",
+    "topicCode": "6.B",
     "topic": "Comparison",
     "skill": "6",
     "setType": "short-fiction",
@@ -1708,17 +1708,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/1063, 1846."
     },
     "sequence": 7,
-    "q": "Montresor's claim that his smile is prompted by Fortunato's “immolation” chiefly compares friendliness with",
+    "q": "Montresor’s use of “immolation” functions as a metaphor that casts Fortunato’s death as",
     "o": [
-      "a public reconciliation ceremony",
-      "the warmth of carnival lights",
-      "a hidden image of sacrificial destruction",
-      "a financial bargain over wine"
+      "a public contest in which the two men openly test their courage",
+      "an accidental consequence of carnival excess and confusion",
+      "a sacrificial destruction concealed beneath the language of friendship",
+      "a legal punishment carried out by an acknowledged public authority"
     ],
     "c": [
       2
     ],
-    "e": "“Immolation” evokes sacrificial killing or destruction; placing that idea behind a social smile makes the outward gesture conceal a radically opposite intention."
+    "e": "“Immolation” invokes sacrificial destruction rather than ordinary killing. Montresor’s private use of the term metaphorically reframes his friendly smile as concealment for a ritualized vision of Fortunato’s death."
   },
   {
     "id": "aplit-sf-snow-12",
@@ -1911,17 +1911,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/Poems%3A_Second_Series_(Dickinson)/The_Snake"
     },
     "sequence": 8,
-    "q": "The parenthetical contrast “Attended or alone” emphasizes that the response",
+    "q": "The parenthetical phrase “Attended or alone” most clearly reveals that the speaker views her fear as",
     "o": [
-      "occurs only when the creature appears in a group",
-      "does not depend on whether the speaker has companions",
-      "has weakened since childhood",
-      "is concealed from other observers"
+      "a response she performs more strongly when other people are watching",
+      "an involuntary reaction that persists whether or not she has companions",
+      "a judgment she reaches after another observer identifies the creature",
+      "a childhood memory whose force depends on being retold to an audience"
     ],
     "c": [
       1
     ],
-    "e": "The paired conditions cover both accompanied and solitary encounters, presenting the physical fear as automatic rather than socially produced."
+    "e": "By explicitly including both accompanied and solitary encounters, the speaker presents the bodily chill as her own persistent response rather than something produced by an audience."
   },
   {
     "id": "aplit-po-snake-07",
@@ -1940,17 +1940,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/Poems%3A_Second_Series_(Dickinson)/The_Snake"
     },
     "sequence": 4,
-    "q": "Describing the snake as a “fellow” chiefly",
+    "q": "Calling the snake a “fellow” most clearly reveals a speaker who regards the creature as",
     "o": [
-      "identifies the animal as a human neighbor",
-      "makes the speaker's final fear seem insincere",
-      "joins familiarity with the creature's wildness",
-      "proves the snake recognizes the speaker personally"
+      "too ordinary to deserve the careful attention given elsewhere in the poem",
+      "a humanlike companion whose behavior can be predicted with confidence",
+      "familiar enough for kinship language yet still capable of provoking visceral fear",
+      "an enemy whose presence overrides the speaker’s broader affinity with nature"
     ],
     "c": [
       2
     ],
-    "e": "The familiar noun places the snake among “nature's people,” yet the speaker never achieves the cordial relationship enjoyed with other creatures."
+    "e": "“Fellow” is intimate, almost companionable language, but the poem also records a bodily chill. The word therefore reveals a perspective that holds familiarity and instinctive fear together."
   },
   {
     "id": "aplit-po-snake-08",
@@ -2172,17 +2172,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/Songs_of_Innocence_and_of_Experience_(1826)/Songs_of_Experience/The_Tyger"
     },
     "sequence": 2,
-    "q": "The direct address to the tiger primarily makes it",
+    "q": "The speaker’s repeated direct address to the tiger most clearly reveals a perspective that treats it as",
     "o": [
-      "the speaker capable of answering the poem's questions",
-      "a harmless pet familiar to the speaker",
-      "an immediate subject of contemplation",
-      "the narrator of the middle stanzas"
+      "a distant example used mainly to settle an abstract philosophical argument",
+      "a familiar domestic creature whose origins require little explanation",
+      "an immediate presence that draws the speaker into awed questioning",
+      "a silent witness expected to answer each question with factual information"
     ],
     "c": [
       2
     ],
-    "e": "Apostrophe places the tiger before the speaker in vivid imaginative presence, although the questions ultimately concern the unobserved creator."
+    "e": "Direct address makes the tiger feel present before the questioning speaker. The form therefore reveals an absorbed, awed perspective rather than detached analysis or an expectation of literal replies."
   },
   {
     "id": "aplit-po-tyger-05",
@@ -2232,10 +2232,10 @@
     "sequence": 8,
     "q": "The lack of declarative answers most strongly suggests that the speaker",
     "o": [
-      "treats the tiger as a mystery inquiry deepens",
+      "treats the tiger as a mystery that inquiry deepens",
       "has forgotten the questions immediately after asking them",
       "expects the tiger to provide a theological explanation",
-      "believes the questions are unimportant"
+      "regards the questions as less important than the tiger’s appearance"
     ],
     "c": [
       0
@@ -2317,17 +2317,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/Songs_of_Innocence_and_of_Experience_(1826)/Songs_of_Experience/The_Tyger"
     },
     "sequence": 5,
-    "q": "The question about the maker of “the Lamb” chiefly compares",
+    "q": "The allusion to “the Lamb” chiefly functions to",
     "o": [
-      "two predators competing in the same forest",
-      "human craftsmanship with animal instinct",
-      "nighttime darkness with daylight",
-      "gentleness and vulnerability with terrifying strength"
+      "identify the tiger and lamb as animals created for exactly the same earthly purpose",
+      "resolve the poem’s questions by proving that gentleness must defeat destructive power",
+      "shift attention away from creation toward a literal pastoral scene containing both animals",
+      "place Christian associations of gentleness and innocence beside the tiger’s terrifying strength, sharpening the question of a single creator"
     ],
     "c": [
       3
     ],
-    "e": "Invoking the Lamb brings an emblem of innocence and meekness beside the tiger, intensifying the theological problem of one creator encompassing apparent opposites."
+    "e": "“The Lamb” carries recognizable Christian associations with innocence and sacrificial gentleness. Setting that allusion beside the tiger intensifies the poem’s puzzle about a creator responsible for radically different forms of life."
   },
   {
     "id": "aplit-po-tyger-10",
@@ -2462,17 +2462,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/The_Darkling_Thrush"
     },
     "sequence": 1,
-    "q": "The first two stanzas develop primarily by",
+    "q": "The extended metaphor that makes the landscape “The Century’s corpse” and the sky its “crypt” chiefly functions to",
     "o": [
-      "projecting the ending of a century onto a winter landscape",
-      "describing the speaker's journey from home into a forest",
-      "presenting scientific evidence of ecological decline",
-      "recounting the thrush's earlier life"
+      "project the ending of a century onto a winter landscape so historical exhaustion feels physically present",
+      "suggest that the speaker expects the winter landscape to revive before evening",
+      "turn the thrush itself into a symbol of political authority over the countryside",
+      "present the natural scene as visually cheerful despite the speaker’s private melancholy"
     ],
     "c": [
       0
     ],
-    "e": "Frost, weakening day, broken lyres, corpse, crypt, and lament turn seasonal observation into an imaginative death scene for the century."
+    "e": "Calling the landscape the Century’s corpse and the cloudy sky its crypt maps historical decline onto winter scenery. The metaphor makes an abstract sense of an ending materially visible and oppressive."
   },
   {
     "id": "aplit-po-thrush-04",
@@ -2868,17 +2868,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/We_Wear_the_Mask"
     },
     "sequence": 9,
-    "q": "The exclamation point in the final refrain most plausibly intensifies",
+    "q": "The word “Nay” at the beginning of the final stanza chiefly functions to",
     "o": [
-      "a joyful decision to abandon concealment",
-      "a request that the world provide a new mask",
-      "the force and cost of continuing the declaration",
-      "uncertainty about whether the mask exists"
+      "signal that the speakers are abandoning concealment and preparing to confess publicly to the world",
+      "soften the preceding rhetorical question by conceding that outside observers deserve a fuller explanation",
+      "sharply reject the idea that the world should inspect the speakers’ suffering before redirecting disclosure toward Christ",
+      "introduce a change from collective speech to the private feelings of a single speaker"
     ],
     "c": [
       2
     ],
-    "e": "After the stanza exposes tortured souls and a vile road, the emphatic refrain sounds both resolute and painful, not celebratory or doubtful."
+    "e": "“Nay” is a compact verbal refusal. It rejects the world’s claim to scrutinize the speakers’ pain and prepares the stanza’s contrast between concealment from society and direct appeal to Christ."
   },
   {
     "id": "aplit-po-mask-07",
@@ -3071,17 +3071,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/Poems_(Rossetti%2C_1901)/Up-Hill"
     },
     "sequence": 4,
-    "q": "Across the poem, the questions move from concern about",
+    "q": "The progression from questions about the road to questions about the inn most clearly reveals a speaker who is",
     "o": [
-      "the identity of the guide to the origin of the road",
-      "the difficulty of travel to the conditions of arrival and rest",
-      "daylight weather to agricultural work",
-      "solitary travel to a decision to turn back"
+      "interested mainly in describing scenery encountered during the journey",
+      "anxious about both enduring the journey and finding welcome at its end",
+      "confident from the opening that effort and arrival require little reassurance",
+      "more concerned with other travelers than with the destination or rest"
     ],
     "c": [
       1
     ],
-    "e": "The first stanza asks how long and hard the road is; later stanzas ask about the inn, prior wayfarers, entry, comfort, and beds."
+    "e": "The questions move from whether the road is difficult and lengthy to whether shelter, beds, and welcome await. That progression reveals anxiety about both endurance and eventual acceptance."
   },
   {
     "id": "aplit-po-uphill-03",
@@ -3303,17 +3303,17 @@
       "source": "Public-domain text: https://en.wikisource.org/wiki/Poems_(Rossetti%2C_1901)/Up-Hill"
     },
     "sequence": 8,
-    "q": "“Those who have gone before” compares the traveler with",
+    "q": "Within the poem’s extended journey metaphor, the phrase “Those who have gone before” chiefly functions to",
     "o": [
-      "guides who abandoned the road midway",
-      "earlier wayfarers who have completed the same journey",
-      "strangers traveling in the opposite direction",
-      "innkeepers who have never traveled"
+      "separate the questioner from travelers whose journeys led toward different forms of rest",
+      "suggest that earlier travelers have completed the same journey, making the promised rest feel established rather than hypothetical",
+      "suggest that earlier travelers left the road unfinished because endurance mattered more than arrival",
+      "suggest that the speaker must travel in the opposite direction from those who reached the inn"
     ],
     "c": [
       1
     ],
-    "e": "The phrase reassures the questioner that arrival joins a prior community, situating the individual journey within a shared human path."
+    "e": "Within the extended journey metaphor, earlier wayfarers make the destination feel tried and known. Their prior arrival strengthens the answering voice’s reassurance that rest awaits after the difficult road."
   },
   {
     "id": "aplit-po-uphill-11",
@@ -3434,7 +3434,7 @@
   {
     "id": "aplit-ld-clock-04",
     "unit": "LD",
-    "topicCode": "3.E",
+    "topicCode": "3.C",
     "topic": "Structure",
     "skill": "3",
     "setType": "longer-drama",
@@ -3463,7 +3463,7 @@
   {
     "id": "aplit-ld-clock-05",
     "unit": "LD",
-    "topicCode": "3.E",
+    "topicCode": "3.B",
     "topic": "Structure",
     "skill": "3",
     "setType": "longer-drama",
@@ -3535,17 +3535,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/844, 1895."
     },
     "sequence": 5,
-    "q": "The cucumber sandwiches chiefly function as",
+    "q": "The cucumber sandwiches most plausibly symbolize",
     "o": [
-      "evidence that Lady Bracknell has already arrived",
-      "a trivial object puncturing his philosophical pose",
-      "a symbol of Lane's desire to marry again",
-      "proof that Algernon lives frugally"
+      "Lane’s quiet authority over Algernon’s household decisions",
+      "the ordinary appetites beneath Algernon’s philosophical performance",
+      "a larger scarcity that threatens the household’s social position",
+      "the formal hospitality Algernon consistently places above self-interest"
     ],
     "c": [
       1
     ],
-    "e": "They enter immediately after Algernon announces that he keeps “science for Life,” reducing lofty self-description to concern over fashionable refreshments."
+    "e": "The sandwiches repeatedly interrupt Algernon’s lofty claims with appetite and etiquette. They therefore become a comic symbol of ordinary self-interest beneath his philosophical performance."
   },
   {
     "id": "aplit-ld-clock-08",
@@ -3593,17 +3593,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/844, 1895."
     },
     "sequence": 8,
-    "q": "The scene's comedy depends most on",
+    "q": "Which commentary best explains how the scene’s polished manners support a claim that it satirizes social convention?",
     "o": [
-      "characters misunderstanding every literal word they hear",
-      "physical slapstick involving the furniture",
-      "a secret identity revealed to the audience",
-      "polite language carrying irreverent or contradictory ideas"
+      "Formal courtesy softens the disagreement, suggesting that social rules can make difficult conversations productive and sincere.",
+      "The restrained diction makes the exchange seem serious, suggesting that the scene values decorum more than comic contradiction.",
+      "Lane’s careful replies preserve professional distance, suggesting that class roles can contain tension without challenging the hierarchy itself.",
+      "The mismatch between formal courtesy and irreverent ideas makes respectable behavior look performative rather than reliably moral."
     ],
     "c": [
       3
     ],
-    "e": "Both men maintain formal address while discussing impolite listening, stolen champagne, marriage as misunderstanding, and moral responsibility through deadpan paradox rather than overt conflict."
+    "e": "The scene repeatedly pairs polished address with selfish, irreverent, or contradictory claims. Explaining that mismatch connects specific evidence to the interpretive claim that conventional respectability is being satirized."
   },
   {
     "id": "aplit-ld-kitchen-01",
@@ -3796,17 +3796,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/59432, 1916."
     },
     "sequence": 4,
-    "q": "The fire in the kitchen most plausibly functions as",
+    "q": "The fire in the kitchen most plausibly symbolizes",
     "o": [
-      "proof that Mrs. Wright kept the farmhouse comfortably heated",
-      "a symbol of the County Attorney's sympathy for the accused",
-      "physical comfort contrasting with the room's coldness",
-      "evidence that someone tried to destroy the kitchen"
+      "the investigators’ confidence that the stove explains the crime",
+      "the household prosperity that existed before Mr. Wright’s death",
+      "a fragile domestic warmth within an otherwise cold investigative setting",
+      "Mrs. Peters’s intention to alter the physical evidence in the room"
     ],
     "c": [
       2
     ],
-    "e": "The officials immediately seek the stove because the weather is below zero, but the abandoned, disordered room and Mrs. Peters's refusal of comfort keep the setting psychologically cold."
+    "e": "The fire provides literal warmth in a room repeatedly described as cold and uneasy. It can therefore symbolize a limited domestic comfort within an emotionally and institutionally cold setting."
   },
   {
     "id": "aplit-ld-kitchen-08",
@@ -3854,17 +3854,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/59432, 1916."
     },
     "sequence": 8,
-    "q": "The opening most strongly establishes a tension between",
+    "q": "Which commentary best explains how the kitchen details support a claim that the scene questions what official investigators count as evidence?",
     "o": [
-      "formal investigation and the meanings embedded in ordinary household details",
-      "two competing police agencies",
-      "the County Attorney and Sheriff over who owns the farmhouse",
-      "Hale and Mrs. Peters over whether the house is cold"
+      "Placing unfinished domestic work beside the formal inquiry suggests that procedure may overlook evidence whose meaning is rooted in household life.",
+      "The disorder makes the room harder to search, suggesting that investigators need a more systematic method for cataloging physical objects.",
+      "The men’s attention to the stove suggests that official inquiry can recognize domestic evidence when its practical importance is immediately visible.",
+      "The contrast between kitchen work and legal business suggests that the activities occupy separate spheres with different purposes."
     ],
     "c": [
       0
     ],
-    "e": "The stage directions foreground unfinished domestic work while the men explicitly organize an official inquiry, preparing a conflict over what kinds of details deserve attention."
+    "e": "The stage directions foreground unfinished domestic work while the men privilege formal procedure. The correct commentary explains how that juxtaposition supports the claim that official methods may miss household meanings."
   },
   {
     "id": "aplit-ld-orbit-01",
@@ -3946,7 +3946,7 @@
       "proving that the household has no economic concerns",
       "placing the characters in a public workplace",
       "showing that Helmer dislikes Christmas traditions",
-      "frames financial negotiation within festive domestic abundance"
+      "framing financial negotiation within festive domestic abundance"
     ],
     "c": [
       3
@@ -3972,7 +3972,7 @@
     "sequence": 4,
     "q": "Helmer's entrance from his study chiefly shifts the scene from",
     "o": [
-      "Nora's privacy giving way to Helmer's scrutiny",
+      "Nora’s private freedom to Helmer’s scrutiny",
       "financial anxiety to complete agreement",
       "Christmas preparation to a discussion with the porter",
       "domestic life to an unrelated business meeting"
@@ -3985,7 +3985,7 @@
   {
     "id": "aplit-ld-orbit-05",
     "unit": "LD",
-    "topicCode": "5.D",
+    "topicCode": "5.C",
     "topic": "Word Choice, Imagery, and Symbol",
     "skill": "5",
     "setType": "longer-drama",
@@ -3999,17 +3999,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/2542, 1879; R. Farquharson Sharp translation."
     },
     "sequence": 6,
-    "q": "The hidden macaroons most strongly suggest",
+    "q": "The hidden macaroons most plausibly symbolize",
     "o": [
-      "Helmer's plan to surprise Nora with food",
-      "a private appetite Nora conceals",
-      "the household's inability to afford sweets",
-      "a medical restriction imposed by the porter"
+      "the household’s inability to afford ordinary food during the holidays",
+      "a small private autonomy Nora conceals from Helmer",
+      "Helmer’s unspoken plan to restrict the family’s Christmas celebration",
+      "Nora’s desire to end the playful intimacy of the household"
     ],
     "c": [
       1
     ],
-    "e": "Nora eats them furtively, listens at Helmer's door, then pockets the bag and wipes her mouth before calling him in, making concealment unmistakable."
+    "e": "Nora deliberately hides a minor pleasure that Helmer would police. The macaroons therefore symbolically condense the small private autonomy she preserves within his affectionate control."
   },
   {
     "id": "aplit-ld-orbit-06",
@@ -4115,17 +4115,17 @@
       "source": "Public-domain text: https://www.gutenberg.org/ebooks/2542, 1879; R. Farquharson Sharp translation."
     },
     "sequence": 8,
-    "q": "The scene most strongly develops a tension between",
+    "q": "Which commentary best explains how Helmer’s pet names and Nora’s concealed behavior support a claim that their playful intimacy contains unequal authority?",
     "o": [
-      "romantic love and public scandal already known to both characters",
-      "playful domestic intimacy and unequal authority",
-      "parenthood and dislike of children",
-      "work and artistic ambition"
+      "Their playful language makes financial disagreement seem temporary, suggesting that affection readily resolves the couple’s differences about spending.",
+      "His affection accompanies correction while her secrecy preserves small choices, showing that warmth and control operate together in the marriage.",
+      "Nora’s secrecy gives her leverage in the exchange, suggesting that she directs the household more strongly than Helmer recognizes.",
+      "The pet names make the disagreement comic, suggesting that money functions mainly as a shared source of entertainment for the couple."
     ],
     "c": [
       1
     ],
-    "e": "The couple's banter is affectionate and energetic, yet Helmer's pet names, financial judgments, and Nora's concealed behavior establish an imbalance within that intimacy."
+    "e": "The scene combines affectionate language with Helmer’s regulation and Nora’s concealment. The correct commentary connects those details to the claim that intimacy and unequal authority coexist."
   }
 ];
 

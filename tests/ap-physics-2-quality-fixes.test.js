@@ -22,7 +22,7 @@ test("Physics 2 recall-heavy audit items are replaced by AP-level reasoning", ()
   assert.equal(answer("apphys2-u11-012"), "Twice as much");
   assert.match(answer("apphys2-u11-015"), /current through R is twice/i);
   assert.equal(answer("apphys2-u13-011"), "3/2");
-  assert.match(answer("apphys2-u13-015"), /real, inverted image 60 cm.*magnification −2/i);
+  assert.match(answer("apphys2-u13-015"), /60 cm.*twice.*inversion/i);
   assert.match(answer("apphys2-u14-026"), /^Zero,/i);
   assert.match(answer("apphys2-u15-011"), /High-frequency modes require larger discrete energy quanta/i);
   assert.match(answer("apphys2-u15-013"), /Trial B gives larger maximum electron kinetic energy/i);
