@@ -12,14 +12,24 @@ jobs:
     if: contains(github.event.head_commit.message, '[run-branch-hygiene]')
     runs-on: ubuntu-latest
     steps:
-      - name: Delete fully merged stale branches and report survivors
+      - name: Delete superseded stale branches and report survivors
         uses: actions/github-script@v7
         with:
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const main = 'main';
-            const forceDelete = new Set(['release/ap-precalculus-2027']);
+            const forceDelete = new Set([
+              'audit/2026-08-main-new-course-content',
+              'gov/expand-question-bank',
+              'integration/ap-government-biology-release',
+              'integration/2026-08-ap-english-public-domain-v2',
+              'integration/2026-08-ap-statistics-release',
+              'ops/branch-hygiene-final',
+              'release/ap-statistics-2027',
+              'subject/ap-biology',
+              'subject/ap-chemistry'
+            ]);
             const branches = await github.paginate(github.rest.repos.listBranches, { owner, repo, per_page: 100 });
             const deleted = [];
             const survivors = [];
@@ -34,10 +44,10 @@ jobs:
                 if (ahead === 0 || forceDelete.has(branch)) {
                   try {
                     await github.rest.git.deleteRef({ owner, repo, ref: `heads/${branch}` });
-                    deleted.push({branch, ahead, behind, reason: forceDelete.has(branch) ? 'disposable interrupted release scaffold' : '0 commits ahead of main'});
+                    deleted.push({branch, ahead, behind});
                     core.info(`DELETED ${branch} ahead=${ahead} behind=${behind}`);
                   } catch (err) {
-                    failed.push({branch, ahead, behind, error: err.message});
+                    failed.push({branch, error: err.message});
                     core.warning(`FAILED DELETE ${branch}: ${err.message}`);
                   }
                 } else {
@@ -51,7 +61,7 @@ jobs:
             }
             core.summary.addHeading('Branch hygiene result');
             core.summary.addRaw(`Deleted: ${deleted.length}\n\n`);
-            for (const x of deleted) core.summary.addRaw(`- deleted ${x.branch} — ${x.reason} (ahead ${x.ahead}, behind ${x.behind})\n`);
+            for (const x of deleted) core.summary.addRaw(`- deleted ${x.branch} (ahead ${x.ahead}, behind ${x.behind})\n`);
             core.summary.addRaw(`\nSurvivors: ${survivors.length}\n\n`);
             for (const x of survivors) core.summary.addRaw(`- keep ${x.branch} — ahead ${x.ahead}, behind ${x.behind}\n`);
             if (failed.length) {
