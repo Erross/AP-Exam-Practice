@@ -1,0 +1,1 @@
+(function(){"use strict";if(typeof window.__APHUG_FINALIZE__!=="function")throw new Error("AP Human Geography builder missing");window.__APHUG_FINALIZE__();delete window.__APHUG_FINALIZE__;delete window.__APHUG_ADD_TOPICS__;})();
