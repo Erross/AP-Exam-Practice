@@ -7,6 +7,8 @@ const subject=AP_SUBJECTS.find(x=>x.id==="ap-human-geography");
 const {bank}=loadEffectiveBank(subject);
 const units={U1:6,U2:9,U3:9,U4:9,U5:9,U6:9,U7:9};
 const skills={"1":[15,21],"2":[10,15],"3":[8,12],"4":[8,12],"5":[8,12]};
+assert.deepEqual(subject.skillCountRanges,skills);
+assert.equal(subject.sciencePracticeRanges,undefined);
 test("Human Geography draws exact unit and source blueprint",()=>{
  for(let i=0;i<1000;i++){
   const draw=drawExam(subject,bank);assert.equal(draw.length,60);
