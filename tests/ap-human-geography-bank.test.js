@@ -27,3 +27,4 @@ test("Human Geography exact skill families perform their declared task",()=>{
  visual.forEach(q=>assert.equal(q.stimulus&&q.stimulus.type,"visual",q.id));
  scale.forEach(q=>{assert.equal(q.stimulusGroupId,null,q.id);assert.match(q.q,/local.*regional|regional.*local/i,q.id);});
 });
+// clean-room restart marker
