@@ -20,6 +20,8 @@ The current production catalog contains seven released AP courses:
 | **AP Calculus AB** | 120 questions | 42-question Section I attempts | Separate timed Part A/Part B behavior; calculator-homogeneous parts; graphical, numerical, analytical, and verbal representations. |
 | **AP Physics 2** | 140 questions | 42-question Section I attempts | Units 9–15; current MCQ science-practice weighting; seven shared data/stimulus sets; quantitative and claim/evidence reasoning. |
 
+**AP Statistics** is also present on `main` with a completed, independently audited 140-question bank for the May 2027 redesign, but it remains intentionally `releaseStatus: "draft"` and is therefore not published in the production catalog.
+
 Other AP subjects may appear in the repository registry as **draft metadata**. A draft is never published merely because a data file exists: production output includes only subjects whose registry metadata explicitly sets `releaseStatus: "released"`.
 
 ## What an exam attempt does
@@ -59,7 +61,7 @@ The repository also contains quality gates intended to catch common synthetic-qu
 - source/provenance validation for stimulus material;
 - checks that shared stimuli stay intact and internally consistent.
 
-Recent post-release audits also specifically hardened distractors and AP-level reasoning in Chemistry, Physics 2, English Language, English Literature, and Calculus AB rather than relying only on structural tests.
+In August 2026, all seven released courses were run through repeated clean-room audit/fix cycles: audit from scratch, repair substantive findings, restart the audit, and repeat until a fresh post-repair pass was clean. Those passes hardened exact CED skill/task alignment, distractor quality, quantitative correctness, duplicate/variant handling, browser/test bank parity, and retake behavior across English Language, English Literature, U.S. Government, Calculus AB, Biology, Chemistry, and Physics 2. AP Statistics went through the same process while remaining draft.
 
 See [`CONTENT_STANDARDS.md`](CONTENT_STANDARDS.md) for the full authoring and release standard.
 
