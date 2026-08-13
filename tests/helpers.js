@@ -14,6 +14,7 @@ function loadChemistryBank() {
   vm.runInContext(fs.readFileSync("data/ap-chemistry.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("data/ap-chemistry-curation.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("data/ap-chemistry-corrections.js", "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-chemistry-quality-fixes.js", "utf8"), sandbox);
   return sandbox.window.QUESTIONS_AP_CHEMISTRY;
 }
 
