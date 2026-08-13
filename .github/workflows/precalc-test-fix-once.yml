@@ -1,0 +1,36 @@
+name: Fix Precalculus clean-room test
+
+on:
+  push:
+    branches:
+      - release/ap-precalculus-2027-quality
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: contains(github.event.head_commit.message, '[run-precalc-test-fix]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/ap-precalculus-2027-quality
+      - name: Correct drawExam argument order
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('tests/ap-precalculus-clean-room.test.js')
+          s = p.read_text()
+          old = 'const exam = drawExam(bank, subject).flat();'
+          new = 'const exam = drawExam(subject, bank);'
+          if old not in s:
+              raise SystemExit('target invocation not found')
+          p.write_text(s.replace(old, new))
+          PY
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add tests/ap-precalculus-clean-room.test.js
+          git commit -m "Fix Precalculus clean-room draw invocation"
+          git push origin HEAD:release/ap-precalculus-2027-quality
