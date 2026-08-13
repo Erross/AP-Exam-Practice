@@ -1,6 +1,6 @@
 // AP Precalculus clean-room quality repairs.
 // Applied after data/ap-precalculus.js so the effective browser bank uses the
-// independently reviewed rationales without duplicating the 125-item bank.
+// independently reviewed fixes without duplicating the 125-item bank.
 (() => {
   const bank = window.QUESTIONS_AP_PRECALCULUS;
   if (!Array.isArray(bank)) throw new Error("AP Precalculus bank must load before quality fixes");
@@ -19,4 +19,16 @@
     if (!question) throw new Error(`Missing Precalculus quality-fix target ${id}`);
     question.e = explanation;
   }
+
+  const logShape = bank.find((item) => item.id === "apprecalc-u2-031");
+  if (!logShape) throw new Error("Missing Precalculus quality-fix target apprecalc-u2-031");
+  const correctText = "It is increasing for x > 0, crosses the x-axis at x = 1, and has vertical asymptote x = 0.";
+  const key = logShape.c[0];
+  const options = [
+    "It decreases for x > 0 and has vertical asymptote x = 0.",
+    "Its domain includes negative x-values, and it has horizontal asymptote y = 0.",
+    "It increases for x > 1 but decreases on the interval 0 < x < 1."
+  ];
+  options.splice(key, 0, correctText);
+  logShape.o = options;
 })();
