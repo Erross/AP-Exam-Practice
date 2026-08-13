@@ -1,0 +1,21 @@
+name: AP Precalculus release audit
+
+on:
+  push:
+    branches:
+      - release/ap-precalculus-2027
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Generic release audit — 5,000 draws / 5,000 retake pairs
+        run: npm run release:audit -- --subject ap-precalculus --trials 5000 --overlap-trials 5000
+      - name: Full repository gate
+        run: npm run check
