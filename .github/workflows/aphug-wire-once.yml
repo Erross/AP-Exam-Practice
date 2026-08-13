@@ -14,8 +14,7 @@ jobs:
           ref: subject/ap-human-geography
       - name: Apply wiring
         run: |
-          base64 -d .aphug-wire.b64 > /tmp/aphug-wire.py
-          python /tmp/aphug-wire.py
+          python tools/aphug-wire-core.py
           rm -f .aphug-wire.b64 .aphug-payload.bin .aphug-payload-* .github/workflows/aphug-materialize-once.yml
       - name: Commit wiring
         run: |
