@@ -12,7 +12,8 @@ function copy(source) {
   fs.copyFileSync(source, target);
 }
 
-["style.css", "js/subjects.js", "js/draw.js", "js/session.js", "js/notation.js", "js/app.js"].forEach(copy);
+copy("style.css");
+fs.cpSync("js", path.join(out, "js"), { recursive: true });
 fs.cpSync("assets", path.join(out, "assets"), { recursive: true });
 
 const released = AP_SUBJECTS.filter((subject) => subject.releaseStatus === "released");
@@ -26,10 +27,7 @@ function owningReleasedSubject(source) {
   return released.find((subject) => filename === subject.id || filename.startsWith(`${subject.id}-`)) || null;
 }
 
-const allowedScripts = new Set(
-  referencedDataScripts.filter((source) => owningReleasedSubject(source))
-);
-
+const allowedScripts = new Set(referencedDataScripts.filter((source) => owningReleasedSubject(source)));
 for (const source of allowedScripts) copy(source);
 
 const html = sourceHtml.replace(
