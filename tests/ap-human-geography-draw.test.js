@@ -16,8 +16,11 @@ test("Human Geography draws exact unit and source blueprint",()=>{
  }
 });
 test("Human Geography draw skill families stay inside CED ranges",()=>{
- for(let i=0;i<1000;i++){
+ const mins={1:99,2:99,3:99,4:99,5:99},maxs={1:0,2:0,3:0,4:0,5:0};
+ for(let i=0;i<5000;i++){
   const c={};drawExam(subject,bank).forEach(q=>{const f=q.skill.split('.')[0];c[f]=(c[f]||0)+1;});
-  for(const [f,[lo,hi]] of Object.entries(skills))assert.ok((c[f]||0)>=lo&&(c[f]||0)<=hi,`skill ${f}=${c[f]||0}`);
+  for(const f of Object.keys(skills)){mins[f]=Math.min(mins[f],c[f]||0);maxs[f]=Math.max(maxs[f],c[f]||0);}
  }
+ console.log("Human Geography skill envelope",{mins,maxs});
+ for(const [f,[lo,hi]] of Object.entries(skills)){assert.ok(mins[f]>=lo,`skill ${f} minimum ${mins[f]} below ${lo}`);assert.ok(maxs[f]<=hi,`skill ${f} maximum ${maxs[f]} above ${hi}`);}
 });
