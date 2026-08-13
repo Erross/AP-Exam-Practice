@@ -18,9 +18,25 @@ jobs:
           ref: release/ap-precalculus-2027-quality
       - run: node tools/precalc-harden-skills.js
       - run: node tools/precalc-content-fixes.js
+      - name: Fix short clean-room rationale
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const p = 'data/ap-precalculus.js';
+          let s = fs.readFileSync(p, 'utf8');
+          const oldText = 'The quadratic formula gives x = [6 ± √(36 − 52)]/2 = [6 ± 4i]/2 = 3 ± 2i.';
+          const newText = 'The quadratic formula gives x = [6 ± √(36 − 52)]/2 = [6 ± 4i]/2 = 3 ± 2i. The negative discriminant produces the conjugate pair, so both solutions are required.';
+          if (!s.includes(oldText) && !s.includes(newText)) throw new Error('target rationale not found');
+          s = s.replace(oldText, newText);
+          fs.writeFileSync(p, s);
+          NODE
       - run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add data/ap-precalculus.js
-          git commit -m "Apply Precalculus clean-room content repairs"
-          git push origin HEAD:release/ap-precalculus-2027-quality
+          if git diff --cached --quiet; then
+            echo "No data changes required"
+          else
+            git commit -m "Fix Precalculus clean-room rationale"
+            git push origin HEAD:release/ap-precalculus-2027-quality
+          fi
