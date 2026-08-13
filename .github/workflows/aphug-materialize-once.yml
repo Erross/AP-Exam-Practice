@@ -18,12 +18,16 @@ jobs:
           ref: subject/ap-human-geography
       - name: Expand authored profile payload
         run: |
+          wc -c .aphug-payload.bin
           python - <<'PY'
           from pathlib import Path
           import io, zipfile
           encrypted = Path('.aphug-payload.bin').read_bytes()
-          raw = bytes(value ^ 0xA5 for value in encrypted)
+          print('encrypted bytes', len(encrypted))
+          raw = bytes(value ^ 165 for value in encrypted)
+          print('decoded bytes', len(raw))
           with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+              print(archive.namelist())
               archive.extractall('.')
           PY
           rm -f .aphug-payload.bin .aphug-payload-* data/ap-human-geography-u3a.js
