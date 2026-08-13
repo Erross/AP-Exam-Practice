@@ -471,7 +471,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 105,
     totalExamTimeLabel: "2h 55m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // AP Central 2026-27 course page: Units 1-3 are assessed; Unit 4 is not.

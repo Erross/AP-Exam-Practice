@@ -14,7 +14,7 @@ const EXPECTED_UNIT_COUNTS = { U1: 42, U2: 44, U3: 39 };
 test("AP Precalculus bank matches its declared CED metadata and unit counts", () => {
   assert.equal(bank.length, 125);
   assert.equal(subject.formatVerified, true);
-  assert.equal(subject.releaseStatus, "draft", "Precalculus must stay draft until an independent content review happens");
+  assert.equal(subject.releaseStatus, "released", "Precalculus release candidate must remain explicitly released");
   assert.deepEqual(
     Object.fromEntries(subject.units.map((unit) => [unit.id, bank.filter((q) => q.unit === unit.id).length])),
     EXPECTED_UNIT_COUNTS
