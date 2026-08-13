@@ -515,7 +515,18 @@
       );
 
       if (subject.examBlueprint) {
-        result = drawBlueprintExam(subject, bank, targets, rng);
+        const ranges = subject.sciencePracticeRanges || {};
+        const attempts = Object.keys(ranges).length ? (subject.constraintDrawAttempts || 5000) : 1;
+        for (let attempt = 0; attempt < attempts; attempt++) {
+          const candidate = drawBlueprintExam(subject, bank, targets, rng);
+          const summary = summarizeBlocks(toBlocks(candidate));
+          const valid = Object.entries(ranges).every(([family, range]) => {
+            const count = summary.practices[family] || 0;
+            return count >= range[0] && count <= range[1];
+          });
+          if (valid) { result = candidate; break; }
+        }
+        if (!result) throw new Error("No blueprint draw satisfies configured practice ranges");
       } else if (subject.sciencePracticeRanges || subject.attributeRanges) {
         result = drawConstrainedWeightedExam(subject, byUnit, targets, rng);
       } else {

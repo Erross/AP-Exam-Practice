@@ -223,6 +223,7 @@ const AP_SUBJECTS = [
       { id: "U7", name: "Industrial and Economic Development Patterns and Processes", examWeight: 0.145, examWeightRange: [0.12, 0.17] },
     ],
     examBlueprint: { sets: { quantitative: 4, foundational: 0, text: 0, visual: 3 }, standaloneRange: [39, 39] },
+    sciencePracticeRanges: { "1": [15, 21], "2": [10, 15], "3": [8, 12], "4": [8, 12], "5": [8, 12] },
     dataVar: "QUESTIONS_AP_HUMAN_GEOGRAPHY",
   },
   {

@@ -9,7 +9,7 @@ function loadAllBanks() {
   const scripts = [...html.matchAll(/<script src="(data\/[^"]+\.js)"><\/script>/g)].map((m) => m[1]);
   const groups = new Map();
   scripts.forEach((file) => {
-    const key = file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
+    const key = file.startsWith("data/ap-human-geography-") ? "data/ap-human-geography.js" : file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(file);
   });
