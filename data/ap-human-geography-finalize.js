@@ -19,7 +19,7 @@
     if(source&&source.type==="quantitative"){
       q.skill=seq===1?"3.A":seq===2?"3.B":"3.E";
       if(seq===1){
-        Object.assign(q,rotate("A quantitative table comparing values for three geographic areas",["A qualitative interview transcript from one resident","A reference map showing only named locations","A landscape photograph without numerical attributes"],key));
+        Object.assign(q,rotate("A quantitative table comparing values for three geographic areas",["A qualitative interview transcript describing one resident's geographic experience","A reference map displaying named locations and transportation features","A landscape image showing visible land-use and settlement features"],key));
         q.q="Which type of geographic evidence is presented in the source?";
         q.e="The source is a table of numerical values organized by geographic area, so it is quantitative geographic data. The other choices describe qualitative text, a reference map, or a photograph rather than the evidence actually displayed.";
       } else if(seq===2){
@@ -33,7 +33,7 @@
     } else if(source&&source.type==="visual"){
       q.skill=seq===1?"4.A":seq===2?"4.C":"4.E";
       if(seq===1){
-        Object.assign(q,rotate("A qualitative description of a geographic landscape or spatial situation",["A numerical time series measuring annual change","A table of demographic rates for several countries","A mathematical model with no geographic context"],key));
+        Object.assign(q,rotate("A qualitative description of a geographic landscape or spatial situation",["A numerical time series documenting annual change in a geographic indicator","A demographic table comparing population rates among several geographic areas","A mathematical model describing a relationship without a geographic source"],key));
         q.q="Which type of information is presented in the visual source description?";
         q.e="The source describes visible landscape or spatial features qualitatively. It does not present a numerical time series, a demographic table, or a context-free mathematical model, so visual-source analysis is required.";
       } else if(seq===2){
