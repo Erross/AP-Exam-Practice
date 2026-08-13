@@ -8,7 +8,7 @@ The project is deliberately lightweight: static HTML, CSS, and JavaScript with n
 
 ## Released courses
 
-The current production catalog contains eight released AP courses:
+The current production catalog contains nine released AP courses:
 
 | Course | Bank size | Practice section | Highlights |
 | --- | ---: | --- | --- |
@@ -60,7 +60,7 @@ The repository also contains quality gates intended to catch common synthetic-qu
 - source/provenance validation for stimulus material;
 - checks that shared stimuli stay intact and internally consistent.
 
-In August 2026, all eight released courses were run through repeated clean-room audit/fix cycles: audit from scratch, repair substantive findings, restart the audit, and repeat until a fresh post-repair pass was clean. Those passes hardened exact CED skill/task alignment, distractor quality, quantitative correctness, duplicate/variant handling, browser/test bank parity, and retake behavior across English Language, English Literature, U.S. Government, Calculus AB, Biology, Chemistry, Physics 2, and Statistics.
+In August 2026, all nine released courses were run through repeated clean-room audit/fix cycles: audit from scratch, repair substantive findings, restart the audit, and repeat until a fresh post-repair pass was clean. Those passes hardened exact CED skill/task alignment, distractor quality, quantitative correctness, duplicate/variant handling, browser/test bank parity, and retake behavior across English Language, English Literature, U.S. Government, Calculus AB, Biology, Chemistry, Physics 2, and Statistics.
 
 See [`CONTENT_STANDARDS.md`](CONTENT_STANDARDS.md) for the full authoring and release standard.
 
@@ -179,3 +179,7 @@ This project is an independent educational practice resource and is not affiliat
 ## License
 
 MIT © 2026 Ewan Ross. See [`LICENSE`](LICENSE).
+
+
+### AP Precalculus
+Released for the May 2027 format after clean-room CED, content, draw, overlap, and naive-interface audits.
