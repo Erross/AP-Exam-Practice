@@ -1,56 +1,125 @@
-// Catalog presentation helper: keep released/playable courses primary and move
-// disabled draft/unreleased cards into one collapsed development section.
+// Catalog presentation helper: released courses first, drafts collapsed, and a
+// confirmation screen before the timed exam begins.
 (function () {
   "use strict";
+
+  let selectedSubject = null;
+  let beginExam = null;
 
   function organizeCatalog() {
     const container = document.getElementById("catalog-categories");
     if (!container) return;
+    const old = container.querySelector(".development-catalog");
+    if (old) old.remove();
 
-    const priorDevelopment = container.querySelector(".development-catalog");
-    if (priorDevelopment) priorDevelopment.remove();
-
-    const draftCards = [];
-    const sections = Array.from(container.children).filter((node) =>
-      node.classList && node.classList.contains("category-section")
-    );
-
-    sections.forEach((section) => {
+    const drafts = [];
+    Array.from(container.querySelectorAll(":scope > .category-section")).forEach((section) => {
       const cards = Array.from(section.querySelectorAll(".subject-card"));
-      cards.filter((card) => card.classList.contains("disabled")).forEach((card) => draftCards.push(card));
-      if (!cards.some((card) => !card.classList.contains("disabled"))) section.remove();
+      cards.filter((card) => card.disabled).forEach((card) => drafts.push(card));
+      if (!cards.some((card) => !card.disabled)) section.remove();
     });
-
-    if (draftCards.length === 0) return;
+    if (!drafts.length) return;
 
     const details = document.createElement("details");
     details.className = "development-catalog category-section";
-
     const summary = document.createElement("summary");
-    summary.textContent = `More AP courses in development (${draftCards.length})`;
+    summary.textContent = `More AP courses in development (${drafts.length})`;
     details.appendChild(summary);
-
     const grid = document.createElement("div");
     grid.className = "subject-grid";
-    draftCards.forEach((card) => grid.appendChild(card));
+    drafts.forEach((card) => grid.appendChild(card));
     details.appendChild(grid);
 
     const search = document.getElementById("catalog-search");
-    const hasReleasedMatch = container.querySelector(".category-section .subject-card:not(.disabled)");
-    if (search && search.value.trim() && !hasReleasedMatch) details.open = true;
-
+    if (search && search.value.trim() && !container.querySelector(".subject-card:not(.disabled)")) {
+      details.open = true;
+    }
     container.appendChild(details);
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    // app.js renders the initial catalog in its own DOMContentLoaded handler.
-    // Defer until all handlers for the event have run, then reorganize the result.
-    queueMicrotask(organizeCatalog);
+  function text(parent, tag, id, className, value) {
+    const node = document.createElement(tag);
+    if (id) node.id = id;
+    if (className) node.className = className;
+    node.textContent = value || "";
+    parent.appendChild(node);
+    return node;
+  }
 
+  function ensurePreflight() {
+    if (document.getElementById("screen-preflight")) return;
+    const screen = document.createElement("main");
+    screen.id = "screen-preflight";
+    screen.className = "screen";
+    screen.setAttribute("aria-label", "Practice exam details");
+    const panel = document.createElement("div");
+    panel.className = "question-panel";
+    screen.appendChild(panel);
+
+    const heading = text(panel, "h2", "preflight-subject", "", "");
+    heading.tabIndex = -1;
+    text(panel, "p", "", "results-scope-note", "Timed Section I multiple-choice practice");
+    text(panel, "p", "preflight-format", "question-text", "");
+    text(panel, "p", "preflight-parts", "subject-timing", "");
+    text(panel, "p", "preflight-calculator", "subject-timing", "");
+    text(panel, "p", "preflight-full", "subject-total", "");
+    text(panel, "p", "", "results-scope-note", "Your in-progress attempt is saved in this browser session. The timer starts only after you choose Start timed practice.");
+
+    const controls = document.createElement("div");
+    controls.className = "question-controls";
+    panel.appendChild(controls);
+    const back = text(controls, "button", "preflight-back", "", "← Back to subjects");
+    back.type = "button";
+    const start = text(controls, "button", "preflight-start", "", "Start timed practice →");
+    start.type = "button";
+    document.getElementById("main-content").appendChild(screen);
+
+    back.addEventListener("click", () => {
+      selectedSubject = null;
+      showScreen("screen-catalog");
+      const search = document.getElementById("catalog-search");
+      if (search) search.focus();
+    });
+    start.addEventListener("click", () => {
+      if (!selectedSubject || !beginExam) return;
+      const subject = selectedSubject;
+      selectedSubject = null;
+      beginExam(subject);
+    });
+  }
+
+  function showPreflight(subject) {
+    ensurePreflight();
+    selectedSubject = subject;
+    document.getElementById("preflight-subject").textContent = subject.name;
+    document.getElementById("preflight-format").textContent = `${subject.mcqCount} multiple-choice questions · ${subject.mcqTimeMinutes} minutes`;
+    document.getElementById("preflight-full").textContent = `Official full AP exam duration: ${subject.totalExamTimeLabel}`;
+
+    const parts = document.getElementById("preflight-parts");
+    const partText = subject.examParts && Array.isArray(subject.examParts.parts)
+      ? subject.examParts.parts.map((part) => `${part.label}: ${part.timeMinutes} min`).join(" · ")
+      : "";
+    parts.textContent = partText;
+    parts.hidden = !partText;
+
+    const calculator = document.getElementById("preflight-calculator");
+    const calculatorText = subject.calculatorExpected === true
+      ? "Calculator expected/permitted throughout this practice section."
+      : (partText && /calculator/i.test(partText) ? "Calculator rules change by part; see the timed-part details above." : "");
+    calculator.textContent = calculatorText;
+    calculator.hidden = !calculatorText;
+
+    showScreen("screen-preflight");
+    document.getElementById("preflight-subject").focus();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    ensurePreflight();
+    queueMicrotask(organizeCatalog);
     const search = document.getElementById("catalog-search");
-    if (search) {
-      // app.js re-renders synchronously on input; the microtask runs afterward.
-      search.addEventListener("input", () => queueMicrotask(organizeCatalog));
-    }
+    if (search) search.addEventListener("input", () => queueMicrotask(organizeCatalog));
+
+    beginExam = window.startExam;
+    window.startExam = showPreflight;
   });
 })();
