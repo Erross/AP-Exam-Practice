@@ -57,4 +57,14 @@
       "Because the conversion formulas from polar to rectangular coordinates produce different locations for the same ordered pair."
     ]
   );
+
+  setOptions(
+    "apprecalc-u2-032",
+    "f(x) decreases without bound toward −∞.",
+    [
+      "f(x) approaches 0 from below as the positive input gets closer and closer to the vertical axis.",
+      "f(x) increases without bound toward +∞ because the logarithm grows as its input becomes smaller.",
+      "f(x) approaches the finite value 1 while remaining defined for positive inputs arbitrarily close to 0."
+    ]
+  );
 })();
