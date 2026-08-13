@@ -1,0 +1,28 @@
+name: Export AP Precalculus bank for clean-room audit
+
+on:
+  push:
+    branches:
+      - release/ap-precalculus-2027
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Export effective bank
+        run: |
+          node - <<'NODE'
+          const fs = require('fs'); const vm = require('vm');
+          const sandbox = { window: {} }; vm.createContext(sandbox);
+          vm.runInContext(fs.readFileSync('data/ap-precalculus.js','utf8'), sandbox);
+          fs.writeFileSync('precalc-bank.json', JSON.stringify(sandbox.window.QUESTIONS_AP_PRECALCULUS, null, 2));
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: precalc-clean-room-bank
+          path: precalc-bank.json
+          retention-days: 1
