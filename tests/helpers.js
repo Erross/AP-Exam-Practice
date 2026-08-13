@@ -28,5 +28,7 @@ function loadPhysics2Bank() {
 
 function loadStatisticsBank() { const sandbox = { window: {} }; vm.createContext(sandbox); vm.runInContext(fs.readFileSync("data/ap-statistics.js", "utf8"), sandbox); return sandbox.window.QUESTIONS_AP_STATISTICS; }
 
-module.exports = { loadGovernmentBank, loadChemistryBank, loadPhysics2Bank  , loadStatisticsBank,
+function loadPrecalculusBank() { const sandbox = { window: {} }; vm.createContext(sandbox); vm.runInContext(fs.readFileSync("data/ap-precalculus.js", "utf8"), sandbox); return sandbox.window.QUESTIONS_AP_PRECALCULUS; }
+
+module.exports = { loadGovernmentBank, loadChemistryBank, loadPhysics2Bank  , loadStatisticsBank, loadPrecalculusBank,
 };
