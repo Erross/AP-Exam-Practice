@@ -60,7 +60,7 @@ test('Precalculus semantic variants are grouped and never co-occur in a delivere
     assert.equal(new Set(items.map(q=>q.topicCode)).size, 1, `${id}: crosses topics`);
   }
   for (let i=0;i<1000;i++) {
-    const exam = drawExam(bank, subject).flat();
+    const exam = drawExam(subject, bank);
     const seen = new Set();
     for (const q of exam.filter(q=>q.variantGroupId)) {
       assert.ok(!seen.has(q.variantGroupId), `draw ${i}: repeated ${q.variantGroupId}`);
