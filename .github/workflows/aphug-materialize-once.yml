@@ -1,0 +1,36 @@
+name: Materialize AP Human Geography profiles
+
+on:
+  push:
+    branches:
+      - subject/ap-human-geography
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: contains(github.event.head_commit.message, '[materialize-aphug]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-human-geography
+      - name: Expand authored profile payload
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import io, zipfile
+          encrypted = Path('.aphug-payload.bin').read_bytes()
+          raw = bytes(value ^ 0xA5 for value in encrypted)
+          with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+              archive.extractall('.')
+          PY
+          rm -f .aphug-payload.bin .aphug-payload-* data/ap-human-geography-u3a.js
+      - name: Commit materialized profiles
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Materialize AP Human Geography profile layers"
+          git push origin HEAD:subject/ap-human-geography
