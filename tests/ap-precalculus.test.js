@@ -40,7 +40,7 @@ test("AP Precalculus bank passes schema, id, and CED topic-coverage checks", () 
       /This directly follows from the definitions and properties governing this topic\.?$/i,
       `${question.id}: rationale still carries the boilerplate fallback sentence`
     );
-    assert.match(question.skill, /^[1-3]$/, `${question.id}: unrecognized math-practice family`);
+    assert.match(question.skill, /^[1-3]\.[A-C]$/, `${question.id}: unrecognized exact math-practice skill`);
     assert.match(question.topicCode, new RegExp(`^${question.unit.slice(1)}\\.\\d+$`), `${question.id}: topicCode doesn't match its unit`);
     assert.equal(typeof question.calculatorAllowed, "boolean", `${question.id}: calculatorAllowed must be a boolean`);
     topicsByUnit.set(question.unit, (topicsByUnit.get(question.unit) || new Set()).add(question.topicCode));
