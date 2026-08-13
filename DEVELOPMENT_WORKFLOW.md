@@ -61,6 +61,16 @@ Every new or materially revised subject must have:
 - rendered visual inspection at the application's actual display width;
 - independent content review before release.
 
+Use [`SUBJECT_RELEASE_CHECKLIST.md`](SUBJECT_RELEASE_CHECKLIST.md) as the required evidence checklist. In addition to subject-specific tests, run the generic release audit while the course is still a release candidate:
+
+```bash
+npm run release:audit -- --subject ap-<course-id> --trials 5000 --overlap-trials 5000
+```
+
+The generic audit loads the effective browser bank in `index.html` order, checks shared schema/bias/group rules, exercises randomized draws, and measures independent-attempt overlap. It does **not** replace exact CED tests, clean-room content review, rendered visual review, or the naive-assessor UX gate in the checklist.
+
+After any substantive repair from independent review, restart the clean-room audit from scratch. After a UX repair from naive assessment, use a fresh naive assessor who has not learned the interface from the previous round.
+
 ## Integration release gate
 
 The integration pull request may merge to `main` only when:
@@ -69,14 +79,15 @@ The integration pull request may merge to `main` only when:
 2. Merge conflicts are resolved with all affected subject tests rerun.
 3. `npm ci` succeeds from a clean checkout.
 4. `npm run check` passes, including audits, all tests, the production build, the artifact check, and the dependency audit.
-5. Large randomized simulations satisfy every released subject's blueprint on every accepted draw.
-6. No exam contains two questions from the same variant group.
-7. The release manifest and built HTML contain every `released` bank and no `draft` bank.
-8. New or changed SVGs render legibly and match their question text and alternative text.
-9. The integration PR is mergeable and its required GitHub Actions checks pass on the exact head commit.
-10. A deployment preview or local production artifact smoke test confirms both catalog selection and exam start behavior for every released subject.
+5. The subject release evidence in `SUBJECT_RELEASE_CHECKLIST.md` is complete, including the generic release-audit output, clean-room audit, and naive-assessor gate.
+6. Large randomized simulations satisfy every released subject's blueprint on every accepted draw.
+7. No exam contains two questions from the same variant group.
+8. The release manifest and built HTML contain every `released` bank and no `draft` bank.
+9. New or changed SVGs render legibly and match their question text and alternative text.
+10. The integration PR is mergeable and its required GitHub Actions checks pass on the exact head commit.
+11. A deployment preview or local production artifact smoke test confirms catalog selection, preflight, and exam start behavior for every released subject.
 
-After merging, verify the Pages deployment completed from the merge commit and smoke-test the public site. If deployment fails, treat `main` as impaired and fix it immediately through a focused hotfix branch.
+After merging, verify the Pages deployment completed from the merge commit and smoke-test the public site. Passing tests, building `_site`, and uploading the Pages artifact are not sufficient by themselves: the final Pages deployment step must also complete successfully. If deployment fails, treat `main` as impaired and fix it immediately through a focused hotfix branch.
 
 ## Repository protections
 
