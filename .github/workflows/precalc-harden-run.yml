@@ -3,7 +3,7 @@ name: Apply AP Precalculus hardening
 on:
   push:
     branches:
-      - release/ap-precalculus-2027-cleanroom
+      - release/ap-precalculus-2027-quality
 
 permissions:
   contents: write
@@ -15,11 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: release/ap-precalculus-2027-cleanroom
+          ref: release/ap-precalculus-2027-quality
       - run: node tools/precalc-harden-skills.js
+      - run: node tools/precalc-content-fixes.js
       - run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add data/ap-precalculus.js
-          git commit -m "Apply audited Precalculus skills and variants"
-          git push origin HEAD:release/ap-precalculus-2027-cleanroom
+          git commit -m "Apply Precalculus clean-room content repairs"
+          git push origin HEAD:release/ap-precalculus-2027-quality
