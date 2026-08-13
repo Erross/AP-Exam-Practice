@@ -255,7 +255,7 @@
    * exam split. Subjects that don't set it are unaffected.
    */
   function drawConstrainedWeightedExam(subject, byUnit, targets, rng) {
-    const ranges = subject.sciencePracticeRanges || {};
+    const ranges = subject.skillCountRanges || subject.sciencePracticeRanges || {};
     const setRange = subject.stimulusSetRange || [0, Infinity];
     const families = Object.keys(ranges);
     const attributeRanges = subject.attributeRanges || {};
@@ -288,7 +288,7 @@
     }
 
     throw new Error(
-      "No whole-block draw satisfies the configured unit, stimulus-set, science-practice, and attribute ranges"
+      "No whole-block draw satisfies the configured unit, stimulus-set, skill/practice, and attribute ranges"
     );
   }
 
@@ -515,8 +515,19 @@
       );
 
       if (subject.examBlueprint) {
-        result = drawBlueprintExam(subject, bank, targets, rng);
-      } else if (subject.sciencePracticeRanges || subject.attributeRanges) {
+        const ranges = subject.skillCountRanges || subject.sciencePracticeRanges || {};
+        const attempts = Object.keys(ranges).length ? (subject.constraintDrawAttempts || 5000) : 1;
+        for (let attempt = 0; attempt < attempts; attempt++) {
+          const candidate = drawBlueprintExam(subject, bank, targets, rng);
+          const summary = summarizeBlocks(toBlocks(candidate));
+          const valid = Object.entries(ranges).every(([family, range]) => {
+            const count = summary.practices[family] || 0;
+            return count >= range[0] && count <= range[1];
+          });
+          if (valid) { result = candidate; break; }
+        }
+        if (!result) throw new Error("No blueprint draw satisfies configured practice ranges");
+      } else if (subject.skillCountRanges || subject.sciencePracticeRanges || subject.attributeRanges) {
         result = drawConstrainedWeightedExam(subject, byUnit, targets, rng);
       } else {
         const setRange = Array.isArray(subject.stimulusSetRange) ? subject.stimulusSetRange : null;
