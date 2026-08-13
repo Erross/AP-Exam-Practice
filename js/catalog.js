@@ -1,6 +1,6 @@
 // Catalog presentation helper: released courses first, drafts collapsed, a
-// stronger first-visit value proposition, and a confirmation screen before the
-// timed exam begins.
+// stronger first-visit value proposition, stronger course-card CTA hierarchy,
+// and a confirmation screen before the timed exam begins.
 (function () {
   "use strict";
 
@@ -16,11 +16,34 @@
     }
   }
 
+  function styleCourseCards(container) {
+    Array.from(container.querySelectorAll(".subject-card")).forEach((card) => {
+      const playable = !card.disabled;
+      card.classList.toggle("released-card", playable);
+      card.classList.toggle("development-card", !playable);
+
+      const heading = card.querySelector("h3");
+      if (heading && !card.querySelector(".subject-card-kicker")) {
+        const kicker = document.createElement("span");
+        kicker.className = "subject-card-kicker";
+        kicker.textContent = playable ? "Ready to practice" : "In development";
+        card.insertBefore(kicker, heading);
+      }
+
+      const status = card.querySelector(".subject-status");
+      if (!status) return;
+      status.classList.toggle("subject-cta", playable);
+      if (playable) status.textContent = "Start timed Section I →";
+    });
+  }
+
   function organizeCatalog() {
     const container = document.getElementById("catalog-categories");
     if (!container) return;
     const old = container.querySelector(".development-catalog");
     if (old) old.remove();
+
+    styleCourseCards(container);
 
     const drafts = [];
     Array.from(container.querySelectorAll(":scope > .category-section")).forEach((section) => {
