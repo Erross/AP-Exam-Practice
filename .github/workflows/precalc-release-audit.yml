@@ -3,7 +3,7 @@ name: AP Precalculus release audit
 on:
   push:
     branches:
-      - release/ap-precalculus-2027
+      - release/ap-precalculus-2027-quality
 
 jobs:
   audit:
