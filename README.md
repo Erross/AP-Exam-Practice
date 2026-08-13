@@ -8,7 +8,7 @@ The project is deliberately lightweight: static HTML, CSS, and JavaScript with n
 
 ## Released courses
 
-The current production catalog contains seven released AP courses:
+The current production catalog contains eight released AP courses:
 
 | Course | Bank size | Practice section | Highlights |
 | --- | ---: | --- | --- |
@@ -18,9 +18,8 @@ The current production catalog contains seven released AP courses:
 | **AP English Literature and Composition** | 142 questions | 55-question MCQ attempts | Five-set prose/poetry/drama structure; authentic public-domain literary texts; skill and genre weighting constraints. |
 | **AP Chemistry** | 182 questions | Full Section I-style MCQ draws | All 91 CED topics covered; unit/practice constraints; quantitative, experimental, model, and stimulus-based questions. |
 | **AP Calculus AB** | 120 questions | 42-question Section I attempts | Separate timed Part A/Part B behavior; calculator-homogeneous parts; graphical, numerical, analytical, and verbal representations. |
+| **AP Statistics** | 140 questions | 42-question Section I attempts | May 2027 five-unit redesign; exact revised topic/skill coverage; required probability and regression sets; calculator permitted; 33.6% measured retake overlap at release. |
 | **AP Physics 2** | 140 questions | 42-question Section I attempts | Units 9–15; current MCQ science-practice weighting; seven shared data/stimulus sets; quantitative and claim/evidence reasoning. |
-
-**AP Statistics** is also present on `main` with a completed, independently audited 140-question bank for the May 2027 redesign, but it remains intentionally `releaseStatus: "draft"` and is therefore not published in the production catalog.
 
 Other AP subjects may appear in the repository registry as **draft metadata**. A draft is never published merely because a data file exists: production output includes only subjects whose registry metadata explicitly sets `releaseStatus: "released"`.
 
@@ -61,7 +60,7 @@ The repository also contains quality gates intended to catch common synthetic-qu
 - source/provenance validation for stimulus material;
 - checks that shared stimuli stay intact and internally consistent.
 
-In August 2026, all seven released courses were run through repeated clean-room audit/fix cycles: audit from scratch, repair substantive findings, restart the audit, and repeat until a fresh post-repair pass was clean. Those passes hardened exact CED skill/task alignment, distractor quality, quantitative correctness, duplicate/variant handling, browser/test bank parity, and retake behavior across English Language, English Literature, U.S. Government, Calculus AB, Biology, Chemistry, and Physics 2. AP Statistics went through the same process while remaining draft.
+In August 2026, all eight released courses were run through repeated clean-room audit/fix cycles: audit from scratch, repair substantive findings, restart the audit, and repeat until a fresh post-repair pass was clean. Those passes hardened exact CED skill/task alignment, distractor quality, quantitative correctness, duplicate/variant handling, browser/test bank parity, and retake behavior across English Language, English Literature, U.S. Government, Calculus AB, Biology, Chemistry, Physics 2, and Statistics.
 
 See [`CONTENT_STANDARDS.md`](CONTENT_STANDARDS.md) for the full authoring and release standard.
 

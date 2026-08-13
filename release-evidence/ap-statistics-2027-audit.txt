@@ -1,0 +1,12 @@
+
+> ap-exam-practice@1.0.0 release:audit
+> node tools/subject-release-audit.js --subject ap-statistics --trials 5000 --overlap-trials 5000
+
+Subject release audit passed: AP Statistics (ap-statistics)
+Bank: 140 questions across 1 effective data layer(s); draw size 42.
+Groups: 6 stimulus, 8 variant.
+Answer-patterns: uniquely longest 15.7%; among-longest 56.4%; correct 7.39 words vs distractors 6.89.
+Raw keys: A 35%, B 22.1%, C 23.6%, D 19.3%.
+Draw simulation: 5000/5000 valid generic draws.
+Retake overlap: 33.6% average across 5000 independent draw pairs (target <=40%).
+Manual gates still required: subject-specific CED/blueprint tests; clean-room independent audit; naive assessor audit; production artifact smoke test.

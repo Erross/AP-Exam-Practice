@@ -260,7 +260,7 @@ const EXACT_SKILLS = {
 const ABSOLUTE = /\b(always|never|every|only|entirely|unlimited|must|guarantees?)\b/i;
 
 test('Statistics metadata matches the May 2027 redesign', () => {
-  assert.equal(bank.length, 140); assert.equal(subject.releaseStatus, 'draft');
+  assert.equal(bank.length, 140); assert.equal(subject.releaseStatus, 'released');
   assert.equal(subject.mcqCount, 42); assert.equal(subject.mcqTimeMinutes, 90);
   assert.deepEqual(subject.sciencePracticeRanges, {'1':[3,4],'2':[9,12],'3':[11,14],'4':[11,14]});
   assert.deepEqual(subject.attributeRanges.statsSetType, {probability:[3,3],regression:[3,3]});
