@@ -28,7 +28,7 @@ function stimulusGroups() {
 
 test("Chemistry metadata and 91-topic CED coverage are complete", () => {
   assert.equal(bank.length, 182);
-  assert.equal(subject.releaseStatus, "draft");
+  assert.equal(subject.releaseStatus, "released");
   assert.equal(subject.formatVerified, true);
   assert.equal(subject.mcqCount, 60);
   assert.equal(subject.mcqTimeMinutes, 90);
