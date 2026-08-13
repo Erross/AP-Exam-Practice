@@ -1,0 +1,21 @@
+name: AP Human Geography draft release gate
+on:
+  push:
+    branches: [subject/ap-human-geography]
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: contains(github.event.head_commit.message, '[audit-aphug]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Human Geography release audit
+        run: npm run release:audit -- --subject ap-human-geography --trials 5000 --overlap-trials 5000
+      - name: Full repository gate
+        run: npm run check
