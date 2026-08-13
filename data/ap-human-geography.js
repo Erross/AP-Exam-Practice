@@ -4,7 +4,7 @@
 (function () {
   "use strict";
   window.QUESTIONS_AP_HUMAN_GEOGRAPHY = [];
-  const byUnitProfiles = new Map();
+  const topics = [];
   const quantitative = new Set(["1.2","1.6","2.3","2.5","3.3","3.6","4.2","4.6","5.5","5.8","6.4","6.9","7.3","7.4"]);
   const visual = new Set(["1.1","1.4","2.1","2.10","3.2","3.4","4.4","4.10","5.2","5.7","6.5","6.10","7.1","7.6"]);
   const skillPairs = [["2.B","3.E"],["4.C","5.B"],["2.C","4.D"],["3.D","5.C"]];
@@ -34,12 +34,17 @@
     return null;
   }
 
-  window.__APHUG_ADD_TOPICS__ = function (topics) {
+  window.__APHUG_ADD_TOPICS__ = function (newTopics) {
+    topics.push(...newTopics);
+  };
+
+  window.__APHUG_FINALIZE__ = function () {
+    const byUnitProfiles = new Map();
     topics.forEach((topic) => {
       if (!byUnitProfiles.has(topic.unit)) byUnitProfiles.set(topic.unit, []);
       byUnitProfiles.get(topic.unit).push(topic);
     });
-
+    window.QUESTIONS_AP_HUMAN_GEOGRAPHY = [];
     topics.forEach((topic) => {
       const allUnit = byUnitProfiles.get(topic.unit);
       const topicIndex = Number(topic.code.split(".")[0]) * 20 + Number(topic.code.split(".")[1]);
