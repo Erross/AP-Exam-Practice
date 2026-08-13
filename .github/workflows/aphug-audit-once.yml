@@ -19,4 +19,4 @@ jobs:
         run: npm run release:audit -- --subject ap-human-geography --trials 5000 --overlap-trials 5000
       - name: Full repository gate
         run: npm run check
-# final consolidated-shape and naive-audit repair gate
+# final draft gate after canonical bank, naive UX, and generic skill-count contract
