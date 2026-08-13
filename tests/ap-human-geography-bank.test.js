@@ -18,3 +18,12 @@ test("Human Geography has 14 quantitative and 14 visual source sets",()=>{
  for(const [id,qs] of groups){assert.equal(qs.length,3,id);assert.equal(new Set(qs.map(q=>q.stimulus)).size,1,id);kinds[qs[0].stimulus.type]++;}
  assert.deepEqual(kinds,{quantitative:14,visual:14});
 });
+test("Human Geography exact skill families perform their declared task",()=>{
+ const data=bank.filter(q=>q.skill.startsWith("3."));
+ const visual=bank.filter(q=>q.skill.startsWith("4."));
+ const scale=bank.filter(q=>q.skill.startsWith("5."));
+ assert.equal(data.length,42); assert.equal(visual.length,42); assert.ok(scale.length>0);
+ data.forEach(q=>assert.equal(q.stimulus&&q.stimulus.type,"quantitative",q.id));
+ visual.forEach(q=>assert.equal(q.stimulus&&q.stimulus.type,"visual",q.id));
+ scale.forEach(q=>{assert.equal(q.stimulusGroupId,null,q.id);assert.match(q.q,/local.*regional|regional.*local/i,q.id);});
+});
