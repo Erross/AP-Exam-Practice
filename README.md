@@ -111,7 +111,7 @@ Source records are stored with the relevant stimuli and are regression-tested wh
 └── ENGLISH_STATIC_FEATURES.md
 ```
 
-The production build creates `_site/` and deliberately includes only released subject banks.
+The production build creates `_site/` and deliberately includes only released subject banks plus the correction/curation/quality layers referenced for those released subjects; draft-subject data is excluded.
 
 ## Local development and validation
 
