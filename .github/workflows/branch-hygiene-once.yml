@@ -1,0 +1,70 @@
+name: One-shot branch hygiene
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: contains(github.event.head_commit.message, '[run-branch-hygiene]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete fully merged stale branches and report survivors
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const main = 'main';
+            const forceDelete = new Set(['release/ap-precalculus-2027']);
+            const branches = await github.paginate(github.rest.repos.listBranches, {
+              owner, repo, per_page: 100
+            });
+            const deleted = [];
+            const survivors = [];
+            const failed = [];
+
+            for (const item of branches) {
+              const branch = item.name;
+              if (branch === main) continue;
+              try {
+                const cmp = await github.rest.repos.compareCommitsWithBasehead({
+                  owner, repo, basehead: `${main}...${branch}`
+                });
+                const ahead = cmp.data.ahead_by;
+                const behind = cmp.data.behind_by;
+                const shouldDelete = ahead === 0 || forceDelete.has(branch);
+                if (shouldDelete) {
+                  try {
+                    await github.rest.git.deleteRef({
+                      owner, repo, ref: `heads/${branch}`
+                    });
+                    deleted.push({branch, ahead, behind, reason: forceDelete.has(branch) ? 'disposable interrupted release scaffold' : '0 commits ahead of main'});
+                    core.info(`DELETED ${branch} ahead=${ahead} behind=${behind}`);
+                  } catch (err) {
+                    failed.push({branch, ahead, behind, error: err.message});
+                    core.warning(`FAILED DELETE ${branch}: ${err.message}`);
+                  }
+                } else {
+                  survivors.push({branch, ahead, behind});
+                  core.info(`KEEP ${branch} ahead=${ahead} behind=${behind}`);
+                }
+              } catch (err) {
+                failed.push({branch, error: err.message});
+                core.warning(`COMPARE FAILED ${branch}: ${err.message}`);
+              }
+            }
+
+            core.summary.addHeading('Branch hygiene result');
+            core.summary.addRaw(`Deleted: ${deleted.length}\n\n`);
+            for (const x of deleted) core.summary.addRaw(`- deleted ${x.branch} — ${x.reason} (ahead ${x.ahead}, behind ${x.behind})\n`);
+            core.summary.addRaw(`\nSurvivors: ${survivors.length}\n\n`);
+            for (const x of survivors) core.summary.addRaw(`- keep ${x.branch} — ahead ${x.ahead}, behind ${x.behind}\n`);
+            if (failed.length) {
+              core.summary.addRaw(`\nFailures: ${failed.length}\n\n`);
+              for (const x of failed) core.summary.addRaw(`- ${x.branch}: ${x.error}\n`);
+            }
+            await core.summary.write();
