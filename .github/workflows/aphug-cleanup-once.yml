@@ -1,0 +1,53 @@
+name: Consolidate AP Human Geography
+on:
+  push:
+    branches: [subject/ap-human-geography]
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    if: contains(github.event.head_commit.message, '[cleanup-aphug]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-human-geography
+      - name: Consolidate canonical bank
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          layers = [
+            'data/ap-human-geography.js',
+            'data/ap-human-geography-u1.js','data/ap-human-geography-u2.js',
+            'data/ap-human-geography-u3a.js','data/ap-human-geography-u3b.js',
+            'data/ap-human-geography-u4.js','data/ap-human-geography-u5.js',
+            'data/ap-human-geography-u6-1.js','data/ap-human-geography-u6-2a.js','data/ap-human-geography-u6-2b.js',
+            'data/ap-human-geography-u6-3a.js','data/ap-human-geography-u6-3b.js',
+            'data/ap-human-geography-u7a.js','data/ap-human-geography-u7b.js',
+            'data/ap-human-geography-finalize.js'
+          ]
+          pieces=[]
+          for path in layers:
+            pieces.append(f'\n// ---- consolidated from {path} ----\n')
+            pieces.append(Path(path).read_text())
+          Path('data/ap-human-geography.js').write_text(''.join(pieces))
+          html=Path('index.html').read_text()
+          for path in layers[1:]:
+            html=html.replace(f'<script src="{path}"></script>\n','')
+          Path('index.html').write_text(html)
+          for path in layers[1:]: Path(path).unlink()
+          for path in [
+            'data/ap-human-geography-quality-fixes.js','tools/aphug-bias-fix.py','tools/aphug-fix-core.py',
+            'tools/aphug-wire-config.json','tools/aphug-wire-core.py','ci-trigger-aphug.txt',
+            '.github/workflows/aphug-wire-once.yml','.github/workflows/aphug-cleanup-once.yml'
+          ]:
+            p=Path(path)
+            if p.exists(): p.unlink()
+          PY
+      - name: Commit canonical shipping shape
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Consolidate AP Human Geography shipping bank"
+          git push origin HEAD:subject/ap-human-geography
