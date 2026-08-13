@@ -5,6 +5,7 @@
   "description": "Unofficial AP multiple-choice practice exams",
   "scripts": {
     "audit": "node tools/audit.js",
+    "release:audit": "node tools/subject-release-audit.js",
     "test": "node --test",
     "build": "node tools/build.js",
     "test:artifact": "node tools/artifact-check.js",
