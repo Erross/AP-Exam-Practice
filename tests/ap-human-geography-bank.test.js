@@ -7,7 +7,7 @@ const {bank}=loadEffectiveBank(subject);
 const counts=[7,12,8,10,12,11,8];
 const topics=counts.flatMap((n,i)=>Array.from({length:n},(_,j)=>`${i+1}.${j+1}`));
 test("Human Geography bank covers all 68 CED topics",()=>{
- assert.equal(subject.formatVerified,true); assert.equal(subject.releaseStatus,"draft"); assert.equal(bank.length,204);
+ assert.equal(subject.formatVerified,true); assert.equal(subject.releaseStatus,"released"); assert.equal(bank.length,204);
  assert.equal(new Set(bank.map(q=>q.id)).size,204); assert.equal(new Set(bank.map(q=>q.topicCode)).size,68);
  for(const code of topics) assert.equal(bank.filter(q=>q.topicCode===code).length,3,`${code}: expected 3 questions`);
  bank.forEach(q=>{assert.equal(q.o.length,4);assert.equal(q.c.length,1);assert.ok(q.e.length>=90,`${q.id}: short rationale`);assert.match(q.skill,/^[1-5]\.[A-Z]$/);});

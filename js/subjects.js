@@ -210,7 +210,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "2h 15m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: false,
     tierNote: null,
