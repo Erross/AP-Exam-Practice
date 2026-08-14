@@ -1,0 +1,12 @@
+
+> ap-exam-practice@1.0.0 release:audit
+> node tools/subject-release-audit.js --subject ap-art-history --trials 5000 --overlap-trials 5000
+
+Subject release audit passed: AP Art History (ap-art-history)
+Bank: 340 questions across 1 effective data layer(s); draw size 80.
+Groups: 48 stimulus, 0 variant.
+Answer-patterns: uniquely longest 18.5%; among-longest 37.1%; correct 38.06 words vs distractors 37.16.
+Raw keys: A 25.3%, B 23.2%, C 25.6%, D 25.9%.
+Draw simulation: 5000/5000 valid generic draws.
+Retake overlap: 35.2% average across 5000 independent draw pairs (target <=40%).
+Manual gates still required: subject-specific CED/blueprint tests; clean-room independent audit; naive assessor audit; production artifact smoke test.

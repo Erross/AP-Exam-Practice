@@ -8,16 +8,19 @@ The project is deliberately lightweight: static HTML, CSS, and JavaScript with n
 
 ## Released courses
 
-The current production catalog contains nine released AP courses:
+The current production catalog contains eleven released AP courses:
 
 | Course | Bank size | Practice section | Highlights |
 | --- | ---: | --- | --- |
+| **AP Art History** | 340 questions | 80-question MCQ attempts | Ten content areas; exact Skill 1–7 delivery; 48 local reusable visual sets; prescribed-work and unfamiliar-work analysis; larger-image inspection during practice and review. |
 | **AP United States Government and Politics** | 176 questions | 55-question MCQ attempts | Unit-weighted draws; quantitative, foundational-document, text, and visual stimulus sets; all 60 CED topics covered. |
+| **AP Human Geography** | 204 questions | 60-question MCQ attempts | All 68 CED topics covered; exact unit/source blueprint; quantitative and visual source sets; skill-family constraints. |
 | **AP Biology** | 180 questions | 60-question MCQ attempts | All 60 CED topics represented at least twice; science-practice constraints; graph/data-rich stimulus sets; variant exclusion. |
 | **AP English Language and Composition** | 115 questions | 45-question MCQ attempts | Five-set structure with 24 Reading and 21 Writing questions; Reading passages use sourced public-domain nonfiction; Writing sets use original student-draft material. |
 | **AP English Literature and Composition** | 142 questions | 55-question MCQ attempts | Five-set prose/poetry/drama structure; authentic public-domain literary texts; skill and genre weighting constraints. |
 | **AP Chemistry** | 182 questions | Full Section I-style MCQ draws | All 91 CED topics covered; unit/practice constraints; quantitative, experimental, model, and stimulus-based questions. |
 | **AP Calculus AB** | 120 questions | 42-question Section I attempts | Separate timed Part A/Part B behavior; calculator-homogeneous parts; graphical, numerical, analytical, and verbal representations. |
+| **AP Precalculus** | 125 questions | 42-question Section I attempts | May 2027 three-unit Section I; 29-question no-calculator Part A and 13-question calculator Part B; all 44 examinable topics covered. |
 | **AP Statistics** | 140 questions | 42-question Section I attempts | May 2027 five-unit redesign; exact revised topic/skill coverage; required probability and regression sets; calculator permitted; 33.6% measured retake overlap at release. |
 | **AP Physics 2** | 140 questions | 42-question Section I attempts | Units 9–15; current MCQ science-practice weighting; seven shared data/stimulus sets; quantitative and claim/evidence reasoning. |
 
@@ -60,7 +63,7 @@ The repository also contains quality gates intended to catch common synthetic-qu
 - source/provenance validation for stimulus material;
 - checks that shared stimuli stay intact and internally consistent.
 
-In August 2026, all nine released courses were run through repeated clean-room audit/fix cycles: audit from scratch, repair substantive findings, restart the audit, and repeat until a fresh post-repair pass was clean. Those passes hardened exact CED skill/task alignment, distractor quality, quantitative correctness, duplicate/variant handling, browser/test bank parity, and retake behavior across English Language, English Literature, U.S. Government, Calculus AB, Biology, Chemistry, Physics 2, and Statistics.
+In August 2026, the released courses were run through repeated clean-room audit/fix cycles: audit from scratch, repair substantive findings, restart the audit, and repeat until a fresh post-repair pass was clean. Those passes hardened exact CED skill/task alignment, distractor quality, quantitative correctness, duplicate/variant handling, browser/test bank parity, visual-source handling, accessibility, and retake behavior across the released catalog.
 
 See [`CONTENT_STANDARDS.md`](CONTENT_STANDARDS.md) for the full authoring and release standard.
 
@@ -179,7 +182,3 @@ This project is an independent educational practice resource and is not affiliat
 ## License
 
 MIT © 2026 Ewan Ross. See [`LICENSE`](LICENSE).
-
-
-### AP Precalculus
-Released for the May 2027 format after clean-room CED, content, draw, overlap, and naive-interface audits.
