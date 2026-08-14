@@ -111,8 +111,12 @@ function auditGenericContent(subject, bank) {
     const lengths = question.o.map(wordCount);
     const longest = Math.max(...lengths);
     const correctLength = lengths[key];
-    if (correctLength === longest) amongLongest++;
-    if (correctLength === longest && lengths.filter((length) => length === longest).length === 1) uniqueLongest++;
+    const longestCount = lengths.filter((length) => length === longest).length;
+    // A four-way length tie carries zero answer-position information. Keep
+    // two- and three-way longest ties in the conservative among-longest metric,
+    // but do not count a tie shared by every option as an exploitable cue.
+    if (correctLength === longest && longestCount < lengths.length) amongLongest++;
+    if (correctLength === longest && longestCount === 1) uniqueLongest++;
     correctWords += correctLength;
     lengths.forEach((length, index) => { if (index !== key) distractorWords += length; });
     const absoluteDistractors = question.o.filter((_, index) => index !== key).filter((option) => ABSOLUTE_LANGUAGE.test(option)).length;
@@ -208,7 +212,7 @@ function runAudit(args) {
 function formatReport(result) {
   return [
     `${result.subject}: ${result.bankSize} questions from ${result.scripts.length} browser data layer(s)`,
-    `Answer pattern: uniquely-longest ${(100 * result.content.uniqueLongestShare).toFixed(1)}%; among-longest ${(100 * result.content.amongLongestShare).toFixed(1)}%; correct ${result.content.correctAverage.toFixed(2)} words vs distractors ${result.content.distractorAverage.toFixed(2)}.`,
+    `Answer pattern: uniquely-longest ${(100 * result.content.uniqueLongestShare).toFixed(1)}%; exploitable among-longest ${(100 * result.content.amongLongestShare).toFixed(1)}% (four-way ties excluded); correct ${result.content.correctAverage.toFixed(2)} words vs distractors ${result.content.distractorAverage.toFixed(2)}.`,
     `Raw keys: ${result.content.keyShares.map((share, i) => `${String.fromCharCode(65 + i)} ${(100 * share).toFixed(1)}%`).join(", ")}.`,
     `Variant groups: ${result.content.variantGroups}; stimulus groups: ${result.content.stimulusGroups}.`,
     `Draw audit: ${result.draws.trials}/${result.draws.trials} valid.`,

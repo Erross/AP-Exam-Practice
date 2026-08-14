@@ -23,7 +23,7 @@
   V("9.3", "Finding Arc Lengths of Curves Given by Parametric Equations", [
     { skill:"3.D", calculatorAllowed:false, q:"Which integral gives the arc length of x=t and y=t² for 0≤t≤1?", correct:"∫₀¹ √(1+4t²) dt", distractors:["∫₀¹ (1+2t) dt","∫₀¹ √(1+2t) dt","∫₀¹ (1+4t²) dt"], explanation:"Parametric arc length is ∫√[(dx/dt)²+(dy/dt)²]dt. Here the derivatives are 1 and 2t, so the integrand is √(1+4t²)." },
     { skill:"1.E", calculatorAllowed:false, q:"The curve x=3cos(t), y=3sin(t) is traced for 0≤t≤π/2. What is its arc length?", correct:"3π/2", distractors:["π/2","3π","9π/2"], explanation:"The speed along the parametrized curve is √[9sin²t+9cos²t]=3. Integrating 3 from 0 to π/2 gives an arc length of 3π/2." },
-    { skill:"1.D", calculatorAllowed:true, q:"For x=2t and y=t² on 0≤t≤1, which integrand belongs in the parametric arc-length formula?", correct:"√(4+4t²)", distractors:["2+2t","√(2+2t)","4+4t²"], explanation:"dx/dt=2 and dy/dt=2t, so the arc-length integrand is √[(2)²+(2t)²]=√(4+4t²)." },
+    { skill:"1.D", calculatorAllowed:true, q:"For x=2t and y=t² on 0≤t≤1, which integrand belongs in the parametric arc-length formula?", correct:"√(4+4t²)", distractors:["2+2t","√(2+2t)","4+4t²"], explanation:"For parametric arc length, square both coordinate derivatives before adding them. Here dx/dt=2 and dy/dt=2t, so √[(dx/dt)²+(dy/dt)²]=√[(2)²+(2t)²]=√(4+4t²)." },
   ]);
 
   V("9.4", "Defining and Differentiating Vector-Valued Functions", [
