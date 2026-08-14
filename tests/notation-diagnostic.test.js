@@ -9,7 +9,11 @@ function loadAllBanks() {
   const scripts = [...html.matchAll(/<script src="(data\/[^"]+\.js)"><\/script>/g)].map((m) => m[1]);
   const groups = new Map();
   scripts.forEach((file) => {
-    const key = file.startsWith("data/ap-human-geography-") ? "data/ap-human-geography.js" : file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
+    const key = file.startsWith("data/ap-human-geography-")
+      ? "data/ap-human-geography.js"
+      : file.startsWith("data/ap-art-history-")
+        ? "data/ap-art-history.js"
+        : file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(file);
   });
@@ -50,8 +54,6 @@ const patterns = {
   asciiInequality: /<=|>=/,
   asciiPlusMinus: /\+\/-/,
   asciiSubscript: /\b[A-Za-z]_[A-Za-z0-9]+\b/,
-  // Signed infinity and "approaches infinity" are raw symbolic forms; prose such
-  // as "limit at infinity" is standard readable mathematical English.
   plainInfinity: /(?:\+|-|−)infinity\b|approaches\s+infinity\b/i,
   greekWord: /\b(?:Delta|theta|lambda|sigma)\b/,
   plainIonicCharge: /\b(?:H|Li|Na|K|Mg|Ca|Al|Fe|Cu|Zn|Ag|F|Cl|Br|O|N|S)\d*[+−-](?=\s|,|\.|\)|\/|$)/,
