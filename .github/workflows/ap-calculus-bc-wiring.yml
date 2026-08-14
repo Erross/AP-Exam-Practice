@@ -1,0 +1,26 @@
+name: Apply AP Calculus BC wiring
+on:
+  push:
+    branches: [subject/ap-calculus-bc]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Apply AP Calculus BC wiring patch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-calculus-bc
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python tools/patch-ap-calculus-bc-wiring.py
+      - run: npm ci
+      - run: npm run check
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add js/subjects.js index.html data/ap-calculus-bc-u9.js
+          git commit -m "Wire AP Calculus BC draft blueprint"
+          git push origin HEAD:subject/ap-calculus-bc
