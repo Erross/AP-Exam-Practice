@@ -478,6 +478,64 @@
   }
 
   /**
+   * Draw AP Art History from an exact constructive blueprint instead of relying
+   * on rejection sampling across ten unit quotas and seven simultaneous skill
+   * bands. The blueprint names how many known-image sets, unknown-image sets,
+   * and standalone skill questions each unit contributes. Every selected visual
+   * set remains whole and contiguous.
+   */
+  function drawArtHistoryExam(subject, bank, rng) {
+    const blueprint = subject.artHistoryBlueprint;
+    const blocks = toBlocks(bank);
+    const knownByUnit = new Map();
+    const unknownByUnit = new Map();
+    const standaloneByUnitSkill = new Map();
+    (subject.units || []).forEach((u) => {
+      knownByUnit.set(u.id, []);
+      unknownByUnit.set(u.id, []);
+      standaloneByUnitSkill.set(u.id, new Map());
+    });
+
+    blocks.forEach((block) => {
+      const first = block[0];
+      if (!first) return;
+      const unit = first.unit;
+      if (!standaloneByUnitSkill.has(unit)) return;
+      if (first.stimulusGroupId) {
+        if (first.stimulusGroupId.startsWith('aparth-unk-')) unknownByUnit.get(unit).push(block);
+        else if (first.stimulusGroupId.startsWith('aparth-work-')) knownByUnit.get(unit).push(block);
+        return;
+      }
+      const family = practiceFamily(first);
+      const bySkill = standaloneByUnitSkill.get(unit);
+      if (!bySkill.has(family)) bySkill.set(family, []);
+      bySkill.get(family).push(block);
+    });
+
+    const selected = [];
+    Object.entries(blueprint.perUnit).forEach(([unit, plan]) => {
+      const known = shuffle(knownByUnit.get(unit) || [], rng);
+      const unknown = shuffle(unknownByUnit.get(unit) || [], rng);
+      if (known.length < (plan.knownSets || 0)) throw new Error(`${unit}: insufficient known Art History image sets`);
+      if (unknown.length < (plan.unknownSets || 0)) throw new Error(`${unit}: insufficient unknown Art History image sets`);
+      selected.push(...known.slice(0, plan.knownSets || 0));
+      selected.push(...unknown.slice(0, plan.unknownSets || 0));
+
+      Object.entries(plan.standalone || {}).forEach(([skill, count]) => {
+        const pool = shuffle((standaloneByUnitSkill.get(unit).get(String(skill)) || []), rng);
+        if (pool.length < count) throw new Error(`${unit}: insufficient standalone Skill ${skill} Art History questions`);
+        selected.push(...pool.slice(0, count));
+      });
+    });
+
+    const result = shuffle(selected, rng).flat();
+    if (result.length !== subject.mcqCount) {
+      throw new Error(`Art History blueprint produced ${result.length}; expected ${subject.mcqCount}`);
+    }
+    return result;
+  }
+
+  /**
    * Build one attempt's question list for a subject.
    *
    * @param {object} subject   an AP_SUBJECTS entry
@@ -494,7 +552,9 @@
     const units = Array.isArray(subject.units) ? subject.units : [];
     let result;
 
-    if (subject.setBlueprint) {
+    if (subject.artHistoryBlueprint) {
+      result = drawArtHistoryExam(subject, bank, rng);
+    } else if (subject.setBlueprint) {
       result = drawSetBlueprintExam(subject, bank, rng);
     } else if (units.length === 0) {
       const blocks = drawBlocks(bank, drawCount, rng);
@@ -595,6 +655,7 @@
     summarizeBlocks,
     summarizeAttributes,
     drawConstrainedWeightedExam,
+    drawArtHistoryExam,
     drawBlueprintExam,
     drawSetBlueprintExam,
     orderByExamParts,

@@ -20,7 +20,7 @@ test("Art History draft bank has the audited prescribed-work inventory and all M
 test("Art History visual groups are two-question, single-unit, single-image sets with honest unknown labels",()=>{
  const groups=new Map();
  bank.filter(q=>q.stimulusGroupId).forEach(q=>{if(!groups.has(q.stimulusGroupId))groups.set(q.stimulusGroupId,[]);groups.get(q.stimulusGroupId).push(q);});
- assert.equal(groups.size,48);
+ assert.equal(groups.size,48,`visual groups: ${[...groups.keys()].join(", ")}`);
  let unknown=0,known=0;
  for(const [id,qs] of groups){
   assert.equal(qs.length,2,id); assert.equal(new Set(qs.map(q=>q.unit)).size,1,id); assert.equal(new Set(qs.map(q=>q.stimulus)).size,1,id);

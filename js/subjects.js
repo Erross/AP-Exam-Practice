@@ -58,8 +58,23 @@ const AP_SUBJECTS = [
       { id:"U10", name:"Global Contemporary, 1980 CE to Present", examWeight:0.11, examWeightRange:[0.11,0.11] },
     ],
     skillCountRanges: { "1":[12,15], "2":[23,25], "3":[9,10], "4":[16,20], "5":[5,6], "6":[5,6], "7":[5,6] },
-    stimulusSetRange: [17,21],
-    constraintDrawAttempts: 50000,
+    stimulusSetRange: [20,20],
+    // Exact constructive draw: 15 prescribed-work image sets + 5 unfamiliar-work
+    // image sets = 40 visual questions. Standalones then produce an exact skill
+    // mix of 15/24/10/16/5/5/5 while preserving Hamilton unit counts
+    // 3/12/17/17/5/5/3/6/3/9.
+    artHistoryBlueprint: { perUnit: {
+      U1:  { knownSets:1, unknownSets:0, standalone:{ "4":1 } },
+      U2:  { knownSets:2, unknownSets:1, standalone:{ "2":1, "3":2, "4":2, "7":1 } },
+      U3:  { knownSets:3, unknownSets:1, standalone:{ "2":2, "3":2, "4":4, "7":1 } },
+      U4:  { knownSets:3, unknownSets:3, standalone:{ "2":1, "3":1, "4":2, "7":1 } },
+      U5:  { knownSets:1, unknownSets:0, standalone:{ "3":1, "4":1, "7":1 } },
+      U6:  { knownSets:1, unknownSets:0, standalone:{ "2":1, "3":1, "4":1 } },
+      U7:  { knownSets:1, unknownSets:0, standalone:{ "3":1 } },
+      U8:  { knownSets:1, unknownSets:0, standalone:{ "2":1, "3":1, "4":2 } },
+      U9:  { knownSets:1, unknownSets:0, standalone:{ "2":1 } },
+      U10: { knownSets:1, unknownSets:0, standalone:{ "2":2, "3":1, "4":3, "7":1 } },
+    } },
     dataVar: "QUESTIONS_AP_ART_HISTORY",
   },
   {
