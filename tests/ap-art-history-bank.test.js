@@ -23,7 +23,8 @@ test("Art History visual groups are two-question, single-unit, single-image sets
  assert.equal(groups.size,48,`visual groups: ${[...groups.keys()].join(", ")}`);
  let unknown=0,known=0;
  for(const [id,qs] of groups){
-  assert.equal(qs.length,2,id); assert.equal(new Set(qs.map(q=>q.unit)).size,1,id); assert.equal(new Set(qs.map(q=>q.stimulus)).size,1,id);
+  assert.equal(qs.length,2,id); assert.equal(new Set(qs.map(q=>q.unit)).size,1,id);
+  assert.deepEqual(qs[1].stimulus,qs[0].stimulus,`${id}: set questions must carry identical stimulus content`);
   assert.equal(qs[0].stimulus.type,"visual",id); assert.ok(qs[0].stimulus.image.startsWith("assets/ap-art-history/"),id);
   if(id.includes("unk-")){unknown++;assert.deepEqual(qs.map(q=>q.skill).sort(),["5","6"],id);assert.equal(qs[0].stimulus.title,"Unidentified work",id);assert.doesNotMatch(qs[0].stimulus.description,/Mona|Venus|Nefertiti|Vermeer|David|Delacroix|G.ricault|Monet|Amiens/i,id);}
   else {known++;assert.deepEqual(qs.map(q=>q.skill).sort(),["1","2"],id);}
