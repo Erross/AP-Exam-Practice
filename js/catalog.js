@@ -180,6 +180,7 @@
     text(panel, "p", "preflight-parts", "subject-timing", "");
     text(panel, "p", "preflight-calculator", "subject-timing", "");
     text(panel, "p", "preflight-full", "subject-total", "");
+    text(panel, "p", "preflight-note", "results-scope-note", "");
     text(panel, "p", "", "results-scope-note", "Your in-progress attempt is saved in this browser session. The timer starts only after you choose Start timed practice.");
     const controls = document.createElement("div");
     controls.className = "question-controls";
@@ -209,6 +210,9 @@
     document.getElementById("preflight-subject").textContent = subject.name;
     document.getElementById("preflight-format").textContent = `${subject.mcqCount} multiple-choice questions · ${subject.mcqTimeMinutes} minutes`;
     document.getElementById("preflight-full").textContent = `Official full AP exam duration: ${subject.totalExamTimeLabel}`;
+    const note = document.getElementById("preflight-note");
+    note.textContent = subject.tierNote || "";
+    note.hidden = !subject.tierNote;
     const parts = document.getElementById("preflight-parts");
     const partText = subject.examParts && Array.isArray(subject.examParts.parts)
       ? subject.examParts.parts.map((part) => `${part.label}: ${part.timeMinutes} min`).join(" · ") : "";
