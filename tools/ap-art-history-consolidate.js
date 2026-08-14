@@ -15,7 +15,8 @@ const bank = sandbox.window.QUESTIONS_AP_ART_HISTORY;
 if (!Array.isArray(bank) || bank.length !== 340) throw new Error(`Expected 340 effective Art History questions; found ${bank && bank.length}`);
 
 const header = `// AP Art History — original Section I practice bank.\n// Current-format metadata and skill/unit blueprint verified against College Board AP Central in August 2026.\n// Visual assets are stored locally under assets/ap-art-history; SOURCES.json records reusable-image provenance.\n// This file is the canonical shipping bank; development profile layers were consolidated before release.\nwindow.QUESTIONS_AP_ART_HISTORY = `;
-fs.writeFileSync("data/ap-art-history.js", header + JSON.stringify(bank, null, 2) + ";\n");
+const internStimuli = `\n// Preserve atomic-set identity after JSON materialization: every question in a\n// stimulusGroupId references the same stimulus object, matching the repo-wide\n// release invariant used by the generic audit and browser-effective layered banks.\n(()=>{const shared=new Map();window.QUESTIONS_AP_ART_HISTORY.forEach(q=>{if(!q.stimulusGroupId||!q.stimulus)return;if(!shared.has(q.stimulusGroupId))shared.set(q.stimulusGroupId,q.stimulus);else q.stimulus=shared.get(q.stimulusGroupId);});})();\n`;
+fs.writeFileSync("data/ap-art-history.js", header + JSON.stringify(bank, null, 2) + ";\n" + internStimuli);
 
 let nextHtml = html;
 for (const file of scripts.slice(1)) {
@@ -36,6 +37,7 @@ const remove = [
   "tools/ap-art-history-ux-repair.py",
   ".aparth-clean-trigger",
   ".aparth-ux-trigger",
+  ".aparth-consolidate-trigger",
   ".github/workflows/ap-art-history-materialize.yml",
   ".github/workflows/ap-art-history-fix-assets.yml",
   ".github/workflows/ap-art-history-drawer-patch.yml",
