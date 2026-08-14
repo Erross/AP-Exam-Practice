@@ -13,18 +13,35 @@ function loadAllBanks() {
       ? "data/ap-human-geography.js"
       : file.startsWith("data/ap-art-history-")
         ? "data/ap-art-history.js"
-        : file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
+        : file.startsWith("data/ap-calculus-bc-")
+          ? "data/ap-calculus-bc.js"
+          : file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(file);
   });
 
   const rows = [];
-  groups.forEach((files) => {
+  groups.forEach((files, key) => {
     const sandbox = { window: {} };
     vm.createContext(sandbox);
+
+    // The BC bank intentionally inherits the browser-effective AB bank during
+    // development. Reproduce that dependency here rather than executing the BC
+    // base file in an artificial empty sandbox. The final shipping bank is
+    // consolidated and independent before release.
+    if (key === "data/ap-calculus-bc.js") {
+      ["data/ap-calculus-ab.js", "data/ap-calculus-ab-quality-fixes.js"].forEach((file) => {
+        vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
+      });
+    }
+
     files.forEach((file) => vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file }));
     Object.entries(sandbox.window)
-      .filter(([name, value]) => name.startsWith("QUESTIONS_") && Array.isArray(value))
+      .filter(([name, value]) => {
+        if (!name.startsWith("QUESTIONS_") || !Array.isArray(value)) return false;
+        if (key === "data/ap-calculus-bc.js") return name === "QUESTIONS_AP_CALCULUS_BC";
+        return true;
+      })
       .forEach(([bank, questions]) => questions.forEach((q) => rows.push({ bank, q })));
   });
   return rows;
