@@ -44,19 +44,14 @@ function loadEffectiveBank(subject, scripts = dataScriptsForSubject(subject.id))
   assert.ok(scripts.length > 0, `${subject.id}: no data scripts are referenced by index.html`);
   const sandbox = { window: {} };
   vm.createContext(sandbox);
-
-  // AP Calculus BC temporarily inherits the browser-effective AB bank while its
-  // BC-only material is being authored and audited. The release process must
-  // consolidate BC into an independent canonical bank before promotion; this
-  // dependency preload exists only so the generic audit can inspect the exact
-  // development bank that the browser sees.
-  if (subject.id === "ap-calculus-bc") {
-    ["data/ap-calculus-ab.js", "data/ap-calculus-ab-quality-fixes.js"].forEach((source) => {
-      if (!fs.existsSync(source)) return;
-      vm.runInContext(fs.readFileSync(source, "utf8"), sandbox, { filename: source });
-    });
+  // During development a subject may explicitly inherit a previously loaded bank.
+  // Mirror browser order for that dependency without making generic audits silently
+  // load unrelated course data in all cases.
+  if (subject.id === "ap-calculus-bc" && scripts.some((source) => source === "data/ap-calculus-bc.js")) {
+    for (const dependency of ["data/ap-calculus-ab.js", "data/ap-calculus-ab-quality-fixes.js"]) {
+      if (fs.existsSync(dependency)) vm.runInContext(fs.readFileSync(dependency, "utf8"), sandbox, { filename: dependency });
+    }
   }
-
   scripts.forEach((source) => {
     assert.ok(fs.existsSync(source), `${subject.id}: missing data layer ${source}`);
     vm.runInContext(fs.readFileSync(source, "utf8"), sandbox, { filename: source });
@@ -149,7 +144,9 @@ function auditGenericContent(subject, bank) {
   for (const [groupId, questions] of stimulusGroups) {
     assert.ok(questions.length >= 2, `${groupId}: stimulus group has fewer than two questions`);
     assert.equal(new Set(questions.map((q) => q.unit)).size, 1, `${groupId}: stimulus group crosses units`);
-    assert.equal(new Set(questions.map((q) => q.stimulus)).size, 1, `${groupId}: stimulus object mismatch`);
+    // Compare stimulus content rather than object identity. Standalone shipping
+    // banks may deserialize equivalent stimulus objects into distinct references.
+    assert.equal(new Set(questions.map((q) => JSON.stringify(q.stimulus))).size, 1, `${groupId}: stimulus object mismatch`);
     const stimulus = questions[0].stimulus;
     assert.ok(stimulus && typeof stimulus === "object", `${groupId}: missing stimulus`);
     if (stimulus.image) {
@@ -200,24 +197,13 @@ function measureOverlap(subject, bank, trials) {
 function runAudit(args) {
   assert.ok(args.subjectId, "--subject is required");
   const subject = AP_SUBJECTS.find((candidate) => candidate.id === args.subjectId);
-  assert.ok(subject, `unknown subject ${args.subjectId}`);
+  assert.ok(subject, `Unknown subject: ${args.subjectId}`);
   const { bank, scripts } = loadEffectiveBank(subject);
   const content = auditGenericContent(subject, bank);
   const draws = auditDraws(subject, bank, args.trials);
   const overlap = measureOverlap(subject, bank, args.overlapTrials);
-  assert.ok(overlap <= 0.40, `retake overlap ${(100 * overlap).toFixed(1)}% exceeds 40%`);
+  assert.ok(overlap <= 0.40, `average retake overlap ${(100 * overlap).toFixed(1)}% exceeds 40%`);
   return { subject: subject.id, bankSize: bank.length, scripts, content, draws, overlap };
-}
-
-function formatReport(result) {
-  return [
-    `${result.subject}: ${result.bankSize} questions from ${result.scripts.length} browser data layer(s)`,
-    `Answer pattern: uniquely-longest ${(100 * result.content.uniqueLongestShare).toFixed(1)}%; exploitable among-longest ${(100 * result.content.amongLongestShare).toFixed(1)}% (four-way ties excluded); correct ${result.content.correctAverage.toFixed(2)} words vs distractors ${result.content.distractorAverage.toFixed(2)}.`,
-    `Raw keys: ${result.content.keyShares.map((share, i) => `${String.fromCharCode(65 + i)} ${(100 * share).toFixed(1)}%`).join(", ")}.`,
-    `Variant groups: ${result.content.variantGroups}; stimulus groups: ${result.content.stimulusGroups}.`,
-    `Draw audit: ${result.draws.trials}/${result.draws.trials} valid.`,
-    `Retake overlap: ${(100 * result.overlap).toFixed(1)}% average shared questions.`,
-  ].join("\n");
 }
 
 if (require.main === module) {
@@ -229,20 +215,18 @@ if (require.main === module) {
     }
     const result = runAudit(args);
     if (args.json) console.log(JSON.stringify(result, null, 2));
-    else console.log(formatReport(result));
+    else {
+      console.log(`${result.subject}: ${result.bankSize} questions from ${result.scripts.length} browser data layer(s)`);
+      console.log(`Answer pattern: uniquely-longest ${(100 * result.content.uniqueLongestShare).toFixed(1)}%; exploitable among-longest ${(100 * result.content.amongLongestShare).toFixed(1)}% (four-way ties excluded); correct ${result.content.correctAverage.toFixed(2)} words vs distractors ${result.content.distractorAverage.toFixed(2)}.`);
+      console.log(`Raw keys: ${result.content.keyShares.map((share, index) => `${String.fromCharCode(65 + index)} ${(100 * share).toFixed(1)}%`).join(", ")}.`);
+      console.log(`Variant groups: ${result.content.variantGroups}; stimulus groups: ${result.content.stimulusGroups}.`);
+      console.log(`Draw audit: ${result.draws.trials}/${result.draws.trials} valid.`);
+      console.log(`Retake overlap: ${(100 * result.overlap).toFixed(1)}% average shared questions.`);
+    }
   } catch (error) {
-    console.error(error.stack || error.message || String(error));
+    console.error(error.stack || error.message || error);
     process.exit(1);
   }
 }
 
-module.exports = {
-  parseArgs,
-  dataScriptsForSubject,
-  loadEffectiveBank,
-  auditGenericContent,
-  auditDraws,
-  measureOverlap,
-  runAudit,
-  formatReport,
-};
+module.exports = { parseArgs, dataScriptsForSubject, loadEffectiveBank, wordCount, auditGenericContent, auditDraws, measureOverlap, runAudit };
