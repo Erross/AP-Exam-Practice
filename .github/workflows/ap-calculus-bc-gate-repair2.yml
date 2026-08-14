@@ -6,7 +6,7 @@ permissions:
   contents: write
 jobs:
   repair:
-    if: github.event.head_commit.message == 'Apply Calculus BC answer-pattern gate repair'
+    if: github.event.head_commit.message == 'Finalize Calculus BC generic release gate repairs'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
       - run: python tools/ap-calculus-bc-generic-gate-repair.py
       - run: python tools/patch-release-audit-four-way-ties.py
       - run: node --test tests/subject-release-audit.test.js tests/ap-calculus-bc.test.js
-      - run: npm run release:audit -- --subject ap-calculus-bc --trials 1000 --overlap-trials 1000
+      - run: npm run release:audit -- --subject ap-calculus-bc --trials 5000 --overlap-trials 5000
       - run: npm run check
       - run: |
           git config user.name github-actions[bot]
