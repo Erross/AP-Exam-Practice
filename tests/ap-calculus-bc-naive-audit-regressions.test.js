@@ -26,8 +26,11 @@ test("Calculus BC naive audit exposes the May 2027 Section I preflight facts", (
   assert.match(catalog, /Start timed practice →/);
 });
 
-test("Calculus BC exam runtime retains timed-part transition behavior", () => {
-  assert.match(app, /examParts/);
-  assert.match(app, /part/i);
-  assert.match(app, /calculator/i);
+test("Calculus BC exam runtime retains generic timed-part transition and lock behavior", () => {
+  assert.match(app, /computePartBoundaries\(subject, state\.questions\)/);
+  assert.match(app, /state\.partIndex/);
+  assert.match(app, /showPartTransitionBanner/);
+  assert.match(app, /Earlier questions are locked and can no longer be viewed or changed/);
+  assert.match(app, /part\.timeMinutes \* 60 \* 1000/);
+  assert.match(app, /isPartLocked/);
 });
