@@ -1,0 +1,32 @@
+name: Repair AP Art History promotion registry
+on:
+  push:
+    branches: [subject/ap-art-history]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.event.head_commit.message == 'Repair AP Art History promotion registry'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-art-history
+          fetch-depth: 0
+      - run: |
+          git checkout 52d6191bc06a6509d41d93c6217431811a5d9402 -- js/subjects.js
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('js/subjects.js')
+          s=p.read_text()
+          anchor='id: "ap-art-history"'
+          i=s.index(anchor)
+          j=s.index('releaseStatus: "draft"', i)
+          s=s[:j]+s[j:].replace('releaseStatus: "draft"','releaseStatus: "released"',1)
+          p.write_text(s)
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add js/subjects.js
+          git commit -m "Restore current registry and release AP Art History"
+          git push origin HEAD:subject/ap-art-history
