@@ -34,17 +34,32 @@ const AP_SUBJECTS = [
     name: "AP Art History",
     category: "Arts",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-art-history/assessment
-    // — Section I: Multiple Choice, 80 questions, 50% of score; total exam duration 3hrs.
-    // Section I is allotted 1 hour. Previous repo value (28 questions) was badly stale.
+    // VERIFIED 2026-08-13 against current AP Central course and exam pages.
+    // Section I: 80 MCQs in 60 minutes, 50% of score; 2-3 question image sets
+    // plus individual questions using works both within and beyond the prescribed image set.
     mcqCount: 80,
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
+    calculatorAllowed: false,
     tierNote: null,
-    units: [],
+    units: [
+      { id:"U1", name:"Global Prehistory, 30,000–500 BCE", examWeight:0.04, examWeightRange:[0.04,0.04] },
+      { id:"U2", name:"Ancient Mediterranean, 3500 BCE–300 CE", examWeight:0.15, examWeightRange:[0.15,0.15] },
+      { id:"U3", name:"Early Europe and Colonial Americas, 200–1750 CE", examWeight:0.21, examWeightRange:[0.21,0.21] },
+      { id:"U4", name:"Later Europe and Americas, 1750–1980 CE", examWeight:0.21, examWeightRange:[0.21,0.21] },
+      { id:"U5", name:"Indigenous Americas, 1000 BCE–1980 CE", examWeight:0.06, examWeightRange:[0.06,0.06] },
+      { id:"U6", name:"Africa, 1100–1980 CE", examWeight:0.06, examWeightRange:[0.06,0.06] },
+      { id:"U7", name:"West and Central Asia, 500 BCE–1980 CE", examWeight:0.04, examWeightRange:[0.04,0.04] },
+      { id:"U8", name:"South, East, and Southeast Asia, 300 BCE–1980 CE", examWeight:0.08, examWeightRange:[0.08,0.08] },
+      { id:"U9", name:"The Pacific, 700–1980 CE", examWeight:0.04, examWeightRange:[0.04,0.04] },
+      { id:"U10", name:"Global Contemporary, 1980 CE to Present", examWeight:0.11, examWeightRange:[0.11,0.11] },
+    ],
+    skillCountRanges: { "1":[12,15], "2":[23,25], "3":[9,10], "4":[16,20], "5":[5,6], "6":[5,6], "7":[5,6] },
+    stimulusSetRange: [17,21],
+    constraintDrawAttempts: 50000,
     dataVar: "QUESTIONS_AP_ART_HISTORY",
   },
   {

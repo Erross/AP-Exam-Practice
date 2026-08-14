@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import json, os, re, sys, urllib.parse, urllib.request
+import json, os, re, sys, time, urllib.parse, urllib.request, urllib.error
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,15 +62,31 @@ QUERIES = {
 ACCEPT = ("public domain", "cc0", "cc by", "cc-by", "cc by-sa", "cc-by-sa", "creative commons attribution")
 UA = "AP-Exam-Practice/1.0 (educational static site; github.com/Erross/AP-Exam-Practice)"
 
+def open_with_backoff(req, timeout):
+    for attempt in range(7):
+        try:
+            return urllib.request.urlopen(req, timeout=timeout)
+        except urllib.error.HTTPError as exc:
+            if exc.code != 429 or attempt == 6:
+                raise
+            wait = min(60, 3 * (2 ** attempt))
+            print(f"Wikimedia rate limit; sleeping {wait}s", flush=True)
+            time.sleep(wait)
+    raise RuntimeError("unreachable")
+
 def get_json(url: str):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+    with open_with_backoff(req, 30) as r:
+        data = json.load(r)
+    time.sleep(1.25)
+    return data
 
 def fetch_bytes(url: str):
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return r.read(), r.headers.get_content_type()
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Referer":"https://commons.wikimedia.org/"})
+    with open_with_backoff(req, 60) as r:
+        data, ctype = r.read(), r.headers.get_content_type()
+    time.sleep(1.25)
+    return data, ctype
 
 def text_meta(meta, key):
     v = (meta or {}).get(key) or {}
@@ -105,6 +121,7 @@ def commons_candidate(query):
 def materialize_assets():
     manifest = []
     for key, query in QUERIES.items():
+        out = ASSET_DIR / f"{key}.jpg"
         page, info, meta, url = commons_candidate(query)
         raw, ctype = fetch_bytes(url)
         # Keep the bank path stable as .jpg. Pillow is installed by the workflow.
@@ -112,7 +129,6 @@ def materialize_assets():
         from io import BytesIO
         img = Image.open(BytesIO(raw)).convert("RGB")
         img.thumbnail((900, 9000))
-        out = ASSET_DIR / f"{key}.jpg"
         img.save(out, "JPEG", quality=84, optimize=True, progressive=True)
         manifest.append({
             "key": key,
