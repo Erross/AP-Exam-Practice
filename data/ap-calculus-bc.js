@@ -17,6 +17,21 @@
     stimulusGroupId: q.stimulusGroupId ? `apcalcbc-shared-${q.stimulusGroupId}` : undefined,
   }));
 
+  // Some audited AB questions use a table/diagram as a one-question stimulus.
+  // A singleton is not a shared stimulus *group*, so keep its stimulus object but
+  // remove the group id. This preserves the visual/data dependency while making
+  // group metadata mean what the release gate expects: an atomic set of 2+ items.
+  const stimulusGroupCounts = new Map();
+  bank.forEach((q) => {
+    if (!q.stimulusGroupId) return;
+    stimulusGroupCounts.set(q.stimulusGroupId, (stimulusGroupCounts.get(q.stimulusGroupId) || 0) + 1);
+  });
+  bank.forEach((q) => {
+    if (q.stimulusGroupId && stimulusGroupCounts.get(q.stimulusGroupId) === 1) {
+      q.stimulusGroupId = undefined;
+    }
+  });
+
   const counts = Object.fromEntries(Array.from({ length: 10 }, (_, i) => [`U${i + 1}`, bank.filter((q) => q.unit === `U${i + 1}`).length]));
   function add({ unit, topicCode, topic, skill, calculatorAllowed, q, correct, distractors, explanation, variantGroupId }) {
     counts[unit] = (counts[unit] || 0) + 1;
