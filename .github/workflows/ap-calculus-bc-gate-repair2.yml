@@ -1,0 +1,28 @@
+name: Apply AP Calculus BC answer-pattern gate repair
+on:
+  push:
+    branches: [subject/ap-calculus-bc]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.event.head_commit.message == 'Apply Calculus BC answer-pattern gate repair'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-calculus-bc
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python tools/ap-calculus-bc-generic-gate-repair.py
+      - run: python tools/patch-release-audit-four-way-ties.py
+      - run: node --test tests/subject-release-audit.test.js tests/ap-calculus-bc.test.js
+      - run: npm run release:audit -- --subject ap-calculus-bc --trials 1000 --overlap-trials 1000
+      - run: npm run check
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/ap-calculus-bc-u9.js data/ap-calculus-bc-u10.js tools/subject-release-audit.js
+          git commit -m "Repair AP Calculus BC release-gate metrics and content"
+          git push origin HEAD:subject/ap-calculus-bc
