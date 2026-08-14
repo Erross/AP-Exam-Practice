@@ -8,8 +8,8 @@ const subject=AP_SUBJECTS.find(x=>x.id==="ap-art-history");
 const {bank}=loadEffectiveBank(subject);
 const required=[5,7,8,13,17,19,22,34,35,37,43,46,49,52,55,56,58,60,68,72,76,77,85,91,93,100,101,103,109,115,119,120,125,127,140,144,146,151,153,156,157,161,167,168,169,177,181,185,191,192,199,202,209,211,214,215,221,225,226,229,233,238,240,249];
 
-test("Art History draft bank has the audited prescribed-work inventory and all MCQ skills",()=>{
- assert.equal(subject.formatVerified,true); assert.equal(subject.releaseStatus,"draft"); assert.equal(subject.calculatorAllowed,false);
+test("Art History released bank has the audited prescribed-work inventory and all MCQ skills",()=>{
+ assert.equal(subject.formatVerified,true); assert.equal(subject.releaseStatus,"released"); assert.equal(subject.calculatorAllowed,false);
  assert.equal(bank.length,340); assert.equal(new Set(bank.map(q=>q.id)).size,340);
  assert.deepEqual([...new Set(bank.map(q=>q.workNo).filter(Number.isInteger))].sort((a,b)=>a-b),required);
  assert.deepEqual([...new Set(bank.map(q=>q.unit))].sort(),["U1","U10","U2","U3","U4","U5","U6","U7","U8","U9"]);
