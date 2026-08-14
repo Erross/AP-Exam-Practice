@@ -34,6 +34,9 @@
     const seed = [...id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
     const { o, c } = rotateOptions(correct, distractors, seed);
     const item = { id, unit, type:"s", q, o, c, e:explanation, skill };
+    item.topicCode = Number.isInteger(workNo)
+      ? `PIS-${String(workNo).padStart(3,"0")}`
+      : `${unit}-UNKNOWN`;
     if (workNo) item.workNo = workNo;
     if (groupId) item.stimulusGroupId = groupId;
     if (stimulus) item.stimulus = stimulus;
@@ -116,7 +119,7 @@
     }));
   });
 
-  unknowns.forEach((p, index) => {
+  unknowns.forEach((p) => {
     const peers = unknowns.filter((x) => x !== p);
     const groupId = `aparth-${p.id}`;
     const stimulus = {
