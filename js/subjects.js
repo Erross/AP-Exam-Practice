@@ -465,7 +465,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 100,
     totalExamTimeLabel: "3h 10m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     tierNote: null,
     // Current AP Central published BC unit bands are 5-10% for U1-U4 and U7-U8,

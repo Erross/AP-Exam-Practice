@@ -40,9 +40,9 @@ function correctText(q) {
   return q.o[q.c[0]];
 }
 
-test("Calculus BC draft metadata matches the May 2027 Section I structure", () => {
+test("Calculus BC released metadata matches the May 2027 Section I structure", () => {
   assert.ok(subject);
-  assert.equal(subject.releaseStatus, "draft");
+  assert.equal(subject.releaseStatus, "released");
   assert.equal(subject.formatVerified, true);
   assert.equal(subject.mcqCount, 42);
   assert.equal(subject.mcqTimeMinutes, 100);
