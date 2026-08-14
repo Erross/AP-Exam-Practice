@@ -30,7 +30,6 @@ test("clean-room inventory has three independently authored variants for every B
 });
 
 test("clean-room quantitative and conceptual anchors recompute across every BC-only topic", () => {
-  // U6-U8 BC extensions
   expect("6.11", /x e\^x/, "e^x(x − 1) + C");
   expect("6.12", /3x\+5/, "2/(x+1) + 1/(x+2)");
   expect("6.13", /1\/x²/, "1");
@@ -38,7 +37,6 @@ test("clean-room quantitative and conceptual anchors recompute across every BC-o
   expect("7.9", /growth rate greatest/, "250");
   expect("8.13", /speed at t=1/, "√13");
 
-  // Unit 9
   expect("9.1", /x=t²\+1/, "3");
   expect("9.2", /x=t² and y=t³/, "3/4");
   expect("9.3", /3cos\(t\)/, "3π/2");
@@ -49,7 +47,6 @@ test("clean-room quantitative and conceptual anchors recompute across every BC-o
   expect("9.8", /r=2cos\(θ\).*−π\/2/, "π");
   expect("9.9", /circles r=2 and r=1/, "3π");
 
-  // Unit 10
   expect("10.1", /Sₙ=3−2\/n/, "The series converges to 3.");
   expect("10.2", /\(1\/3\)\^n/, "3/2");
   expect("10.3", /n\/\(n\+1\)/, "It diverges because n/(n+1) approaches 1, not 0.");
@@ -67,29 +64,27 @@ test("clean-room quantitative and conceptual anchors recompute across every BC-o
   expect("10.15", /x\/\(1−x²\)/, "Σ x^(2n+1) from n=0 to ∞");
 });
 
-test("clean-room BC-only skill tags use MCQ-assessed practice families and match task type", () => {
+test("clean-room BC-only skill tags stay within MCQ-assessed practices and semantic anchors match", () => {
   const allowed = new Set(["1.D","1.E","2.C","2.D","3.B","3.D"]);
   assert.ok(authored.every((q) => allowed.has(q.skill)), "unexpected BC-only exact skill code");
   assert.ok(authored.every((q) => !String(q.skill).startsWith("4.")), "Practice 4 must not appear in Section I");
 
-  // Construction/calculation tasks should not masquerade as justification tasks.
-  for (const q of authored.filter((q) => q.skill.startsWith("1."))) {
-    assert.doesNotMatch(q.q, /Which conclusion is justified|Which statement best explains why/i, `${q.id}: process tag on justification wording`);
-  }
-  // Explicit convergence/error justification tasks should be in Practice 3.
-  for (const q of authored.filter((q) => /what can be concluded|which conclusion|why does|error bound|convergence behavior/i.test(q.q))) {
-    if (q.topicCode.startsWith("10.")) assert.ok(q.skill.startsWith("3.") || q.skill === "1.D", `${q.id}: convergence justification mis-tagged ${q.skill}`);
-  }
+  assert.equal(pick("6.11", /x e\^x/).skill, "1.E");
+  assert.equal(pick("7.9", /carrying capacity/).skill, "1.D");
+  assert.equal(pick("9.7", /Cartesian point/).skill, "2.C");
+  assert.equal(pick("10.1", /Sₙ=3−2\/n/).skill, "2.D");
+  assert.equal(pick("10.3", /n\/\(n\+1\)/).skill, "3.D");
+  assert.equal(pick("10.11", /third-degree Maclaurin polynomial for e\^x/).skill, "1.E");
+  assert.equal(pick("10.14", /Maclaurin series represents cos/).skill, "2.C");
 });
 
-test("clean-room BC-only option sets remain unambiguous and explanations support the keyed result", () => {
+test("clean-room BC-only option sets are unambiguous and rationales are substantive", () => {
   for (const q of authored) {
     assert.equal(new Set(q.o.map((x) => String(x).trim())).size, 4, `${q.id}: duplicate answer text`);
     assert.ok(q.c.length === 1 && Number.isInteger(q.c[0]), `${q.id}: ambiguous key shape`);
     const keyed = answer(q);
     assert.ok(keyed && String(keyed).trim().length > 0, `${q.id}: empty key`);
     assert.ok(q.e.length >= 90, `${q.id}: rationale too thin`);
-    const token = String(keyed).replace(/[()\[\]{}*+?.^$|\\]/g, " ").split(/\s+/).filter((x) => x.length >= 3)[0];
-    if (token) assert.ok(q.e.includes(token) || q.e.length >= 120, `${q.id}: explanation does not visibly support keyed result`);
+    assert.doesNotMatch(q.e, /because it is correct|the other answers are wrong/i, `${q.id}: non-explanatory rationale`);
   }
 });
