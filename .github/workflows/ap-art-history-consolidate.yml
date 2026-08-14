@@ -1,0 +1,28 @@
+name: Consolidate AP Art History shipping bank
+on:
+  push:
+    branches: [subject/ap-art-history]
+permissions:
+  contents: write
+jobs:
+  consolidate:
+    if: github.event.head_commit.message == 'Run AP Art History shipping consolidation'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-art-history
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: node tools/ap-art-history-consolidate.js
+      - run: node --test tests/ap-art-history-bank.test.js tests/ap-art-history-draw.test.js tests/ap-art-history-quality.test.js tests/notation-diagnostic.test.js
+      - run: npm run release:audit -- --subject ap-art-history --trials 1000 --overlap-trials 1000
+      - run: npm run check
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Consolidate AP Art History into canonical shipping bank"
+          git push origin HEAD:subject/ap-art-history
