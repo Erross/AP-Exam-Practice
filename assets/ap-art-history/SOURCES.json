@@ -13,15 +13,15 @@
   },
   {
     "key": "008-stonehenge",
-    "query": "Stonehenge",
-    "commonsTitle": "File:Stonehenge Heel Stone.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Stonehenge_Heel_Stone.jpg",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Stonehenge_Heel_Stone.jpg/960px-Stonehenge_Heel_Stone.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "query": "File:Stonehenge showing lintels.jpg",
+    "commonsTitle": "File:Stonehenge showing lintels.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Stonehenge_showing_lintels.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Stonehenge_showing_lintels.jpg/960px-Stonehenge_showing_lintels.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "artist": "DeFacto",
+    "artist": "Hadrianus1959",
     "credit": "Own work",
-    "originalDescription": "Stonehenge Heel Stone."
+    "originalDescription": "Stonehenge, Avebury and Associated Sites\n.mw-parser-output .messagebox{margin:4px 0;width:auto;border-collapse:collapse;border:2px solid var(--border-color-progressive,#6485d1);background-color:var(--background-color-neutral-subtle,#fbfcff);color:var(--color-base,#202122);box-sizing:border-box;border-inline-start-width:8px}.mw-parser-output .messagebox.mbox-small{font-size:88%;line-height:1.25em}.mw-parser-output .mbox-warning,.mw-parser-output .mbox-speedy{border:2px solid var(--border-color-error,#b22222);background:var(--background-color-error-subtle,#ffdbdb);border-inline-start-width:8px}.mw-parser-output .mbox-serious,.mw-parser-output .mbox-delete,.mw-parser-output .mbox-stop{border:2px solid var(--border-color-error,#b22222);border-inline-start-width:8px}.mw-parser-output .mbox-issue,.mw-parser-output .mbox-content{border:2px solid #f28500;background:var(--background-color-warning-subtle,#ffe);border-inline-start-width:8px}.mw-parser-output .mbox-query,.mw-parser-output .mbox-style{border:2px solid #f4c430;background:var(--background-color-warning-subtle,#ffe);border-inline-start-width:8px}.mw-parser-output .mbox-shit{border:2px solid #960;border-inline-start-width:8px}.mw-parser-output .mbox-license{border:2px solid #88a;border-inline-start-width:initial}.mw-parser-output .mbox-legal{border:2px solid var(--border-color-notice,#666);background:var(--background-color-base,#fff);border-inline-start-width:8px}.mw-parser-output .mbox-honor{border:2px solid #ca3;background:var(--background-color-warning-subtle,#fcf4db);border-inline-start-width:8px}.mw-parser-output .mbox-growth{border:2px solid #8d4;background:var(--background-color-success-subtle,#d5fdf4);border-inline-start-width:8px}.mw-parser-output .mbox-move{border:2px solid #93c;border-inline-start-width:8px}.mw-parser-output .mbox-protection,.mw-parser-output .mbox-message{border:2px solid var(--border-color-base,#aaa);border-inline-start-width:8px}.mw-parser-output .messagebox .mbox-text{border:none;padding:0.25em 0.9em;width:100%}.mw-parser-output .messagebox .mbox-image{border:none;padding-top:2px;padding-bottom:2px;padding-inline-start:0.9em;padding-inline-end:0;text-align:center}.mw-parser-output .messagebox .mbox-imageright{border:none;padding-top:2px;padding-bottom:2px;padding-inline-start:0;padding-inline-end:0.9em;text-align:center}.mw-parser-output .messagebox .mbox-empty-cell{border:none;padding:0;width:1px}.mw-parser-output .messagebox .mbox-invalid-type{text-align:center}@media(min-width:720px){.mw-parser-output .messagebox{margin:4px 10%}.mw-parser-output .messagebox.mbox-small{clear:right;float:right;margin:4px 0 4px 1em;width:238px}}body.skin--responsive .mw-parser-output table.messagebox img{max-width:none!important}Wikidata has entry Stonehenge, Avebury and Associated Sites (Q587584) with data related to this item."
   },
   {
     "key": "013-narmer",
@@ -97,15 +97,15 @@
   },
   {
     "key": "052-hagia-sophia",
-    "query": "Hagia Sophia interior dome",
-    "commonsTitle": "File:Kuppel Kleine Hagia Sophia.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kuppel_Kleine_Hagia_Sophia.jpg",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Kuppel_Kleine_Hagia_Sophia.jpg/960px-Kuppel_Kleine_Hagia_Sophia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-    "license": "Public domain",
-    "licenseUrl": "",
-    "artist": "H005",
+    "query": "File:HagiaSophiaDomeInside.jpg",
+    "commonsTitle": "File:HagiaSophiaDomeInside.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:HagiaSophiaDomeInside.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/HagiaSophiaDomeInside.jpg/960px-HagiaSophiaDomeInside.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "artist": "Metsavend",
     "credit": "Own work",
-    "originalDescription": "Interior view of the dome of Little Hagia Sophia, Istanbul"
+    "originalDescription": "Interior view of Hagia Sophia Dome, Istanbul"
   },
   {
     "key": "055-lindisfarne",
@@ -133,15 +133,15 @@
   },
   {
     "key": "060-chartres",
-    "query": "Chartres Cathedral interior",
-    "commonsTitle": "File:Chartres RosetteNord 121 DSC08241.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chartres_RosetteNord_121_DSC08241.jpg",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Chartres_RosetteNord_121_DSC08241.jpg/960px-Chartres_RosetteNord_121_DSC08241.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "query": "File:Chartres Cathédrale Notre-Dame de Chartres Innen Langhaus Nordost 2.jpg",
+    "commonsTitle": "File:Chartres Cathédrale Notre-Dame de Chartres Innen Langhaus Nordost 2.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chartres_Cath%C3%A9drale_Notre-Dame_de_Chartres_Innen_Langhaus_Nordost_2.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Chartres_Cath%C3%A9drale_Notre-Dame_de_Chartres_Innen_Langhaus_Nordost_2.jpg/960px-Chartres_Cath%C3%A9drale_Notre-Dame_de_Chartres_Innen_Langhaus_Nordost_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "artist": "PtrQs",
+    "artist": "Zairon",
     "credit": "Own work",
-    "originalDescription": "Fensterrosette Nord (baie 121)"
+    "originalDescription": "Nave of the Cathedral of Our Lady, Chartres, Department of Eure-et-Loire, Region of Centre-Loire Valley, France"
   },
   {
     "key": "068-arnolfini",
@@ -456,66 +456,6 @@
     "originalDescription": "Guggenheim Museum Bilbao,  exterior"
   },
   {
-    "key": "249-maxxi",
-    "query": "MAXXI museum Rome exterior",
-    "commonsTitle": "File:Riverside Museum (30244146743).jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Riverside_Museum_(30244146743).jpg",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Riverside_Museum_%2830244146743%29.jpg/960px-Riverside_Museum_%2830244146743%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-    "license": "CC BY-SA 2.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-    "artist": "Neil Williamson from Dundee, Scotland",
-    "credit": "Riverside Museum",
-    "originalDescription": "The Riverside Museum in Glasgow which now houses the Glasgow Museum of Transport. Berthed next to it is the Clyde built sailing ship the Glenlee.\nThe museum is a unique and eye-catching building designed by the late Zaha Hadid and houses over 3,000 objects that detail Glasgow’s rich past from its days as maritime powerhouse to a glimpse into daily Glasgow life in the early to mid 20th Century.\nsource:http://www.glasgowlife.org.uk\nI found the museum to be really interesting and it is absolutely crammed full of stuff to see. Was hoping to go to the Kelvingrove Museum afterwards but ended up spending the whole day here as there was so much to see. The Glenlee is also quite interesting to walk around and it has had a fantastic restoration job done to it. Unfortunately, there was maintenance going on when I was there so I couldn't get to see in every part of the ship. All in all, both attractions are well worth visiting and both are free to go into, as are all of Glasgow's museums. \nHere is a bit about the building and the ship:\nThe Riverside Museum is an award winning building that has already become an iconic landmark on the banks of the River Clyde. \nLocated on the site of the former Inglis Shipyard the building sits on the north bank of the River Clyde beside where it merges with the River Kelvin.  \nThis site enables The Tall Ship to berth alongside the museum and provide another world class attraction at Riverside.\nTechnical Specifications\nSize: 11,300m²​​\nExhibition Ares: 7000m²​​\nSite Size: 22,400m²​​\nFootprint Size:7,800m²​​​\nThe Architect\nIraqi-born architect Zaha Hadid (1950-2016) won the contract to design the new museum of transport for Glasgow in 2004.\nOther museums that Zaha Hadid has been involved in include:\nthe Rosenthal Centre for Contemporary Arts in Cincinnati\nthe MAXXI National Museum of 21st Century Arts in Rome, for which she won the RIBA Stirling Prize for Architecture in 2010\nthe Phaeno Science Centre in Wolfsburg, GermanyZaha Hadid  was also the architect for the Maggie’s Centre in Kirkcaldy, her first completed project in Britain, which opened in 2004.  That same year, Zaha Hadid became the first female recipient of the prestigious Pritzker Architecture Prize.\nThe Concept\n\"The building, open at opposite ends, has a tunnel-like configuration between the city and the Clyde. However, within this connection between the city and river, the building diverts to create a journey away from its external context into the world of the exhibits.\"\nRead a full explanation of the Riverside design concept on Zaha Hadid's website.​​\nCost\nThe cost of the Riverside Museum was £74 million.\nThe Heritage Lottery Fund  provided £21.6 million towards the cost of the Riverside Museum, Phase 2 of Glasgow Museums Resource Centre and the creation of the Collections Navigator.   It is the largest HLF grant to any museum project in Scotland. \n​​The Riverside Museum Appeal (RMA), chaired by Lord Smith, raised £5m towards the costs from benefactors, charitable trusts, corporations and the public. .  \nGlasgow Harbour Ltd has also contributed £1.4 million and Glasgow City Council is providing the remaining financial support.\nsource:http://www.glasgowlife.org.uk\n\nThe Glenlee\nThe Glenlee was built at the Bay Yard in Port Glasgow and was one of a group of 10 steel sailing vessels built to a standard design for the Glasgow shipping firm of Archibald Sterling and Co. Ltd. \nShe is a three masted barque, with length 245 feet, beam 37.5 feet, depth 22.5 feet and air draft 137' 6\".\nThe Glenlee first took to the water as a bulk cargo carrier in 1896. She circumnavigated the globe four times and survived (though not without incident!) passing through the fearsome storms of Cape Horn 15 times before being bought by the Spanish navy in 1922 and being turned into a sail training vessel. \nThe ship was modified and served in that role until 1969. She then operated as a training school until 1981 when she was laid up in Seville Harbour and largely forgotten.\nDiscovery\nA British naval architect saw her in Seville in 1990 and two years later, the Clyde Maritime Trust succeeded in buying the re-named Galatea at auction for 5 million Pesetas (£40,000) and saved her from dereliction.\nRestoration\nThe Glenlee is one of only 5 Clydebuilt sailing ships that remain afloat in the world and she was restored over a six year period by the Clyde Maritime Trust’s paid and voluntary crew.\nThe other four Clydebuilt sailing ships afloat in the world are also visitor attractions\nBalclutha (San Francisco)\nMoshulu (Philadelphia)\nFalls of Clyde (Hawaii)\nPommern (Finland)\nIn November 1999, the Glenlee was recognised as part of the Core Collection of historic vessels in the UK. Chosen from a list of over 1,500 ships, the Glenlee is one of only 43 vessels recognised by the National Historic Ships Committee as being of pre-eminent national significance in terms of maritime heritage, historic associations or technological innovation.\n\nsource:http://thetallship.com"
-  },
-  {
-    "key": "unk-venus-milo",
-    "query": "Venus de Milo Louvre",
-    "commonsTitle": "File:Venus de Milo.JPG",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Venus_de_Milo.JPG",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Venus_de_Milo.JPG/960px-Venus_de_Milo.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-    "license": "CC BY-SA 2.5",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.5",
-    "artist": "Unknown authorUnknown author",
-    "credit": "Chosovi",
-    "originalDescription": "So-called “Venus de Milo” (Aphrodite from Melos), detail of the bust showing the  difference of surface between the two arm sections: right one smooth; left one rough with a mortice. Parian marble, ca. 130-100 BC? Found in Melos in 1820."
-  },
-  {
-    "key": "unk-nefertiti",
-    "query": "Nefertiti bust",
-    "commonsTitle": "File:Nofretete Neues Museum.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nofretete_Neues_Museum.jpg",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Nofretete_Neues_Museum.jpg/960px-Nofretete_Neues_Museum.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "artist": "Philip Pikart",
-    "credit": "Own work",
-    "originalDescription": "Picture of the Nefertiti bust in Neues Museum, Berlin."
-  },
-  {
-    "key": "unk-mona-lisa",
-    "query": "Mona Lisa Leonardo da Vinci",
-    "commonsTitle": "File:Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/960px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-    "license": "Public domain",
-    "licenseUrl": "",
-    "artist": "Leonardo da Vinci",
-    "credit": "Cropped and relevelled from File:Mona Lisa, by Leonardo da Vinci, from C2RMF.jpg. Originally C2RMF: Galerie de tableaux en très haute définition: image page",
-    "originalDescription": ""
-  },
-  {
-    "key": "unk-girl-pearl",
-    "query": "Girl with a Pearl Earring Vermeer",
-    "commonsTitle": "File:1665 Girl with a Pearl Earring.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/960px-1665_Girl_with_a_Pearl_Earring.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-    "license": "Public domain",
-    "licenseUrl": "",
-    "artist": "Johannes Vermeer",
-    "credit": "https://www.mauritshuis.nl/",
-    "originalDescription": "Megapixel Girl with a Pearl Earring by Johannes Vermeer."
-  },
-  {
     "key": "unk-amiens",
     "query": "Amiens Cathedral west facade",
     "commonsTitle": "File:Amiens Cathedral, West facade, right portal, left side - Vanderbilt ACT - 00001298.jpg",
@@ -540,6 +480,30 @@
     "originalDescription": ""
   },
   {
+    "key": "unk-girl-pearl",
+    "query": "Girl with a Pearl Earring Vermeer",
+    "commonsTitle": "File:1665 Girl with a Pearl Earring.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/960px-1665_Girl_with_a_Pearl_Earring.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "artist": "Johannes Vermeer",
+    "credit": "https://www.mauritshuis.nl/",
+    "originalDescription": "Megapixel Girl with a Pearl Earring by Johannes Vermeer."
+  },
+  {
+    "key": "unk-impression-sunrise",
+    "query": "Impression Sunrise Monet",
+    "commonsTitle": "File:Monet - Impression, Sunrise.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Monet_-_Impression,_Sunrise.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Monet_-_Impression%2C_Sunrise.jpg/960px-Monet_-_Impression%2C_Sunrise.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "artist": "Claude Monet",
+    "credit": "art database",
+    "originalDescription": ""
+  },
+  {
     "key": "unk-liberty",
     "query": "Liberty Leading the People Delacroix",
     "commonsTitle": "File:Eugène Delacroix - La liberté guidant le peuple.jpg",
@@ -550,6 +514,30 @@
     "artist": "Eugène Delacroix",
     "credit": "This page from 1st-art-gallery.com",
     "originalDescription": "Romantic history painting. Commemorates the French Revolution of 1830 (July Revolution) on 28 July 1830."
+  },
+  {
+    "key": "unk-mona-lisa",
+    "query": "Mona Lisa Leonardo da Vinci",
+    "commonsTitle": "File:Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/960px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "artist": "Leonardo da Vinci",
+    "credit": "Cropped and relevelled from File:Mona Lisa, by Leonardo da Vinci, from C2RMF.jpg. Originally C2RMF: Galerie de tableaux en très haute définition: image page",
+    "originalDescription": ""
+  },
+  {
+    "key": "unk-nefertiti",
+    "query": "Nefertiti bust",
+    "commonsTitle": "File:Nofretete Neues Museum.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nofretete_Neues_Museum.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Nofretete_Neues_Museum.jpg/960px-Nofretete_Neues_Museum.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "artist": "Philip Pikart",
+    "credit": "Own work",
+    "originalDescription": "Picture of the Nefertiti bust in Neues Museum, Berlin."
   },
   {
     "key": "unk-raft",
@@ -564,16 +552,16 @@
     "originalDescription": ""
   },
   {
-    "key": "unk-impression-sunrise",
-    "query": "Impression Sunrise Monet",
-    "commonsTitle": "File:Monet - Impression, Sunrise.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Monet_-_Impression,_Sunrise.jpg",
-    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Monet_-_Impression%2C_Sunrise.jpg/960px-Monet_-_Impression%2C_Sunrise.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-    "license": "Public domain",
-    "licenseUrl": "",
-    "artist": "Claude Monet",
-    "credit": "art database",
-    "originalDescription": ""
+    "key": "unk-venus-milo",
+    "query": "Venus de Milo Louvre",
+    "commonsTitle": "File:Venus de Milo.JPG",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Venus_de_Milo.JPG",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Venus_de_Milo.JPG/960px-Venus_de_Milo.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "license": "CC BY-SA 2.5",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.5",
+    "artist": "Unknown authorUnknown author",
+    "credit": "Chosovi",
+    "originalDescription": "So-called “Venus de Milo” (Aphrodite from Melos), detail of the bust showing the  difference of surface between the two arm sections: right one smooth; left one rough with a mortice. Parian marble, ca. 130-100 BC? Found in Melos in 1820."
   },
   {
     "key": "unk-water-lilies",
