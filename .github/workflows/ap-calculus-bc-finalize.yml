@@ -37,13 +37,8 @@ jobs:
           PY
       - name: Remove one-off Calculus BC development machinery
         run: |
+          rm -f .apcalcbc-*-trigger
           rm -f \
-            .apcalcbc-audit-trigger \
-            .apcalcbc-cleanroom-trigger \
-            .apcalcbc-consolidate-trigger \
-            .apcalcbc-diagnostic-trigger \
-            .apcalcbc-notation-trigger \
-            .apcalcbc-wiring-trigger \
             tools/ap-calculus-bc-diagnostics.js \
             tools/ap-calculus-bc-generic-gate-repair.py \
             tools/consolidate-ap-calculus-bc.js \
