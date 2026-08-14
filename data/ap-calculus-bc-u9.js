@@ -41,7 +41,7 @@
   V("9.6", "Solving Motion Problems Using Parametric and Vector-Valued Functions", [
     { skill:"1.E", calculatorAllowed:false, q:"A particle has velocity v(t)=⟨3,4t⟩. What is its speed at t=1?", correct:"5", distractors:["4","7","25"], explanation:"Speed is the magnitude of velocity. At t=1 the velocity vector is ⟨3,4⟩, whose magnitude is √(3²+4²)=5." },
     { skill:"2.D", calculatorAllowed:false, q:"A particle starts at r(0)=⟨2,−1⟩ and has velocity v(t)=⟨1,t⟩. What is r(2)?", correct:"⟨4,1⟩", distractors:["⟨3,1⟩","⟨4,3⟩","⟨2,2⟩"], explanation:"The displacement from 0 to 2 is ∫₀²⟨1,t⟩dt=⟨2,2⟩. Adding the initial position ⟨2,−1⟩ gives r(2)=⟨4,1⟩." },
-    { skill:"1.E", calculatorAllowed:true, q:"For x(t)=t²−1 and y(t)=2t, at what rate is the particle’s distance from the origin changing at t=1?", correct:"2√5/5", distractors:["2","4/5","√5"], explanation:"Let R=√(x²+y²). Then dR/dt=(x x′+y y′)/R. At t=1, x=0, y=2, x′=2, y′=2, so dR/dt=(0+4)/2=2. However the requested rate of distance from the origin is therefore 2, not 2√5/5." },
+    { skill:"1.E", calculatorAllowed:true, q:"For x(t)=t²−1 and y(t)=2t, at what rate is the particle’s distance from the origin changing at t=1?", correct:"2", distractors:["4/5","√5","2√5/5"], explanation:"Let R=√(x²+y²). Then dR/dt=(x x′+y y′)/R. At t=1, x=0, y=2, x′=2, y′=2, so dR/dt=(0+4)/2=2. However the requested rate of distance from the origin is therefore 2, not 2√5/5." },
   ]);
 
   V("9.7", "Defining Polar Coordinates and Differentiating in Polar Form", [
