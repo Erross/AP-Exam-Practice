@@ -410,6 +410,15 @@ function renderStimulus(question, index, ranges) {
         attrs: { src: stim.image, alt: stim.alt || stim.description || "" },
       })
     );
+    if (stim.image) {
+      wrap.appendChild(
+        el("a", {
+          className: "stimulus-image-link",
+          text: "View larger image ↗",
+          attrs: { href: stim.image, target: "_blank", rel: "noopener" },
+        })
+      );
+    }
     if (stim.description) {
       wrap.appendChild(el("p", { className: "stimulus-body", text: stim.description }));
     }

@@ -44,7 +44,7 @@ const AP_SUBJECTS = [
     releaseStatus: "draft",
     allowsMultiSelect: false,
     calculatorAllowed: false,
-    tierNote: null,
+    tierNote: "Includes image-based question sets and unfamiliar-work visual analysis; use View larger image when you need to inspect detail.",
     units: [
       { id:"U1", name:"Global Prehistory, 30,000–500 BCE", examWeight:0.04, examWeightRange:[0.04,0.04] },
       { id:"U2", name:"Ancient Mediterranean, 3500 BCE–300 CE", examWeight:0.15, examWeightRange:[0.15,0.15] },
