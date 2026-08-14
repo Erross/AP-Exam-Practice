@@ -28,7 +28,7 @@ const state = {
   partIndex: 0,                // index into state.parts of the section currently being delivered
 };
 
-// ---------- Small DOM helpers (textContent only, never innerHTML) ----------
+// ---------- Small DOM helpers ----------
 
 function el(tag, options = {}, children = []) {
   const node = document.createElement(tag);
@@ -66,17 +66,9 @@ const OPTION_LETTERS = ["A", "B", "C", "D", "E", "F"];
 // ---------- Subject / bank access ----------
 
 function getQuestionBank(subject) {
-  // data/<id>.js defines a global like QUESTIONS_AP_BIOLOGY; subjects.js records
-  // that variable's name in dataVar so this stays generic.
   return window[subject.dataVar] || [];
 }
 
-/**
- * A subject is playable only when it has been explicitly marked released AND its
- * bank actually has questions. Bank length alone is NOT sufficient — that was the
- * old behaviour, and it meant the first work-in-progress question pushed into any
- * bank would silently publish that subject to every visitor.
- */
 function subjectIsPlayable(subject) {
   return subject.releaseStatus === "released" && getQuestionBank(subject).length > 0;
 }
@@ -119,7 +111,6 @@ function renderCatalog(filterText = "") {
   });
 
   if (rendered === 0) {
-    // textContent, not innerHTML — filterText is user input.
     container.appendChild(
       el("p", { className: "empty-state", text: `No subjects match "${filterText}".` })
     );
@@ -179,8 +170,6 @@ function startExam(subject) {
   const bank = getQuestionBank(subject);
 
   state.subject = subject;
-  // Blueprint-weighted draw (see js/draw.js) — per-unit counts are fixed by
-  // Hamilton apportionment of subject.units[].examWeight before any sampling.
   state.questions = drawExam(subject, bank).map((question) => {
     const { o, c, order } = shuffleQuestionOptions(question);
     return { ...question, o, c, optionOrder: order };
@@ -189,10 +178,6 @@ function startExam(subject) {
   state.struckOut = {};
   state.flagged = new Set();
   state.createdAt = Date.now();
-  // Subjects with examParts (e.g. AP Calculus AB's no-calculator/calculator
-  // split) deliver Section I as separate timed sections rather than one block;
-  // js/draw.js's orderByExamParts has already grouped state.questions into
-  // contiguous runs per part, so this just records where each run starts/ends.
   state.parts = computePartBoundaries(subject, state.questions);
   state.partIndex = 0;
   state.current = state.parts ? state.parts[0].start : 0;
@@ -210,11 +195,10 @@ function enterExamScreen() {
   updatePartUI();
   startTimer();
   showScreen("screen-exam");
-  // Focus has to move off the (now hidden) catalog card that launched the exam.
   focusQuestionHeading();
 }
 
-// ---------- Exam parts (e.g. AP Calculus AB Part A/B) ----------
+// ---------- Exam parts ----------
 
 function currentPart() {
   return state.parts ? state.parts[state.partIndex] : null;
@@ -224,7 +208,6 @@ function isOnFinalPart() {
   return !state.parts || state.partIndex === state.parts.length - 1;
 }
 
-/** Questions belonging to a part that has already closed can no longer be viewed or edited. */
 function isPartLocked(questionIndex) {
   const part = currentPart();
   return !!part && questionIndex < part.start;
@@ -252,12 +235,6 @@ function showPartTransitionBanner(part) {
   banner.hidden = false;
 }
 
-/**
- * Advances from the current part to the next one, whether triggered by that
- * part's timer running out or by the student choosing to move on early. Once
- * called, every question before the new part's start becomes permanently
- * inaccessible for the rest of this attempt (see isPartLocked).
- */
 function advanceToNextPart() {
   if (isOnFinalPart()) {
     submitExam();
@@ -282,7 +259,7 @@ function focusQuestionHeading() {
   if (heading) heading.focus();
 }
 
-// ---------- Timer (wall-clock based) ----------
+// ---------- Timer ----------
 
 function secondsRemaining() {
   if (!state.endsAt) return 0;
@@ -292,14 +269,10 @@ function secondsRemaining() {
 function startTimer() {
   clearInterval(state.timerId);
   updateTimerDisplay();
-  // Recompute from Date.now() every tick rather than decrementing a counter, so a
-  // throttled/backgrounded tab can't hand the student extra time.
   state.timerId = setInterval(() => {
     updateTimerDisplay();
     if (secondsRemaining() <= 0) {
       clearInterval(state.timerId);
-      // A part's timer running out advances to the next part (if any) rather
-      // than always submitting — only the final part's timer ends the attempt.
       advanceToNextPart();
     }
   }, 500);
@@ -349,7 +322,6 @@ function refreshNavigatorState() {
     item.classList.toggle("locked", isLocked);
     item.disabled = isLocked;
 
-    // Same information as the CSS classes, exposed to assistive tech.
     if (isCurrent) item.setAttribute("aria-current", "true");
     else item.removeAttribute("aria-current");
 
@@ -365,11 +337,6 @@ function refreshNavigatorState() {
 
 // ---------- Stimulus rendering ----------
 
-/**
- * Map stimulusGroupId -> { first, last } positions in the delivered exam, so a
- * shared source can be introduced once with "Questions 12-14 refer to..." rather
- * than being presented as if it belonged to a single item.
- */
 function stimulusGroupRanges() {
   const ranges = {};
   state.questions.forEach((q, i) => {
@@ -379,6 +346,26 @@ function stimulusGroupRanges() {
     else ranges[gid].last = i;
   });
   return ranges;
+}
+
+function visualStimulusImage(stim, imageClass = "stimulus-image") {
+  const wrap = el("div", { className: "visual-stimulus-media" });
+  wrap.appendChild(
+    el("img", {
+      className: imageClass,
+      attrs: { src: stim.image, alt: stim.alt || stim.description || "" },
+    })
+  );
+  if (stim.image) {
+    wrap.appendChild(
+      el("a", {
+        className: "stimulus-image-link",
+        text: "View larger image ↗",
+        attrs: { href: stim.image, target: "_blank", rel: "noopener" },
+      })
+    );
+  }
+  return wrap;
 }
 
 function renderStimulus(question, index, ranges) {
@@ -404,27 +391,11 @@ function renderStimulus(question, index, ranges) {
     wrap.appendChild(renderStimulusTable(stim));
   } else if (stim.type === "visual") {
     wrap.appendChild(el("p", { className: "stimulus-kind", text: "Visual source" }));
-    wrap.appendChild(
-      el("img", {
-        className: "stimulus-image",
-        attrs: { src: stim.image, alt: stim.alt || stim.description || "" },
-      })
-    );
-    if (stim.image) {
-      wrap.appendChild(
-        el("a", {
-          className: "stimulus-image-link",
-          text: "View larger image ↗",
-          attrs: { href: stim.image, target: "_blank", rel: "noopener" },
-        })
-      );
-    }
+    wrap.appendChild(visualStimulusImage(stim));
     if (stim.description) {
       wrap.appendChild(el("p", { className: "stimulus-body", text: stim.description }));
     }
   } else {
-    // "text" (secondary/qualitative excerpt) and "document" (required foundational
-    // document excerpt) render the same way; the kind line distinguishes them.
     wrap.appendChild(
       el("p", {
         className: "stimulus-kind",
@@ -434,12 +405,8 @@ function renderStimulus(question, index, ranges) {
     wrap.appendChild(el("blockquote", { className: "stimulus-body", text: stim.text || "" }));
   }
 
-  if (stim.note) {
-    wrap.appendChild(el("p", { className: "stimulus-note", text: stim.note }));
-  }
-  if (stim.source) {
-    wrap.appendChild(el("p", { className: "stimulus-source", text: `— ${stim.source}` }));
-  }
+  if (stim.note) wrap.appendChild(el("p", { className: "stimulus-note", text: stim.note }));
+  if (stim.source) wrap.appendChild(el("p", { className: "stimulus-source", text: `— ${stim.source}` }));
   return wrap;
 }
 
@@ -457,11 +424,7 @@ function renderStimulusTable(stim) {
   rows.forEach((r) => {
     const tr = el("tr");
     r.forEach((cell, ci) => {
-      tr.appendChild(
-        ci === 0
-          ? el("th", { text: String(cell), attrs: { scope: "row" } })
-          : el("td", { text: String(cell) })
-      );
+      tr.appendChild(ci === 0 ? el("th", { text: String(cell), attrs: { scope: "row" } }) : el("td", { text: String(cell) }));
     });
     tbody.appendChild(tr);
   });
@@ -489,23 +452,14 @@ function renderQuestion(opts = {}) {
 
   const fieldset = el("fieldset", { className: "options" });
   fieldset.appendChild(
-    el("legend", {
-      className: "visually-hidden",
-      text: `Question ${state.current + 1}: ${q.q}`,
-    })
+    el("legend", { className: "visually-hidden", text: `Question ${state.current + 1}: ${q.q}` })
   );
 
   q.o.forEach((opt, i) => {
     const isStruck = struck.has(i);
     const row = el("div", { className: "option" + (isStruck ? " struck" : "") });
-
     const input = el("input", {
-      attrs: {
-        type: "radio",
-        name: "option",
-        value: String(i),
-        id: `option-${i}`,
-      },
+      attrs: { type: "radio", name: "option", value: String(i), id: `option-${i}` },
       props: { checked: selected === i },
     });
     const label = el("label", { attrs: { for: `option-${i}` } }, [
@@ -534,10 +488,7 @@ function renderQuestion(opts = {}) {
   });
 
   container.appendChild(fieldset);
-
-  container.querySelectorAll('input[name="option"]').forEach((input) => {
-    input.addEventListener("change", () => recordAnswer());
-  });
+  container.querySelectorAll('input[name="option"]').forEach((input) => input.addEventListener("change", () => recordAnswer()));
 
   const flagBtn = document.getElementById("flag-btn");
   const isFlagged = state.flagged.has(state.current);
@@ -547,7 +498,6 @@ function renderQuestion(opts = {}) {
   updateNavButtons();
   refreshNavigatorState();
 
-  // Focus restoration — never let a re-render drop focus onto <body>.
   if (opts.focus === "heading") {
     focusQuestionHeading();
   } else if (typeof opts.focusStrike === "number") {
@@ -580,7 +530,6 @@ function toggleStrike(index) {
   if (set.has(index)) set.delete(index);
   else set.add(index);
   state.struckOut[state.current] = set;
-  // Re-render replaces the strike button, so explicitly put focus back on it.
   renderQuestion({ focusStrike: index });
   persistSession();
 }
@@ -601,17 +550,15 @@ function goToQuestion(delta) {
   if (next < 0 || next >= state.questions.length) return;
   if (isPartLocked(next)) return;
   const part = currentPart();
-  if (part && next >= part.end) return; // don't preview the next part before it opens
+  if (part && next >= part.end) return;
   state.current = next;
   renderQuestion();
   persistSession();
-  // If the button we just used became disabled at the boundary, focus would fall
-  // to <body>; move it somewhere meaningful instead.
   const active = document.activeElement;
   if (!active || active === document.body || active.disabled) focusQuestionHeading();
 }
 
-// ---------- Session persistence (sessionStorage) ----------
+// ---------- Session persistence ----------
 
 function persistSession() {
   if (!state.subject || !state.endsAt) return;
@@ -623,55 +570,32 @@ function persistSession() {
       endsAt: state.endsAt,
       current: state.current,
       partIndex: state.partIndex,
-      questions: state.questions.map((question) => ({
-        id: question.id,
-        optionOrder: question.optionOrder,
-      })),
+      questions: state.questions.map((question) => ({ id: question.id, optionOrder: question.optionOrder })),
       answers: state.answers,
       flagged: [...state.flagged],
-      struckOut: Object.fromEntries(
-        Object.entries(state.struckOut).map(([k, v]) => [k, [...v]])
-      ),
+      struckOut: Object.fromEntries(Object.entries(state.struckOut).map(([k, v]) => [k, [...v]])),
     };
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   } catch (err) {
-    // Storage disabled or full — the exam still works, it just won't survive a reload.
+    // Storage disabled or full — exam continues without persistence.
   }
 }
 
 function clearSession() {
-  try {
-    sessionStorage.removeItem(STORAGE_KEY);
-  } catch (err) {
-    /* ignore */
-  }
+  try { sessionStorage.removeItem(STORAGE_KEY); } catch (err) { /* ignore */ }
 }
 
 function restoreSession() {
   let raw = null;
-  try {
-    raw = sessionStorage.getItem(STORAGE_KEY);
-  } catch (err) {
-    return false;
-  }
+  try { raw = sessionStorage.getItem(STORAGE_KEY); } catch (err) { return false; }
   if (!raw) return false;
 
   let saved;
-  try {
-    saved = JSON.parse(raw);
-  } catch (err) {
-    clearSession();
-    return false;
-  }
+  try { saved = JSON.parse(raw); } catch (err) { clearSession(); return false; }
 
   const subject = saved && saved.subjectId ? findSubjectById(saved.subjectId) : null;
-  const restored = subject
-    ? validateSavedSession(saved, subject, getQuestionBank(subject), Date.now())
-    : null;
-  if (!restored) {
-    clearSession();
-    return false;
-  }
+  const restored = subject ? validateSavedSession(saved, subject, getQuestionBank(subject), Date.now()) : null;
+  if (!restored) { clearSession(); return false; }
 
   state.subject = subject;
   Object.assign(state, restored);
@@ -695,7 +619,7 @@ function submitExam() {
   clearSession();
 
   let correct = 0;
-  const perUnit = {}; // unitId -> { correct, total }
+  const perUnit = {};
 
   state.questions.forEach((q, i) => {
     const ok = isAnswerCorrect(q, state.answers[i]);
@@ -724,9 +648,7 @@ function renderResults(correct, total, perUnit) {
   Object.entries(perUnit).forEach(([unitId, { correct: c, total: t }]) => {
     const unitConfig = (state.subject.units || []).find((u) => u.id === unitId);
     const label = unitConfig ? `${unitId}: ${unitConfig.name}` : unitId;
-    table.appendChild(
-      el("tr", {}, [el("td", { text: label }), el("td", { text: `${c} / ${t}` })])
-    );
+    table.appendChild(el("tr", {}, [el("td", { text: label }), el("td", { text: `${c} / ${t}` })]));
   });
 
   const review = document.getElementById("results-review");
@@ -745,15 +667,17 @@ function renderResults(correct, total, perUnit) {
           text: `Source: ${q.stimulus.title || q.stimulus.source || q.stimulus.type}`,
         })
       );
+      if (q.stimulus.type === "visual" && q.stimulus.image) {
+        item.appendChild(visualStimulusImage(q.stimulus, "review-stimulus-image"));
+      }
+      if (q.stimulus.description) {
+        item.appendChild(el("p", { className: "review-stimulus-description", text: q.stimulus.description }));
+      }
     }
     item.appendChild(
-      el("p", {
-        text: `Your answer: ${[...givenSet].map((idx) => q.o[idx]).join(", ") || "(none)"}`,
-      })
+      el("p", { text: `Your answer: ${[...givenSet].map((idx) => q.o[idx]).join(", ") || "(none)"}` })
     );
-    item.appendChild(
-      el("p", { text: `Correct answer: ${q.c.map((idx) => q.o[idx]).join(", ")}` })
-    );
+    item.appendChild(el("p", { text: `Correct answer: ${q.c.map((idx) => q.o[idx]).join(", ")}` }));
     item.appendChild(el("p", { className: "rationale", text: q.e || "" }));
     if (q.topic) item.appendChild(el("p", { className: "review-topic", text: `Topic: ${q.topic}` }));
     review.appendChild(item);
@@ -778,9 +702,7 @@ function backToCatalog() {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderCatalog();
-  document
-    .getElementById("catalog-search")
-    .addEventListener("input", (e) => renderCatalog(e.target.value));
+  document.getElementById("catalog-search").addEventListener("input", (e) => renderCatalog(e.target.value));
   document.getElementById("prev-btn").addEventListener("click", () => goToQuestion(-1));
   document.getElementById("next-btn").addEventListener("click", () => goToQuestion(1));
   document.getElementById("flag-btn").addEventListener("click", toggleFlag);
@@ -803,6 +725,5 @@ document.addEventListener("DOMContentLoaded", () => {
     if (confirm("Leave this exam? Your progress will be lost.")) backToCatalog();
   });
 
-  // Pick an interrupted attempt back up after a refresh / accidental navigation.
   restoreSession();
 });
