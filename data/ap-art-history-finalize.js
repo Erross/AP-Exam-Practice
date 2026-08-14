@@ -56,7 +56,7 @@
       type:"visual",
       title:`Image-set work: ${p.title}`,
       image:asset(p.imageKey),
-      alt:p.alt || `Reproduction of ${p.title}`,
+      alt:`${p.alt || `Reproduction of ${p.title}`}. Image provided for formal and contextual analysis of the work.`,
       description:`${p.title}. ${p.maker}. ${p.date}. ${p.medium}.`,
       source:sourceNote,
     } : null;
@@ -123,7 +123,10 @@
     const peers = unknowns.filter((x) => x !== p);
     const groupId = `aparth-${p.id}`;
     const stimulus = {
-      type:"visual", title:"Unidentified work", image:asset(p.imageKey), alt:p.alt,
+      type:"visual",
+      title:"Unidentified work",
+      image:asset(p.imageKey),
+      alt:"Unidentified artwork reproduced without title or attribution for paired visual-analysis and attribution questions.",
       description:"For these questions, treat the work as unfamiliar and base your response on the visual evidence provided.",
       source:sourceNote,
     };
