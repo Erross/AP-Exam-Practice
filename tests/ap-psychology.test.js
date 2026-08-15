@@ -27,6 +27,7 @@ test('Psychology bank covers the exact current 35-topic CED inventory',()=>{
  assert.equal(subject.mcqCount,75);
  assert.equal(subject.mcqTimeMinutes,90);
  assert.equal(subject.totalExamTimeLabel,'2h 40m');
+ assert.deepEqual(subject.stimulusSetRange,[7,8]);
 });
 
 test('Psychology shared research portfolio has one two-question synthetic set per topic',()=>{
@@ -49,10 +50,68 @@ test('every Psychology data-set arithmetic key independently recomputes',()=>{
  const data=bank.filter(q=>q.numericCheck);
  assert.equal(data.length,35);
  for(const q of data){
-  assert.equal(q.numericCheck.kind,'difference');
-  assert.equal(q.numericCheck.a-q.numericCheck.b,q.numericCheck.expected,`${q.id} numeric check`);
-  assert.ok(['3.B','3.C'].includes(q.skill));
+  const n=q.numericCheck;
+  if(n.kind==='difference') assert.equal(n.minuend-n.subtrahend,n.expected,`${q.id} difference`);
+  else if(n.kind==='correlation') assert.equal(n.value>0?'positive':'negative',n.expected,`${q.id} correlation direction`);
+  else if(n.kind==='larger') assert.equal(n.first>n.second?'Condition A':'Condition B',n.expected,`${q.id} variability`);
+  else if(n.kind==='significance') assert.equal(n.p<0.05,n.expected,`${q.id} significance`);
+  else if(n.kind==='trend') assert.equal(n.values.every((v,i,a)=>i===0||v<a[i-1])?'decrease':'other',n.expected,`${q.id} trend`);
+  else assert.fail(`${q.id}: unknown numeric check ${n.kind}`);
+  assert.ok(['3.A','3.B','3.C'].includes(q.skill));
  }
+});
+
+test('Psychology exact science-practice tags match the task actually performed',()=>{
+ const methodTags={
+  'operational-definition':'2.B','sampling-generalizability':'2.C','random-assignment':'2.B','confounding-variable':'2.B',
+  'informed-consent':'2.D','replication':'2.C','survey-wording':'2.C','design-identification':'2.A',
+  'causal-inference':'2.B','correlation-causation':'2.C','longitudinal-design':'2.A','naturalistic-observation':'2.A',
+  'dependent-variable':'2.B','response-bias':'2.C','debriefing':'2.D','case-generalizability':'2.C'
+ };
+ const methods=bank.filter(q=>q.methodFocus);
+ assert.equal(methods.length,70);
+ assert.ok(new Set(methods.map(q=>q.methodFocus)).size>=14);
+ for(const q of methods) assert.equal(q.skill,methodTags[q.methodFocus],`${q.id}: ${q.methodFocus}`);
+
+ const dataTags={
+  'mean-difference':'3.B','correlation':'3.C','change-over-time':'3.B','observed-frequency':'3.C',
+  'standard-deviation':'3.B','percentage-difference':'3.C','effect-size-significance':'3.C','concept-in-data':'3.A'
+ };
+ const data=bank.filter(q=>q.dataFocus);
+ assert.equal(data.length,35);
+ assert.deepEqual([...new Set(data.map(q=>q.dataFocus))].sort(),Object.keys(dataTags).sort());
+ for(const q of data) assert.equal(q.skill,dataTags[q.dataFocus],`${q.id}: ${q.dataFocus}`);
+});
+
+test('Psychology concept application is scenario-based and 1.B is reserved for norms or cognitive bias',()=>{
+ const application=bank.filter(q=>q.applicationMode);
+ const eligible1B=new Set([
+  'confirmation bias','functional fixedness','stereotype threat','gender role','gender schema',
+  'fundamental attribution error','self-serving bias','actor-observer bias','halo effect',
+  'cognitive dissonance','foot-in-the-door technique','central-route persuasion','peripheral-route persuasion',
+  'conformity','obedience','social facilitation','groupthink','stress appraisal'
+ ]);
+ assert.equal(application.length,140);
+ for(const code of TOPICS){
+  const topicItems=application.filter(q=>q.topicCode===code);
+  assert.equal(topicItems.length,4);
+  assert.equal(new Set(topicItems.map(q=>q.applicationMode)).size,4);
+ }
+ for(const q of application){
+  const answer=q.o[q.c[0]];
+  assert.equal(q.skill,eligible1B.has(answer)?'1.B':'1.A',`${q.id}: ${answer}`);
+  assert.doesNotMatch(q.q,/Which concept best explains this .* example/i);
+  assert.ok(q.e.length>=140,`${q.id}: rationale should compare mechanisms`);
+ }
+});
+
+test('Psychology research portfolio rejects the superseded boilerplate templates',()=>{
+ const text=bank.map(q=>q.q).join('\n');
+ assert.equal(new Set(bank.map(q=>q.q)).size,bank.length,'every student-facing stem should be textually distinct');
+ assert.doesNotMatch(text,/A second research team studying .* wants its procedure to be replicable/i);
+ assert.doesNotMatch(text,/Using the synthetic .* study data, which statement accurately describes the reported group means/i);
+ assert.equal(new Set(bank.filter(q=>q.methodFocus).map(q=>q.methodFocus)).size>=14,true);
+ assert.equal(new Set(bank.filter(q=>q.dataFocus).map(q=>q.dataFocus)).size,8);
 });
 
 test('Psychology MCQs use only current MCQ-assessed practice families',()=>{

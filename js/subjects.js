@@ -335,8 +335,13 @@ const AP_SUBJECTS = [
     name: "AP Psychology",
     category: "History & Social Sciences",
     tier: 1,
-    // VERIFIED 2026-08-15 against the current AP Psychology CED (clarified Fall 2025)
-    // and current AP Central exam page. Section I: 75 digital MCQs / 90 minutes.
+    // VERIFIED 2026-08-15: current official CED cover is effective Fall 2025
+    // (the carried-forward V.1 body is ©2024):
+    // https://apcentral.collegeboard.org/media/pdf/ap-psychology-course-and-exam-description.pdf
+    // Current exam page confirms a fully digital Section I with 75 MCQs / 90 minutes:
+    // https://apcentral.collegeboard.org/courses/ap-psychology/exam
+    // Psychology is not among the calculator-permitted courses:
+    // https://apcentral.collegeboard.org/exam-administration-ordering-scores/administering-exams/exam-policies/calculator-policy
     mcqCount: 75,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "2h 40m",
@@ -354,6 +359,8 @@ const AP_SUBJECTS = [
     ],
     // Current CED MCQ practice mix: approximately P1 65%, P2 25%, P3 10%; P4 is FRQ-only.
     skillCountRanges: { "1":[48,50], "2":[18,20], "3":[7,8] },
+    // Every Practice 3 item belongs to a two-question synthetic research set.
+    stimulusSetRange: [7,8],
     constraintDrawAttempts: 20000,
     dataVar: "QUESTIONS_AP_PSYCHOLOGY",
   },

@@ -1,7 +1,8 @@
 // AP Psychology — May 2027 practice bank
 // Current framework: Fall 2025 clarified CED. All content below is original/synthetic.
-// Four concept-application questions plus a two-question synthetic research mini-set
-// are generated for each of the 35 CED topics: 210 questions total.
+// Four concept-application questions, one standalone methods question, and one
+// two-question synthetic research mini-set are generated for each CED topic:
+// 35 topics x 7 original questions = 245 questions total.
 (function(){
   const T=[
     ['U1','1.1','Interaction of Heredity and Environment',['heritability','gene–environment interaction','epigenetic influence','evolutionary perspective'],['Identical twins raised in different homes remain more similar in height than unrelated children','A child with a genetic tendency toward sociability becomes especially outgoing in a highly interactive school','Chronic stress changes gene expression without changing the underlying DNA sequence','A tendency to notice threatening stimuli quickly is explained as having aided ancestral survival']],
@@ -52,57 +53,141 @@
     return Object.assign({id,unit,type:'s',topicCode:topic,skill,q,o:ro,c:[key],e},extra);
   }
 
+  const MEASURES=[
+    'behavioral similarity score','reaction time after a stress cue','neural-response latency','words recalled after a delay','next-day alertness score','minimum detectable signal intensity',
+    'accuracy identifying an incomplete figure','decision accuracy under time pressure','details recalled from an event','delayed-recall score','retention score after sleep','number of correctly recalled words','false-memory count','standardized achievement score',
+    'age-related change score','motor-coordination score','rating of stereotype-consistent expectations','perspective-taking score','number of correctly understood sentences','caregiver-reunion comfort score','conditioned-response strength','target behavior frequency','novel-task learning score',
+    'situational-attribution rating','attitude-change score','rate of helping behavior','self-description rating','task-persistence score','minutes spent on an optional task','reported emotional intensity',
+    'daily stress rating','life-satisfaction score','diagnostic-agreement rate','symptom-interference score','symptom-reduction score'
+  ];
+  const STUDY_TARGETS=[
+    'the proportion of childhood that twin pairs spent in the same household','autonomic recovery after a sudden noise','responses following a receptor agonist','planning after focal frontal-lobe injury','circadian disruption after an altered sleep schedule','visual signal detection near threshold',
+    'top-down expectations during ambiguous-image recognition','decision quality under time pressure','short-lived visual traces','semantic versus shallow encoding','memory consolidation across repeated assessments','context cues during recall','interference between old and new passwords','study time and achievement',
+    'within-person developmental change','motor development across childhood','responses to stereotype-laden survey wording','perspective taking across childhood','language-comprehension development','caregiver-reunion behavior','acquisition of a conditioned response','behavior change following reinforcement','learning after observing a model',
+    'attributions made after an ambiguous event','attitude change after counterattitudinal behavior','conformity under unanimous group pressure','impulse control in a clinical case','self-efficacy and persistence','task persistence under different incentives','reported fear following induced arousal',
+    'stress appraisal and daily stress ratings','life satisfaction across adulthood','preferences for biological, psychological, or social explanations of disorders','symptom severity and daily interference','symptom change following cognitive behavioral therapy'
+  ];
+
+  const BIAS_OR_NORM_CONCEPTS=new Set([
+    'confirmation bias','functional fixedness','stereotype threat','gender role','gender schema',
+    'fundamental attribution error','self-serving bias','actor-observer bias','halo effect',
+    'cognitive dissonance','foot-in-the-door technique','central-route persuasion','peripheral-route persuasion',
+    'conformity','obedience','social facilitation','groupthink','stress appraisal'
+  ]);
+
+  const APPLICATION_STEMS=[
+    scenario=>`A psychologist records the following observation: ${scenario}. Which concept most directly accounts for it?`,
+    scenario=>`Which psychological concept best supports a prediction based on this case? ${scenario}.`,
+    scenario=>`A researcher treats the following result as an application of a course concept: ${scenario}. Which concept is being applied?`,
+    scenario=>`Which concept is illustrated by the mechanism in this scenario? ${scenario}.`
+  ];
+
+  // Match each topic to a defensible study family. Sensitive or naturally occurring
+  // constructs (for example, heredity, gender identity, and disorder classification)
+  // are never presented as variables that researchers experimentally impose.
+  const STUDY_PATTERNS=[
+    1,3,4,7,0,4,4,4,0,0,2,4,0,1,2,2,5,2,2,3,0,0,0,5,6,6,7,1,0,0,1,2,5,1,0
+  ];
+
+  function standaloneMethod(idx,name,concept,measure){
+    const focus=idx%8;
+    if(focus===0) return {skill:'2.B',methodFocus:'operational-definition',
+      q:`An experiment testing ${concept} defines ${measure} as the number recorded on a specified task during a 10-minute session. Why is that definition methodologically useful?`,
+      o:['It makes the dependent variable observable and the procedure replicable','It guarantees that the sample represents every relevant population','It prevents participants from knowing they are in a study','It proves that the manipulated variable caused any observed difference'],c:0,
+      e:'A numerical task score collected under a stated procedure is an operational definition: it specifies how the dependent variable is measured so another researcher can reproduce the measurement. It does not by itself ensure representative sampling, conceal participation, or establish causation.'};
+    if(focus===1) return {skill:'2.C',methodFocus:'sampling-generalizability',
+      q:`A survey about ${name.toLowerCase()} recruits only volunteers from one after-school club. Which limitation most directly affects generalizing the results?`,
+      o:['The volunteer sample may differ systematically from the broader population','The survey necessarily manipulates an independent variable','The sample size converts the survey into an experiment','The researchers cannot calculate any descriptive statistics'],c:0,
+      e:'Volunteers from one club are a convenience or self-selected sample and may not represent the broader population of interest. That sampling limitation restricts generalizability; it does not create an experiment or prevent descriptive analysis.'};
+    if(focus===2) return {skill:'2.B',methodFocus:'random-assignment',
+      q:`Researchers testing a prediction about ${concept} have already recruited participants. Which procedure would best reduce preexisting differences between the experimental and comparison conditions?`,
+      o:['Randomly assign each recruited participant to a condition','Invite only participants who expect the hypothesis to be correct','Let participants choose the condition they prefer','Remove participants whose results differ from the group average'],c:0,
+      e:'Random assignment distributes participant characteristics across conditions by chance and strengthens causal inference. Self-selection, expectancy-based recruitment, and removing inconvenient results introduce bias rather than control it.'};
+    if(focus===3) return {skill:'2.B',methodFocus:'confounding-variable',
+      q:`In an experiment about ${name.toLowerCase()}, Condition A is tested in a quiet room in the morning and Condition B in a noisy room after school. What is the clearest design problem?`,
+      o:['Room noise and time of day are confounded with condition','The dependent variable has been randomly sampled','The study has no comparison between conditions','The design is correlational because two conditions are present'],c:0,
+      e:'Noise and testing time vary systematically with the assigned condition, so either factor could explain an outcome difference. Those confounds prevent isolating the effect of the intended independent variable even though the study compares conditions.'};
+    if(focus===4) return {skill:'2.D',methodFocus:'informed-consent',
+      q:`A study of ${name.toLowerCase()} asks minors to complete a potentially stressful task. Which safeguard is required before participation?`,
+      o:['Obtain guardian consent and the minors’ informed assent','Publish each participant’s name with the data','Require participation once a guardian is contacted','Withhold all information about foreseeable discomfort'],c:0,
+      e:'Research involving minors ordinarily requires permission from a parent or guardian and informed assent from the minor, along with protection from undue harm. Participation remains voluntary, foreseeable risks must be addressed, and identities should be protected.'};
+    if(focus===5) return {skill:'2.C',methodFocus:'replication',
+      q:`A team reports a new association involving ${concept}. What would most strengthen confidence that the finding is not peculiar to one sample or procedure?`,
+      o:['Independent researchers replicate the study with clearly documented methods','The original team repeats its conclusion without releasing methods','A larger headline describes the result as established fact','Participants are told which result the researchers prefer'],c:0,
+      e:'Independent replication using transparent procedures tests whether a result generalizes beyond one sample and research team. Reasserting a conclusion, publicizing it, or creating participant expectancy does not provide independent scientific confirmation.'};
+    if(focus===6) return {skill:'2.C',methodFocus:'survey-wording',
+      q:`A questionnaire about ${name.toLowerCase()} asks, “Responsible people surely agree with this healthy choice, don’t they?” What is the primary methodological concern?`,
+      o:['Leading wording may produce response and social-desirability bias','The item randomly assigns respondents to conditions','The wording creates a longitudinal study','The question guarantees anonymous responding'],c:0,
+      e:'The wording signals a preferred answer and links it with being responsible, which can shift responses through leading-question and social-desirability effects. It does not randomly assign participants, create repeated measurement, or ensure anonymity.'};
+    return {skill:'2.A',methodFocus:'design-identification',
+      q:`To study ${name.toLowerCase()}, researchers measure the same participants once a year from ninth grade through college. Which design are they using?`,
+      o:['A longitudinal design','A cross-sectional design','A case study of one event','A naturalistic observation with no repeated measures'],c:0,
+      e:'A longitudinal design follows and repeatedly measures the same participants across an extended period. A cross-sectional design compares different groups at one time, while case studies and naturalistic observations do not describe this repeated cohort structure.'};
+  }
+
+  function studySet(idx,name,concepts,apps,measure,target){
+    const pattern=STUDY_PATTERNS[idx], a=18+(idx%7)*3, b=34+(idx%5)*4;
+    let stimulus,method,data,numericCheck;
+    if(pattern===0){
+      stimulus={type:'quantitative',title:`Synthetic experiment — ${name}`,source:'Original AP Exam Practice data; all values and participants are invented for practice.',columns:['Condition','n',`Mean ${measure}`],rows:[['Target condition','60',String(b)],['Comparison condition','60',String(a)]],description:`Researchers testing a prediction about ${target} randomly assigned 120 volunteers to a target condition or a comparison condition, used identical instructions, and then recorded ${measure}.`};
+      method={skill:'2.B',methodFocus:'causal-inference',q:`Which feature of this ${name.toLowerCase()} study most directly permits a causal conclusion about the assigned condition?`,o:['Random assignment to the two activity conditions','Recruiting volunteers rather than a random population sample','Reporting a mean for each condition','Using the same number of participants in each condition'],c:0,e:'Random assignment makes the activity the systematic difference between conditions and helps distribute preexisting participant differences, supporting causal inference. Volunteer recruitment limits generalizability, while equal group sizes and reported means do not establish causation.'};
+      const diff=b-a; data={skill:'3.B',dataFocus:'mean-difference',q:`What is the difference between the two reported mean ${measure}s?`,o:[`${diff} points, with the concept-focused condition higher`,`${diff} points, with the comparison condition higher`,`${a+b} points, with the concept-focused condition higher`,'No difference between the reported means'],c:0,e:`The reported difference is ${b} - ${a} = ${diff} points, with the concept-focused condition higher. Adding the means would not measure a group difference, and the table does not show equal outcomes.`}; numericCheck={kind:'difference',minuend:b,subtrahend:a,expected:diff};
+    } else if(pattern===1){
+      const r=idx%2?0.46:-0.41, direction=r>0?'positive':'negative';
+      stimulus={type:'quantitative',title:`Synthetic correlational study — ${name}`,source:'Original AP Exam Practice data; all values and participants are invented for practice.',columns:['Variable pair','Participants','Correlation (r)'],rows:[[`${measure} and topic indicator`,'180',String(r)]],description:`Researchers measured ${measure} and a second quantitative indicator of ${target} in the same 180 participants. Neither variable was manipulated.`};
+      method={skill:'2.C',methodFocus:'correlation-causation',q:`Which conclusion is justified by the correlational design used to study ${name.toLowerCase()}?`,o:['The variables are associated, but the design cannot establish causal direction','The first variable necessarily causes the second variable','The second variable necessarily causes the first variable','Random assignment eliminates every third-variable explanation'],c:0,e:'Because both variables were measured without manipulation or random assignment, the study can establish an association but not causal direction and cannot rule out third variables. Either causal direction—or another factor—could underlie the correlation.'};
+      data={skill:'3.C',dataFocus:'correlation',q:`Which interpretation of the reported correlation involving ${measure} is accurate?`,o:[`The variables have a moderate ${direction} relationship`,'The variables have no relationship because r is not exactly 1.00','The coefficient proves that one variable caused the other','The coefficient reports the difference between the two group means'],c:0,e:`A correlation of r = ${r} indicates a moderate ${direction} relationship: the variables tend to move ${r>0?'in the same':'in opposite'} direction. Correlation does not prove causation, and r is not a mean difference.`}; numericCheck={kind:'correlation',value:r,expected:direction};
+    } else if(pattern===2){
+      const later=b+6;
+      stimulus={type:'quantitative',title:`Synthetic longitudinal study — ${name}`,source:'Original AP Exam Practice data; all values and participants are invented for practice.',columns:['Measurement wave','Participants',`Mean ${measure}`],rows:[['Year 1','90',String(b)],['Year 4','90',String(later)]],description:`To examine ${target}, the same 90 participants completed the ${measure} measure in Year 1 and again in Year 4; no variable was experimentally manipulated.`};
+      method={skill:'2.A',methodFocus:'longitudinal-design',q:`What research design was used to examine ${name.toLowerCase()}?`,o:['A longitudinal design following the same participants over time','A cross-sectional design comparing different age groups once','An experiment with random assignment to conditions','A case study limited to one participant'],c:0,e:'The defining feature is repeated measurement of the same participants across multiple years, so this is longitudinal research. No separate age cohorts, random assignment, or single-case focus is described.'};
+      data={skill:'3.B',dataFocus:'change-over-time',q:`How did the reported mean ${measure} change from Year 1 to Year 4?`,o:[`It increased by ${later-b} points`,`It decreased by ${later-b} points`,`It increased by ${later+b} points`,'It remained unchanged'],c:0,e:`The mean changed from ${b} to ${later}, an increase of ${later} - ${b} = ${later-b} points. The table describes change in this sample over time, not a causal effect.`}; numericCheck={kind:'difference',minuend:later,subtrahend:b,expected:later-b};
+    } else if(pattern===3){
+      const high=b+12;
+      stimulus={type:'quantitative',title:`Synthetic naturalistic observation — ${name}`,source:'Original AP Exam Practice data; all values and observations are invented for practice.',columns:['Observed setting','Observation periods','Target behaviors recorded'],rows:[['Setting A','20',String(high)],['Setting B','20',String(a)]],description:`Observers used a fixed coding guide to record ${target} in two everyday settings. They did not intervene or assign people to settings.`};
+      method={skill:'2.A',methodFocus:'naturalistic-observation',q:`Which method best describes this study of ${name.toLowerCase()}?`,o:['Naturalistic observation using a behavioral coding guide','A laboratory experiment with random assignment','A survey based entirely on self-report','A longitudinal study following one cohort for years'],c:0,e:'Researchers systematically recorded naturally occurring behavior without manipulating variables or assigning participants, which is naturalistic observation. The design is neither an experiment, a self-report survey, nor a long-term repeated-measures study.'};
+      data={skill:'3.C',dataFocus:'observed-frequency',q:`Which statement accurately summarizes the recorded ${name.toLowerCase()} frequencies?`,o:[`Setting A produced ${high-a} more target behaviors than Setting B`,'Setting B produced more target behaviors than Setting A','The two settings produced identical frequencies','The frequencies prove that the setting caused the behavior difference'],c:0,e:`The observers recorded ${high} behaviors in Setting A and ${a} in Setting B, a difference of ${high-a}. Because people were not randomly assigned and the researchers did not manipulate settings, the frequency difference does not establish causation.`}; numericCheck={kind:'difference',minuend:high,subtrahend:a,expected:high-a};
+    } else if(pattern===4){
+      const sdA=4+(idx%3),sdB=9+(idx%4);
+      stimulus={type:'quantitative',title:`Synthetic variability study — ${name}`,source:'Original AP Exam Practice data; all values and participants are invented for practice.',columns:['Condition','n',`Mean ${measure}`,'Standard deviation'],rows:[['Condition A','50',String(b),String(sdA)],['Condition B','50',String(b-2),String(sdB)]],description:`To study ${target}, participants were randomly assigned to two conditions; researchers recorded ${measure} using the same instrument and procedure in both conditions.`};
+      method={skill:'2.B',methodFocus:'dependent-variable',q:`What is the dependent variable in this ${name.toLowerCase()} experiment?`,o:[measure,'Assignment to Condition A or Condition B','The number of conditions in the experiment','The hypothesis stated before data collection'],c:0,e:`The dependent variable is the measured outcome—${measure}. Condition assignment is the independent variable, while the number of conditions and the hypothesis are not measured outcomes.`};
+      const wider=sdA>sdB?'Condition A':'Condition B'; data={skill:'3.B',dataFocus:'standard-deviation',q:`Which condition shows greater variability in ${measure}?`,o:[`${wider}, because its standard deviation is larger`,`${wider==='Condition A'?'Condition B':'Condition A'}, because its mean is lower`,'Neither condition, because unequal standard deviations indicate equal spread','Variability cannot be compared when both groups have 50 participants'],c:0,e:`${wider} has the larger standard deviation (${Math.max(sdA,sdB)} versus ${Math.min(sdA,sdB)}), so its scores are more dispersed around the mean. Sample sizes and mean levels do not reverse that interpretation.`}; numericCheck={kind:'larger',first:sdA,second:sdB,expected:wider};
+    } else if(pattern===5){
+      const neutral=42+(idx%5),leading=neutral+18;
+      stimulus={type:'quantitative',title:`Synthetic survey-wording study — ${name}`,source:'Original AP Exam Practice data; all values and participants are invented for practice.',columns:['Survey form','Respondents','Percent endorsing statement'],rows:[['Neutral wording','100',`${neutral}%`],['Leading wording','100',`${leading}%`]],description:`Two randomly selected halves of a volunteer sample answered either a neutrally worded item or an item that described one response as socially responsible. Both items concerned ${target}.`};
+      method={skill:'2.C',methodFocus:'response-bias',q:`Which threat to validity is most directly raised by the wording difference in this ${name.toLowerCase()} survey?`,o:['Leading wording and social-desirability bias may shift self-reports','Random assignment makes both survey forms experimental treatments that prove the belief is true','Using percentages prevents comparison across the survey forms','The survey automatically becomes longitudinal because it has two forms'],c:0,e:'Calling one response socially responsible signals a preferred answer and can increase endorsement through leading wording and social-desirability bias. Percentages remain comparable, and two forms do not make the study longitudinal or prove the underlying belief.'};
+      data={skill:'3.C',dataFocus:'percentage-difference',q:`What pattern is shown in the ${name.toLowerCase()} response data?`,o:[`Endorsement was ${leading-neutral} percentage points higher with leading wording`,`Endorsement was ${leading-neutral} percentage points lower with leading wording`,'The two forms produced the same endorsement percentage',`Leading wording increased endorsement by ${leading+neutral} percentage points`],c:0,e:`Endorsement was ${leading}% with leading wording and ${neutral}% with neutral wording, a difference of ${leading-neutral} percentage points. The pattern is consistent with wording effects but does not establish how every population would respond.`}; numericCheck={kind:'difference',minuend:leading,subtrahend:neutral,expected:leading-neutral};
+    } else if(pattern===6){
+      const effect=0.4+(idx%3)*0.2,p=0.03;
+      stimulus={type:'quantitative',title:`Synthetic deception study — ${name}`,source:'Original AP Exam Practice data; all values and participants are invented for practice.',columns:['Comparison','Effect size','p value'],rows:[['Assigned conditions',effect.toFixed(1),p.toFixed(2)]],description:`Adults consented to a study described only in general terms because knowing its full purpose could alter ${target}. They were randomly assigned, allowed to stop at any time, and their identities were coded.`};
+      method={skill:'2.D',methodFocus:'debriefing',q:`Which additional procedure is most important after participation in this ${name.toLowerCase()} study?`,o:['Promptly debrief participants about the true purpose and any deception','Keep the true purpose permanently hidden from participants','Publish the code linking names to individual responses','Tell participants they may no longer withdraw their data'],c:0,e:'When justified deception is used, researchers should debrief participants promptly, explain the true purpose, address concerns, and preserve participant rights and confidentiality. Permanent concealment, identifiable publication, and revoking withdrawal rights are unethical.'};
+      data={skill:'3.C',dataFocus:'effect-size-significance',q:`Which interpretation of the reported ${name.toLowerCase()} statistics is accurate?`,o:[`The effect is ${effect<0.3?'small':effect<0.8?'moderate':'large'} and statistically significant at the .05 level`,'The p value shows that the null hypothesis has a 97% probability of being true','The effect size proves that every participant responded in the same way','Statistical significance proves the result has no chance of replication failure'],c:0,e:`An effect size of ${effect.toFixed(1)} is conventionally ${effect<0.3?'small':effect<0.8?'moderate':'large'}, and p = ${p.toFixed(2)} is below .05, so the result is statistically significant. Neither statistic proves uniform individual responses or certainty about replication.`}; numericCheck={kind:'significance',effect:Number(effect.toFixed(1)),p,expected:p<0.05};
+    } else {
+      const values=[b,b-3,b-7,b-10];
+      stimulus={type:'quantitative',title:`Synthetic single-case observations — ${name}`,source:'Original AP Exam Practice data; all values and observations are invented for practice.',columns:['Session','Recorded target behaviors'],rows:values.map((v,i)=>[`Session ${i+1}`,String(v)]),description:`A psychologist repeatedly observed one client using a coding guide for this behavior: ${apps[0]}. The observations are a descriptive case study and were not compared with a randomly assigned control group.`};
+      method={skill:'2.C',methodFocus:'case-generalizability',q:`What is the strongest methodological limitation of this ${name.toLowerCase()} case study?`,o:['One descriptive case cannot establish that the pattern generalizes to a population','Repeated observations automatically create random assignment','A case study cannot contain quantitative observations','The declining counts prove the observer caused the behavior change'],c:0,e:'Detailed case studies can include quantitative observations, but one client is not a representative sample and no random assignment occurred. The design therefore cannot establish population generalizability or a causal effect of the observer.'};
+      data={skill:'3.A',dataFocus:'concept-in-data',q:`The declining ${name.toLowerCase()} behavioral count across four sessions is most directly evaluated as data relevant to which concept?`,o:concepts,c:0,e:`The recorded behavior was explicitly defined as an observable indicator of ${concepts[0]}, so that is the concept represented by the declining series. The other options concern different mechanisms within ${name.toLowerCase()} and were not operationalized by the observation guide.`}; numericCheck={kind:'trend',values,expected:'decrease'};
+    }
+    return {stimulus,method,data,numericCheck};
+  }
+
   const Q=[];
   T.forEach((t,idx)=>{
     const [unit,code,name,concepts,apps]=t;
     for(let k=0;k<4;k++){
-      Q.push(item(`psy-${code.replace('.','')}-c${k+1}`,unit,code,k%2?'1.B':'1.A',
-        `Which concept best explains this ${name.toLowerCase()} example? ${apps[k]}`,
+      const next=(k+1)%4;
+      Q.push(item(`psy-${code.replace('.','')}-c${k+1}`,unit,code,BIAS_OR_NORM_CONCEPTS.has(concepts[k])?'1.B':'1.A',
+        APPLICATION_STEMS[k](apps[k]),
         concepts,k,
-        `${concepts[k]} is the best match because the scenario directly illustrates that concept’s defining psychological mechanism. The other choices are related to ${name.toLowerCase()}, but each describes a different process than the one shown.`));
+        `This is an application of ${concepts[k]}: ${apps[k].charAt(0).toLowerCase()+apps[k].slice(1)}. By contrast, ${concepts[next]} would involve ${apps[next].charAt(0).toLowerCase()+apps[next].slice(1)}, which is not the mechanism described in the scenario.`,{applicationMode:['observation','prediction','research-finding','mechanism'][k]}));
     }
+    const standalone=standaloneMethod(idx,name,concepts[0],MEASURES[idx]);
+    Q.push(item(`psy-${code.replace('.','')}-m7`,unit,code,standalone.skill,standalone.q,standalone.o,standalone.c,standalone.e,{synthetic:true,methodFocus:standalone.methodFocus}));
 
-    const a=18+(idx%7)*3, b=34+(idx%5)*4;
-    const design=idx%4;
-    let rq,ro,rc,re,rskill;
-    if(design===0){
-      rq=`Researchers studying ${name.toLowerCase()} randomly assign 120 volunteers to an intervention or comparison condition and hold instructions constant. Which feature most directly supports a causal conclusion?`;
-      ro=['random assignment to conditions','random sampling from the population','a larger descriptive questionnaire','reporting a correlation coefficient']; rc=0; rskill='2.B';
-      re='Random assignment helps distribute preexisting participant differences across experimental conditions, strengthening causal inference when the manipulated condition is the systematic difference between groups.';
-    } else if(design===1){
-      rq=`Researchers studying ${name.toLowerCase()} measure two naturally occurring variables in 240 students and find a strong association. Which conclusion is methodologically justified?`;
-      ro=['the variables are associated but causation is not established','the first measured variable necessarily causes the second','the second measured variable necessarily causes the first','random assignment has eliminated third-variable explanations']; rc=0; rskill='2.C';
-      re='A nonexperimental association can establish covariation but cannot determine causal direction or eliminate plausible third variables because the researchers did not manipulate and randomly assign a causal factor.';
-    } else if(design===2){
-      rq=`A study of ${name.toLowerCase()} measures the same participants once each year for eight years. Which research design is being used?`;
-      ro=['longitudinal design','cross-sectional design','laboratory experiment','naturalistic observation']; rc=0; rskill='2.A';
-      re='A longitudinal design repeatedly measures the same participants over an extended period, allowing researchers to track within-person change rather than comparing different age groups at one moment.';
-    } else {
-      rq=`In a study of ${name.toLowerCase()}, researchers temporarily withhold the study’s full purpose because disclosure would alter responses. Which safeguard is most important after participation?`;
-      ro=['prompt debriefing about the deception and study purpose','permanent concealment of the study purpose from participants','publication of each participant’s identifiable responses','requiring participants to waive the right to withdraw']; rc=0; rskill='2.D';
-      re='When ethically justified deception is used, researchers should debrief participants promptly, explain the true purpose and deception, address concerns, and preserve participants’ rights and confidentiality.';
-    }
-    const mq=`A second research team studying ${name.toLowerCase()} wants its procedure to be replicable. Which choice best improves the methodological clarity of the study?`;
-    const mo=['state exactly how each measured variable is operationally defined','describe the expected conclusion before collecting any observations','replace the participant sample with a single illustrative case','omit procedural details so later researchers remain unbiased'];
-    const me='Clear operational definitions specify exactly how variables are measured or manipulated, allowing other researchers to reproduce the procedure and evaluate whether the measures appropriately represent the intended constructs.';
-    Q.push(item(`psy-${code.replace('.','')}-m7`,unit,code,idx%2===0?'2.B':'2.C',mq,mo,0,me,{synthetic:true}));
-
-    const stimulus={
-      type:'quantitative',
-      title:`Synthetic psychology study — ${name}`,
-      source:'Original AP Exam Practice data; all values and participants are invented for practice.',
-      columns:['Group','n','Mean outcome score'],
-      rows:[['Group A','40',String(a)],['Group B','40',String(b)]],
-      description:'Participants were recruited from one local school; the table reports descriptive group means only.'
-    };
+    const study=studySet(idx,name,concepts,apps,MEASURES[idx],STUDY_TARGETS[idx]);
     const gid=`psy-${code.replace('.','')}-study`;
-    Q.push(item(`psy-${code.replace('.','')}-r5`,unit,code,rskill,rq,ro,rc,re,{stimulus,stimulusGroupId:gid,synthetic:true}));
-
-    const diff=b-a;
-    const dq=`Using the synthetic ${name.toLowerCase()} study data, which statement accurately describes the reported group means?`;
-    const dop=[`Group B’s mean is ${diff} points higher than Group A’s mean`,`Group A’s mean is ${diff} points higher than Group B’s mean`,`The two groups have identical reported means`,`The data prove that group membership caused the difference in scores`];
-    const de=`The descriptive difference is ${b} − ${a} = ${diff} points, so Group B has the higher reported mean. The table alone does not establish that group membership caused the difference, especially given the limited sampling information.`;
-    Q.push(item(`psy-${code.replace('.','')}-d6`,unit,code,idx%3===0?'3.B':'3.C',dq,dop,0,de,{stimulus,stimulusGroupId:gid,synthetic:true,numericCheck:{kind:'difference',a:b,b:a,expected:diff}}));
+    Q.push(item(`psy-${code.replace('.','')}-r5`,unit,code,study.method.skill,study.method.q,study.method.o,study.method.c,study.method.e,{stimulus:study.stimulus,stimulusGroupId:gid,synthetic:true,methodFocus:study.method.methodFocus}));
+    Q.push(item(`psy-${code.replace('.','')}-d6`,unit,code,study.data.skill,study.data.q,study.data.o,study.data.c,study.data.e,{stimulus:study.stimulus,stimulusGroupId:gid,synthetic:true,dataFocus:study.data.dataFocus,numericCheck:study.numericCheck}));
   });
   window.QUESTIONS_AP_PSYCHOLOGY=Q;
 })();
