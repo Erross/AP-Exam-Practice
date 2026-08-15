@@ -14,15 +14,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Inspect Psychology bank
-        run: |
-          node - <<'NODE'
-          const fs=require('fs'),vm=require('vm'); const s={window:{}};vm.createContext(s);vm.runInContext(fs.readFileSync('data/ap-psychology.js','utf8'),s);
-          const b=s.window.QUESTIONS_AP_PSYCHOLOGY; const fam=q=>String(q.skill).split('.')[0];
-          console.log('Psych bank size',b.length);
-          console.log('Psych topics',new Set(b.map(q=>q.topicCode)).size);
-          console.log('Psych units',Object.fromEntries([...new Set(b.map(q=>q.unit))].map(u=>[u,b.filter(q=>q.unit===u).length])));
-          console.log('Psych skills',Object.fromEntries(['1','2','3','4'].map(k=>[k,b.filter(q=>fam(q)===k).length])));
-          console.log('Psych research sets',new Set(b.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId)).size);
-          NODE
-          node tools/subject-release-audit.js --subject ap-psychology --trials 1000 --overlap-trials 1000
+      - name: Run Psychology release regressions
+        run: node --test tests/ap-psychology.test.js
+      - name: Run 5k Psychology release audit
+        run: node tools/subject-release-audit.js --subject ap-psychology --trials 5000 --overlap-trials 5000
+      - name: Run full repository gate
+        run: npm run check
