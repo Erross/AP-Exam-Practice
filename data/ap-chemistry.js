@@ -23,6 +23,7 @@ function chemQuestion(unit, topicCode, topic, skill, stem, correct, distractors,
     ...(stimulus ? { stimulus } : {}),
   });
 }
+{
 const q = chemQuestion;
 
 // Unit 1 — Atomic Structure and Properties
@@ -225,4 +226,5 @@ q("U9","9.10","Cell Potential Under Nonstandard Conditions","6.B","As a galvanic
 q("U9","9.11","Electrolysis and Faraday’s Law","5.C","A current of 2.00 A flows for 965 s. Approximately how much charge passes through the cell?","1930 C",["483 C","967 C","193000 C"],"Electrical charge is Q=It. Multiplying 2.00 C s⁻¹ by 965 s gives 1930 C of charge delivered through the electrolytic cell.","chem-9.11-electrolysis");
 q("U9","9.11","Electrolysis and Faraday’s Law","5.F","How many moles of electrons correspond to 96485 C of charge? Use F=96485 C mol−1 e−.","1.00 mol e−",["0.500 mol e−","2.00 mol e−","96485 mol e−"],"Faraday's constant is the charge per mole of electrons. Dividing 96485 C by 96485 C mol⁻¹ gives exactly 1.00 mol of electrons to the stated precision.","chem-9.11-electrolysis");
 
+}
 window.QUESTIONS_AP_CHEMISTRY = CHEM_QUESTIONS;

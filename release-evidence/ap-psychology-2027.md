@@ -72,3 +72,10 @@ Post-boundary-repair local gate:
 - Draft CI at `ea5f3b42beb2ce9f06abf448bc590dcd65c2c5e3`: [repository Test run 31907325734](https://github.com/Erross/AP-Exam-Practice/actions/runs/31907325734) and [5,000-draw Psychology audit run 31907325752](https://github.com/Erross/AP-Exam-Practice/actions/runs/31907325752), both successful.
 
 Released-mode gate, integration CI, and production deployment evidence remain pending.
+
+## Integration and production smoke evidence
+
+- Subject-to-integration PR [#57](https://github.com/Erross/AP-Exam-Practice/pull/57) passed pull-request CI and merged to integration commit `88175cc514315428abee4cbd9e37eb6b19519727`; the exact integration push gate [31907579870](https://github.com/Erross/AP-Exam-Practice/actions/runs/31907579870) succeeded.
+- Integration-to-main PR [#58](https://github.com/Erross/AP-Exam-Practice/pull/58) passed CI and merged to main commit `62ac509fdd8a7ec750f451475156fd0094bd653c`; the exact-main gate [31907675325](https://github.com/Erross/AP-Exam-Practice/actions/runs/31907675325) and Pages deployment [31907675861](https://github.com/Erross/AP-Exam-Practice/actions/runs/31907675861) succeeded.
+- Public Psychology smoke test passed catalog discovery, 75-question/90-minute/no-calculator preflight, timed start, first-item rendering, answer changes, flagging, navigation, and refresh/resume persistence.
+- The same public smoke test exposed a pre-existing global `const q` collision that prevented the released Biology and Chemistry banks from loading beside Calculus AB. The aliases were made subject-specific and a new browser-order regression executes all 45 data scripts in one shared global scope before asserting that every released bank exists. The follow-up local gate passed 207/207 tests and built 16 released subjects with 24 released data layers.

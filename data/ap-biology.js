@@ -15,6 +15,7 @@
 // the full release gate are complete.
 // ============================================================================
 
+(function(){
 const BIO_STIMULI = {
   u1Macromolecules: {
     type: "quantitative",
@@ -587,3 +588,4 @@ BIO_QUESTIONS.forEach((question) => {
 });
 
 window.QUESTIONS_AP_BIOLOGY = BIO_QUESTIONS;
+})();
