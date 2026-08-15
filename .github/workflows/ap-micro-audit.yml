@@ -14,16 +14,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Inspect and audit Micro
-        run: |
-          node - <<'NODE'
-          const fs=require('fs'),vm=require('vm');
-          const s={window:{}}; vm.createContext(s); vm.runInContext(fs.readFileSync('data/ap-microeconomics.js','utf8'),s);
-          const b=s.window.QUESTIONS_AP_MICROECONOMICS;
-          console.log('Micro bank size',b.length);
-          console.log('Micro numerical count',b.filter(q=>q.numericalAnalysis===true).length);
-          console.log('Micro topics',new Set(b.map(q=>q.topicCode)).size);
-          console.log('Micro units',Object.fromEntries([...new Set(b.map(q=>q.unit))].map(u=>[u,b.filter(q=>q.unit===u).length])));
-          console.log('Micro skills',Object.fromEntries([...new Set(b.map(q=>String(q.skill).split('.')[0]))].map(k=>[k,b.filter(q=>String(q.skill).split('.')[0]===k).length])));
-          NODE
-          node tools/subject-release-audit.js --subject ap-microeconomics --trials 1000 --overlap-trials 1000
+      - name: Run Micro release regressions
+        run: node --test tests/ap-microeconomics.test.js
+      - name: Run 5k release audit
+        run: node tools/subject-release-audit.js --subject ap-microeconomics --trials 5000 --overlap-trials 5000
+      - name: Run full repository gate
+        run: npm run check
