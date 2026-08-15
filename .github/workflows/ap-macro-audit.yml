@@ -1,6 +1,5 @@
-name: Macro first audit
+name: Macro development gate
 'on': [push]
-# rerun after rationale hardening
 jobs:
   audit:
     runs-on: ubuntu-latest
@@ -11,4 +10,5 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: node --test tests/ap-macroeconomics.test.js
       - run: node tools/subject-release-audit.js --subject ap-macroeconomics --trials 1000 --overlap-trials 1000
