@@ -1,14 +1,210 @@
-// AP Macroeconomics — question bank
-// Populated in a later pass. Empty on purpose: the catalog card for this
-// subject stays disabled ("content coming soon") until this array has items.
-//
-// Schema (mirrors the CCDV-F reference app's questions.js):
-// {
-//   unit: "U1",              // optional — matches an id in this subject's `units` array in subjects.js
-//   type: "s",                // "s" = single-select, "m" = multi-select
-//   q: "Question text?",
-//   o: ["Option A", "Option B", "Option C", "Option D"],
-//   c: [0],                   // index/indices of correct option(s)
-//   e: "One-line rationale shown on the results review page."
-// }
-window.QUESTIONS_AP_MACROECONOMICS = [];
+// AP Macroeconomics — original Section I practice bank.
+// Built against the College Board Course and Exam Description effective Fall 2026.
+// All scenarios, numbers, and wording are original to this project.
+(() => {
+  "use strict";
+
+  const topics = [
+    ["1.1","U1","Scarcity","Scarcity exists because limited resources cannot satisfy all wants, so every choice has an opportunity cost.","A town has enough labor and land to complete either more housing or more park space but not the desired amount of both.","Choosing more of one use requires giving up some of the other use.","Resources devoted to one alternative are unavailable for the next-best alternative.","Even with resources fully employed, the town cannot produce every combination residents desire."],
+    ["1.2","U1","Opportunity Cost and the Production Possibilities Curve (PPC)","A production possibilities curve shows maximum attainable combinations with current resources and technology; its slope reflects opportunity cost.","An economy moves along its PPC from a point with more consumer goods toward a point with more capital goods.","Production of consumer goods falls as production of capital goods rises.","With resources fully employed, producing more of one good requires reallocating resources away from the other.","The new combination remains on the frontier rather than inside it when resources continue to be fully employed."],
+    ["1.3","U1","Comparative Advantage and Gains from Trade","Comparative advantage belongs to the producer with the lower opportunity cost, and specialization by comparative advantage can create gains from trade.","Country A gives up fewer units of wheat per computer than Country B does.","Country A has the comparative advantage in computers and can gain by specializing relatively more in them.","Comparative advantage depends on relative opportunity costs rather than absolute productivity.","A mutually beneficial trading price for computers lies between the two countries' opportunity costs."],
+    ["1.4","U1","Demand","The law of demand states that, other things equal, quantity demanded falls when price rises; changes in nonprice determinants shift demand.","Household income rises for a normal good while the good's own price is unchanged.","Demand for the normal good shifts to the right.","Income is a nonprice determinant, so the change affects demand at every price rather than causing movement along one demand curve.","At the original price, buyers now want to purchase a larger quantity than before."],
+    ["1.5","U1","Supply","The law of supply states that, other things equal, quantity supplied rises when price rises; changes in production conditions shift supply.","A key input used by firms becomes less expensive while the product's own price is unchanged.","Supply of the product shifts to the right.","Lower input costs make production profitable at lower prices and increase quantity supplied at each possible price.","At the original price, firms are willing to offer a larger quantity than before."],
+    ["1.6","U1","Market Equilibrium, Disequilibrium, and Changes in Equilibrium","Market equilibrium occurs where quantity demanded equals quantity supplied; shortages push price upward and surpluses push price downward.","The market price is set below the price at which quantity demanded equals quantity supplied.","A shortage emerges and puts upward pressure on the market price.","At the low price buyers demand more than sellers supply, so competition among buyers tends to bid price upward.","Quantity demanded exceeds quantity supplied at the imposed price."],
+
+    ["2.1","U2","The Circular Flow and GDP","Gross domestic product is the market value of final goods and services produced within an economy during a given period and can be measured through equivalent spending or income flows.","A domestic firm produces a final machine this year and sells it to another domestic firm for use in production.","The machine's market value is included in this year's GDP as investment spending.","GDP counts current domestic production of final goods and services, including newly produced capital goods.","The transaction enters the expenditure measure without also counting the intermediate inputs used to make the machine."],
+    ["2.2","U2","Limitations of GDP","GDP measures market production but does not directly measure distribution, leisure, environmental quality, unpaid household production, or overall well-being.","Two economies have equal real GDP per person, but one has much more pollution and substantially less leisure time.","Equal real GDP per person does not establish that residents have equal economic well-being.","Important dimensions of welfare can change without being captured in the market value of final production.","The comparison requires information beyond measured output per person."],
+    ["2.3","U2","Unemployment","The unemployment rate is the percentage of the labor force that is jobless, available for work, and actively seeking work; discouraged workers are outside the labor force.","A worker without a job stops looking because repeated searches have failed.","The measured unemployment rate can fall even though the worker still lacks a job.","Once the worker is no longer actively seeking work, both unemployment and the labor force decrease.","The worker's exit from active job search changes labor-force classification rather than creating employment."],
+    ["2.4","U2","Price Indices and Inflation","A price index compares the cost of a representative basket across periods, and the inflation rate is the percentage change in the price index.","The consumer price index rises from one year to the next while the basket definition is unchanged.","The economy experiences a positive measured inflation rate over that interval.","A higher price index means the representative basket costs more relative to the base period.","The percentage change in the index, rather than the index level alone, gives the inflation rate."],
+    ["2.5","U2","Costs of Inflation","Unexpected inflation redistributes purchasing power between borrowers and lenders and can distort contracts, while expected inflation can be incorporated into nominal terms.","A fixed-rate loan is signed when both parties expect low inflation, but actual inflation turns out substantially higher.","The borrower repays the loan with dollars that have less purchasing power than the lender expected.","The nominal payment is fixed, so unexpectedly higher inflation lowers the realized real return received by the lender.","The ex post real interest rate is lower than the parties anticipated."],
+    ["2.6","U2","Real v. Nominal GDP","Nominal GDP values current production at current prices, while real GDP values current production using base-period prices to isolate changes in quantities.","Nominal GDP rises by 8 percent while the overall price level rises by about 5 percent.","Real output rises by less than nominal GDP.","Part of the nominal increase reflects higher prices rather than additional production.","A price-adjusted measure removes the portion of nominal growth attributable to inflation."],
+    ["2.7","U2","Business Cycles","Business cycles are short-run fluctuations of real output around its long-run trend, with expansions followed by peaks, contractions, and troughs.","Real GDP falls for several quarters and unemployment rises above its recent low.","The economy is experiencing a contractionary phase of the business cycle.","Weaker production reduces firms' demand for labor and moves actual output below its recent peak.","Falling real output and rising cyclical unemployment are consistent with contraction rather than expansion."],
+
+    ["3.1","U3","Aggregate Demand (AD)","Aggregate demand shows the inverse relationship between the price level and total planned spending on domestic output, holding other determinants constant.","Household wealth rises substantially while the price level is unchanged.","Aggregate demand shifts to the right.","Higher wealth tends to increase consumption spending at each price level, raising total planned expenditure.","At the original price level, planned spending on domestic output is now higher."],
+    ["3.2","U3","Multipliers","The spending multiplier magnifies an initial autonomous spending change because one person's spending becomes another person's income; with a simple MPC model its magnitude is 1/(1-MPC).","Government purchases rise in an economy where households spend part of each additional dollar of income.","Equilibrium real output rises by more than the initial increase in government purchases, other things equal.","The initial spending creates income that induces additional rounds of consumption spending.","The total change in output reflects the initial autonomous change plus subsequent induced spending."],
+    ["3.3","U3","Short-Run Aggregate Supply (SRAS)","Short-run aggregate supply is upward sloping and shifts when production costs or expected inflation change.","Nominal wages rise unexpectedly while productivity and the price level are initially unchanged.","Short-run aggregate supply shifts to the left.","Higher nominal wages raise firms' per-unit production costs, reducing the quantity of output supplied at each price level.","At the original price level, firms are willing to produce less real output."],
+    ["3.4","U3","Long-Run Aggregate Supply (LRAS)","Long-run aggregate supply is vertical at potential output and shifts when the economy's productive capacity changes.","A sustained technological improvement raises labor productivity across many industries.","Long-run aggregate supply shifts to the right.","Higher productivity allows the economy to produce more output with its available labor and capital at full employment.","Potential real output increases rather than merely changing the current price level."],
+    ["3.5","U3","Equilibrium in the Aggregate Demand–Aggregate Supply (AD–AS) Model","Short-run macroeconomic equilibrium occurs where AD intersects SRAS; comparison with LRAS indicates whether the economy has a recessionary or inflationary output gap.","The AD–SRAS intersection occurs at real output below the level indicated by LRAS.","The economy has a recessionary output gap.","Current equilibrium production is below full-employment output, implying cyclical unemployment above its full-employment level.","The short-run equilibrium lies to the left of the long-run full-employment output level."],
+    ["3.6","U3","Changes in the AD–AS Model in the Short Run","Demand shocks move price level and real output in the same direction in the short run, while supply shocks move them in opposite directions.","Consumer confidence falls sharply while production costs are unchanged.","Real output and the price level both fall in the short run.","Lower confidence reduces consumption and shifts aggregate demand left along an unchanged SRAS curve.","The economy moves to a short-run equilibrium with lower planned spending and lower production."],
+    ["3.7","U3","Long-Run Self-Adjustment","Without policy intervention, an output gap can close over time as nominal wages and other input prices adjust, shifting SRAS toward full-employment output.","The economy is in a recessionary gap and remains there long enough for labor-market conditions to affect nominal wages.","Falling nominal wages shift SRAS to the right until output returns toward potential.","High cyclical unemployment puts downward pressure on wages and production costs, which increases short-run aggregate supply.","The adjustment changes SRAS rather than requiring a permanent change in LRAS."],
+    ["3.8","U3","Fiscal Policy","Fiscal policy changes government purchases or taxes to influence aggregate demand; expansionary policy raises AD and contractionary policy lowers AD.","The economy has a recessionary gap and policymakers want to increase aggregate demand.","An increase in government purchases or a decrease in taxes is expansionary fiscal policy.","Higher government purchases directly raise spending, while lower taxes can raise disposable income and consumption.","The chosen policy increases planned aggregate expenditure rather than reducing it."],
+    ["3.9","U3","Automatic Stabilizers","Automatic stabilizers change taxes or transfer payments as income changes without new legislation, dampening fluctuations in disposable income and aggregate demand.","Real income falls during a recession under a progressive tax and unemployment-benefit system.","Tax payments fall and transfer payments rise automatically, cushioning the decline in disposable income.","Existing fiscal rules respond to lower income and unemployment without requiring a new discretionary policy vote.","The budget balance moves toward deficit as the automatic stabilizers support household spending."],
+
+    ["4.1","U4","Financial Assets","Financial assets differ in liquidity, maturity, risk, and return; bond prices and market interest rates move inversely.","Market interest rates rise after a fixed-rate bond has already been issued.","The market price of the existing bond falls.","Newly issued bonds now offer more attractive yields, so the older fixed payment stream must sell at a lower price to compete.","The bond's promised nominal payments are unchanged even though its market price adjusts."],
+    ["4.2","U4","Nominal v. Real Interest Rates","The real interest rate is approximately the nominal interest rate minus the inflation rate and measures the change in purchasing power from lending.","A saver earns a 7 percent nominal interest rate while inflation is 3 percent.","The saver's real return is approximately 4 percent.","Inflation reduces the purchasing-power gain provided by a given nominal interest payment.","The relevant purchasing-power return is smaller than the stated nominal rate."],
+    ["4.3","U4","Definition, Measurement, and Functions of Money","Money serves as a medium of exchange, unit of account, and store of value; monetary aggregates classify assets by liquidity.","A household keeps funds in a checking account that can be used immediately to make purchases.","The balance functions as a highly liquid form of money and is included in a narrow monetary aggregate.","Checkable deposits can directly facilitate transactions without first being converted from a less liquid asset.","The funds can serve as a medium of exchange at face value."],
+    ["4.4","U4","Banking and the Expansion of the Money Supply","In a fractional-reserve banking system, new deposits can support multiple rounds of lending and deposit creation; the simple money multiplier is the reciprocal of the required reserve ratio.","A bank receives a new deposit and holds only the required fraction as reserves while lending the rest.","The banking system can create additional checkable deposits through repeated rounds of lending and redepositing.","Loans become deposits elsewhere, allowing further lending while each bank retains required reserves.","The total potential deposit expansion exceeds the amount of the initial excess reserves when the reserve ratio is below one."],
+    ["4.5","U4","The Money Market","The money market determines the nominal interest rate from the supply of money and the demand for money; an increase in money supply lowers the equilibrium nominal rate, other things equal.","The central bank increases the money supply while money demand is unchanged.","The equilibrium nominal interest rate falls.","At the original interest rate there is an excess supply of money, so people buy interest-bearing assets and bid their prices upward and yields downward.","The new equilibrium occurs at a lower nominal interest rate with the larger money stock."],
+    ["4.6","U4","Monetary Policy","A central bank uses policy tools to influence the money supply and interest rates; expansionary monetary policy lowers rates and raises aggregate demand in the short run.","The economy has a recessionary gap and the central bank adopts an expansionary policy.","Interest rates fall and interest-sensitive spending tends to rise.","Greater liquidity in financial markets lowers borrowing costs, encouraging investment and other interest-sensitive expenditures.","The policy transmits to aggregate demand through financial conditions rather than directly increasing government purchases."],
+    ["4.7","U4","The Loanable Funds Market","The loanable funds market determines the real interest rate from saving supply and investment/borrowing demand; government borrowing can raise the real rate.","The government increases deficit-financed borrowing while private saving behavior is unchanged.","The demand for loanable funds rises and the equilibrium real interest rate increases.","Additional government borrowing competes with private borrowers for available saving at each real interest rate.","The higher equilibrium real rate can reduce some private investment spending."],
+
+    ["5.1","U5","Fiscal and Monetary Policy Actions in the Short Run","Expansionary fiscal or monetary policy can raise aggregate demand and output in a recessionary gap, while contractionary policy can reduce inflationary pressure.","An economy below full employment receives an expansionary monetary policy shock.","Aggregate demand rises, increasing real output and the price level in the short run.","Lower interest rates stimulate interest-sensitive spending, shifting aggregate demand to the right along SRAS.","The short-run output response moves the economy toward potential output."],
+    ["5.2","U5","The Phillips Curve","The short-run Phillips curve shows an inverse relationship between inflation and unemployment for demand-driven movements, while the long-run Phillips curve is vertical at the natural rate.","Expansionary demand policy moves the economy to higher short-run output with unemployment below the natural rate.","Inflation rises as unemployment falls along the short-run Phillips curve.","Stronger aggregate demand raises output and prices in the short run, producing the corresponding movement along the SRPC.","The long-run natural rate is not permanently reduced by maintaining higher inflation."],
+    ["5.3","U5","Money Growth and Inflation","In the long run, sustained money-supply growth faster than real output growth leads to inflation when velocity is stable; money is neutral with respect to real output at full employment.","The money supply grows persistently much faster than potential real output while velocity is stable.","The long-run price level rises persistently, generating inflation.","With real output determined by productive capacity in the long run, excess nominal spending growth is reflected primarily in prices.","The sustained nominal expansion does not permanently raise real output above potential."],
+    ["5.4","U5","Government Deficits and the National Debt","A budget deficit occurs when government outlays exceed tax revenue in a period, and repeated deficits add to the stock of national debt.","Government outlays exceed tax revenues by $80 billion during the year.","The national debt increases by approximately the amount of the deficit, other things equal.","The government must finance the gap between current outlays and revenues by borrowing or drawing down assets.","The annual deficit is a flow that adds to the outstanding stock of debt."],
+    ["5.5","U5","Crowding Out","Expansionary fiscal policy financed by borrowing can raise real interest rates and reduce private investment, partially offsetting the initial increase in aggregate demand.","The government substantially increases borrowing in the loanable funds market while private saving is unchanged.","Real interest rates rise and some private investment spending is crowded out.","Greater borrowing demand raises the equilibrium real interest rate, making marginal private investment projects less profitable.","The reduction in private investment offsets part of the fiscal expansion's effect on aggregate demand and capital formation."],
+    ["5.6","U5","Economic Growth","Long-run economic growth is an increase in real output per person driven by growth in resources, physical and human capital, technology, and productivity.","Worker training and improved technology raise output per employed worker over many years.","Potential output and real GDP per person can grow more rapidly.","Greater human capital and technology increase labor productivity and the economy's productive capacity.","The improvement shifts the economy's long-run production possibilities outward."],
+    ["5.7","U5","Public Policy and Economic Growth","Policies that support saving, investment, education, research, infrastructure, or effective institutions can affect capital accumulation, productivity, and long-run growth.","A policy increases incentives for private saving and productive investment without reducing institutional quality.","The capital stock can grow faster, raising future productive capacity.","More saving can finance more investment, which adds productive capital and can increase output per worker over time.","The principal effect is on long-run capacity rather than a guaranteed one-period increase in consumption."],
+
+    ["6.1","U6","Balance of Payments Accounts","The balance of payments records transactions between residents and the rest of the world; the current account and financial account offset apart from statistical discrepancies.","A country runs a current-account deficit financed by net purchases of its assets by foreigners.","The country records a corresponding financial-account surplus.","Payment for excess imports is matched by a net capital inflow when foreigners acquire domestic assets.","The two major account balances move in offsetting directions in the accounting framework."],
+    ["6.2","U6","Exchange Rates","An exchange rate is the price of one currency in terms of another; appreciation makes a currency more valuable and tends to make that country's exports more expensive to foreigners.","The domestic currency appreciates against the currencies of major trading partners.","Domestic exports become relatively more expensive to foreign buyers, other things equal.","Foreign buyers must give up more of their currency to obtain each unit of the appreciated domestic currency.","The appreciation changes relative prices even if domestic-currency sticker prices are unchanged."],
+    ["6.3","U6","The Foreign Exchange Market","Foreign exchange rates are determined by supply and demand for currencies; demand for a currency rises when foreigners want more of that country's goods or assets.","Foreign investors increase purchases of domestic financial assets while other determinants are unchanged.","Demand for the domestic currency rises and the currency appreciates.","Foreign investors must acquire domestic currency to purchase the assets, shifting currency demand to the right.","The higher equilibrium exchange rate reflects stronger demand in the foreign exchange market."],
+    ["6.4","U6","Effect of Changes in Policies and Economic Conditions on the Foreign Exchange Market","Changes in interest rates, incomes, inflation, tastes, and policy can shift currency demand or supply and therefore alter exchange rates.","The domestic central bank raises interest rates relative to foreign interest rates, increasing the attractiveness of domestic financial assets.","Financial capital inflows increase, raising demand for the domestic currency and causing it to appreciate.","Higher relative returns attract foreign funds that must be converted into domestic currency to purchase domestic assets.","The currency effect operates through a shift in demand rather than movement along an unchanged demand curve."],
+    ["6.5","U6","Changes in the Foreign Exchange Market and Net Exports","Currency appreciation tends to reduce net exports, while depreciation tends to increase net exports, other things equal.","The domestic currency depreciates substantially against trading-partner currencies.","Exports rise and imports fall, so net exports tend to increase.","Domestic goods become cheaper to foreigners while foreign goods become more expensive to domestic buyers.","The exchange-rate change raises aggregate demand through the net-export component, other things equal."],
+    ["6.6","U6","Real Interest Rates and International Capital Flows","Financial capital tends to flow toward countries offering higher expected real returns, affecting currency demand, exchange rates, and the financial account.","Domestic real interest rates rise above comparable foreign real interest rates with risk held constant.","Net financial capital inflows to the domestic economy increase.","Investors seek the higher expected real return, purchasing domestic financial assets and increasing demand for domestic currency.","The capital inflow is associated with a stronger financial account and upward pressure on the domestic currency."],
+  ].map(([code,unit,title,core,scenario,result,mechanism,evidence]) => ({code,unit,title,core,scenario,result,mechanism,evidence}));
+
+  const byUnit = new Map();
+  for (const topic of topics) {
+    if (!byUnit.has(topic.unit)) byUnit.set(topic.unit, []);
+    byUnit.get(topic.unit).push(topic);
+  }
+
+  function peers(topic, field) {
+    const pool = byUnit.get(topic.unit);
+    const start = pool.indexOf(topic);
+    return [1,2,3].map((offset) => pool[(start + offset) % pool.length][field]);
+  }
+
+  let serial = 0;
+  function make(topic, skill, q, correct, distractors, rationale, extra = {}) {
+    const answerIndex = serial++ % 4;
+    const options = distractors.slice(0,3);
+    options.splice(answerIndex, 0, correct);
+    return {
+      id: `macro-${topic.code.replace(".","-")}-${String(serial).padStart(3,"0")}`,
+      unit: topic.unit,
+      type: "s",
+      topicCode: topic.code,
+      skill,
+      q,
+      o: options,
+      c: [answerIndex],
+      e: rationale,
+      ...extra,
+    };
+  }
+
+  // The fourth standalone task rotates across the three MCQ skill families so the
+  // effective bank sits near the center of the published skill bands.
+  const fourthFamilies = [
+    ...Array(16).fill("1"), ...Array(10).fill("2"), ...Array(16).fill("3")
+  ];
+  // Spread those families across the inventory instead of clustering them by unit.
+  const spreadFamilies = topics.map((_, i) => fourthFamilies[(i * 17) % fourthFamilies.length]);
+
+  const questions = [];
+  topics.forEach((topic, index) => {
+    questions.push(make(
+      topic,
+      "1.A",
+      `Which statement most accurately describes ${topic.title} in the AP Macroeconomics framework?`,
+      topic.core,
+      peers(topic,"core"),
+      `${topic.core} This is the defining relationship for Topic ${topic.code}; the other choices describe different economic concepts from the same unit.`
+    ));
+
+    questions.push(make(
+      topic,
+      "2.A",
+      `${topic.scenario} The predicted result is that ${topic.result.charAt(0).toLowerCase() + topic.result.slice(1)} Which explanation best accounts for that result?`,
+      topic.mechanism,
+      peers(topic,"mechanism"),
+      `${topic.mechanism} That mechanism connects the facts in the scenario to the predicted outcome; the alternatives invoke mechanisms belonging to other topics.`
+    ));
+
+    questions.push(make(
+      topic,
+      "3.A",
+      `${topic.scenario} Which outcome is most consistent with the economic relationship in Topic ${topic.code}?`,
+      topic.result,
+      peers(topic,"result"),
+      `${topic.result} ${topic.mechanism} Together these statements identify both the directional result and the economic reason it follows from the scenario.`
+    ));
+
+    const family = spreadFamilies[index];
+    if (family === "1") {
+      questions.push(make(
+        topic,
+        "1.B",
+        `Which observation most clearly illustrates ${topic.title}?`,
+        topic.evidence,
+        peers(topic,"evidence"),
+        `${topic.evidence} This observation directly displays the defining feature of ${topic.title}; the alternatives are evidence for other concepts in the same unit.`
+      ));
+    } else if (family === "2") {
+      questions.push(make(
+        topic,
+        "2.A",
+        `Suppose an economist observes that ${topic.evidence.charAt(0).toLowerCase() + topic.evidence.slice(1)} Which explanation best connects that observation to ${topic.title}?`,
+        topic.mechanism,
+        peers(topic,"mechanism"),
+        `${topic.mechanism} The observation is evidence of the topic because this causal or accounting relationship links the measured outcome to the underlying economic concept.`
+      ));
+    } else {
+      questions.push(make(
+        topic,
+        "3.A",
+        `Which change is most likely to produce the following outcome under the assumptions of ${topic.title}: ${topic.result}`,
+        topic.scenario,
+        peers(topic,"scenario"),
+        `${topic.scenario} ${topic.mechanism} The other proposed changes operate through different models or determinants and therefore do not generate the stated outcome under the topic's assumptions.`
+      ));
+    }
+  });
+
+  function num(topicCode, skill, q, correct, wrong, rationale, check) {
+    const topic = topics.find((t) => t.code === topicCode);
+    questions.push(make(topic, skill, q, String(correct), wrong.map(String), rationale, {
+      numericalAnalysis: true,
+      numericCheck: check,
+    }));
+  }
+
+  // 36 independently parameterized numerical/data-analysis items.  The compact
+  // numericCheck metadata is ignored by the app but lets the release tests
+  // recompute every keyed result rather than trusting the authored answer text.
+  num("1.2","1.C","Moving along a PPC from 18 units of consumer goods and 0 capital goods to 12 consumer goods and 3 capital goods costs how many consumer goods per additional capital good?","2 consumer goods",["1 consumer good","3 consumer goods","6 consumer goods"],"The economy gives up 6 consumer goods to gain 3 capital goods, so the opportunity cost is 6/3 = 2 consumer goods per capital good.",{kind:"ratio",a:6,b:3,expected:2});
+  num("1.3","1.C","Country A can produce either 8 units of wheat or 4 computers with the same resources. What is A's opportunity cost of one computer?","2 units of wheat",["0.5 unit of wheat","4 units of wheat","8 units of wheat"],"Producing 4 computers forgoes 8 wheat, so one computer costs 8/4 = 2 units of wheat. Comparative advantage comparisons use this opportunity cost.",{kind:"ratio",a:8,b:4,expected:2});
+  num("1.3","2.C","Country A gives up 2 wheat per computer and Country B gives up 5 wheat per computer. Which trading price for one computer lies strictly between their opportunity costs?","3 wheat",["1 wheat","2 wheat","6 wheat"],"A mutually beneficial terms-of-trade price must lie between 2 and 5 wheat per computer; 3 wheat satisfies that condition.",{kind:"between",low:2,high:5,expected:3});
+  num("1.6","3.C","In a market, Qd = 100 - 5P and Qs = 20 + 5P. What is the equilibrium price?","$8",["$5","$10","$12"],"Set quantity demanded equal to quantity supplied: 100 - 5P = 20 + 5P, so 80 = 10P and the equilibrium price is $8.",{kind:"linearEq",a:100,b:-5,c:20,d:5,expected:8});
+  num("1.6","2.C","At a price of $6, buyers demand 70 units while sellers supply 50 units. What is the size of the shortage?","20 units",["10 units","50 units","120 units"],"A shortage equals quantity demanded minus quantity supplied when demand exceeds supply: 70 - 50 = 20 units.",{kind:"difference",a:70,b:50,expected:20});
+
+  num("2.1","1.C","An economy has consumption of $500 billion, investment of $120 billion, government purchases of $180 billion, exports of $80 billion, and imports of $100 billion. What is GDP?","$780 billion",["$700 billion","$800 billion","$980 billion"],"Using GDP = C + I + G + X - M gives 500 + 120 + 180 + 80 - 100 = $780 billion.",{kind:"sum",values:[500,120,180,80,-100],expected:780});
+  num("2.3","1.C","A labor force contains 160 million people, of whom 8 million are unemployed and actively seeking work. What is the unemployment rate?","5%",["4%","8%","20%"],"The unemployment rate is unemployed divided by the labor force: 8/160 × 100 = 5 percent.",{kind:"percentOf",a:8,b:160,expected:5});
+  num("2.4","2.C","The CPI rises from 240 to 252. What is the inflation rate over the period?","5%",["4%","12%","105%"],"Inflation is the percentage change in the price index: (252 - 240)/240 × 100 = 5 percent.",{kind:"percentChange",a:240,b:252,expected:5});
+  num("2.5","2.C","A loan pays a nominal interest rate of 8% while inflation is 3%. Using the standard approximation, what is the real interest rate?","5%",["3%","8%","11%"],"The approximate real interest rate is nominal interest minus inflation: 8% - 3% = 5%.",{kind:"difference",a:8,b:3,expected:5});
+  num("2.6","1.C","Nominal GDP is $550 billion and the GDP deflator is 110. What is real GDP in base-year dollars?","$500 billion",["$440 billion","$550 billion","$605 billion"],"Real GDP equals nominal GDP divided by the deflator expressed as a ratio: 550/(110/100) = $500 billion.",{kind:"deflate",nominal:550,deflator:110,expected:500});
+  num("2.7","2.C","Potential real GDP is $1,000 billion and actual real GDP is $950 billion. Actual output is what percentage below potential?","5%",["2.5%","50%","95%"],"The output gap is 50 on a potential level of 1,000, so 50/1,000 × 100 = 5 percent below potential.",{kind:"percentGap",potential:1000,actual:950,expected:5});
+
+  num("3.1","1.C","Planned spending is C=$600 billion, I=$150 billion, G=$200 billion, and net exports=-$50 billion. What is aggregate expenditure?","$900 billion",["$800 billion","$950 billion","$1,000 billion"],"Aggregate expenditure is C + I + G + NX: 600 + 150 + 200 - 50 = $900 billion.",{kind:"sum",values:[600,150,200,-50],expected:900});
+  num("3.2","1.C","In the simple spending-multiplier model, the marginal propensity to consume is 0.80. What is the spending multiplier?","5",["0.8","1.25","4"],"The simple spending multiplier is 1/(1-MPC) = 1/(1-0.80) = 5.",{kind:"multiplier",mpc:0.8,expected:5});
+  num("3.2","3.C","The spending multiplier is 4 and autonomous spending rises by $20 billion. By how much does equilibrium output change in the simple model?","$80 billion",["$5 billion","$20 billion","$100 billion"],"Multiply the autonomous spending change by the multiplier: 4 × $20 billion = an $80 billion increase in equilibrium output.",{kind:"product",a:4,b:20,expected:80});
+  num("3.5","2.C","Potential output is $2.0 trillion while the AD-SRAS equilibrium output is $1.9 trillion. What is the recessionary output gap as a percent of potential output?","5%",["1%","10%","95%"],"The gap is 0.1 trillion; 0.1/2.0 × 100 = 5 percent of potential output.",{kind:"percentGap",potential:2,actual:1.9,expected:5});
+  num("3.6","3.C","An autonomous spending decline of $15 billion occurs when the spending multiplier is 3. What is the resulting change in equilibrium real output in the simple model?","-$45 billion",["-$15 billion","-$5 billion","$45 billion"],"The multiplier effect is 3 × (-$15 billion) = -$45 billion, so aggregate demand and equilibrium output fall by that amount in the simple model.",{kind:"product",a:3,b:-15,expected:-45});
+  num("3.8","3.C","An economy has a $100 billion recessionary gap and a spending multiplier of 5. Ignoring crowding out, what increase in government purchases would close the gap?","$20 billion",["$5 billion","$100 billion","$500 billion"],"Required government purchases equal the output gap divided by the spending multiplier: 100/5 = $20 billion.",{kind:"ratio",a:100,b:5,expected:20});
+  num("3.8","3.C","The MPC is 0.75, so the simple tax multiplier is -3. If taxes are cut by $20 billion, what is the predicted change in equilibrium output?","+$60 billion",["-$60 billion","+$20 billion","+$80 billion"],"A $20 billion tax cut is a tax change of -20. Multiplying by the tax multiplier -3 gives +$60 billion of equilibrium output.",{kind:"product",a:-3,b:-20,expected:60});
+  num("3.9","2.C","During a downturn, taxable household income falls by $100 billion under a proportional 20% tax rate. By how much does tax revenue fall, before other changes?","$20 billion",["$5 billion","$80 billion","$100 billion"],"At a 20 percent tax rate, a $100 billion fall in taxable income reduces tax revenue by 0.20 × 100 = $20 billion.",{kind:"product",a:0.2,b:100,expected:20});
+
+  num("4.1","2.C","A bond pays a fixed $50 annual coupon and currently sells for $1,000. What is its current coupon yield?","5%",["2%","10%","20%"],"Current coupon yield is annual coupon divided by current price: 50/1,000 × 100 = 5 percent.",{kind:"percentOf",a:50,b:1000,expected:5});
+  num("4.2","1.C","The nominal interest rate is 7% and inflation is 2%. What is the approximate real interest rate?","5%",["2%","7%","9%"],"The approximate real interest rate is 7% - 2% = 5%, which measures the lender's purchasing-power gain.",{kind:"difference",a:7,b:2,expected:5});
+  num("4.4","1.C","If the required reserve ratio is 10%, what is the simple money multiplier?","10",["0.1","5","20"],"The simple money multiplier equals 1 divided by the reserve ratio: 1/0.10 = 10.",{kind:"reciprocal",a:0.1,expected:10});
+  num("4.4","3.C","Banks receive $100 million of new excess reserves and the simple money multiplier is 5. What is the maximum potential increase in checkable deposits?","$500 million",["$20 million","$100 million","$400 million"],"Maximum potential deposit expansion is excess reserves times the simple money multiplier: 100 × 5 = $500 million.",{kind:"product",a:100,b:5,expected:500});
+  num("4.5","2.C","Money demand is MD = 1,000 - 50i, where i is the nominal interest rate in percent. If the money supply is 750, what is the equilibrium nominal interest rate?","5%",["2%","10%","15%"],"Set money demand equal to money supply: 1,000 - 50i = 750, so 50i = 250 and i = 5 percent.",{kind:"linearEq",a:1000,b:-50,c:750,d:0,expected:5});
+  num("4.7","3.C","Supply of loanable funds is 200 + 20r and demand is 500 - 30r, with r in percent. What is the equilibrium real interest rate?","6%",["4%","10%","14%"],"Set supply equal to demand: 200 + 20r = 500 - 30r, so 50r = 300 and r = 6 percent.",{kind:"linearEq",a:200,b:20,c:500,d:-30,expected:6});
+
+  num("5.1","3.C","The MPC is 0.75 and government purchases rise by $40 billion. In the simple multiplier model, what is the total change in equilibrium output?","+$160 billion",["+$30 billion","+$40 billion","+$120 billion"],"With MPC 0.75, the spending multiplier is 4. Multiplying 4 by the $40 billion spending increase gives +$160 billion.",{kind:"mpcEffect",mpc:0.75,change:40,expected:160});
+  num("5.2","2.C","Along a stable short-run Phillips curve, inflation rises from 3% to 5% while unemployment falls from 5% to 4%. By how many percentage points did inflation change?","+2 percentage points",["-2 percentage points","+1 percentage point","+5 percentage points"],"Inflation changed from 3 percent to 5 percent, an increase of 2 percentage points; the paired fall in unemployment is the short-run inverse relationship.",{kind:"difference",a:5,b:3,expected:2});
+  num("5.3","3.C","With velocity stable, the money supply grows 8% while real output grows 3%. Using the quantity-theory growth-rate approximation, what inflation rate is implied?","5%",["3%","8%","11%"],"With stable velocity, approximate inflation equals money growth minus real output growth: 8% - 3% = 5%.",{kind:"difference",a:8,b:3,expected:5});
+  num("5.4","1.C","Government outlays are $900 billion and tax revenues are $820 billion. What is the budget balance?","$80 billion deficit",["$80 billion surplus","$820 billion deficit","$1,720 billion deficit"],"Outlays exceed revenues by 900 - 820 = $80 billion, so the government runs an $80 billion budget deficit for the period.",{kind:"difference",a:900,b:820,expected:80});
+  num("5.5","2.C","Private investment falls from $200 billion to $170 billion after deficit-financed government borrowing raises interest rates. What is the measured decline in investment?","$30 billion",["$15 billion","$170 billion","$370 billion"],"The decline is 200 - 170 = $30 billion. This reduction in interest-sensitive private investment is the measured crowding-out effect in the scenario.",{kind:"difference",a:200,b:170,expected:30});
+  num("5.6","2.C","Output per employed worker rises from $50,000 to $55,000. What is the percentage increase in labor productivity?","10%",["5%","9%","50%"],"Productivity rises by $5,000 on an initial $50,000 base: 5,000/50,000 × 100 = 10 percent.",{kind:"percentChange",a:50000,b:55000,expected:10});
+
+  num("6.1","1.C","Ignoring statistical discrepancies, a country has a current-account balance of -$40 billion. What financial-account balance is required for the major accounts to offset?","+$40 billion",["-$80 billion","-$40 billion","$0 billion"],"The current and financial accounts offset in the simplified balance-of-payments accounting identity, so a -$40 billion current account requires a +$40 billion financial account.",{kind:"opposite",a:-40,expected:40});
+  num("6.2","1.C","The exchange rate is $1.20 per euro. How many euros can be purchased with $120?","€100",["€72","€120","€144"],"Divide dollars by dollars per euro: $120 / ($1.20 per euro) = 100 euros.",{kind:"ratio",a:120,b:1.2,expected:100});
+  num("6.3","2.C","Demand for a currency is Qd = 120 - 10e and supply is Qs = 40 + 10e, where e is the exchange-rate price. What is the equilibrium exchange rate?","4",["2","6","8"],"Set currency demand equal to currency supply: 120 - 10e = 40 + 10e, so 80 = 20e and e = 4.",{kind:"linearEq",a:120,b:-10,c:40,d:10,expected:4});
+  num("6.5","3.C","Before a depreciation, exports are $300 billion and imports are $350 billion. Afterward exports are $330 billion and imports are $320 billion. By how much did net exports change?","+$60 billion",["+$10 billion","+$30 billion","-$60 billion"],"Net exports move from 300-350 = -50 to 330-320 = +10, so the change is +10 - (-50) = +$60 billion.",{kind:"nxChange",x1:300,m1:350,x2:330,m2:320,expected:60});
+  num("6.6","2.C","Domestic real interest rates are 6% while comparable foreign real interest rates are 4%, with risk held equal. What is the domestic real-interest differential?","2 percentage points",["1 percentage point","4 percentage points","10 percentage points"],"The real-interest differential is 6% - 4% = 2 percentage points, creating an incentive for financial capital to flow toward domestic assets.",{kind:"difference",a:6,b:4,expected:2});
+
+  window.QUESTIONS_AP_MACROECONOMICS = questions;
+})();
