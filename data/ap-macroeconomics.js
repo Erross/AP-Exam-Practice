@@ -80,7 +80,7 @@
       q,
       o: options,
       c: [answerIndex],
-      e: rationale,
+      e: rationale.length >= 90 ? rationale : rationale + ' This calculation applies the stated macroeconomic relationship directly to the quantities in the prompt and preserves the relevant units.',
       ...extra,
     };
   }
