@@ -87,7 +87,14 @@
     const me='Clear operational definitions specify exactly how variables are measured or manipulated, allowing other researchers to reproduce the procedure and evaluate whether the measures appropriately represent the intended constructs.';
     Q.push(item(`psy-${code.replace('.','')}-m7`,unit,code,idx%2===0?'2.B':'2.C',mq,mo,0,me,{synthetic:true}));
 
-    const stimulus=`Synthetic study — ${name}: Group A (n=40) had a mean outcome score of ${a}; Group B (n=40) had a mean outcome score of ${b}. Participants were recruited from one local school. The values are invented for practice.`;
+    const stimulus={
+      type:'quantitative',
+      title:`Synthetic psychology study — ${name}`,
+      source:'Original AP Exam Practice data; all values and participants are invented for practice.',
+      columns:['Group','n','Mean outcome score'],
+      rows:[['Group A','40',String(a)],['Group B','40',String(b)]],
+      description:'Participants were recruited from one local school; the table reports descriptive group means only.'
+    };
     const gid=`psy-${code.replace('.','')}-study`;
     Q.push(item(`psy-${code.replace('.','')}-r5`,unit,code,rskill,rq,ro,rc,re,{stimulus,stimulusGroupId:gid,synthetic:true}));
 
