@@ -1,0 +1,26 @@
+name: Wire AP Comparative Government
+on:
+  push:
+    branches: [subject/ap-comparative-government]
+permissions:
+  contents: write
+jobs:
+  wire:
+    if: github.event.head_commit.message == 'Trigger AP Comparative Government wiring'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-comparative-government
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python tools/wire-ap-comparative-government.py
+      - run: npm ci
+      - run: node --test tests/ap-comparative-government.test.js tests/notation-diagnostic.test.js
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add js/subjects.js
+          git commit -m "Wire AP Comparative Government 2027 blueprint"
+          git push origin HEAD:subject/ap-comparative-government
