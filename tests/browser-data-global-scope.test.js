@@ -9,7 +9,8 @@ test('browser data scripts share one collision-free global scope',()=>{
  const scripts=[...html.matchAll(/<script src="(data\/[^"]+\.js)"/g)].map(match=>match[1]);
  assert.ok(scripts.length>=45,'expected the complete browser data-script inventory');
 
- const sandbox={window:{}};
+ const sandbox={};
+ sandbox.window=sandbox;
  vm.createContext(sandbox);
  for(const file of scripts){
   assert.doesNotThrow(
