@@ -17,6 +17,7 @@ jobs:
           node-version: '22'
       - run: python tools/strengthen-ap-comparative-government.py
       - run: python tools/fix-ap-comparative-government-tells.py
+      - run: python tools/strengthen-ap-comparative-government-sources.py
       - run: npm ci
       - run: node tools/diagnose-ap-comparative-government.js
       - run: npm run release:audit -- --subject ap-comparative-government --trials 1000 --overlap-trials 1000
