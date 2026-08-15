@@ -1,0 +1,48 @@
+name: Clean AP Comparative Government release branch
+on:
+  push:
+    branches: [subject/ap-comparative-government]
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    if: github.event.head_commit.message == 'Run Comparative Government cleanup'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-comparative-government
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - name: Permanent Comparative Government gates
+        run: node --test tests/ap-comparative-government.test.js tests/ap-comparative-government-quality.test.js tests/notation-diagnostic.test.js
+      - name: Remove development scaffolding
+        run: |
+          rm -f \
+            .github/workflows/ap-comparative-government-wire.yml \
+            .github/workflows/ap-comparative-government-audit.yml \
+            .github/workflows/ap-comparative-government-tell-repair.yml \
+            .github/workflows/ap-comparative-government-diagnose.yml \
+            .github/workflows/ap-comparative-government-cleanroom.yml \
+            .github/workflows/ap-comparative-government-cleanup.yml \
+            tools/wire-ap-comparative-government.py \
+            tools/fix-ap-comparative-government-tells.py \
+            tools/diagnose-ap-comparative-government.js \
+            tools/strengthen-ap-comparative-government.py \
+            tools/strengthen-ap-comparative-government-sources.py \
+            tools/strengthen-ap-comparative-government-sources-v2.py \
+            .compgov-wire-trigger \
+            .compgov-audit-trigger \
+            .compgov-tell-trigger \
+            .compgov-diagnostic-trigger \
+            .compgov-cleanroom-trigger
+      - name: Full clean-draft gate
+        run: npm run check
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Clean AP Comparative Government shipping candidate"
+          git push origin HEAD:subject/ap-comparative-government
