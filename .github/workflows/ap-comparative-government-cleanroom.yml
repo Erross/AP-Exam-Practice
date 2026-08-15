@@ -1,0 +1,29 @@
+name: Apply AP Comparative Government clean-room repair
+on:
+  push:
+    branches: [subject/ap-comparative-government]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.event.head_commit.message == 'Trigger Comparative Government clean-room repair'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-comparative-government
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python tools/strengthen-ap-comparative-government.py
+      - run: python tools/fix-ap-comparative-government-tells.py
+      - run: npm ci
+      - run: node tools/diagnose-ap-comparative-government.js
+      - run: npm run release:audit -- --subject ap-comparative-government --trials 1000 --overlap-trials 1000
+      - run: node --test tests/ap-comparative-government.test.js tests/notation-diagnostic.test.js
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/ap-comparative-government.js
+          git commit -m "Strengthen AP Comparative Government comparative reasoning"
+          git push origin HEAD:subject/ap-comparative-government
