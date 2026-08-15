@@ -1,0 +1,76 @@
+name: Wire AP Macroeconomics blueprint
+on:
+  push:
+    paths: ['.github/workflows/ap-macro-wire.yml']
+permissions:
+  contents: write
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-macroeconomics
+      - name: Wire metadata
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('js/subjects.js')
+          s=p.read_text()
+          old='''  {
+    id: "ap-macroeconomics",
+    name: "AP Macroeconomics",
+    category: "History & Social Sciences",
+    tier: 1,
+    mcqCount: 60,
+    mcqTimeMinutes: 70,
+    totalExamTimeLabel: "2h 10m",
+    formatVerified: false,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    tierNote: null,
+    units: [],
+    dataVar: "QUESTIONS_AP_MACROECONOMICS",
+  },'''
+          new='''  {
+    id: "ap-macroeconomics",
+    name: "AP Macroeconomics",
+    category: "History & Social Sciences",
+    tier: 1,
+    // VERIFIED 2026-08-15 against the AP Macroeconomics CED effective Fall 2026
+    // and the current AP Central exam page. Section I: 60 MCQs / 70 minutes.
+    mcqCount: 60,
+    mcqTimeMinutes: 70,
+    totalExamTimeLabel: "2h 10m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    calculatorAllowed: true,
+    calculatorExpected: true,
+    tierNote: "Four-function calculator permitted throughout this practice section.",
+    units: [
+      { id:"U1", name:"Basic Economic Concepts", examWeight:5/60, examWeightRange:[0.05,0.10] },
+      { id:"U2", name:"Economic Indicators and the Business Cycle", examWeight:9/60, examWeightRange:[0.12,0.17] },
+      { id:"U3", name:"National Income and Price Determination", examWeight:13/60, examWeightRange:[0.17,0.27] },
+      { id:"U4", name:"Financial Sector", examWeight:12/60, examWeightRange:[0.18,0.23] },
+      { id:"U5", name:"Long-Run Consequences of Stabilization Policies", examWeight:14/60, examWeightRange:[0.20,0.30] },
+      { id:"U6", name:"Open Economy—International Trade and Finance", examWeight:7/60, examWeightRange:[0.10,0.13] },
+    ],
+    // Published MCQ bands: P1 30–40%, P2 25–32%, P3 30–40%.
+    // Numerical analysis across those practices accounts for 16–20% of Section I.
+    skillCountRanges: { "1":[18,24], "2":[15,19], "3":[18,24] },
+    attributeRanges: { numericalAnalysis: { "true":[10,12] } },
+    constraintDrawAttempts: 10000,
+    dataVar: "QUESTIONS_AP_MACROECONOMICS",
+  },'''
+          assert old in s, 'Macro stub not found'
+          p.write_text(s.replace(old,new))
+          PY
+      - name: Commit and remove workflow
+        run: |
+          rm .github/workflows/ap-macro-wire.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add js/subjects.js .github/workflows/ap-macro-wire.yml
+          git commit -m 'Wire AP Macroeconomics 2027 blueprint'
+          git push origin HEAD:subject/ap-macroeconomics
