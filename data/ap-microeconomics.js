@@ -74,7 +74,7 @@
 
   function num(code,skill,q,correct,wrong,rationale,check){ const t=topics.find(x=>x.code===code); questions.push(make(t,skill,q,String(correct),wrong.map(String),rationale,{numericalAnalysis:true,numericCheck:check})); }
 
-  // 42 original numerical/data-analysis questions. numericCheck is test-only metadata
+  // 43 original numerical/data-analysis questions. numericCheck is test-only metadata
   // used to independently recompute each keyed result during release review.
   num('1.3','1.C','A PPC point changes from 20 units of food and 0 machines to 14 food and 3 machines. What is the opportunity cost per additional machine?','2 units of food',['1 unit of food','3 units of food','6 units of food'],'Six units of food are forgone to gain three machines, so opportunity cost is 6/3 = 2 units of food per machine.',{kind:'ratio',a:6,b:3,expected:2});
   num('1.4','1.C','A producer can make either 12 shirts or 4 bicycles with the same resources. What is the opportunity cost of one bicycle?','3 shirts',['0.33 shirt','4 shirts','12 shirts'],'Twelve shirts are forgone for four bicycles, so one bicycle has an opportunity cost of 12/4 = 3 shirts.',{kind:'ratio',a:12,b:4,expected:3});

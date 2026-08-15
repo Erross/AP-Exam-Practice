@@ -44,7 +44,7 @@ test('Microeconomics bank covers the exact Fall-2026 CED inventory',()=>{
  assert.deepEqual([...new Set(bank.map(q=>q.topicCode))].sort(),TOPICS.slice().sort());
  for(const code of TOPICS) assert.ok(bank.filter(q=>q.topicCode===code).length>=4,`${code} is shallow`);
  assert.equal(subject.formatVerified,true);
- assert.equal(subject.releaseStatus,'draft');
+ assert.equal(subject.releaseStatus,'released');
  assert.equal(subject.mcqCount,60);
  assert.equal(subject.mcqTimeMinutes,70);
  assert.equal(subject.totalExamTimeLabel,'2h 10m');
