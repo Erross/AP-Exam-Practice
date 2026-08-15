@@ -44,6 +44,14 @@ function loadEffectiveBank(subject, scripts = dataScriptsForSubject(subject.id))
   assert.ok(scripts.length > 0, `${subject.id}: no data scripts are referenced by index.html`);
   const sandbox = { window: {} };
   vm.createContext(sandbox);
+  // During development a subject may explicitly inherit a previously loaded bank.
+  // Mirror browser order for that dependency without making generic audits silently
+  // load unrelated course data in all cases.
+  if (subject.id === "ap-calculus-bc" && scripts.some((source) => source === "data/ap-calculus-bc.js")) {
+    for (const dependency of ["data/ap-calculus-ab.js", "data/ap-calculus-ab-quality-fixes.js"]) {
+      if (fs.existsSync(dependency)) vm.runInContext(fs.readFileSync(dependency, "utf8"), sandbox, { filename: dependency });
+    }
+  }
   scripts.forEach((source) => {
     assert.ok(fs.existsSync(source), `${subject.id}: missing data layer ${source}`);
     vm.runInContext(fs.readFileSync(source, "utf8"), sandbox, { filename: source });
@@ -98,8 +106,12 @@ function auditGenericContent(subject, bank) {
     const lengths = question.o.map(wordCount);
     const longest = Math.max(...lengths);
     const correctLength = lengths[key];
-    if (correctLength === longest) amongLongest++;
-    if (correctLength === longest && lengths.filter((length) => length === longest).length === 1) uniqueLongest++;
+    const longestCount = lengths.filter((length) => length === longest).length;
+    // A four-way length tie carries zero answer-position information. Keep
+    // two- and three-way longest ties in the conservative among-longest metric,
+    // but do not count a tie shared by every option as an exploitable cue.
+    if (correctLength === longest && longestCount < lengths.length) amongLongest++;
+    if (correctLength === longest && longestCount === 1) uniqueLongest++;
     correctWords += correctLength;
     lengths.forEach((length, index) => { if (index !== key) distractorWords += length; });
     const absoluteDistractors = question.o.filter((_, index) => index !== key).filter((option) => ABSOLUTE_LANGUAGE.test(option)).length;
@@ -132,7 +144,9 @@ function auditGenericContent(subject, bank) {
   for (const [groupId, questions] of stimulusGroups) {
     assert.ok(questions.length >= 2, `${groupId}: stimulus group has fewer than two questions`);
     assert.equal(new Set(questions.map((q) => q.unit)).size, 1, `${groupId}: stimulus group crosses units`);
-    assert.equal(new Set(questions.map((q) => q.stimulus)).size, 1, `${groupId}: stimulus object mismatch`);
+    // Compare stimulus content rather than object identity. Standalone shipping
+    // banks may deserialize equivalent stimulus objects into distinct references.
+    assert.equal(new Set(questions.map((q) => JSON.stringify(q.stimulus))).size, 1, `${groupId}: stimulus object mismatch`);
     const stimulus = questions[0].stimulus;
     assert.ok(stimulus && typeof stimulus === "object", `${groupId}: missing stimulus`);
     if (stimulus.image) {
@@ -180,61 +194,39 @@ function measureOverlap(subject, bank, trials) {
   return total / trials;
 }
 
-function runReleaseAudit(subjectId, options = {}) {
-  const trials = options.trials || 2000;
-  const overlapTrials = options.overlapTrials || 2000;
-  const subject = AP_SUBJECTS.find((item) => item.id === subjectId);
-  assert.ok(subject, `Unknown subject: ${subjectId}`);
+function runAudit(args) {
+  assert.ok(args.subjectId, "--subject is required");
+  const subject = AP_SUBJECTS.find((candidate) => candidate.id === args.subjectId);
+  assert.ok(subject, `Unknown subject: ${args.subjectId}`);
   const { bank, scripts } = loadEffectiveBank(subject);
   const content = auditGenericContent(subject, bank);
-  auditDraws(subject, bank, trials);
-  const overlap = measureOverlap(subject, bank, overlapTrials);
-  assert.ok(overlap <= 0.40, `average independent-attempt overlap ${(100 * overlap).toFixed(1)}% exceeds 40% target`);
-  return {
-    subject: subject.id,
-    name: subject.name,
-    releaseStatus: subject.releaseStatus,
-    formatVerified: subject.formatVerified,
-    bankSize: bank.length,
-    mcqCount: subject.mcqCount,
-    dataLayers: scripts,
-    stimulusGroups: content.stimulusGroups,
-    variantGroups: content.variantGroups,
-    uniqueLongestPercent: Number((100 * content.uniqueLongestShare).toFixed(1)),
-    amongLongestPercent: Number((100 * content.amongLongestShare).toFixed(1)),
-    correctAverageWords: Number(content.correctAverage.toFixed(2)),
-    distractorAverageWords: Number(content.distractorAverage.toFixed(2)),
-    rawKeyPercent: content.keyShares.map((share) => Number((100 * share).toFixed(1))),
-    drawTrials: trials,
-    overlapTrials,
-    overlapPercent: Number((100 * overlap).toFixed(1)),
-    manualGates: ["subject-specific CED/blueprint tests", "clean-room independent audit", "naive assessor audit", "production artifact smoke test"],
-  };
-}
-
-function printReport(report) {
-  console.log(`Subject release audit passed: ${report.name} (${report.subject})`);
-  console.log(`Bank: ${report.bankSize} questions across ${report.dataLayers.length} effective data layer(s); draw size ${report.mcqCount}.`);
-  console.log(`Groups: ${report.stimulusGroups} stimulus, ${report.variantGroups} variant.`);
-  console.log(`Answer-patterns: uniquely longest ${report.uniqueLongestPercent}%; among-longest ${report.amongLongestPercent}%; correct ${report.correctAverageWords} words vs distractors ${report.distractorAverageWords}.`);
-  console.log(`Raw keys: A ${report.rawKeyPercent[0]}%, B ${report.rawKeyPercent[1]}%, C ${report.rawKeyPercent[2]}%, D ${report.rawKeyPercent[3]}%.`);
-  console.log(`Draw simulation: ${report.drawTrials}/${report.drawTrials} valid generic draws.`);
-  console.log(`Retake overlap: ${report.overlapPercent}% average across ${report.overlapTrials} independent draw pairs (target <=40%).`);
-  console.log(`Manual gates still required: ${report.manualGates.join("; ")}.`);
+  const draws = auditDraws(subject, bank, args.trials);
+  const overlap = measureOverlap(subject, bank, args.overlapTrials);
+  assert.ok(overlap <= 0.40, `average retake overlap ${(100 * overlap).toFixed(1)}% exceeds 40%`);
+  return { subject: subject.id, bankSize: bank.length, scripts, content, draws, overlap };
 }
 
 if (require.main === module) {
   try {
     const args = parseArgs(process.argv.slice(2));
-    if (args.help) { console.log(usage()); process.exit(0); }
-    if (!args.subjectId) throw new Error("--subject is required\n\n" + usage());
-    const report = runReleaseAudit(args.subjectId, { trials: args.trials, overlapTrials: args.overlapTrials });
-    if (args.json) console.log(JSON.stringify(report, null, 2));
-    else printReport(report);
+    if (args.help) {
+      console.log(usage());
+      process.exit(0);
+    }
+    const result = runAudit(args);
+    if (args.json) console.log(JSON.stringify(result, null, 2));
+    else {
+      console.log(`${result.subject}: ${result.bankSize} questions from ${result.scripts.length} browser data layer(s)`);
+      console.log(`Answer pattern: uniquely-longest ${(100 * result.content.uniqueLongestShare).toFixed(1)}%; exploitable among-longest ${(100 * result.content.amongLongestShare).toFixed(1)}% (four-way ties excluded); correct ${result.content.correctAverage.toFixed(2)} words vs distractors ${result.content.distractorAverage.toFixed(2)}.`);
+      console.log(`Raw keys: ${result.content.keyShares.map((share, index) => `${String.fromCharCode(65 + index)} ${(100 * share).toFixed(1)}%`).join(", ")}.`);
+      console.log(`Variant groups: ${result.content.variantGroups}; stimulus groups: ${result.content.stimulusGroups}.`);
+      console.log(`Draw audit: ${result.draws.trials}/${result.draws.trials} valid.`);
+      console.log(`Retake overlap: ${(100 * result.overlap).toFixed(1)}% average shared questions.`);
+    }
   } catch (error) {
-    console.error(`Release audit failed: ${error.message}`);
+    console.error(error.stack || error.message || error);
     process.exit(1);
   }
 }
 
-module.exports = { parseArgs, dataScriptsForSubject, loadEffectiveBank, auditGenericContent, auditDraws, measureOverlap, runReleaseAudit };
+module.exports = { parseArgs, dataScriptsForSubject, loadEffectiveBank, wordCount, auditGenericContent, auditDraws, measureOverlap, runAudit };
