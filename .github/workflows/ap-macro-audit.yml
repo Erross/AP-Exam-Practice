@@ -1,0 +1,13 @@
+name: Macro first audit
+'on': [push]
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node tools/subject-release-audit.js --subject ap-macroeconomics --trials 1000 --overlap-trials 1000
