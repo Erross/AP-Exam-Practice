@@ -1,0 +1,29 @@
+name: Audit AP Microeconomics
+'on': [push]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-microeconomics
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Inspect and audit Micro
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const s={window:{}}; vm.createContext(s); vm.runInContext(fs.readFileSync('data/ap-microeconomics.js','utf8'),s);
+          const b=s.window.QUESTIONS_AP_MICROECONOMICS;
+          console.log('Micro bank size',b.length);
+          console.log('Micro numerical count',b.filter(q=>q.numericalAnalysis===true).length);
+          console.log('Micro topics',new Set(b.map(q=>q.topicCode)).size);
+          console.log('Micro units',Object.fromEntries([...new Set(b.map(q=>q.unit))].map(u=>[u,b.filter(q=>q.unit===u).length])));
+          console.log('Micro skills',Object.fromEntries([...new Set(b.map(q=>String(q.skill).split('.')[0]))].map(k=>[k,b.filter(q=>String(q.skill).split('.')[0]===k).length])));
+          NODE
+          node tools/subject-release-audit.js --subject ap-microeconomics --trials 1000 --overlap-trials 1000
