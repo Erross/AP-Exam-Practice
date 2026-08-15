@@ -49,4 +49,17 @@ Post-repair draft audit (local clean checkout):
 - Answer construction: uniquely-longest correct 18.4%; exploitable among-longest 39.2%; correct 4.38 words versus distractors 4.26.
 - Raw keys: A 25.7%, B 26.9%, C 23.3%, D 24.1%.
 
-Final fresh semantic pass, naive-assessor gate, released-mode gate, integration CI, and production deployment evidence remain pending.
+Pass 2 restarted the semantic review from the official topic-level essential knowledge and found an additional release blocker: multiple application items crossed current topic boundaries or used material absent from, or expressly excluded by, the current CED. The affected areas were memory (Topics 2.4–2.5), developmental methods and social learning (3.1, 3.3, 3.9), attribution/attitudes/personality/motivation/emotion (4.1–4.2 and 4.4–4.7), and positive psychology, classification, and treatment (5.2, 5.3, 5.5). Most critically, the draft assessed Maslow's hierarchy of needs and the specific names of early emotion theories even though the CED expressly excludes them.
+
+Repair realigned all affected application inventories to the current topic boundaries, replaced specific emotion-theory names with the CED's assessed sequence/label distinctions, and added permanent topic-inventory and exclusion regressions. Memory study targets now follow the encoding/storage split, and social-personality study targets no longer rely on superseded constructs.
+
+Post-boundary-repair local gate:
+
+- 11/11 Psychology regressions and 206/206 repository tests passed.
+- 5,000/5,000 valid constrained draws.
+- Retake overlap: 33.0%.
+- Answer construction: uniquely-longest correct 19.2%; exploitable among-longest 42.4%; correct 4.47 words versus distractors 4.34.
+- Raw keys: A 25.7%, B 26.9%, C 23.3%, D 24.1%.
+- Built artifact: 15 released subjects and 23 released data layers; Psychology remains excluded while in draft status.
+
+Final naive-assessor gate, released-mode gate, integration CI, and production deployment evidence remain pending.

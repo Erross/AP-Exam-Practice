@@ -17,6 +17,23 @@ const TOPICS=[
  '5.1','5.2','5.3','5.4','5.5'
 ];
 const family=q=>String(q.skill).split('.')[0];
+const CED_BOUNDARY_CONCEPTS={
+ '2.3':['sensory memory','working memory','episodic memory','procedural memory'],
+ '2.4':['mnemonic device','chunking','spacing effect','serial position effect'],
+ '2.5':['maintenance rehearsal','elaborative rehearsal','autobiographical memory','anterograde amnesia'],
+ '3.1':['cross-sectional study','longitudinal study','nature and nurture','continuous and discontinuous development'],
+ '3.3':['biological sex','gender','gender role','sexual orientation'],
+ '3.9':['observational learning','vicarious conditioning','insight learning','latent learning'],
+ '4.1':['fundamental attribution error','self-serving bias','actor-observer bias','mere exposure effect'],
+ '4.2':['stereotype','implicit attitude','belief perseverance','cognitive dissonance'],
+ '4.4':['ego defense mechanism','projective test','unconditional regard','self-actualizing tendency'],
+ '4.5':['reciprocal determinism','self-efficacy','Big Five traits','self-esteem'],
+ '4.6':['drive-reduction theory','incentive theory','self-determination theory','arousal theory'],
+ '4.7':['physiological experience precedes cognitive appraisal','physiological and cognitive experiences occur simultaneously','a cognitive label is required to experience emotion','facial-feedback hypothesis'],
+ '5.2':['resilience','gratitude','signature strengths','posttraumatic growth'],
+ '5.3':['biopsychosocial model','diathesis-stress model','DSM classification','eclectic approach'],
+ '5.5':['cognitive behavioral therapy','exposure therapy','psychodynamic therapy','psychoactive medication']
+};
 
 test('Psychology bank covers the exact current 35-topic CED inventory',()=>{
  assert.equal(bank.length,245);
@@ -86,9 +103,9 @@ test('Psychology exact science-practice tags match the task actually performed',
 test('Psychology concept application is scenario-based and 1.B is reserved for norms or cognitive bias',()=>{
  const application=bank.filter(q=>q.applicationMode);
  const eligible1B=new Set([
-  'confirmation bias','functional fixedness','stereotype threat','gender role','gender schema',
-  'fundamental attribution error','self-serving bias','actor-observer bias','halo effect',
-  'cognitive dissonance','foot-in-the-door technique','central-route persuasion','peripheral-route persuasion',
+  'confirmation bias','functional fixedness','stereotype threat','gender role',
+  'fundamental attribution error','self-serving bias','actor-observer bias',
+  'stereotype','implicit attitude','belief perseverance','cognitive dissonance',
   'conformity','obedience','social facilitation','groupthink','stress appraisal'
  ]);
  assert.equal(application.length,140);
@@ -103,6 +120,17 @@ test('Psychology concept application is scenario-based and 1.B is reserved for n
   assert.doesNotMatch(q.q,/Which concept best explains this .* example/i);
   assert.ok(q.e.length>=140,`${q.id}: rationale should compare mechanisms`);
  }
+});
+
+test('Psychology application concepts respect current CED topic and exclusion boundaries',()=>{
+ const application=bank.filter(q=>q.applicationMode);
+ for(const [code,expected] of Object.entries(CED_BOUNDARY_CONCEPTS)){
+  const actual=[...application.filter(q=>q.topicCode===code)].map(q=>q.o[q.c[0]]);
+  assert.deepEqual(actual,expected,`${code} application inventory`);
+ }
+ const studentFacing=bank.map(q=>[q.q,...q.o,q.e].join(' ')).join('\n');
+ assert.doesNotMatch(studentFacing,/Maslow|hierarchy of needs|James[-–]Lange|Cannon[-–]Bard|two-factor theory/i);
+ assert.doesNotMatch(studentFacing,/sequential design|gender schema|mirror[- ]neuron|medical model|\bSSRI\b|\bflow\b/i);
 });
 
 test('Psychology research portfolio rejects the superseded boilerplate templates',()=>{
