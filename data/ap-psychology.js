@@ -82,6 +82,11 @@
       ro=['prompt debriefing about the deception and study purpose','permanent concealment of the study purpose from participants','publication of each participant’s identifiable responses','requiring participants to waive the right to withdraw']; rc=0; rskill='2.D';
       re='When ethically justified deception is used, researchers should debrief participants promptly, explain the true purpose and deception, address concerns, and preserve participants’ rights and confidentiality.';
     }
+    const mq=`A second research team studying ${name.toLowerCase()} wants its procedure to be replicable. Which choice best improves the methodological clarity of the study?`;
+    const mo=['state exactly how each measured variable is operationally defined','describe the expected conclusion before collecting any observations','replace the participant sample with a single illustrative case','omit procedural details so later researchers remain unbiased'];
+    const me='Clear operational definitions specify exactly how variables are measured or manipulated, allowing other researchers to reproduce the procedure and evaluate whether the measures appropriately represent the intended constructs.';
+    Q.push(item(`psy-${code.replace('.','')}-m7`,unit,code,idx%2===0?'2.B':'2.C',mq,mo,0,me,{synthetic:true}));
+
     const stimulus=`Synthetic study — ${name}: Group A (n=40) had a mean outcome score of ${a}; Group B (n=40) had a mean outcome score of ${b}. Participants were recruited from one local school. The values are invented for practice.`;
     const gid=`psy-${code.replace('.','')}-study`;
     Q.push(item(`psy-${code.replace('.','')}-r5`,unit,code,rskill,rq,ro,rc,re,{stimulus,stimulusGroupId:gid,synthetic:true}));
