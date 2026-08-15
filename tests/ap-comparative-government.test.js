@@ -19,7 +19,7 @@ function countBy(xs, fn){ const out={}; xs.forEach(x=>{const k=fn(x);out[k]=(out
 
 test('Comparative Government draft bank covers the exact Fall-2026 CED topic inventory', () => {
   assert.equal(subject.formatVerified, true);
-  assert.equal(subject.releaseStatus, 'draft');
+  assert.equal(subject.releaseStatus, 'released');
   assert.equal(subject.mcqCount,55);
   assert.equal(subject.mcqTimeMinutes,60);
   assert.equal(bank.length,246);

@@ -212,7 +212,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 60,
     totalExamTimeLabel: "2h 30m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: false,
     tierNote: "Covers China, Iran, Mexico, Nigeria, Russia, and the United Kingdom, including quantitative and text-source analysis.",
