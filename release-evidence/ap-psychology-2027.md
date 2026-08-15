@@ -23,7 +23,7 @@ Draft-mode mechanical gate at `9a74fb8343c57dac39655993beb321c981cc1aec`:
 - Raw practice-family counts: Practice 1 140, Practice 2 70, Practice 3 35, Practice 4 0.
 - 35 intact two-question synthetic research sets.
 - 5,000/5,000 valid constrained draws; observed form envelope P1 48–50, P2 18–20, P3 7–8; 7–8 research sets per form.
-- Retake overlap: 33.1%.
+- Retake overlap: 33.0%.
 - Answer construction: uniquely-longest correct 8.6%; exploitable among-longest 49.0%; correct 4.70 words versus distractors 4.35.
 - Raw keys: A 25.7%, B 26.9%, C 23.3%, D 24.1%.
 - Repository gate: 202/202 tests passed.
@@ -59,9 +59,16 @@ Post-boundary-repair local gate:
 
 - 11/11 Psychology regressions and 206/206 repository tests passed.
 - 5,000/5,000 valid constrained draws.
-- Retake overlap: 33.0%.
+- Retake overlap: 33.1%.
 - Answer construction: uniquely-longest correct 19.2%; exploitable among-longest 42.4%; correct 4.47 words versus distractors 4.34.
 - Raw keys: A 25.7%, B 26.9%, C 23.3%, D 24.1%.
 - Built artifact: 15 released subjects and 23 released data layers; Psychology remains excluded while in draft status.
 
-Final naive-assessor gate, released-mode gate, integration CI, and production deployment evidence remain pending.
+## Final pre-promotion gates
+
+- Fresh post-repair semantic pass: zero substantive findings across all 35 topic inventories; the official exclusion statements and corrected topic boundaries are locked by regression.
+- Naive catalog/preflight review: pass. The course card and confirmation surface disclose 75 MCQs, 90 minutes, no calculator, browser-session saving, and MCQ-only practice scope before timing begins.
+- Naive item review: pass after the shared comparison-rationale grammar repair.
+- Draft CI at `ea5f3b42beb2ce9f06abf448bc590dcd65c2c5e3`: [repository Test run 31907325734](https://github.com/Erross/AP-Exam-Practice/actions/runs/31907325734) and [5,000-draw Psychology audit run 31907325752](https://github.com/Erross/AP-Exam-Practice/actions/runs/31907325752), both successful.
+
+Released-mode gate, integration CI, and production deployment evidence remain pending.

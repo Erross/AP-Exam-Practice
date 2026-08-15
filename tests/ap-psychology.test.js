@@ -40,7 +40,7 @@ test('Psychology bank covers the exact current 35-topic CED inventory',()=>{
  assert.deepEqual([...new Set(bank.map(q=>q.topicCode))].sort(),TOPICS.slice().sort());
  for(const code of TOPICS) assert.equal(bank.filter(q=>q.topicCode===code).length,7,`${code} should have seven original questions`);
  assert.equal(subject.formatVerified,true);
- assert.equal(subject.releaseStatus,'draft');
+ assert.equal(subject.releaseStatus,'released');
  assert.equal(subject.mcqCount,75);
  assert.equal(subject.mcqTimeMinutes,90);
  assert.equal(subject.totalExamTimeLabel,'2h 40m');

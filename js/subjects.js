@@ -346,7 +346,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "2h 40m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: false,
     tierNote: "Calculator not permitted on the AP Psychology exam.",
