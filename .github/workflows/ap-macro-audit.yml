@@ -1,5 +1,6 @@
 name: Macro first audit
 'on': [push]
+# rerun after rationale hardening
 jobs:
   audit:
     runs-on: ubuntu-latest
