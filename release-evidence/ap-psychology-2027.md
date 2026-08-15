@@ -23,7 +23,7 @@ Draft-mode mechanical gate at `9a74fb8343c57dac39655993beb321c981cc1aec`:
 - Raw practice-family counts: Practice 1 140, Practice 2 70, Practice 3 35, Practice 4 0.
 - 35 intact two-question synthetic research sets.
 - 5,000/5,000 valid constrained draws; observed form envelope P1 48–50, P2 18–20, P3 7–8; 7–8 research sets per form.
-- Retake overlap: 33.0%.
+- Retake overlap: 33.1%.
 - Answer construction: uniquely-longest correct 8.6%; exploitable among-longest 49.0%; correct 4.70 words versus distractors 4.35.
 - Raw keys: A 25.7%, B 26.9%, C 23.3%, D 24.1%.
 - Repository gate: 202/202 tests passed.
@@ -52,6 +52,8 @@ Post-repair draft audit (local clean checkout):
 Pass 2 restarted the semantic review from the official topic-level essential knowledge and found an additional release blocker: multiple application items crossed current topic boundaries or used material absent from, or expressly excluded by, the current CED. The affected areas were memory (Topics 2.4–2.5), developmental methods and social learning (3.1, 3.3, 3.9), attribution/attitudes/personality/motivation/emotion (4.1–4.2 and 4.4–4.7), and positive psychology, classification, and treatment (5.2, 5.3, 5.5). Most critically, the draft assessed Maslow's hierarchy of needs and the specific names of early emotion theories even though the CED expressly excludes them.
 
 Repair realigned all affected application inventories to the current topic boundaries, replaced specific emotion-theory names with the CED's assessed sequence/label distinctions, and added permanent topic-inventory and exclusion regressions. Memory study targets now follow the encoding/storage split, and social-personality study targets no longer rely on superseded constructs.
+
+The subsequent naive student-eye read caught a repeated grammar defect in the shared comparison-rationale template. The template was repaired across all 140 application items and a regression now rejects the superseded construction.
 
 Post-boundary-repair local gate:
 

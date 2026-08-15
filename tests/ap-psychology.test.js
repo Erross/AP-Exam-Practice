@@ -118,6 +118,7 @@ test('Psychology concept application is scenario-based and 1.B is reserved for n
   const answer=q.o[q.c[0]];
   assert.equal(q.skill,eligible1B.has(answer)?'1.B':'1.A',`${q.id}: ${answer}`);
   assert.doesNotMatch(q.q,/Which concept best explains this .* example/i);
+  assert.doesNotMatch(q.e,/would involve (?:a|an|the)\b/i,`${q.id}: avoid the superseded ungrammatical rationale template`);
   assert.ok(q.e.length>=140,`${q.id}: rationale should compare mechanisms`);
  }
 });

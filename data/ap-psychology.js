@@ -179,7 +179,7 @@
       Q.push(item(`psy-${code.replace('.','')}-c${k+1}`,unit,code,BIAS_OR_NORM_CONCEPTS.has(concepts[k])?'1.B':'1.A',
         APPLICATION_STEMS[k](apps[k]),
         concepts,k,
-        `This is an application of ${concepts[k]}: ${apps[k].charAt(0).toLowerCase()+apps[k].slice(1)}. By contrast, ${concepts[next]} would involve ${apps[next].charAt(0).toLowerCase()+apps[next].slice(1)}, which is not the mechanism described in the scenario.`,{applicationMode:['observation','prediction','research-finding','mechanism'][k]}));
+        `This is an application of ${concepts[k]}: ${apps[k].charAt(0).toLowerCase()+apps[k].slice(1)}. By contrast, ${concepts[next]} would fit this different case: ${apps[next]}. That mechanism is not described in the scenario.`,{applicationMode:['observation','prediction','research-finding','mechanism'][k]}));
     }
     const standalone=standaloneMethod(idx,name,concepts[0],MEASURES[idx]);
     Q.push(item(`psy-${code.replace('.','')}-m7`,unit,code,standalone.skill,standalone.q,standalone.o,standalone.c,standalone.e,{synthetic:true,methodFocus:standalone.methodFocus}));
