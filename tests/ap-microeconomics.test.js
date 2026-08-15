@@ -39,7 +39,7 @@ function recompute(c){
  }
 }
 
-test('Microeconomics bank covers the exact Fall-2026 CED inventory',()=>{
+test('Microeconomics bank covers the exact current CED inventory',()=>{
  assert.equal(bank.length,183);
  assert.deepEqual([...new Set(bank.map(q=>q.topicCode))].sort(),TOPICS.slice().sort());
  for(const code of TOPICS) assert.ok(bank.filter(q=>q.topicCode===code).length>=4,`${code} is shallow`);

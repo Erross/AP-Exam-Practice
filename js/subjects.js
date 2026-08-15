@@ -306,7 +306,7 @@ const AP_SUBJECTS = [
     name: "AP Microeconomics",
     category: "History & Social Sciences",
     tier: 1,
-    // VERIFIED 2026-08-15 against the AP Microeconomics CED effective Fall 2026
+    // VERIFIED 2026-08-15 against the current AP Microeconomics framework (Fall 2022 CED; no changes announced)
     // and current AP Central exam page. Section I: 60 MCQs / 70 minutes.
     mcqCount: 60,
     mcqTimeMinutes: 70,
