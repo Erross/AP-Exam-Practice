@@ -1,4 +1,4 @@
-name: Macro development gate
+name: Macro full release gate
 'on': [push]
 jobs:
   audit:
@@ -11,4 +11,5 @@ jobs:
           cache: npm
       - run: npm ci
       - run: node --test tests/ap-macroeconomics.test.js
-      - run: node tools/subject-release-audit.js --subject ap-macroeconomics --trials 1000 --overlap-trials 1000
+      - run: node tools/subject-release-audit.js --subject ap-macroeconomics --trials 5000 --overlap-trials 5000
+      - run: npm run check
