@@ -32,7 +32,7 @@ The bank covers the exact 43-topic CED inventory: 1.1–1.5, 2.1–2.9, 3.1–3.
 
 ## Candidate bank
 
-Draft candidate head: `c36fe3772ad5bc6349c74ab12f7aba7129a0f7b0`.
+Original complete-bank checkpoint: `c36fe3772ad5bc6349c74ab12f7aba7129a0f7b0`.
 
 - 177 original questions in one browser data layer.
 - Unit counts: U1 20, U2 32, U3 25, U4 20, U5 23, U6 23, U7 17, U8 17.
@@ -48,10 +48,10 @@ Final draft generic release audit:
 
 - Effective bank: 177 questions / one browser data layer.
 - Randomized-form audit: 5,000 / 5,000 valid.
-- Average independent-attempt overlap: 26.5%, below the project 40% ceiling.
+- Average independent-attempt overlap: 26.3%, below the project 40% ceiling.
 - Uniquely-longest correct answer: 0.0%.
 - Exploitable among-longest correct answer: 16.4%, excluding four-way length ties.
-- Mean correct-option length: 5.92 words; mean distractor length: 5.64 words.
+- Mean correct-option length: 5.90 words; mean distractor length: 5.63 words.
 - Raw keys: A 25.4%, B 24.9%, C 24.9%, D 24.9%.
 - Stimulus groups: eight; every delivered group remains atomic.
 - Permanent 1,000-form regression observed the full configured skill envelope and 2–4 shared sets per form.
@@ -64,7 +64,7 @@ Local draft gate after notation repair:
 - Production build and artifact verification passed.
 - Draft Physics 1 data remained correctly excluded from the released artifact.
 
-Exact remote draft CI:
+Exact remote complete-bank CI before the subsequent semantic-hardening pass:
 
 - Commit `c36fe3772ad5bc6349c74ab12f7aba7129a0f7b0`.
 - [Test run 31953116231](https://github.com/Erross/AP-Exam-Practice/actions/runs/31953116231): successful.
@@ -76,6 +76,10 @@ The first complete bank failed the generator because symbolic-expression Practic
 The first answer-construction audit found a 27.7% uniquely-longest-key rate, a correct/distractor mean-length gap above the project limit, and nine questions with stacked absolute-language distractors. Distractors were rewritten as specific competing physical misconceptions. The fresh post-repair generic audit then passed with the metrics recorded above.
 
 The complete repository gate also caught raw ASCII symbolic notation in new items. All affected expressions were converted to the project's presentation-ready notation, and the full gate was restarted successfully.
+
+A subsequent authoring-side exact-skill pass found five semantic tag defects: a relative-velocity calculation was tagged as comparison, a Newton's-third-law claim was tagged as comparison, and three changed-condition predictions were tagged as comparison. They were corrected to 2.B, 3.B, and 2.D respectively without changing the published delivered-form constraints. Permanent regression now independently recomputes every one of the 46 Practice 2.B answers.
+
+That pass also exposed double-encoded Greek symbols introduced by a mechanical notation rewrite. The source bytes were repaired, remaining ASCII subscripts were normalized, and a permanent regression now rejects common mojibake markers in every stem, option, and rationale. A fresh post-repair generic audit again produced 5,000 / 5,000 valid forms and 26.3% average retake overlap.
 
 ## Student-facing simulation
 

@@ -39,6 +39,11 @@ test("the in-progress Physics 1 bank uses only MCQ-assessed skills and sound sch
     assert.equal(question.o.length, 4);
     assert.equal(question.c.length, 1);
     assert.ok(question.e.length >= 90, `${question.id}: rationale is too short`);
+    assert.doesNotMatch(
+      [question.q, ...question.o, question.e].join(" "),
+      /[ÂÃÎÏ]|\b(?:omega|theta|tau|rho|Delta)_[A-Za-z]/,
+      `${question.id}: source contains mojibake or raw symbolic notation`,
+    );
   }
 });
 
@@ -118,45 +123,59 @@ test("Physics 1 answer construction avoids systematic key tells", () => {
   rawKeys.forEach((count) => assert.ok(count / bank.length >= 0.15 && count / bank.length <= 0.35));
 });
 
-test("selected quantitative answers across all eight units independently recompute", () => {
+test("every Physics 1 Practice 2.B answer independently recomputes", () => {
   const answer = (id) => {
     const question = bank.find((item) => item.id === id);
     assert.ok(question, `missing quantitative anchor ${id}`);
     return question.o[question.c[0]];
   };
+  assert.equal(bank.filter((question) => question.skill === "2.B").length, 46);
   assert.equal(answer("apphys1-u1-002"), `${5 - (-3) > 0 ? "+" : ""}${5 - (-3)} m`);
   assert.equal(answer("apphys1-u1-005"), `${(10 - 4) / 3} m/s^2 east`);
+  assert.equal(answer("apphys1-u1-008"), `+${6 * 4} m`);
+  assert.equal(answer("apphys1-u1-011"), `${25 - 20} m/s east`);
   assert.equal(answer("apphys1-u1-014"), `${6 * 2} m`);
+  assert.equal(answer("apphys1-u1-016"), `${(12 - 2) / (3 - 1)} m/s right`);
   assert.equal(answer("apphys1-u2-002"), `x = ${(1 * 0 + 3 * 4) / (1 + 3)} m`);
   assert.equal(answer("apphys1-u2-014"), `${(30 - 12) / 6} m/s^2 right`);
   assert.equal(answer("apphys1-u2-017"), `${5 * 9.8} N downward`);
   assert.equal(answer("apphys1-u2-020"), `${(0.2 * 10 * 9.8).toFixed(1)} N`);
   assert.equal(answer("apphys1-u2-023"), `${200 * 0.05} N`);
   assert.equal(answer("apphys1-u2-026"), `${2 * 6 ** 2 / 3} N`);
+  assert.equal(answer("apphys1-u2-028"), `${(1.5 / 0.75).toFixed(1)} kg`);
   assert.equal(answer("apphys1-u3-002"), `${0.5 * 4 * 3 ** 2} J`);
   assert.equal(answer("apphys1-u3-006"), `${20 * 5} J`);
   assert.equal(answer("apphys1-u3-010"), `${2 * 9.8 * 5} J`);
+  assert.equal(answer("apphys1-u3-014"), `About ${Math.sqrt(2 * 9.8 * 5).toFixed(1)} m/s`);
   assert.equal(answer("apphys1-u3-018"), `${1200 / 4} W`);
+  assert.equal(answer("apphys1-u3-021"), `About ${(0.5 * 2 * 3.96 ** 2).toFixed(1)} J`);
   assert.equal(answer("apphys1-u4-002"), `${3 * 4} kg*m/s east`);
   assert.equal(answer("apphys1-u4-005"), `${(10 * 0.3).toFixed(1)} N*s`);
   assert.equal(answer("apphys1-u4-008"), `${2 * 3 / (2 + 1)} m/s right`);
+  assert.equal(answer("apphys1-u4-012"), `${4} m/s`);
+  assert.equal(answer("apphys1-u4-016"), `+${(1 * 4 + 3 * 0).toFixed(1)} kg*m/s`);
   assert.equal(answer("apphys1-u5-002"), `${(10 - 2) / 4} rad/s^2`);
   assert.equal(answer("apphys1-u5-005"), `${0.4 * 5}.0 m/s`);
   assert.equal(answer("apphys1-u5-008"), `${(12 * 0.25).toFixed(1)} N*m`);
   assert.equal(answer("apphys1-u5-011"), `${2 * 2 * 0.5 ** 2}.0 kg*m^2`);
   assert.equal(answer("apphys1-u5-014"), `${30 * 2 / 20}.0 m from the pivot`);
   assert.equal(answer("apphys1-u5-017"), `${(6 / 2).toFixed(1)} rad/s^2`);
+  assert.equal(answer("apphys1-u5-019"), `${(0.4 / 1).toFixed(2)} kg*m^2`);
   assert.equal(answer("apphys1-u6-002"), `${0.5 * 4 * 3 ** 2} J`);
   assert.equal(answer("apphys1-u6-005"), `${5 * 4} J`);
   assert.equal(answer("apphys1-u6-008"), `${3 * 4} kg*m^2/s`);
   assert.equal(answer("apphys1-u6-011"), `${6 * 3 / 2} rad/s`);
   assert.equal(answer("apphys1-u6-014"), `${(0.5 * 8).toFixed(1)} m/s`);
+  assert.equal(answer("apphys1-u6-017"), "v = sqrt(GM/r)");
+  assert.equal(answer("apphys1-u6-019"), `${(4 * 1.5).toFixed(1)} kg*m^2/s`);
   assert.equal(answer("apphys1-u7-005"), `${12 / 6}.0 Hz and ${(6 / 12).toFixed(2)} s`);
   assert.equal(answer("apphys1-u7-011"), `${(0.5 * 200 * 0.1 ** 2).toFixed(1)} J`);
+  assert.equal(answer("apphys1-u7-013"), `${2}.0 s and ${(1 / 2).toFixed(2)} Hz`);
   assert.equal(answer("apphys1-u8-002"), `${6 / 0.003} kg/m^3`);
   assert.equal(answer("apphys1-u8-005"), `${1000 * 9.8 * 5} Pa`);
   assert.equal(answer("apphys1-u8-008"), `${1000 * 9.8 * 0.02} N`);
   assert.equal(answer("apphys1-u8-011"), `${0.03 * 2 / 0.01}.0 m/s`);
+  assert.equal(answer("apphys1-u8-013"), `Area times speed is ${6 * 2} cm^2*m/s at every section.`);
 });
 
 test("Physics 1 randomized forms obey exact unit, skill, and shared-set constraints", () => {
