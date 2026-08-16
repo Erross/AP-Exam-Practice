@@ -816,6 +816,7 @@ const AP_SUBJECTS = [
     formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
+    calculatorAllowed: true,
     tierNote: "Four-function, scientific, or graphing calculators are permitted throughout this practice section.",
     // Published MCQ bands are converted to the exact feasible 5/8/8/5/5/3/3/5
     // allocation below. Every delivered share remains inside its CED band.
