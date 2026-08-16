@@ -1,14 +1,34 @@
-// AP Physics 1: Algebra-Based — question bank
-// Populated in a later pass. Empty on purpose: the catalog card for this
-// subject stays disabled ("content coming soon") until this array has items.
-//
-// Schema (mirrors the CCDV-F reference app's questions.js):
-// {
-//   unit: "U1",              // optional — matches an id in this subject's `units` array in subjects.js
-//   type: "s",                // "s" = single-select, "m" = multi-select
-//   q: "Question text?",
-//   o: ["Option A", "Option B", "Option C", "Option D"],
-//   c: [0],                   // index/indices of correct option(s)
-//   e: "One-line rationale shown on the results review page."
-// }
-window.QUESTIONS_AP_PHYSICS_1 = [];
+// AP Physics 1: Algebra-Based — original, unofficial MCQ practice bank.
+// Aligned to the current CED and Fall 2026 clarification for the May 2027 exam.
+// No released or secure College Board question is reproduced here.
+(function () {
+  const QUESTIONS = [];
+  const UNIT_COUNTS = {};
+  function p(unit, topicCode, topic, skill, stem, correct, distractors, why, extras = {}) {
+    const number = (UNIT_COUNTS[unit] || 0) + 1;
+    UNIT_COUNTS[unit] = number;
+    const correctIndex = QUESTIONS.length % 4;
+    const options = distractors.slice();
+    options.splice(correctIndex, 0, correct);
+    QUESTIONS.push({ id: `apphys1-${unit.toLowerCase()}-${String(number).padStart(3, "0")}`, unit, topicCode, topic, skill, type: "s", q: stem, o: options, c: [correctIndex], e: why, ...extras });
+  }
+
+  // Unit 1 — Kinematics
+  p("U1","1.1","Scalars and Vectors in One Dimension","3.B","A runner travels 30 m east and then 50 m west. Which pair correctly gives total distance and displacement?","80 m distance and 20 m west displacement",["20 m distance and 80 m west displacement","80 m distance and 80 m west displacement","20 m distance and 20 m east displacement"],"Distance adds both path segments, 30 m + 50 m = 80 m. Taking east as positive gives displacement 30 m − 50 m = −20 m, or 20 m west.");
+  p("U1","1.1","Scalars and Vectors in One Dimension","2.B","A cart's position changes from x = −3 m to x = +5 m. What is the cart's displacement?","+8 m",["+2 m","−8 m","5 m"],"Displacement is final position minus initial position: Δx = 5 − (−3) = +8 m. The positive sign identifies direction and is not the distance traveled.");
+  p("U1","1.1","Scalars and Vectors in One Dimension","2.C","Student A walks 4 m east. Student B walks 10 m east and then 6 m west. How do their displacements compare?","They have equal displacements, but Student B travels farther.",["Student B has the greater displacement and distance.","Student A has the greater displacement and distance.","They have equal displacements and equal distances."],"Both finish 4 m east of their starting points, so their displacements are equal. Student A travels 4 m, whereas Student B travels 16 m along the path.");
+  p("U1","1.2","Displacement, Velocity, and Acceleration","3.B","A car moves east while its acceleration points west. Which description must be true at that instant?","The car's eastward speed is decreasing.",["The car is moving west.","The car's eastward speed is increasing.","The car has zero velocity."],"Acceleration opposite the velocity reduces the velocity's magnitude. The car is slowing while it continues east at that instant; acceleration alone does not reverse velocity immediately.");
+  p("U1","1.2","Displacement, Velocity, and Acceleration","2.B","A bicycle's velocity changes uniformly from 4 m/s east to 10 m/s east in 3 s. What is its average acceleration?","2 m/s^2 east",["3 m/s^2 east","4.7 m/s^2 east","18 m/s^2 east"],"Average acceleration is Δv/Δt = (10 − 4)/3 = 2 m/s² east. Dividing final velocity by time would incorrectly ignore the nonzero initial velocity.");
+  p("U1","1.2","Displacement, Velocity, and Acceleration","2.D","Two objects start from rest with constant accelerations. X accelerates at twice Y's magnitude for the same time. How do their final speeds compare?","X's final speed is twice Y's.",["X's final speed is four times Y's.","Their final speeds are equal.","X's final speed is half Y's."],"For motion from rest under constant acceleration, v = at. With equal elapsed times, doubling acceleration doubles final speed; it does not square the ratio.");
+  p("U1","1.3","Representing Motion","3.B","On a position-versus-time graph, a straight segment has constant negative slope. What motion does it represent?","Constant velocity in the negative direction",["Increasing speed in the positive direction","Zero velocity with negative acceleration","Constant positive velocity"],"The slope of a position-time graph equals velocity. A constant negative slope therefore represents constant negative velocity, not acceleration or positive-direction motion.");
+  p("U1","1.3","Representing Motion","2.B","A velocity-versus-time graph is horizontal at +6 m/s from t = 0 to t = 4 s. What displacement occurs?","+24 m",["+10 m","+6 m","0 m"],"Displacement equals signed area under a velocity-time graph. The rectangular area is (6 m/s)(4 s) = +24 m, with sign set by the velocity.");
+  p("U1","1.3","Representing Motion","3.C","A velocity-time graph rises linearly from 0 to 8 m/s during 4 s, then remains at 8 m/s. What evidence supports zero acceleration afterward?","The graph's slope is zero after 4 s.",["The graph's area is zero after 4 s.","The velocity is positive after 4 s.","The graph reaches its greatest value at 4 s."],"Acceleration is the slope of a velocity-time graph. The horizontal segment after 4 s has zero slope, directly supporting zero acceleration despite nonzero velocity.");
+  p("U1","1.4","Reference Frames and Relative Motion","3.B","A passenger walks toward the front of a train at 2 m/s relative to the train while it moves east at 20 m/s. What is the passenger's ground velocity?","22 m/s east",["18 m/s east","20 m/s east","2 m/s east"],"Consistently directed frame velocities add: v(passenger,ground) = v(passenger,train) + v(train,ground) = 2 + 20 = 22 m/s east.");
+  p("U1","1.4","Reference Frames and Relative Motion","2.C","Two cars travel east at 25 m/s and 20 m/s. What velocity does the faster car have relative to the slower car?","5 m/s east",["45 m/s east","20 m/s east","5 m/s west"],"Relative velocity is the vector difference 25 − 20 = 5 m/s east. Adding their speeds would not describe either car as observed from the other.");
+  p("U1","1.4","Reference Frames and Relative Motion","2.D","A boat points straight across a river at fixed speed relative to the water. If downstream current doubles, which quantity necessarily doubles?","Its downstream velocity component relative to shore",["Its cross-river velocity component","Its time to cross","Its speed relative to water"],"The current supplies the downstream shore-frame component, so doubling current doubles that component. Cross-river speed and crossing time remain unchanged.");
+  p("U1","1.5","Vectors and Motion in Two Dimensions","3.B","A projectile is launched horizontally from a table with negligible air resistance. Which statement is correct?","Horizontal velocity is constant while vertical velocity changes due to gravity.",["Both velocity components remain constant.","Horizontal velocity decreases because gravity acts horizontally.","Vertical velocity is constant while horizontal velocity increases."],"Gravity supplies vertical acceleration but no horizontal acceleration. The projectile maintains horizontal velocity while its downward vertical velocity changes by g each second.");
+  p("U1","1.5","Vectors and Motion in Two Dimensions","2.B","A ball is launched horizontally at 6 m/s and remains airborne for 2 s. How far horizontally does it travel?","12 m",["3 m","6 m","24 m"],"With negligible air resistance horizontal velocity stays 6 m/s, so horizontal displacement is vx t = (6 m/s)(2 s) = 12 m.");
+  p("U1","1.5","Vectors and Motion in Two Dimensions","2.C","Projectiles A and B launch horizontally from the same height at speeds v and 2v. How do their times aloft compare?","They remain airborne for equal times.",["B remains airborne twice as long.","A remains airborne twice as long.","B remains airborne four times as long."],"Time of fall follows identical vertical motion: both start with zero vertical velocity at the same height and share acceleration g. Horizontal speed changes range, not flight time.");
+
+  window.QUESTIONS_AP_PHYSICS_1 = QUESTIONS;
+})();
