@@ -25,7 +25,7 @@ const expected = {
   "em-8.2-03": `+${6 - 4}e`,
   "em-8.3-01": "6.74×10⁵ N/C",
   "em-8.4-04": "a factor of 1/9",
-  "em-8.5-01": `${200 * 0.30 * Math.cos(Math.PI / 3)} N·m²/C`,
+  "em-8.5-01": `${Math.round(200 * 0.30 * Math.cos(Math.PI / 3))} N·m²/C`,
   "em-8.5-04": "1/2",
   "em-8.6-01": "4.52×10² N·m²/C",
   "em-8.6-02": "E = Qr/(4πε₀R³)",
@@ -78,7 +78,7 @@ const expected = {
   "em-13.4-01": `${(0.50 * 4).toFixed(1)} V`,
   "em-13.5-01": `${(6 / 3).toFixed(1)} A`,
   "em-13.5-02": "I(t) = (V/R)(1 − e^(−Rt/L))",
-  "em-13.6-01": `${1 / Math.sqrt(2 * 8e-6)} rad/s`,
+  "em-13.6-01": `${Math.round(1 / Math.sqrt(2 * 8e-6))} rad/s`,
   "em-13.6-04": "It doubles",
   "em-set-u8-02": "one fourth as large",
   "em-set-u9-02": "one half as large",
@@ -104,7 +104,7 @@ const expected = {
 // bank without being added to the independent recomputation inventory.
 test("E&M quantitative audit inventory covers every explicit numerical calculation item", () => {
   const calculationCue = /\b(?:what is|how much|what .* magnitude|what .* current|what .* resistance|what .* capacitance|what .* time constant|what .* angular frequency|what .* potential|what .* charge)\b/i;
-  const candidateIds = bank
+  const candidateIds = Array.from(bank)
     .filter((q) => /\d/.test(q.q) && calculationCue.test(q.q))
     .map((q) => q.id)
     .sort();
