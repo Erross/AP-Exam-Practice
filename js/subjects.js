@@ -804,18 +804,55 @@ const AP_SUBJECTS = [
     name: "AP Physics 1: Algebra-Based",
     category: "Sciences",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-1-algebra-based/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score;
-    // total duration 3hrs. Discrete questions plus stimulus-based question sets.
-    // The old 50-question / multi-select format is gone as of the 2024-25 redesign.
+    // VERIFIED 2026-08-15 for the May 2027 exam:
+    // https://apcentral.collegeboard.org/courses/ap-physics-1/exam
+    // https://apcentral.collegeboard.org/media/pdf/ap-physics-1-course-and-exam-description.pdf
+    // https://apcentral.collegeboard.org/media/pdf/ap-physics-1-course-and-exam-description-clarifications.pdf
+    // The Fall 2026 clarification changes Section I from 40/80 to 42 questions /
+    // 85 minutes and Section II from 100 to 95 minutes, effective May 2027.
     mcqCount: 42,
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
-    tierNote: null,
-    units: [],
+    calculatorAllowed: true,
+    tierNote: "Four-function, scientific, or graphing calculators are permitted throughout this practice section.",
+    // Published MCQ bands are converted to the exact feasible 5/8/8/5/5/3/3/5
+    // allocation below. Every delivered share remains inside its CED band.
+    units: [
+      { id: "U1", name: "Kinematics", examWeight: 5 / 42, examWeightRange: [0.10, 0.15] },
+      { id: "U2", name: "Force and Translational Dynamics", examWeight: 8 / 42, examWeightRange: [0.18, 0.23] },
+      { id: "U3", name: "Work, Energy, and Power", examWeight: 8 / 42, examWeightRange: [0.18, 0.23] },
+      { id: "U4", name: "Linear Momentum", examWeight: 5 / 42, examWeightRange: [0.10, 0.15] },
+      { id: "U5", name: "Torque and Rotational Dynamics", examWeight: 5 / 42, examWeightRange: [0.10, 0.15] },
+      { id: "U6", name: "Energy and Momentum of Rotating Systems", examWeight: 3 / 42, examWeightRange: [0.05, 0.08] },
+      { id: "U7", name: "Oscillations", examWeight: 3 / 42, examWeightRange: [0.05, 0.08] },
+      { id: "U8", name: "Fluids", examWeight: 5 / 42, examWeightRange: [0.10, 0.15] },
+    ],
+    // Science Practice 1 and 3.A are FRQ-only. These feasible integer ranges
+    // translate the published MCQ skill bands to a 42-question section.
+    attributeRanges: {
+      skill: {
+        "2.A": [7, 8],
+        "2.B": [9, 10],
+        "2.C": [5, 6],
+        "2.D": [5, 6],
+        "3.B": [9, 10],
+        "3.C": [3, 4],
+      },
+    },
+    stimulusSetRange: [2, 4],
+    constraintDrawAttempts: 20000,
+    freeResponse: {
+      timeMinutes: 95,
+      questions: [
+        "Question 1 (Mathematical Routines)",
+        "Question 2 (Translation Between Representations)",
+        "Question 3 (Experimental Design and Analysis)",
+        "Question 4 (Qualitative/Quantitative Translation)",
+      ],
+    },
     dataVar: "QUESTIONS_AP_PHYSICS_1",
   },
   {
