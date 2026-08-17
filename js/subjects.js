@@ -975,7 +975,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: true,
     tierNote: "Calculators are permitted throughout this practice section.",
