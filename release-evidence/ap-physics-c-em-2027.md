@@ -78,13 +78,16 @@ Early completed-candidate runs were intentionally used as defect-finding gates r
 3. residual programmer-style subscript notation;
 4. a slight correct-answer length imbalance above the project 12% limit;
 5. accidental loss of stimulus grouping during one development rewrite, repaired before release testing;
-6. a metadata contract defect in which exact skills were placed in `skillCountRanges` even though that field is intentionally collapsed to practice families by the generic drawer.
+6. a metadata contract defect in which exact skills were placed in `skillCountRanges` even though that field is intentionally collapsed to practice families by the generic drawer;
+7. two final magnetic-field rationales below the project 90-character explanation floor.
 
 The exact-skill contract was repaired to `attributeRanges.skill`, matching AP Physics 1, AP Physics 2, and AP Physics C: Mechanics. A direct post-fix probe produced 30/30 valid constrained forms after the pre-fix configuration produced 0/30.
 
 Answer-length hardening strengthened plausible conceptual distractors rather than padding text. The latest diagnostic measured mean correct option length 5.04 words versus 4.66 words for distractors, comfortably inside the project 12% limit. All six stimulus groups were confirmed at exactly three linked questions after the grouping repair.
 
-The symbolic option collisions arose because mathematically different expressions became identical after the schema gate normalized variable case. `em-8.6-02` and the subsequently exposed `em-8.6-05` were both repaired with dimensionally plausible but case-insensitively distinct incorrect radial dependences. The exact `em-8.6-05` repair is on commit `8c43380cb511ec3265e23cb12307f123484601ac`; this normal evidence commit triggers the final exact-head repository check before the 5,000/5,000 release audit.
+The symbolic option collisions arose because mathematically different expressions became identical after the schema gate normalized variable case. `em-8.6-02` and the subsequently exposed `em-8.6-05` were both repaired with dimensionally plausible but case-insensitively distinct incorrect radial dependences.
+
+The final explanation-floor defects were `em-12.3-02` and `em-12.4-02`. Their rationales were expanded with substantive Biot–Savart directionality and long-solenoid field reasoning, respectively, rather than filler. Those repairs are on `9a1c0676b0f05103192ceb17a9c4647cd83a50d6`; this normal evidence commit triggers the exact-head repository check before the 5,000/5,000 release audit.
 
 ## Generic release audit
 
