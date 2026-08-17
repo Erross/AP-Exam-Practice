@@ -1,14 +1,23 @@
-// AP Physics C: Electricity and Magnetism — question bank
-// Populated in a later pass. Empty on purpose: the catalog card for this
-// subject stays disabled ("content coming soon") until this array has items.
-//
-// Schema (mirrors the CCDV-F reference app's questions.js):
-// {
-//   unit: "U1",              // optional — matches an id in this subject's `units` array in subjects.js
-//   type: "s",                // "s" = single-select, "m" = multi-select
-//   q: "Question text?",
-//   o: ["Option A", "Option B", "Option C", "Option D"],
-//   c: [0],                   // index/indices of correct option(s)
-//   e: "One-line rationale shown on the results review page."
-// }
-window.QUESTIONS_AP_PHYSICS_C_EM = [];
+// AP Physics C: Electricity and Magnetism — original practice question bank
+// Unofficial questions aligned to the Fall 2026 CED and May 2027 exam format.
+// No released or secure College Board question is reproduced here.
+const E = [];
+function add(id, unit, topicCode, topic, skill, q, correct, d1, d2, d3, e) {
+  const options = [correct, d1, d2, d3];
+  const shift = E.length % 4;
+  const rotated = options.slice(shift).concat(options.slice(0, shift));
+  E.push({ id, unit, topicCode, topic, skill, type:"s", q, o:rotated, c:[(4-shift)%4], e });
+}
+add("em-8.1-01","U8","8.1","Electric Charge and Electric Force","2.B","Two point charges +2.0 μC and −3.0 μC are 0.50 m apart. What is the magnitude of the electric force between them?","0.216 N","0.108 N","0.432 N","2.16 N","Coulomb’s law gives F = k|q₁q₂|/r² = (8.99×10⁹)(6.0×10⁻¹²)/(0.50)² ≈ 0.216 N; the opposite signs affect direction, not magnitude.");
+add("em-8.1-02","U8","8.1","Electric Charge and Electric Force","2.D","If both point charges are doubled while their separation is tripled, by what factor does the electric-force magnitude change?","4/9","2/3","4/3","9/4","Because Coulomb force scales as q₁q₂/r², doubling each charge contributes a factor of 4 while tripling separation contributes 1/9, for a net factor 4/9.");
+add("em-8.1-03","U8","8.1","Electric Charge and Electric Force","3.B","Two positive point charges lie on the x-axis. At a point exactly midway between them, the net electric force on a positive test charge is zero only if which condition is met?","The two source charges have equal magnitude","The two source charges have equal mass","The test charge is infinitesimal","The source charges are fixed in place","At the midpoint the distances to the sources are equal, so their oppositely directed Coulomb forces cancel only when the source-charge magnitudes are equal.");
+add("em-8.1-04","U8","8.1","Electric Charge and Electric Force","2.A","A uniformly charged ring of radius R has total charge Q. Which integral correctly represents the axial force on charge q a distance x from its center?","∫ kq x dq'/(x²+R²)^(3/2)","∫ kq dq'/(x²+R²)","∫ kq R dq'/(x²+R²)^(3/2)","∫ kq x dq'/(x²+R²)","Each ring element is the same distance √(x²+R²) from q, and only the axial component survives symmetry, adding the projection factor x/√(x²+R²) to Coulomb’s law.");
+add("em-8.2-01","U8","8.2","Conservation of Electric Charge and the Process of Charging","3.B","A neutral conducting sphere is touched by a negatively charged conducting sphere and then separated. Which statement best describes the neutral sphere afterward?","It acquires negative charge while total charge of the two-sphere system is conserved","It becomes positively charged because electrons leave it","It remains neutral because charge cannot move between conductors","Its final charge must equal the original charge of the other sphere","Contact allows mobile electrons to redistribute between the conductors, so the initially neutral sphere can become negative while the total charge of the isolated two-sphere system remains unchanged.");
+add("em-8.2-02","U8","8.2","Conservation of Electric Charge and the Process of Charging","2.C","Identical neutral metal spheres A and B are separated. A negatively charged rod is brought near A, the spheres are briefly connected, then disconnected before the rod is removed. Compared with B, sphere A ends with","less negative charge, because electrons were repelled toward B","more negative charge, because electrons were attracted toward the rod","the same charge, because the spheres are identical","zero charge, because induction cannot charge conductors","The nearby negative rod repels mobile electrons away from A through the temporary connection, so B gains electrons and A is left relatively positive compared with B after disconnection.");
+add("em-8.2-03","U8","8.2","Conservation of Electric Charge and the Process of Charging","2.B","A conducting object initially has charge +6e. It gains four electrons. What is its final charge?","+2e","+10e","−2e","−10e","Each added electron contributes charge −e, so the object’s charge changes by −4e: +6e − 4e = +2e, consistent with charge quantization and conservation.");
+add("em-8.2-04","U8","8.2","Conservation of Electric Charge and the Process of Charging","3.C","A student says rubbing two initially neutral insulators creates positive charge on one and negative charge on the other. Which observation best supports charge conservation?","The measured charges are equal in magnitude and opposite in sign","Both objects attract small neutral paper pieces","The objects repel after being brought close together","The rubbing process raises the temperature of both objects","Equal and opposite measured charges show that charge was transferred between the objects rather than created, so the net charge of the isolated pair remains zero.");
+add("em-8.3-01","U8","8.3","Electric Fields","2.B","A +3.0 μC point charge creates an electric field at a point 0.20 m away. What is the field magnitude?","6.74×10⁵ N/C","3.37×10⁵ N/C","1.35×10⁶ N/C","6.74×10⁴ N/C","For a point charge, E = k|Q|/r² = (8.99×10⁹)(3.0×10⁻⁶)/(0.20)² ≈ 6.74×10⁵ N/C, directed radially outward for positive Q.");
+add("em-8.3-02","U8","8.3","Electric Fields","2.C","At the same distance from isolated charges +Q and −2Q, how do the electric-field magnitudes compare?","The field from −2Q is twice as large","The field from +Q is twice as large","The magnitudes are equal but directions differ","The comparison depends on the test charge used","Point-charge field magnitude is k|Q|/r², so doubling source-charge magnitude doubles field magnitude at the same radius; field is a property of the source configuration, not the test charge.");
+add("em-8.3-03","U8","8.3","Electric Fields","3.B","A proton is released from rest in a uniform electric field directed east. Neglecting gravity, its initial acceleration is","east, because F = qE and the proton has positive charge","west, because electric force opposes electric field","zero, because the proton begins at rest","north, because electric force is perpendicular to electric field","For a positive charge, electric force qE points with the field; Newton’s second law then gives acceleration in the same eastward direction regardless of the initial velocity.");
+add("em-8.3-04","U8","8.3","Electric Fields","2.A","For an infinite line with uniform linear charge density λ, which expression gives the field a perpendicular distance r away?","E = λ/(2πε₀r)","E = λ/(4πε₀r²)","E = λr/(2πε₀)","E = λ/(ε₀r²)","Cylindrical symmetry makes the field radial and constant on a coaxial Gaussian cylinder; flux E(2πrL) equals λL/ε₀, yielding E = λ/(2πε₀r).");
+window.QUESTIONS_AP_PHYSICS_C_EM = E;
