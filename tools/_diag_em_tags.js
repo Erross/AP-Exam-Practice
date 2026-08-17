@@ -1,0 +1,1 @@
+const fs=require('fs'),vm=require('vm');const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-physics-c-em.js','utf8'),sb);const b=sb.window.QUESTIONS_AP_PHYSICS_C_EM;for(const k of ['3.C','2.B']){console.log('---',k,'---');for(const q of b.filter(x=>x.skill===k))console.log(q.id,'|',q.q,'| correct:',q.o[q.c[0]]);}
