@@ -1,0 +1,27 @@
+name: Fix EM Constraint Contract
+on:
+  push:
+    branches: [subject/ap-physics-c-em]
+    paths: [.github/workflows/_fix_em_constraint_contract.yml]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-physics-c-em
+      - run: python tools/_fix_em_constraint_contract.py
+      - name: Probe exact-skill draws
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');const {AP_SUBJECTS}=require('./js/subjects');const {drawExam}=require('./js/draw');const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-physics-c-em.js','utf8'),sb);const b=sb.window.QUESTIONS_AP_PHYSICS_C_EM,s=AP_SUBJECTS.find(x=>x.id==='ap-physics-c-em');let ok=0,fail=0;for(let i=0;i<30;i++){try{const d=drawExam(s,b);if(d.length===42)ok++;else fail++;}catch(e){fail++;}}console.log('DRAW_PROBE',{ok,fail});
+          NODE
+      - run: rm tools/_fix_em_constraint_contract.py .github/workflows/_fix_em_constraint_contract.yml
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Use exact-skill attribute constraints for E&M"
+          git push origin HEAD:subject/ap-physics-c-em
