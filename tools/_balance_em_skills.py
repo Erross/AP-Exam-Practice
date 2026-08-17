@@ -2,16 +2,13 @@ from pathlib import Path
 p=Path('data/ap-physics-c-em.js'); s=p.read_text(); marker='window.QUESTIONS_AP_PHYSICS_C_EM = E;'
 # Data-set lead questions ask students to make a claim from evidence (3.B), not justify an existing claim (3.C).
 for qid in ['em-set-u8-01','em-set-u9-01','em-set-u10-02','em-set-u11-02','em-set-u12-01','em-set-u13-01']:
-    old=f'id:"{qid}"'
-    pos=s.find(old)
+    start=f'addSet("{qid}"'
+    pos=s.find(start)
     if pos<0: raise SystemExit(f'missing {qid}')
-    end=s.find('});',pos)
+    end=s.find(');',pos)
     chunk=s[pos:end]
-    if 'skill:"3.C"' in chunk:
-        s=s[:pos]+chunk.replace('skill:"3.C"','skill:"3.B"',1)+s[end:]
-    elif '"3.C"' in chunk:
-        s=s[:pos]+chunk.replace('"3.C"','"3.B"',1)+s[end:]
-    else: raise SystemExit(f'3.C tag not found for {qid}')
+    if '"3.C"' not in chunk: raise SystemExit(f'3.C tag not found for {qid}')
+    s=s[:pos]+chunk.replace('"3.C"','"3.B"',1)+s[end:]
 extra=r'''
 add("em-8.6-05","U8","8.6","Gauss's Law","2.A","A solid insulating sphere of radius R has uniform volume charge density ρ. Which expression is obtained for the electric-field magnitude at radius r<R by applying Gauss's law to a concentric spherical surface?","E = ρr/(3ε₀)","E = ρR/(3ε₀)","E = ρR³/(3ε₀r²)","E = ρr²/(3ε₀R)","For a Gaussian sphere of radius r, the enclosed charge is ρ(4πr³/3). Setting E(4πr²)=Qenc/ε₀ and simplifying gives E=ρr/(3ε₀).");
 add("em-9.2-05","U9","9.2","Electric Potential","2.A","Along the x-axis an electric field is Eₓ=ax, where a is a positive constant. Taking V(0)=V₀, which expression gives the electric potential V(x)?","V(x)=V₀−ax²/2","V(x)=V₀+ax²/2","V(x)=V₀−ax","V(x)=V₀+a/x","Because Eₓ=−dV/dx, integrating dV=−ax dx from 0 to x gives V(x)−V₀=−ax²/2, so V(x)=V₀−ax²/2.");
