@@ -22,7 +22,7 @@ const expectedTopics = {
 };
 
 test("Physics C Mechanics metadata matches the May 2027 clarified exam", () => {
-  assert.equal(subject.releaseStatus, "draft");
+  assert.equal(subject.releaseStatus, "released");
   assert.equal(subject.formatVerified, true);
   assert.equal(subject.mcqCount, 42);
   assert.equal(subject.mcqTimeMinutes, 85);
