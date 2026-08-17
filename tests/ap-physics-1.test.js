@@ -12,7 +12,7 @@ vm.runInContext(fs.readFileSync("data/ap-physics-1.js", "utf8"), sandbox);
 const bank = sandbox.window.QUESTIONS_AP_PHYSICS_1;
 
 test("AP Physics 1 metadata matches the May 2027 clarified exam", () => {
-  assert.equal(subject.releaseStatus, "draft");
+  assert.equal(subject.releaseStatus, "released");
   assert.equal(subject.formatVerified, true);
   assert.equal(subject.mcqCount, 42);
   assert.equal(subject.mcqTimeMinutes, 85);
@@ -27,7 +27,7 @@ test("AP Physics 1 metadata matches the May 2027 clarified exam", () => {
   });
 });
 
-test("the in-progress Physics 1 bank uses only MCQ-assessed skills and sound schema", () => {
+test("the released Physics 1 bank uses only MCQ-assessed skills and sound schema", () => {
   const allowed = new Set(["2.A","2.B","2.C","2.D","3.B","3.C"]);
   const ids = new Set();
   for (const question of bank) {

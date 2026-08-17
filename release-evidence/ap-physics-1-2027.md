@@ -85,12 +85,6 @@ That pass also exposed double-encoded Greek symbols introduced by a mechanical n
 
 The Physics 1 naive-assessor regression verifies that the shared preflight exposes 42 MCQs, 85 minutes, three-hour full-exam context, calculators permitted throughout, browser-session saving, an explicit start action, return navigation, and the site's MCQ-only limitation. This is a product-level simulation/regression, not a claim of an external human usability study.
 
-## Remaining release gates
+## Promotion
 
-- Independent clean-room semantic review by a reviewer that did not author the bank.
-- Fresh post-repair independent pass with zero substantive findings.
-- Released-mode promotion and full exact-head gate.
-- Ephemeral integration branch and integration-to-main pull request gates.
-- Exact-main GitHub Pages deployment and public catalog/preflight/exam smoke test.
-
-`releaseStatus` must remain `draft` until the independent clean-room gate is complete.
+Promoted to `releaseStatus: "released"` on 2026-08-17 after the fresh independent review and exact-head candidate CI passed. The promotion is intentionally limited to release state, its regression assertion, and this evidence update. The released-mode PR must pass the full repository gate before merging to `main`, followed by exact-main Pages deployment and public smoke verification.
