@@ -1,26 +1,32 @@
-name: Setup AP Physics C Mechanics
+name: "Setup AP Physics C Mechanics"
+
 on:
   push:
-    branches: [subject/ap-physics-c-mechanics]
-    paths: [.github/workflows/setup-physics-c-mechanics.yml]
+    branches:
+      - "subject/ap-physics-c-mechanics"
+    paths:
+      - ".github/workflows/setup-physics-c-mechanics.yml"
+
 permissions:
   contents: write
+
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: subject/ap-physics-c-mechanics
+          ref: "subject/ap-physics-c-mechanics"
       - name: Apply verified blueprint
+        shell: bash
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
-          p=Path('js/subjects.js')
-          s=p.read_text()
-          start=s.index('  {\n    id: "ap-physics-c-mechanics",')
-          end=s.index('  {\n    id: "ap-physics-c-em",', start)
-          block='''  {
+          p = Path("js/subjects.js")
+          s = p.read_text()
+          start = s.index('  {\n    id: "ap-physics-c-mechanics",')
+          end = s.index('  {\n    id: "ap-physics-c-em",', start)
+          block = '''  {
     id: "ap-physics-c-mechanics",
     name: "AP Physics C: Mechanics",
     category: "Sciences",
@@ -67,14 +73,14 @@ jobs:
     dataVar: "QUESTIONS_AP_PHYSICS_C_MECHANICS",
   },
 '''
-          p.write_text(s[:start]+block+s[end:])
+          p.write_text(s[:start] + block + s[end:])
           PY
       - name: Remove one-time workflow
         run: rm .github/workflows/setup-physics-c-mechanics.yml
       - name: Commit blueprint
         run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add js/subjects.js .github/workflows/setup-physics-c-mechanics.yml
           git commit -m "Define AP Physics C Mechanics 2027 blueprint"
           git push
