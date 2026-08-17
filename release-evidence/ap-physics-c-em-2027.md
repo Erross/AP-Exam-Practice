@@ -120,4 +120,10 @@ Fresh integration branch `integration/ap-physics-c-em-release` was created from 
 
 The isolated promotion changed only AP Physics C: Electricity and Magnetism from `releaseStatus: "draft"` to `"released"` and updated its release-mode metadata assertion. Promotion commit: `906bc85a7c5af53c6be828a5baece309feac3096`.
 
-This evidence commit intentionally triggers the standard full repository workflow on the actual released-mode integration ancestry. Final merge to `main` remains blocked until that exact-head check succeeds and the built release artifact/manifest is explicitly verified to expose E&M as a released 42-question, 85-minute calculator-permitted MCQ practice course.
+The first released-mode integration run (`32074175895`, job `95523704066`) passed 240/241 tests; its sole failure was the naive audit's stale `releaseStatus === "draft"` assertion. No content/draw/quantitative/semantic failure occurred. That assertion was corrected to `released`. Exact-head integration CI then passed on `70a6f400717e039261bd867ff6dc43316adf3332` (run `32074783354`, job `95525511009`).
+
+A separate integration artifact build then ran `npm run check`, built `_site`, and uploaded the actual shipped site from head `5400a802ae956b79cb647cfca52e17b6732fb7d2` (run `32074918582`, job `95525929881`): **SUCCESS**. Artifact `em-release-site`, ID `9303090360`, size 9,381,175 bytes, digest `sha256:4c99aa0e419f6078ae2e3b57ec3fcf0cb99b4515b95114a217c72abfc2ba1583`.
+
+The downloaded artifact was independently unpacked and inspected. Its `release-manifest.json` contains **19 released subjects**, including `ap-physics-c-em`, and includes `data/ap-physics-c-em.js`. Artifact `index.html` loads `data/ap-physics-c-em.js`. Artifact `js/subjects.js` exposes E&M as `releaseStatus: "released"`, 42 MCQs, 85 minutes, calculator permitted, with the reviewed six-unit and exact-skill constraints. The temporary artifact-verification workflow was removed after inspection.
+
+Final merge to `main` is now blocked only on one clean exact-head repository CI after artifact-workflow cleanup and this evidence update; after that, the production PR may be merged with an expected-head guard, followed by exact-main Test/Pages deployment and public-site smoke verification.
