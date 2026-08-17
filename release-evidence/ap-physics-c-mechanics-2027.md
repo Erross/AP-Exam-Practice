@@ -28,6 +28,8 @@ Sources:
 
 The current CED contains 41 topics total: U1 5, U2 10, U3 5, U4 4, U5 6, U6 6, U7 5.
 
+The configured 42-question draw is 5/9/8/6/5/5/4 across Units 1–7, with every delivered share inside its published range.
+
 ## MCQ science-practice weighting
 
 Practice 1 and skill 3.A are FRQ-only. Section I assesses:
@@ -39,10 +41,39 @@ Practice 1 and skill 3.A are FRQ-only. Section I assesses:
 - 3.B: 15–25%
 - 3.C: 5–10%
 
-## Development status
+## Candidate bank
 
 The subject remains `draft` until the full release checklist passes.
 
-First bank pass started 2026-08-17. Units 1–2 contain 45 original questions, three per CED topic, with raw answer positions deliberately rotated. No released or secure College Board question is reproduced.
+- 144 original, unofficial questions.
+- Exact 41/41 CED-topic coverage.
+- At least three independent standalone questions per topic.
+- Per-unit bank counts: U1 18, U2 33, U3 18, U4 15, U5 21, U6 21, U7 18.
+- Seven original synthetic table stimulus sets, one per unit, with three linked questions per set.
+- No released or secure College Board question is reproduced.
+- Student-facing notation was normalized after the first full-suite diagnostic exposed raw authoring notation.
 
-Remaining before review-ready: Units 3–7; complete stimulus-set design; full topic/skill and quantitative regression tests; generic 5,000-draw audit; retake-overlap simulation; clean-room audit; naive-assessor gate; promotion/integration/production gates.
+## Development gate results
+
+First full-suite candidate run: 223 tests, 221 passed, 2 failed. The failures were deliberately treated as authoring findings rather than waived:
+
+1. one rationale below the quality floor;
+2. raw programmer-style math notation in student-facing Physics C text.
+
+The same run independently confirmed:
+
+- exact metadata and 41-topic inventory: pass;
+- seven shared stimulus sets: pass;
+- randomized unit/skill/whole-set constraints: pass;
+- preliminary independent-retake overlap: 33.6%, below the project 40% target.
+
+Both findings were repaired across the bank, and the Mechanics tests were tightened to the project release thresholds before the next full-suite run.
+
+## Remaining release gates
+
+- Clean full-suite pass at the tightened thresholds.
+- Comprehensive quantitative recomputation regression.
+- Generic 5,000-draw / 5,000-overlap release audit and recorded bias metrics.
+- Independent clean-room semantic/content review, repair if needed, then a fresh zero-substantive-finding pass.
+- Naive-assessor regression/gate.
+- Small released-mode promotion, integration, exact-main Pages deployment, and public smoke verification.
