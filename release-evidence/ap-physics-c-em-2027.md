@@ -1,6 +1,6 @@
 # AP Physics C: Electricity and Magnetism — May 2027 release evidence
 
-Status: **development / draft**
+Status: **release candidate / draft pending integration**
 
 Verified 2026-08-17 against current official College Board sources.
 
@@ -57,8 +57,6 @@ U13: 13.1 Magnetic Flux; 13.2 Electromagnetic Induction; 13.3 Induced Currents a
 
 ## Candidate bank
 
-The current draft candidate contains:
-
 - 152 original, unofficial questions.
 - Exact 31/31 CED-topic coverage.
 - At least four independent standalone questions per topic.
@@ -66,39 +64,56 @@ The current draft candidate contains:
 - Six original synthetic table stimulus sets, one per unit, with three linked questions per set.
 - No released or secure College Board question is reproduced.
 - Ten additional symbolic-derivation questions were added to improve genuine 2.A depth rather than misclassifying numerical calculations.
-- The six synthetic-set lead questions were semantically corrected from 3.C to 3.B because they ask students to make claims from evidence rather than justify an existing claim.
-- Each synthetic set now includes a genuine 2.C comparison item so whole-set selection does not artificially suppress comparison practice.
+- Each synthetic set contains a genuine 2.C comparison item so whole-set selection does not suppress comparison practice.
 
 ## Development and adversarial gate history
 
-Early completed-candidate runs were intentionally used as defect-finding gates rather than release evidence. They exposed and drove repair of:
+Development gates exposed and drove repair of duplicate/case-colliding symbolic options, stacked absolute-language distractors, residual programmer-style notation, a slight answer-length imbalance, temporary loss of stimulus grouping during a rewrite, two sub-90-character explanations, and a drawer metadata contract defect. Exact skill constraints were moved from `skillCountRanges` to `attributeRanges.skill`, after which a direct production-drawer probe improved from 0/30 to 30/30 valid forms.
 
-1. duplicate/case-colliding symbolic options in the Gauss's-law derivation items;
-2. stacked absolute-language distractors;
-3. residual programmer-style subscript notation;
-4. a slight correct-answer length imbalance above the project 12% limit;
-5. accidental loss of stimulus grouping during one development rewrite, repaired before release testing;
-6. a metadata contract defect in which exact skills were placed in `skillCountRanges` even though that field is intentionally collapsed to practice families by the generic drawer;
-7. two final magnetic-field rationales below the project 90-character explanation floor.
+The final static repairs included case-normalized Gauss's-law distractors in `em-8.6-02` and `em-8.6-05`, plus substantive rationale expansion for `em-12.3-02` and `em-12.4-02`.
 
-The exact-skill contract was repaired to `attributeRanges.skill`, matching AP Physics 1, AP Physics 2, and AP Physics C: Mechanics. A direct post-fix probe produced 30/30 valid constrained forms after the pre-fix configuration produced 0/30.
+## Quantitative and naive gates
 
-Answer-length hardening strengthened plausible conceptual distractors rather than padding text. The latest diagnostic measured mean correct option length 5.04 words versus 4.66 words for distractors, comfortably inside the project 12% limit. All six stimulus groups were confirmed at exactly three linked questions after the grouping repair.
+Persistent regressions independently recompute the bank's explicit numerical and representative symbolic results. The quantitative inventory and recomputation tests pass. The naive student-facing audit also passes and verifies the May 2027 preflight facts: 42 MCQs, 85 minutes, calculator permitted, hybrid exam context, original/unofficial content, and MCQ-only scope.
 
-The symbolic option collisions arose because mathematically different expressions became identical after the schema gate normalized variable case. `em-8.6-02` and the subsequently exposed `em-8.6-05` were both repaired with dimensionally plausible but case-insensitively distinct incorrect radial dependences.
+## Clean-room semantic review
 
-The final explanation-floor defects were `em-12.3-02` and `em-12.4-02`. Their rationales were expanded with substantive Biot–Savart directionality and long-solenoid field reasoning, respectively, rather than filler. Those repairs are on `9a1c0676b0f05103192ceb17a9c4647cd83a50d6`; this normal evidence commit triggers the exact-head repository check before the 5,000/5,000 release audit.
+The first fresh semantic review used the current College Board exact science-practice definitions rather than family-level labels. It found a contained set of real issues and therefore invalidated the earlier successful 5,000/5,000 audit as final release evidence.
 
-## Generic release audit
+Repairs included:
 
-Pending final exact-head repository CI, persistent quantitative/naive regressions, and post-repair semantic review.
+- `em-9.2-02`: 2.C → 3.B because it makes a model-based claim rather than comparing a quantity across scenarios.
+- `em-set-u8-03`, `em-set-u9-03`, `em-set-u12-02`, and `em-set-u13-03`: 2.A → 3.B because they select a model/law supported by data rather than derive a symbolic expression.
+- Fourteen 2.A prompts were rewritten so the student must follow an explicit symbolic mathematical pathway rather than answer by bare equation recall.
+- `em-12.4-01` was reauthored into a genuine Ampère-law derivation/application using a circular Amperian path and the intermediate equation `B(2πr)=μ₀I`.
 
-Required command before promotion:
+These repairs are protected by `tests/ap-physics-c-em-clean-room.test.js`. A fresh second semantic pass then reviewed the repaired anchors and remaining 2.C, 2.D, 3.B, and 3.C families and found no further substantive semantic defects: 2.C items compare quantities, 2.D items predict new values/factors from functional dependence, 3.B items make law/model-based claims, and 3.C items require justification/support.
+
+Post-review repository CI on candidate `9c00b3b4e786f77df567f8483b62a2755f4c586b` passed the full `npm run check` workflow (run `32073453224`, job `95521465159`). The preceding run that first exercised the clean-room tests had only a too-narrow regression regex; the bank itself passed its 500 constrained draws and other gates. The regex was corrected without changing content.
+
+## Final post-review generic release audit
+
+Required command:
 
 `npm run release:audit -- --subject ap-physics-c-em --trials 5000 --overlap-trials 5000`
 
-Final 5,000/5,000 draw and retake-overlap metrics will be recorded here only after that command completes successfully on the reviewed candidate.
+Final post-review audit head: `4eb041c3b19aa9d99c016e8ed78af24b7ec66299`
+
+Workflow run `32073550406`, job `95521749449`: **SUCCESS**.
+
+Results:
+
+- 152 questions from one browser data layer.
+- Uniquely-longest correct option: **13.2%**.
+- Exploitable among-longest: **28.9%**.
+- Mean correct option length: **5.03 words**; mean distractor length: **4.65 words**.
+- Raw correct-key positions: **A 25.0%, B 25.0%, C 25.0%, D 25.0%**.
+- Variant groups: 0; stimulus groups: 6.
+- **Draw audit: 5,000/5,000 valid**.
+- **Retake overlap: 30.3%** average shared questions, below the project 40% target.
+
+The temporary post-review audit workflow was removed immediately after completion. The remaining pre-integration gate is one stable full repository check on the clean subject-branch head after evidence/audit cleanup.
 
 ## Release integration status
 
-Current status: draft. Promotion to `released` is blocked until all subject-specific, quantitative, naive, generic release-audit, clean-room semantic review, exact-head CI, integration, and production deployment gates are complete.
+Current status: draft release candidate. Promotion to `released` remains blocked until the stable clean-head check, fresh-main integration, released-mode integration checks/build-artifact verification, final merge to `main`, exact-main Test and Pages deployment success, and public-site smoke verification are complete.
