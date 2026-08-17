@@ -931,17 +931,37 @@ const AP_SUBJECTS = [
     name: "AP Physics C: Mechanics",
     category: "Sciences",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-physics-c-mechanics/assessment
-    // — Section I: Multiple Choice, 42 questions, 1hr 25mins, 50% of score; total duration 3hrs.
-    // Previous repo value (35 / 45 min) predates the 2024-25 redesign that doubled exam length.
+    // VERIFIED 2026-08-17 for the May 2027 exam against the current AP Central
+    // course page, 2026 Course at a Glance, and Fall 2026 clarification.
+    // Section I: 42 MCQs / 85 minutes; Section II: 4 FRQs / 95 minutes.
     mcqCount: 42,
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
-    tierNote: null,
-    units: [],
+    calculatorAllowed: true,
+    tierNote: "Four-function, scientific, or graphing calculators are permitted throughout this practice section.",
+    units: [
+      { id:"U1", name:"Kinematics", examWeight:5/42, examWeightRange:[0.10,0.15] },
+      { id:"U2", name:"Force and Translational Dynamics", examWeight:9/42, examWeightRange:[0.20,0.25] },
+      { id:"U3", name:"Work, Energy, and Power", examWeight:8/42, examWeightRange:[0.15,0.25] },
+      { id:"U4", name:"Linear Momentum", examWeight:6/42, examWeightRange:[0.10,0.20] },
+      { id:"U5", name:"Torque and Rotational Dynamics", examWeight:5/42, examWeightRange:[0.10,0.15] },
+      { id:"U6", name:"Energy and Momentum of Rotating Systems", examWeight:5/42, examWeightRange:[0.10,0.15] },
+      { id:"U7", name:"Oscillations", examWeight:4/42, examWeightRange:[0.10,0.15] },
+    ],
+    attributeRanges: { skill: {
+      "2.A":[11,12], "2.B":[9,10], "2.C":[5,6], "2.D":[5,6], "3.B":[7,10], "3.C":[3,4]
+    } },
+    stimulusSetRange: [2,4],
+    constraintDrawAttempts: 30000,
+    freeResponse: { timeMinutes:95, questions:[
+      "Question 1 (Mathematical Routines)",
+      "Question 2 (Translation Between Representations)",
+      "Question 3 (Experimental Design and Analysis)",
+      "Question 4 (Qualitative/Quantitative Translation)",
+    ] },
     dataVar: "QUESTIONS_AP_PHYSICS_C_MECHANICS",
   },
   {
