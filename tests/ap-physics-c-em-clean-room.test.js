@@ -30,7 +30,7 @@ test("E&M clean-room 2.A repairs require a symbolic mathematical pathway rather 
     "em-12.4-01", "em-13.1-03", "em-13.2-02", "em-13.3-03",
     "em-13.4-02", "em-13.6-02",
   ];
-  const pathway = /using|starting|eliminat|divid|substitut|integrat|summing|applying|follows|force per unit charge|no charge accumulates|symmetry/i;
+  const pathway = /using|starting|eliminat|divid|substitut|integrat|summing|applying|follows|combines|force per unit charge|no charge accumulates|symmetry/i;
   for (const id of derivationIds) {
     const item = q(id);
     assert.equal(item.skill, "2.A", `${id}: exact skill changed`);
