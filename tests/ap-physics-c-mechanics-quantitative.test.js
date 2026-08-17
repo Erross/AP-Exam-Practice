@@ -24,6 +24,7 @@ const expected = {
   "pcm-1.4-01": `${20 - 12} m/s east`,
   "pcm-2.1-01": `${(1 * 0 + 3 * 4) / 4} m`,
   "pcm-2.5-01": `${(8 * 3) / 4} m/s^2`,
+  "pcm-2.6-01": "2Gm^2/r^2",
   "pcm-2.7-01": `${0.20 * 5 * 10} N`,
   "pcm-2.8-01": `${200 * 0.030} N`,
   "pcm-2.10-01": `${6 ** 2 / 3} m/s^2`,
@@ -65,7 +66,8 @@ test("Mechanics quantitative audit inventory covers every explicitly numerical c
     .filter((id) => !["pcm-1.1-03", "pcm-3.3-03"].includes(id))
     .sort();
   const auditedIds = Object.keys(expected).sort();
-  for (const id of candidateIds) assert.ok(auditedIds.includes(id), `${id}: numerical calculation is missing from the independent audit inventory`);
+  const missing = candidateIds.filter((id) => !auditedIds.includes(id));
+  assert.deepEqual(missing, [], `calculation items missing from independent audit inventory: ${missing.join(", ")}`);
 });
 
 test("every inventoried Mechanics numerical result independently recomputes", () => {
