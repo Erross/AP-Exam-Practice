@@ -92,6 +92,7 @@ test("Mechanics answer construction meets project bias and distractor standards"
   let uniqueLongest=0, amongLongest=0, correctWords=0, distractorWords=0;
   const keys=[0,0,0,0];
   const absoluteLanguage=/\b(always|never|every|only|entirely|unlimited|impossible|guaranteed)\b/i;
+  const stackedAbsolute = [];
   for (const q of bank) {
     const lens=q.o.map(wc), longest=Math.max(...lens), cl=lens[q.c[0]], n=lens.filter((x)=>x===longest).length;
     if (cl===longest && n===1) uniqueLongest++;
@@ -100,8 +101,9 @@ test("Mechanics answer construction meets project bias and distractor standards"
     lens.forEach((x,i)=>{ if(i!==q.c[0]) distractorWords += x; });
     keys[q.c[0]]++;
     const absoluteDistractors=q.o.filter((_,i)=>i!==q.c[0]).filter((o)=>absoluteLanguage.test(o));
-    assert.ok(absoluteDistractors.length<=1, `${q.id}: stacked absolute-language distractors`);
+    if (absoluteDistractors.length>1) stackedAbsolute.push(q.id);
   }
+  assert.deepEqual(stackedAbsolute, [], `stacked absolute-language distractors: ${stackedAbsolute.join(", ")}`);
   const ca=correctWords/bank.length, da=distractorWords/(bank.length*3);
   assert.ok(uniqueLongest/bank.length <= 0.25, `uniquely-longest correct ${(100*uniqueLongest/bank.length).toFixed(1)}%`);
   assert.ok(amongLongest/bank.length <= 0.58, `among-longest correct ${(100*amongLongest/bank.length).toFixed(1)}%`);
