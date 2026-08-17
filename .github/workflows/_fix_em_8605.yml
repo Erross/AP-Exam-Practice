@@ -1,0 +1,24 @@
+name: Fix EM 8.6-05
+on:
+  push:
+    branches: [subject/ap-physics-c-em]
+    paths:
+      - 'tools/_fix_em_8605.py'
+      - '.github/workflows/_fix_em_8605.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-physics-c-em
+      - run: python tools/_fix_em_8605.py
+      - run: rm tools/_fix_em_8605.py .github/workflows/_fix_em_8605.yml
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/ap-physics-c-em.js tools/_fix_em_8605.py .github/workflows/_fix_em_8605.yml
+          git commit -m "Fix E&M 8.6-05 option collision"
+          git push origin HEAD:subject/ap-physics-c-em
