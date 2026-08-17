@@ -1,0 +1,80 @@
+name: Setup AP Physics C Mechanics
+on:
+  push:
+    branches: [subject/ap-physics-c-mechanics]
+    paths: [.github/workflows/setup-physics-c-mechanics.yml]
+permissions:
+  contents: write
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-physics-c-mechanics
+      - name: Apply verified blueprint
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('js/subjects.js')
+          s=p.read_text()
+          start=s.index('  {\n    id: "ap-physics-c-mechanics",')
+          end=s.index('  {\n    id: "ap-physics-c-em",', start)
+          block='''  {
+    id: "ap-physics-c-mechanics",
+    name: "AP Physics C: Mechanics",
+    category: "Sciences",
+    tier: 1,
+    // VERIFIED 2026-08-17 for the May 2027 exam against the current AP Central
+    // course page, 2026 Course at a Glance, and Fall 2026 CED clarification.
+    // Section I changes to 42 MCQs / 85 minutes and Section II to 4 FRQs /
+    // 95 minutes, effective May 2027. Calculators are permitted throughout.
+    mcqCount: 42,
+    mcqTimeMinutes: 85,
+    totalExamTimeLabel: "3h 0m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    calculatorAllowed: true,
+    tierNote: "Four-function, scientific, or graphing calculators are permitted throughout this practice section.",
+    // Published MCQ unit bands. Midpoint weights (12.5, 22.5, 20, 15,
+    // 12.5, 12.5, 12.5) sum to 107.5%; normalizing and Hamilton-apportioning
+    // to 42 questions gives the feasible 5/9/8/6/5/5/4 blueprint below.
+    units: [
+      { id:"U1", name:"Kinematics", examWeight:5/42, examWeightRange:[0.10,0.15] },
+      { id:"U2", name:"Force and Translational Dynamics", examWeight:9/42, examWeightRange:[0.20,0.25] },
+      { id:"U3", name:"Work, Energy, and Power", examWeight:8/42, examWeightRange:[0.15,0.25] },
+      { id:"U4", name:"Linear Momentum", examWeight:6/42, examWeightRange:[0.10,0.20] },
+      { id:"U5", name:"Torque and Rotational Dynamics", examWeight:5/42, examWeightRange:[0.10,0.15] },
+      { id:"U6", name:"Energy and Momentum of Rotating Systems", examWeight:5/42, examWeightRange:[0.10,0.15] },
+      { id:"U7", name:"Oscillations", examWeight:4/42, examWeightRange:[0.10,0.15] },
+    ],
+    // MCQ-assessed skills from the current CED: 2.A 25-30%, 2.B 20-25%,
+    // 2.C 10-15%, 2.D 10-15%, 3.B 15-25%, 3.C 5-10%. Practice 1 and 3.A
+    // are FRQ-only. Integer envelopes below are feasible on a 42-question draw.
+    attributeRanges: { skill: {
+      "2.A":[11,12], "2.B":[9,10], "2.C":[5,6],
+      "2.D":[5,6], "3.B":[7,10], "3.C":[3,4]
+    } },
+    stimulusSetRange: [2,4],
+    constraintDrawAttempts: 30000,
+    freeResponse: { timeMinutes:95, questions:[
+      "Question 1 (Mathematical Routines)",
+      "Question 2 (Translation Between Representations)",
+      "Question 3 (Experimental Design and Analysis)",
+      "Question 4 (Qualitative/Quantitative Translation)",
+    ] },
+    dataVar: "QUESTIONS_AP_PHYSICS_C_MECHANICS",
+  },
+'''
+          p.write_text(s[:start]+block+s[end:])
+          PY
+      - name: Remove one-time workflow
+        run: rm .github/workflows/setup-physics-c-mechanics.yml
+      - name: Commit blueprint
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add js/subjects.js .github/workflows/setup-physics-c-mechanics.yml
+          git commit -m "Define AP Physics C Mechanics 2027 blueprint"
+          git push
