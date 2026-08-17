@@ -1,14 +1,8 @@
-// AP Environmental Science — question bank
-// Populated in a later pass. Empty on purpose: the catalog card for this
-// subject stays disabled ("content coming soon") until this array has items.
-//
-// Schema (mirrors the CCDV-F reference app's questions.js):
-// {
-//   unit: "U1",              // optional — matches an id in this subject's `units` array in subjects.js
-//   type: "s",                // "s" = single-select, "m" = multi-select
-//   q: "Question text?",
-//   o: ["Option A", "Option B", "Option C", "Option D"],
-//   c: [0],                   // index/indices of correct option(s)
-//   e: "One-line rationale shown on the results review page."
-// }
-window.QUESTIONS_AP_ENVIRONMENTAL_SCIENCE = [];
+// AP Environmental Science — original, unofficial May 2027 Section I practice bank.
+(function(){"use strict";
+window.QUESTIONS_AP_ENVIRONMENTAL_SCIENCE=[];
+const skills=['1','1','7','1','5','2','1','7','1','6','1','7','2','1','4','7','1','3','5','7'];
+function rotate(correct,distractors,pos){const pool=distractors.filter(x=>x!==correct).slice(0,3),o=pool.slice();o.splice(pos,0,correct);return{o,c:[pos]};}
+window.__APES_ADD_TOPICS__=function(profiles){profiles.forEach((p,i)=>{const peers=profiles.filter(x=>x.code!==p.code);const seed=Number(p.code.split('.')[0])*37+Number(p.code.split('.')[1])*11;const d=(field,offset)=>[0,1,2].map(k=>peers[(seed+offset+k*3)%peers.length][field]);const a=rotate(p.title,d('title',1),(seed*2)%4),b=rotate(p.app,d('app',2),(seed*2+1)%4);const base={unit:p.unit,topicCode:p.code,topic:p.title,type:'s',stimulusGroupId:null,stimulus:null,provenance:'Original AP Exam Practice item; aligned to the current AP Environmental Science CED.'};window.QUESTIONS_AP_ENVIRONMENTAL_SCIENCE.push({...base,id:`apes-${p.code.replace('.','-')}-01`,skill:skills[(seed*2)%skills.length],q:`An environmental scientist observes a situation best explained by this principle: ${p.core} Which course topic most directly applies?`,o:a.o,c:a.c,e:`${p.core} This is the defining relationship for ${p.title}. The competing choices are real concepts from the same unit, but they describe different environmental processes and do not best match the stated principle.`},{...base,id:`apes-${p.code.replace('.','-')}-02`,skill:skills[(seed*2+1)%skills.length],q:`Which outcome or interpretation is most consistent with ${p.title}?`,o:b.o,c:b.c,e:`${p.app} That application follows from the mechanism emphasized in ${p.title}. The alternatives concern other environmental relationships in the same unit and do not follow as directly from the named process.`});});};
+window.__APES_ADD_SET__=function(spec){const stimulus=spec.stimulus;spec.questions.forEach((q,i)=>window.QUESTIONS_AP_ENVIRONMENTAL_SCIENCE.push({unit:spec.unit,topicCode:spec.topicCode,topic:spec.topic,type:'s',id:`${spec.id}-${String(i+1).padStart(2,'0')}`,skill:q.skill,stimulusGroupId:spec.id,stimulus,sequence:i+1,provenance:'Original/synthetic AP Exam Practice stimulus and question.',q:q.q,o:q.o,c:[q.c],e:q.e}));};
+})();
