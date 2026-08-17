@@ -1,40 +1,31 @@
-name: "Setup AP Physics C Mechanics"
-
-on:
-  push:
-    branches:
-      - "subject/ap-physics-c-mechanics"
-    paths:
-      - ".github/workflows/setup-physics-c-mechanics.yml"
-
+name: Setup Physics C Mechanics
+"on": [push]
 permissions:
   contents: write
-
 jobs:
   setup:
+    if: github.ref == 'refs/heads/subject/ap-physics-c-mechanics'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: "subject/ap-physics-c-mechanics"
-      - name: Apply verified blueprint
-        shell: bash
+          ref: subject/ap-physics-c-mechanics
+      - name: Apply blueprint
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path("js/subjects.js")
-          s = p.read_text()
-          start = s.index('  {\n    id: "ap-physics-c-mechanics",')
-          end = s.index('  {\n    id: "ap-physics-c-em",', start)
-          block = '''  {
+          p=Path('js/subjects.js')
+          s=p.read_text()
+          a=s.index('  {\n    id: "ap-physics-c-mechanics",')
+          b=s.index('  {\n    id: "ap-physics-c-em",',a)
+          x='''  {
     id: "ap-physics-c-mechanics",
     name: "AP Physics C: Mechanics",
     category: "Sciences",
     tier: 1,
     // VERIFIED 2026-08-17 for the May 2027 exam against the current AP Central
     // course page, 2026 Course at a Glance, and Fall 2026 CED clarification.
-    // Section I changes to 42 MCQs / 85 minutes and Section II to 4 FRQs /
-    // 95 minutes, effective May 2027. Calculators are permitted throughout.
+    // Section I: 42 MCQs / 85 minutes. Section II: 4 FRQs / 95 minutes.
     mcqCount: 42,
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
@@ -43,9 +34,6 @@ jobs:
     allowsMultiSelect: false,
     calculatorAllowed: true,
     tierNote: "Four-function, scientific, or graphing calculators are permitted throughout this practice section.",
-    // Published MCQ unit bands. Midpoint weights (12.5, 22.5, 20, 15,
-    // 12.5, 12.5, 12.5) sum to 107.5%; normalizing and Hamilton-apportioning
-    // to 42 questions gives the feasible 5/9/8/6/5/5/4 blueprint below.
     units: [
       { id:"U1", name:"Kinematics", examWeight:5/42, examWeightRange:[0.10,0.15] },
       { id:"U2", name:"Force and Translational Dynamics", examWeight:9/42, examWeightRange:[0.20,0.25] },
@@ -55,12 +43,11 @@ jobs:
       { id:"U6", name:"Energy and Momentum of Rotating Systems", examWeight:5/42, examWeightRange:[0.10,0.15] },
       { id:"U7", name:"Oscillations", examWeight:4/42, examWeightRange:[0.10,0.15] },
     ],
-    // MCQ-assessed skills from the current CED: 2.A 25-30%, 2.B 20-25%,
-    // 2.C 10-15%, 2.D 10-15%, 3.B 15-25%, 3.C 5-10%. Practice 1 and 3.A
-    // are FRQ-only. Integer envelopes below are feasible on a 42-question draw.
+    // CED MCQ skill bands: 2.A 25-30%, 2.B 20-25%, 2.C 10-15%,
+    // 2.D 10-15%, 3.B 15-25%, 3.C 5-10%. Practice 1 and 3.A are FRQ-only.
     attributeRanges: { skill: {
-      "2.A":[11,12], "2.B":[9,10], "2.C":[5,6],
-      "2.D":[5,6], "3.B":[7,10], "3.C":[3,4]
+      "2.A":[11,12], "2.B":[9,10], "2.C":[5,6], "2.D":[5,6],
+      "3.B":[7,10], "3.C":[3,4]
     } },
     stimulusSetRange: [2,4],
     constraintDrawAttempts: 30000,
@@ -73,14 +60,14 @@ jobs:
     dataVar: "QUESTIONS_AP_PHYSICS_C_MECHANICS",
   },
 '''
-          p.write_text(s[:start] + block + s[end:])
+          p.write_text(s[:a]+x+s[b:])
           PY
-      - name: Remove one-time workflow
+      - name: Remove setup workflow
         run: rm .github/workflows/setup-physics-c-mechanics.yml
-      - name: Commit blueprint
+      - name: Commit
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add js/subjects.js .github/workflows/setup-physics-c-mechanics.yml
           git commit -m "Define AP Physics C Mechanics 2027 blueprint"
           git push
