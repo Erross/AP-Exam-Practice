@@ -45,7 +45,7 @@ Configured whole-form skill ranges over 42 questions are 2.A 11–12, 2.B 9–10
 
 ## Candidate bank
 
-The subject remains `draft` until the promotion/integration gates pass.
+The reviewed candidate contains:
 
 - 144 original, unofficial questions.
 - Exact 41/41 CED-topic coverage.
@@ -111,14 +111,15 @@ Result on the post-review candidate:
 
 The Mechanics-specific naive regression verifies that the student-facing preflight exposes the May 2027 exam-critical facts, including the 42-question / 85-minute MCQ section, calculator availability, total exam timing, and the MCQ-only scope of this practice product. The product-level regression is not represented as an external human usability study.
 
-## Remaining release gates
+## Release integration status
 
-Development/content gates are complete once the final transient-workflow cleanup head receives a clean repository-wide `npm run check` result.
+Development/content gates passed on stable draft candidate `b735f875cead20cd97331e90a373ffb270e88d5d`, including repository-wide `npm run check`.
 
-After that, remaining work is release mechanics only:
+The reviewed candidate was merged into `integration/ap-physics-c-mechanics-release`, a fresh integration branch created from current `main` (`e7ed0aa2aeaa86c89a27dda90866c18c9d0e7750`). The released-mode promotion then changed only the Mechanics `releaseStatus` and corresponding test expectation; the course bank and blueprint were not modified by promotion.
 
-- small released-mode promotion (`releaseStatus: "draft"` → `"released"`) with corresponding regression update;
-- integration from current `main` using the project release checklist;
-- exact integration/main `npm ci` + `npm run check`, artifact/manifest verification;
-- GitHub Pages deployment from exact main head;
+Remaining release gates:
+
+- exact released-mode integration `npm ci` + `npm run check`;
+- merge reviewed integration head to current `main`;
+- exact-main Pages build/deployment and release-manifest verification;
 - public catalog, preflight, and exam smoke verification.
