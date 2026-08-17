@@ -814,7 +814,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 85,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: true,
     tierNote: "Four-function, scientific, or graphing calculators are permitted throughout this practice section.",
