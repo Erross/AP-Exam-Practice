@@ -16,7 +16,8 @@ const expected={
 };
 function correctText(id){const q=byId.get(id);assert.ok(q,id);return q.o[q.c[0]];}
 test('APES quantitative audit inventory covers every synthetic calculation anchor',()=>{
- assert.deepEqual([...Object.keys(expected)].sort(),bank.filter(q=>q.stimulus&&q.stimulus.type==='quantitative'&&q.skill==='6').map(q=>q.id).sort());
+ const actual=Array.from(bank.filter(q=>q.stimulus&&q.stimulus.type==='quantitative'&&q.skill==='6'),q=>q.id).sort();
+ assert.deepEqual(Object.keys(expected).sort(),actual);
 });
 test('every APES quantitative anchor independently recomputes',()=>{
  assert.equal(138/100*100,138);assert.equal(correctText('apes-q-u3-a-02'),expected['apes-q-u3-a-02']);
