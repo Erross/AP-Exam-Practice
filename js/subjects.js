@@ -987,7 +987,7 @@ const AP_SUBJECTS = [
       { id:"U12", name:"Magnetic Fields and Electromagnetism", examWeight:0.15, examWeightRange:[0.10,0.20] },
       { id:"U13", name:"Electromagnetic Induction", examWeight:0.15, examWeightRange:[0.10,0.20] },
     ],
-    skillCountRanges: { "2.A":[11,12], "2.B":[9,10], "2.C":[5,6], "2.D":[5,6], "3.B":[7,10], "3.C":[3,4] },
+    attributeRanges: { skill: { "2.A":[11,12], "2.B":[9,10], "2.C":[5,6], "2.D":[5,6], "3.B":[7,10], "3.C":[3,4] } },
     stimulusSetRange: [2,4],
     constraintDrawAttempts: 30000,
     freeResponse: { timeMinutes:95, questions:["Mathematical Routines","Translation Between Representations","Experimental Design and Analysis","Qualitative/Quantitative Translation"] },

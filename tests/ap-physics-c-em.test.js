@@ -34,7 +34,7 @@ test("Physics C E&M metadata matches the May 2027 clarified exam", () => {
   assert.equal(subject.freeResponse.timeMinutes, 95);
   assert.deepEqual(subject.units.map((u)=>u.id), ["U8","U9","U10","U11","U12","U13"]);
   assert.deepEqual(targetUnits, {U8:9,U9:6,U10:5,U11:9,U12:7,U13:6});
-  assert.deepEqual(subject.skillCountRanges, {
+  assert.deepEqual(subject.attributeRanges.skill, {
     "2.A":[11,12], "2.B":[9,10], "2.C":[5,6], "2.D":[5,6], "3.B":[7,10], "3.C":[3,4],
   });
 });
@@ -100,7 +100,7 @@ test("Physics C E&M randomized forms obey exact unit, skill, and whole-set const
     const draw=drawExam(subject,bank); assert.equal(draw.length,42); const units={},skills={},groups={};
     for(const q of draw){units[q.unit]=(units[q.unit]||0)+1;skills[q.skill]=(skills[q.skill]||0)+1;if(q.stimulusGroupId)groups[q.stimulusGroupId]=(groups[q.stimulusGroupId]||0)+1;}
     assert.deepEqual(units,targetUnits);
-    for(const [skill,range] of Object.entries(subject.skillCountRanges)) assert.ok(skills[skill]>=range[0]&&skills[skill]<=range[1],`${skill}: ${skills[skill]} outside ${range}`);
+    for(const [skill,range] of Object.entries(subject.attributeRanges.skill)) assert.ok(skills[skill]>=range[0]&&skills[skill]<=range[1],`${skill}: ${skills[skill]} outside ${range}`);
     assert.ok(Object.values(groups).every((n)=>n===3),"shared set split"); assert.ok(Object.keys(groups).length>=2&&Object.keys(groups).length<=4,`set count ${Object.keys(groups).length}`);
   }
 });
