@@ -1,0 +1,22 @@
+name: Fix EM Case Collision
+on:
+  push:
+    branches: [subject/ap-physics-c-em]
+    paths: [.github/workflows/_fix_em_case_collision.yml]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-physics-c-em
+      - run: python tools/_fix_em_case_collision.py
+      - run: rm tools/_fix_em_case_collision.py .github/workflows/_fix_em_case_collision.yml
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Resolve final E&M option-text collision"
+          git push origin HEAD:subject/ap-physics-c-em
