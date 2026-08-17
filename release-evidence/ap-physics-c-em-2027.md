@@ -73,7 +73,7 @@ The current draft candidate contains:
 
 Early completed-candidate runs were intentionally used as defect-finding gates rather than release evidence. They exposed and drove repair of:
 
-1. a duplicate/case-colliding option in `em-8.6-02`;
+1. duplicate/case-colliding symbolic options in the Gauss's-law derivation items;
 2. stacked absolute-language distractors;
 3. residual programmer-style subscript notation;
 4. a slight correct-answer length imbalance above the project 12% limit;
@@ -84,7 +84,7 @@ The exact-skill contract was repaired to `attributeRanges.skill`, matching AP Ph
 
 Answer-length hardening strengthened plausible conceptual distractors rather than padding text. The latest diagnostic measured mean correct option length 5.04 words versus 4.66 words for distractors, comfortably inside the project 12% limit. All six stimulus groups were confirmed at exactly three linked questions after the grouping repair.
 
-The final `em-8.6-02` presentation collision arose because two mathematically different distractors became identical after the quality gate normalized variable case. The final replacement keeps a dimensionally plausible but case-insensitively distinct incorrect radial dependence. The exact-head repository check after this final static repair is the next gate.
+The symbolic option collisions arose because mathematically different expressions became identical after the schema gate normalized variable case. `em-8.6-02` and the subsequently exposed `em-8.6-05` were both repaired with dimensionally plausible but case-insensitively distinct incorrect radial dependences. The next exact-head repository check is the final static baseline before the 5,000/5,000 release audit.
 
 ## Generic release audit
 
