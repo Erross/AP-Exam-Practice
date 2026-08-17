@@ -18,7 +18,7 @@ module.exports = {
     { id:'U9', name:'Global Change', examWeight:14/80, examWeightRange:[0.15,0.20] },
   ],
   skillCountRanges: { '1':[24,30], '2':[10,15], '3':[5,6], '4':[2,3], '5':[10,15], '6':[5,7], '7':[14,18] },
-  examBlueprint: { sets: { quantitative:4, foundational:0, text:2, visual:4 } },
+  examBlueprint: { sets: { quantitative:5, foundational:0, text:2, visual:5 } },
   constraintDrawAttempts: 30000,
   freeResponse: { timeMinutes:70, readingPeriodMinutes:0, questions:['Design an investigation','Analyze and interpret quantitative data','Analyze an environmental problem doing calculations'] },
 };
