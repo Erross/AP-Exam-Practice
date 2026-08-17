@@ -84,7 +84,7 @@ The exact-skill contract was repaired to `attributeRanges.skill`, matching AP Ph
 
 Answer-length hardening strengthened plausible conceptual distractors rather than padding text. The latest diagnostic measured mean correct option length 5.04 words versus 4.66 words for distractors, comfortably inside the project 12% limit. All six stimulus groups were confirmed at exactly three linked questions after the grouping repair.
 
-The symbolic option collisions arose because mathematically different expressions became identical after the schema gate normalized variable case. `em-8.6-02` and the subsequently exposed `em-8.6-05` were both repaired with dimensionally plausible but case-insensitively distinct incorrect radial dependences. The next exact-head repository check is the final static baseline before the 5,000/5,000 release audit.
+The symbolic option collisions arose because mathematically different expressions became identical after the schema gate normalized variable case. `em-8.6-02` and the subsequently exposed `em-8.6-05` were both repaired with dimensionally plausible but case-insensitively distinct incorrect radial dependences. The exact `em-8.6-05` repair is on commit `8c43380cb511ec3265e23cb12307f123484601ac`; this normal evidence commit triggers the final exact-head repository check before the 5,000/5,000 release audit.
 
 ## Generic release audit
 
