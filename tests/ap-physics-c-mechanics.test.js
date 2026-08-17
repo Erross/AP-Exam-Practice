@@ -52,6 +52,7 @@ test("Mechanics bank covers the exact 41-topic CED inventory", () => {
 test("Mechanics bank has sound single-select schema and only MCQ-assessed skills", () => {
   const allowed = new Set(["2.A","2.B","2.C","2.D","3.B","3.C"]);
   const ids = new Set();
+  const shortRationales = [];
   for (const q of bank) {
     assert.match(q.id, /^pcm-(?:[1-7]\.\d{1,2}-\d{2}|set-u[1-7]-\d{2})$/);
     assert.ok(!ids.has(q.id), `duplicate id ${q.id}`); ids.add(q.id);
@@ -60,8 +61,9 @@ test("Mechanics bank has sound single-select schema and only MCQ-assessed skills
     assert.equal(q.o.length, 4);
     assert.equal(q.c.length, 1);
     assert.equal(new Set(q.o.map((o) => o.trim().toLowerCase())).size, 4, `${q.id}: duplicate options`);
-    assert.ok(q.e.length >= 70, `${q.id}: rationale is too short (${q.e.length})`);
+    if (q.e.length < 90) shortRationales.push(`${q.id}:${q.e.length}`);
   }
+  assert.deepEqual(shortRationales, [], `rationales below 90 characters: ${shortRationales.join(", ")}`);
 });
 
 test("Mechanics bank has seven original three-question shared data sets", () => {
@@ -85,10 +87,11 @@ test("Mechanics bank has seven original three-question shared data sets", () => 
   }
 });
 
-test("Mechanics answer construction has no gross key-position or length tell", () => {
+test("Mechanics answer construction meets project bias and distractor standards", () => {
   const wc = (text) => text.trim().split(/\s+/).length;
   let uniqueLongest=0, amongLongest=0, correctWords=0, distractorWords=0;
   const keys=[0,0,0,0];
+  const absoluteLanguage=/\b(always|never|every|only|entirely|unlimited|impossible|guaranteed)\b/i;
   for (const q of bank) {
     const lens=q.o.map(wc), longest=Math.max(...lens), cl=lens[q.c[0]], n=lens.filter((x)=>x===longest).length;
     if (cl===longest && n===1) uniqueLongest++;
@@ -96,11 +99,13 @@ test("Mechanics answer construction has no gross key-position or length tell", (
     correctWords += cl;
     lens.forEach((x,i)=>{ if(i!==q.c[0]) distractorWords += x; });
     keys[q.c[0]]++;
+    const absoluteDistractors=q.o.filter((_,i)=>i!==q.c[0]).filter((o)=>absoluteLanguage.test(o));
+    assert.ok(absoluteDistractors.length<=1, `${q.id}: stacked absolute-language distractors`);
   }
   const ca=correctWords/bank.length, da=distractorWords/(bank.length*3);
-  assert.ok(uniqueLongest/bank.length <= 0.30, `uniquely-longest correct ${(100*uniqueLongest/bank.length).toFixed(1)}%`);
-  assert.ok(amongLongest/bank.length <= 0.62, `among-longest correct ${(100*amongLongest/bank.length).toFixed(1)}%`);
-  assert.ok(Math.abs(ca-da)/da <= 0.18, `correct/distractor word averages ${ca.toFixed(2)}/${da.toFixed(2)}`);
+  assert.ok(uniqueLongest/bank.length <= 0.25, `uniquely-longest correct ${(100*uniqueLongest/bank.length).toFixed(1)}%`);
+  assert.ok(amongLongest/bank.length <= 0.58, `among-longest correct ${(100*amongLongest/bank.length).toFixed(1)}%`);
+  assert.ok(Math.abs(ca-da)/da <= 0.12, `correct/distractor word averages ${ca.toFixed(2)}/${da.toFixed(2)}`);
   keys.forEach((count) => assert.ok(count/bank.length >= 0.15 && count/bank.length <= 0.35, `raw key imbalance ${keys}`));
 });
 
