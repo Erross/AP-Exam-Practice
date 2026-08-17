@@ -8,7 +8,7 @@ const catalog = fs.readFileSync("js/catalog.js", "utf8");
 const about = fs.readFileSync("about.html", "utf8");
 
 test("Physics C Mechanics naive preflight exposes the May 2027 exam-critical facts", () => {
-  assert.equal(subject.releaseStatus, "draft");
+  assert.equal(subject.releaseStatus, "released");
   assert.equal(subject.mcqCount, 42);
   assert.equal(subject.mcqTimeMinutes, 85);
   assert.equal(subject.totalExamTimeLabel, "3h 0m");
