@@ -1,0 +1,30 @@
+name: Harden EM Distractors
+on:
+  push:
+    branches: [subject/ap-physics-c-em]
+    paths: [.github/workflows/_harden_em_distractors.yml]
+permissions:
+  contents: write
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-physics-c-em
+      - run: python tools/_harden_em_distractors.py
+      - name: Probe repaired bank
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');const {AP_SUBJECTS}=require('./js/subjects');const {drawExam}=require('./js/draw');const sb={window:{}};vm.createContext(sb);vm.runInContext(fs.readFileSync('data/ap-physics-c-em.js','utf8'),sb);const b=sb.window.QUESTIONS_AP_PHYSICS_C_EM,s=AP_SUBJECTS.find(x=>x.id==='ap-physics-c-em');
+          const wc=t=>t.trim().split(/\s+/).length;let cw=0,dw=0;for(const q of b){cw+=wc(q.o[q.c[0]]);q.o.forEach((o,i)=>{if(i!==q.c[0])dw+=wc(o)});}console.log('WORD_AVERAGES',cw/b.length,dw/(b.length*3));
+          const gs={};for(const q of b.filter(x=>x.stimulusGroupId))gs[q.stimulusGroupId]=(gs[q.stimulusGroupId]||0)+1;console.log('GROUP_SIZES',JSON.stringify(gs));
+          let ok=0,fail=0;for(let i=0;i<30;i++){try{const d=drawExam(s,b);if(d.length===42)ok++;else fail++;}catch(e){fail++;}}console.log('DRAW_PROBE',{ok,fail});
+          NODE
+      - run: rm tools/_harden_em_distractors.py .github/workflows/_harden_em_distractors.yml
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Harden E&M conceptual distractors"
+          git push origin HEAD:subject/ap-physics-c-em
