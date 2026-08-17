@@ -16,3 +16,4 @@ jobs:
         with:
           node-version: 22
       - run: node tools/_diag_em_feasibility.js
+# rerun with current registry field
