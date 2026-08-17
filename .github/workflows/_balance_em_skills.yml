@@ -1,0 +1,22 @@
+name: Balance EM Skills
+on:
+  push:
+    branches: [subject/ap-physics-c-em]
+    paths: [.github/workflows/_balance_em_skills.yml]
+permissions:
+  contents: write
+jobs:
+  balance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-physics-c-em
+      - run: python tools/_balance_em_skills.py
+      - run: rm tools/_balance_em_skills.py .github/workflows/_balance_em_skills.yml
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Balance AP Physics C E&M skill pool semantically"
+          git push origin HEAD:subject/ap-physics-c-em
