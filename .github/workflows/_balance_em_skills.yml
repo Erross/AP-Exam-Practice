@@ -20,3 +20,4 @@ jobs:
           git add -A
           git commit -m "Balance AP Physics C E&M skill pool semantically"
           git push origin HEAD:subject/ap-physics-c-em
+# rerun after helper-syntax repair
