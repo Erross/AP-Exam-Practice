@@ -20,3 +20,4 @@ jobs:
           git add -A
           git commit -m "Build AP Physics C E&M topics 13.1-13.3"
           git push origin HEAD:subject/ap-physics-c-em
+# retrigger after payload repair
