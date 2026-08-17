@@ -1,6 +1,6 @@
 # AP Physics C: Electricity and Magnetism — May 2027 release evidence
 
-Status: **release candidate / draft pending integration**
+Status: **released-mode integration candidate**
 
 Verified 2026-08-17 against current official College Board sources.
 
@@ -112,8 +112,12 @@ Results:
 - **Draw audit: 5,000/5,000 valid**.
 - **Retake overlap: 30.3%** average shared questions, below the project 40% target.
 
-The temporary post-review audit workflow was removed immediately after completion. The remaining pre-integration gate is one stable full repository check on the clean subject-branch head after evidence/audit cleanup.
+The temporary post-review audit workflow was removed immediately after completion. Stable clean subject-branch CI then passed on `230af9971b74ab78e0e50262f4340506e94b1ed1` (run `32073783436`, job `95522485335`).
 
 ## Release integration status
 
-Current status: draft release candidate. Promotion to `released` remains blocked until the stable clean-head check, fresh-main integration, released-mode integration checks/build-artifact verification, final merge to `main`, exact-main Test and Pages deployment success, and public-site smoke verification are complete.
+Fresh integration branch `integration/ap-physics-c-em-release` was created from current `main` at `3c4bd0f3bffbe08510a4b02e6c860aceedfd9bdd`. PR #64 merged the reviewed draft candidate into that branch at merge commit `89aec0e6262af6e964b08b3dd4c9495e80f21ef7`.
+
+The isolated promotion changed only AP Physics C: Electricity and Magnetism from `releaseStatus: "draft"` to `"released"` and updated its release-mode metadata assertion. Promotion commit: `906bc85a7c5af53c6be828a5baece309feac3096`.
+
+This evidence commit intentionally triggers the standard full repository workflow on the actual released-mode integration ancestry. Final merge to `main` remains blocked until that exact-head check succeeds and the built release artifact/manifest is explicitly verified to expose E&M as a released 42-question, 85-minute calculator-permitted MCQ practice course.
