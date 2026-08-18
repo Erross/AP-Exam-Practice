@@ -17,14 +17,14 @@ test('APES effective development bank has exact 99-topic coverage and deep seman
   assert.equal(subject.formatVerified,true);
   assert.equal(subject.releaseStatus,'draft');
   assert.equal(subject.calculatorAllowed,true);
-  assert.equal(bank.length,285);
-  assert.equal(new Set(bank.map(q=>q.id)).size,285);
+  assert.equal(bank.length,330);
+  assert.equal(new Set(bank.map(q=>q.id)).size,330);
   assert.equal(new Set(bank.map(q=>q.topicCode)).size,99);
   for (const code of topicCodes) {
     assert.ok(bank.some(q=>q.topicCode===code),`${code}: missing topic`);
     assert.ok(bank.filter(q=>q.topicCode===code && !q.stimulusGroupId).length>=2,`${code}: expected at least two standalone candidates`);
   }
-  assert.equal(scripts.length,16);
+  assert.equal(scripts.length,17);
   bank.forEach(q=>{
     assert.equal(q.type,'s',q.id);
     assert.equal(q.o.length,4,q.id);
@@ -38,12 +38,12 @@ test('APES practice labels perform their declared source or standalone task',()=
   const baseConcept=bank.filter(q=>/^apes-\d+-\d+-0[12]$/.test(q.id));
   assert.equal(baseConcept.length,198);
   baseConcept.forEach(q=>assert.equal(q.skill,'1',q.id));
-  const experiments=bank.filter(q=>q.id.startsWith('apes-exp-'));
-  assert.equal(experiments.length,9);
-  experiments.forEach(q=>{assert.equal(q.skill,'4',q.id);assert.match(q.q,/design|tests?|investigat/i,q.id);});
-  const solutions=bank.filter(q=>q.id.startsWith('apes-sol-'));
-  assert.equal(solutions.length,18);
-  solutions.forEach(q=>{assert.equal(q.skill,'7',q.id);assert.match(q.q,/action|measure|policy|response|intervention|practice|strategy|change|step|plan|choice/i,q.id);});
+  const experiments=bank.filter(q=>q.id.startsWith('apes-exp-')||q.id.startsWith('apes-exp2-'));
+  assert.equal(experiments.length,18);
+  experiments.forEach(q=>{assert.equal(q.skill,'4',q.id);assert.match(q.q,/design|tests?|investigat|feature/i,q.id);});
+  const solutions=bank.filter(q=>q.id.startsWith('apes-sol-')||q.id.startsWith('apes-sol2-'));
+  assert.equal(solutions.length,54);
+  solutions.forEach(q=>assert.equal(q.skill,'7',q.id));
   bank.filter(q=>q.stimulus&&q.stimulus.type==='quantitative').forEach(q=>assert.ok(['5','6'].includes(q.skill),q.id));
   bank.filter(q=>q.stimulus&&q.stimulus.type==='visual').forEach(q=>assert.ok(['2','7'].includes(q.skill),q.id));
   bank.filter(q=>q.stimulus&&q.stimulus.type==='text').forEach(q=>assert.equal(q.skill,'3',q.id));
