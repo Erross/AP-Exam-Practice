@@ -9,10 +9,11 @@ function loadBrowserEffectiveBank() {
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   const scripts = [...html.matchAll(/<script src="(data\/ap-african-american-studies[^\"]*\.js)"><\/script>/g)]
     .map((m) => m[1]);
-  assert.ok(scripts.includes('data/ap-african-american-studies-independent-review-fixes.js'), 'independent-review fix layer missing from index.html');
-  assert.ok(scripts.includes('data/ap-african-american-studies-synthetic-depth-fixes.js'), 'synthetic depth layer missing from index.html');
-  assert.equal(scripts.at(-2), 'data/ap-african-american-studies-independent-review-fixes.js');
-  assert.equal(scripts.at(-1), 'data/ap-african-american-studies-synthetic-depth-fixes.js');
+  assert.deepEqual(scripts.slice(-3), [
+    'data/ap-african-american-studies-independent-review-fixes.js',
+    'data/ap-african-american-studies-synthetic-depth-fixes.js',
+    'data/ap-african-american-studies-synthetic-claim-fixes.js',
+  ]);
   const context = vm.createContext({ window: {} });
   for (const script of scripts) {
     vm.runInContext(fs.readFileSync(path.join(root, script), 'utf8'), context, { filename: script });
@@ -69,7 +70,7 @@ test('repetitive old disciplinary-significance scaffold is absent from final tex
   assert.ok(new Set(textQ3.map((q) => q.q)).size >= 30, 'q3 stem variety regressed');
 });
 
-test('synthetic text groups retain topic-specific analytical depth after the final layer', () => {
+test('synthetic text groups retain topic-specific analytical depth and no verbatim keyed thesis', () => {
   const syntheticTextGroups = new Map();
   for (const q of bank) {
     if (q.stimulus && !q.stimulus.requiredSource && q.stimulus.type === 'text') {
@@ -78,10 +79,15 @@ test('synthetic text groups retain topic-specific analytical depth after the fin
   }
   assert.equal(syntheticTextGroups.size, 27);
   for (const qs of syntheticTextGroups.values()) {
+    const q1 = qs.find((q) => q.sequence === 1);
     const q3 = qs.find((q) => q.sequence === 3);
-    assert.ok(q3, `${qs[0].topicCode}: missing q3`);
+    assert.ok(q1 && q3, `${qs[0].topicCode}: missing q1/q3`);
     assert.doesNotMatch(q3.q, /which next step|which comparison would add|which question would best test the limits|which additional perspective|which method would best connect|which approach would best distinguish|which kind of corroboration|broader African American Studies argument/i, `${q3.topicCode}: generic repair scaffold survived`);
     assert.ok(q3.e.length >= 100, `${q3.topicCode}: topic-specific rationale too short`);
+    const keyed = q1.o[q1.c[0]].trim().toLowerCase();
+    const source = q1.stimulus.text.trim().toLowerCase();
+    assert.ok(!source.includes(keyed), `${q1.topicCode}: keyed q1 answer remains verbatim in stimulus`);
+    assert.match(q1.q, /paraphrase|restates|summarizes|interpretation/i, `${q1.topicCode}: q1 no longer tests interpretation`);
   }
 });
 
