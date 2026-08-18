@@ -9,10 +9,11 @@ function loadBrowserEffectiveBank() {
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   const scripts = [...html.matchAll(/<script src="(data\/ap-african-american-studies[^\"]*\.js)"><\/script>/g)]
     .map((m) => m[1]);
-  assert.deepEqual(scripts.slice(-3), [
+  assert.deepEqual(scripts.slice(-4), [
     'data/ap-african-american-studies-independent-review-fixes.js',
     'data/ap-african-american-studies-synthetic-depth-fixes.js',
     'data/ap-african-american-studies-synthetic-claim-fixes.js',
+    'data/ap-african-american-studies-source-use-balance-fixes.js',
   ]);
   const context = vm.createContext({ window: {} });
   for (const script of scripts) vm.runInContext(fs.readFileSync(path.join(root, script), 'utf8'), context, { filename: script });
@@ -21,6 +22,7 @@ function loadBrowserEffectiveBank() {
 
 const bank = loadBrowserEffectiveBank();
 const group = (topic) => bank.filter((q) => q.topicCode === topic).sort((a, b) => a.sequence - b.sequence);
+const words = (s) => String(s).trim().split(/\s+/).filter(Boolean).length;
 
 test('required-source questions stay grounded in the browser-effective source rather than inherited synthetic claims', () => {
   const requiredGroups = new Map();
@@ -31,9 +33,22 @@ test('required-source questions stay grounded in the browser-effective source ra
     const q2 = qs.find((q) => q.sequence === 2);
     assert.ok(q1 && q2);
     assert.match(q1.q, /required source|source itself/i, `${q1.topicCode}: q1 not source-grounded`);
-    assert.match(q2.e, /specific evidence|broader conclusions|corrobor/i, `${q2.topicCode}: q2 does not constrain inference`);
+    assert.match(q2.e, /specific conclusion|broader historical argument|corrobor|independent evidence/i, `${q2.topicCode}: q2 does not constrain inference`);
     assert.doesNotMatch(q2.o[q2.c[0]], /all Black communities|entire period|every region/i, `${q2.topicCode}: keyed answer overgeneralizes`);
   }
+});
+
+test('required-source use questions are parallel competitors rather than keyed length tells', () => {
+  const qs = bank.filter((q) => q.sequence === 2 && q.stimulus && q.stimulus.requiredSource);
+  assert.equal(qs.length, 39);
+  let uniqueLongest = 0;
+  for (const q of qs) {
+    const lengths = q.o.map(words);
+    const max = Math.max(...lengths);
+    if (lengths[q.c[0]] === max && lengths.filter((n) => n === max).length === 1) uniqueLongest++;
+    assert.ok(Math.min(...lengths) >= 20, `${q.topicCode}: required-source q2 has a conspicuously short option`);
+  }
+  assert.ok(uniqueLongest <= 8, `required-source q2 uniquely-longest keyed answers regressed to ${uniqueLongest}/39`);
 });
 
 test('required-source third questions now require topic-specific historical contextualization', () => {
