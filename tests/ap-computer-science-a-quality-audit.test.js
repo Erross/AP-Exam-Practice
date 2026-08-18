@@ -8,21 +8,34 @@ const ABSOLUTE = /\b(always|never|every|only|entirely|unlimited|impossible|guara
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean).length;
 
 test('AP CSA has no stacked absolute-language distractor tells', () => {
-  const offenders = bank.filter(q => {
+  const offenderQuestions = bank.filter(q => {
     const key = q.c[0];
     return q.o.filter((_, i) => i !== key).filter(x => ABSOLUTE.test(x)).length > 1;
-  }).map(q => q.id);
+  });
+  if (offenderQuestions.length) {
+    console.log('CSA stacked-absolute details', JSON.stringify(offenderQuestions.map(q => ({
+      id: q.id,
+      stem: q.q,
+      key: q.c[0],
+      options: q.o,
+    })), null, 2));
+  }
+  const offenders = offenderQuestions.map(q => q.id);
   assert.deepEqual(offenders, [], `stacked absolute-language distractors: ${offenders.join(', ')}`);
 });
 
 test('AP CSA aggregate answer construction remains within project limits', () => {
   let unique = 0, among = 0, cw = 0, dw = 0;
   const keys = [0, 0, 0, 0];
+  const uniqueOutliers = [];
   bank.forEach(q => {
     const key = q.c[0]; keys[key]++;
     const lens = q.o.map(words), longest = Math.max(...lens), ties = lens.filter(n => n === longest).length;
     if (lens[key] === longest && ties < 4) among++;
-    if (lens[key] === longest && ties === 1) unique++;
+    if (lens[key] === longest && ties === 1) {
+      unique++;
+      uniqueOutliers.push({ id: q.id, keyWords: lens[key], maxDistractorWords: Math.max(...lens.filter((_, i) => i !== key)), options: q.o });
+    }
     cw += lens[key];
     lens.forEach((n, i) => { if (i !== key) dw += n; });
   });
@@ -34,6 +47,9 @@ test('AP CSA aggregate answer construction remains within project limits', () =>
     keys,
   };
   console.log('CSA answer metrics', metrics);
+  if (metrics.uniqueLongest > 0.25 || Math.abs(metrics.correctAverage-metrics.distractorAverage)/metrics.distractorAverage > 0.12) {
+    console.log('CSA unique-longest details', JSON.stringify(uniqueOutliers, null, 2));
+  }
   assert.ok(metrics.uniqueLongest <= 0.25, `unique longest ${(metrics.uniqueLongest*100).toFixed(1)}%`);
   assert.ok(metrics.amongLongest <= 0.58, `among longest ${(metrics.amongLongest*100).toFixed(1)}%`);
   assert.ok(Math.abs(metrics.correctAverage-metrics.distractorAverage)/metrics.distractorAverage <= 0.12,
