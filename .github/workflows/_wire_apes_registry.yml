@@ -1,0 +1,73 @@
+name: Wire APES verified draft metadata
+on:
+  push:
+    branches: [subject/ap-environmental-science]
+jobs:
+  wire:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-environmental-science
+      - name: Replace APES registry placeholder
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('js/subjects.js')
+          s=p.read_text()
+          block='''  {
+    id: "ap-environmental-science",
+    name: "AP Environmental Science",
+    category: "Sciences",
+    tier: 1,
+    // VERIFIED 2026-08-17 against current AP Central course/exam pages and
+    // Fall-2026 clarifications for the May 2027 fully digital exam.
+    // Section I: 80 MCQs / 90 minutes / 60%; Section II: 3 FRQs / 70 minutes / 40%.
+    // Calculators are permitted throughout. 2027 source guidance: 3-5 quantitative
+    // data sets, 3-5 qualitative/model/map sets, and exactly 2 text-source sets.
+    mcqCount: 80,
+    mcqTimeMinutes: 90,
+    totalExamTimeLabel: "2h 40m",
+    formatVerified: true,
+    releaseStatus: "draft",
+    allowsMultiSelect: false,
+    calculatorAllowed: true,
+    tierNote: "Includes quantitative data, qualitative models/maps, and text-source sets; calculators are permitted throughout this practice section.",
+    units: [
+      { id:"U1", name:"The Living World: Ecosystems", examWeight:6/80, examWeightRange:[0.06,0.08] },
+      { id:"U2", name:"The Living World: Biodiversity", examWeight:6/80, examWeightRange:[0.06,0.08] },
+      { id:"U3", name:"Populations", examWeight:10/80, examWeightRange:[0.10,0.15] },
+      { id:"U4", name:"Earth Systems and Resources", examWeight:10/80, examWeightRange:[0.10,0.15] },
+      { id:"U5", name:"Land and Water Use", examWeight:10/80, examWeightRange:[0.10,0.15] },
+      { id:"U6", name:"Energy Resources and Consumption", examWeight:10/80, examWeightRange:[0.10,0.15] },
+      { id:"U7", name:"Atmospheric Pollution", examWeight:7/80, examWeightRange:[0.07,0.10] },
+      { id:"U8", name:"Aquatic and Terrestrial Pollution", examWeight:7/80, examWeightRange:[0.07,0.10] },
+      { id:"U9", name:"Global Change", examWeight:14/80, examWeightRange:[0.15,0.20] },
+    ],
+    skillCountRanges: { "1":[24,30], "2":[10,15], "3":[5,6], "4":[2,3], "5":[10,15], "6":[5,7], "7":[14,18] },
+    examBlueprint: { sets: { quantitative:5, foundational:0, text:2, visual:5 } },
+    constraintDrawAttempts: 30000,
+    freeResponse: { timeMinutes:70, readingPeriodMinutes:0, questions:[
+      "Design an investigation",
+      "Analyze and interpret quantitative data",
+      "Analyze an environmental problem doing calculations",
+    ] },
+    dataVar: "QUESTIONS_AP_ENVIRONMENTAL_SCIENCE",
+  },'''
+          pat=r'  \{\n    id: "ap-environmental-science",.*?\n    dataVar: "QUESTIONS_AP_ENVIRONMENTAL_SCIENCE",\n  \},'
+          ns,n=re.subn(pat,block,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'expected one APES block, got {n}')
+          p.write_text(ns)
+          PY
+      - name: Clean helper and commit
+        run: |
+          rm .github/workflows/_wire_apes_registry.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add js/subjects.js .github/workflows/_wire_apes_registry.yml
+          git commit -m "Wire AP Environmental Science verified draft metadata"
+          git push origin HEAD:subject/ap-environmental-science
