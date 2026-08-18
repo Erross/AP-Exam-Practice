@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title desc">
+<title id="title">Synthetic cultural pride poster</title>
+<desc id="desc">An original practice poster featuring a large natural-hair silhouette above the phrase Define Beauty for Ourselves, surrounded by simple geometric textile-inspired motifs.</desc>
+<rect width="800" height="500" fill="#f2eee5"/>
+<g transform="translate(400 205)">
+<circle cx="0" cy="0" r="72" fill="#3b3b3b"/>
+<circle cx="-58" cy="-48" r="45" fill="#2d2d2d"/><circle cx="0" cy="-70" r="50" fill="#2d2d2d"/><circle cx="58" cy="-48" r="45" fill="#2d2d2d"/>
+<circle cx="-78" cy="5" r="42" fill="#2d2d2d"/><circle cx="78" cy="5" r="42" fill="#2d2d2d"/><circle cx="-52" cy="55" r="40" fill="#2d2d2d"/><circle cx="52" cy="55" r="40" fill="#2d2d2d"/>
+<ellipse cx="0" cy="38" rx="48" ry="62" fill="#555"/>
+</g>
+<text x="400" y="370" text-anchor="middle" font-family="sans-serif" font-size="35" font-weight="700">DEFINE BEAUTY FOR OURSELVES</text>
+<g fill="#6b655b"><polygon points="80,70 120,30 160,70 120,110"/><polygon points="640,70 680,30 720,70 680,110"/><polygon points="80,430 120,390 160,430 120,470"/><polygon points="640,430 680,390 720,430 680,470"/></g>
+<text x="400" y="455" text-anchor="middle" font-family="sans-serif" font-size="16">Original synthetic visual created for AP African American Studies source-analysis practice</text>
+</svg>
