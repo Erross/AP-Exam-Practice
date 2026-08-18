@@ -34,24 +34,24 @@
   // length rather than making the nuanced answer visibly longest.
   const unitFrames = {
     U1: [
-      "it connects an African context to broader patterns of movement, exchange, institutions, cultural change, and diaspora.",
-      "it connects early African history to broader questions of diaspora, cultural continuity, political authority, and exchange.",
-      "it connects a specific African setting to broader patterns of knowledge, religion, trade, movement, and diaspora.",
+      "broader patterns of African movement, exchange, institutions, cultural change, and diaspora.",
+      "broader questions of diaspora, cultural continuity, political authority, and exchange.",
+      "broader patterns of knowledge, religion, trade, movement, and diaspora in a specific African setting.",
     ],
     U2: [
-      "it connects enslavement to broader patterns of Black agency, resistance, family life, institutions, culture, and political thought.",
-      "it connects racial slavery through law and violence to broader struggles over resistance, bondage, and freedom.",
-      "it connects a specific source to broader Atlantic patterns of slavery, resistance, abolition, and Black political thought.",
+      "broader patterns of Black agency, resistance, family life, institutions, culture, and political thought under enslavement.",
+      "broader struggles over racial slavery, law, violence, resistance, bondage, and freedom.",
+      "broader Atlantic patterns of slavery, resistance, abolition, and Black political thought.",
     ],
     U3: [
-      "it connects emancipation to broader struggles over citizenship, institutions, economic opportunity, culture, and the practice of freedom.",
-      "it connects post-emancipation evidence to broader contests over citizenship, institution building, racial violence, and freedom.",
-      "it connects law, migration, culture, organizations, and violence to broader analysis of how African Americans practiced freedom.",
+      "broader struggles over citizenship, institutions, economic opportunity, culture, and the practice of freedom after emancipation.",
+      "broader contests over post-emancipation citizenship, institution building, racial violence, and freedom.",
+      "broader analysis of law, migration, culture, organizations, violence, and how African Americans practiced freedom.",
     ],
     U4: [
-      "it connects modern Black freedom struggles to broader debates over political strategy, culture, diaspora, gender, and representation.",
-      "it connects modern Black politics and culture to broader differences in strategy, institutions, and intellectual traditions.",
-      "it connects the source to broader debates over equality, self-determination, representation, cultural power, and freedom.",
+      "broader debates over modern Black political strategy, culture, diaspora, gender, and representation.",
+      "broader differences in modern Black political strategy, institutions, culture, and intellectual traditions.",
+      "broader debates over equality, self-determination, representation, cultural power, and freedom.",
     ],
   };
 
@@ -68,7 +68,7 @@
 
     const title = q1.stimulus && q1.stimulus.title ? q1.stimulus.title : `CED Topic ${q1.topicCode}`;
     const frames = unitFrames[q1.unit] || unitFrames.U4;
-    const correct = `${title} matters to African American Studies because ${frames[groupIndex % frames.length]}`;
+    const correct = `${title} connects the evidence to ${frames[groupIndex % frames.length]}`;
     const distractors = [
       `${title} is most useful as a self-contained illustration of the topic, with its immediate content taking priority over creator, audience, and context.`,
       `${title} chiefly helps confirm a broad chronology of the period, while comparison across institutions, identities, and forms of power is secondary.`,
