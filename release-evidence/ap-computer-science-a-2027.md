@@ -47,14 +47,17 @@ Published MCQ weighting bands:
 
 ## Exact topic inventory
 
-The effective Fall 2025 CED contains 53 topics: 15 in U1, 12 in U2, 9 in U3, and 17 in U4. The exact codes/titles are stored in `data/ap-computer-science-a.js` and will be asserted by the subject-specific release test.
+The effective Fall 2025 CED contains 53 topics: 15 in U1, 12 in U2, 9 in U3, and 17 in U4. The effective candidate bank currently contains 159 original standalone questions, exactly three independently authored candidates per topic.
+
+## Development verification to date
+
+- Browser wiring loads the CSA base file followed by U1/U2/U3/U4 layers.
+- Initial full-repository run 32149481294: 261/262 tests passed. All four CSA-specific tests passed, including 159 unique IDs, 53/53 topics, raw-key balance, selected Java API guardrails, and 500/500 constrained 42-question forms.
+- The sole failure was the repository-wide notation diagnostic executing a CSA unit layer without first loading the CSA base helper. The diagnostic loader has been repaired to group `data/ap-computer-science-a-*` layers under `data/ap-computer-science-a.js`, matching browser execution order.
 
 ## Development gates still required
 
-- Populate a comfortably oversized original/synthetic bank with full 53/53 topic coverage.
-- Add realistic optional two-question code/stimulus sets without splitting groups.
 - Independently recompute every code trace/output and verify Java semantics against the CED/Java Quick Reference.
-- Add subject-specific topic/practice/unit/set tests.
 - Run generic 5,000-draw / 5,000-overlap release audit.
 - Run fresh clean-room semantic review; repair and restart until zero findings.
 - Run naive/preflight audit.
