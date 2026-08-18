@@ -7,7 +7,11 @@ const { drawExam, toBlocks } = require('../js/draw.js');
 
 function loadBank() {
   const context = vm.createContext({ window: {} });
-  for (const file of ['ap-african-american-studies.js', 'ap-african-american-studies-set-expansion.js']) {
+  for (const file of [
+    'ap-african-american-studies.js',
+    'ap-african-american-studies-set-expansion.js',
+    'ap-african-american-studies-required-sources-1.js',
+  ]) {
     const src = fs.readFileSync(path.join(__dirname, `../data/${file}`), 'utf8');
     vm.runInContext(src, context, { filename: file });
   }
@@ -75,12 +79,26 @@ test('all items are single-select, sourced, explained, and use real CED skill co
     assert.ok(q.id && q.topicCode && q.unit && q.stimulusGroupId);
     assert.ok(allowedSkills.has(q.skill), `${q.id}: unexpected skill ${q.skill}`);
     assert.ok(q.e.length >= 90, `${q.id}: explanation too short`);
-    assert.match(q.stimulus.source, /Original synthetic source/);
-    assert.equal(q.stimulus.requiredSource, false);
+    assert.ok(q.stimulus && q.stimulus.source && q.stimulus.text);
+    assert.equal(typeof q.stimulus.requiredSource, 'boolean');
   }
 });
 
-test('raw answer positions remain balanced after 3-4 question expansion', () => {
+test('exactly half of topic source sets are currently converted to named required sources', () => {
+  const groups = toBlocks(bank);
+  const requiredGroups = groups.filter((g) => g[0].stimulus.requiredSource === true);
+  const unfamiliarGroups = groups.filter((g) => g[0].stimulus.requiredSource === false);
+  assert.equal(requiredGroups.length, 37);
+  assert.equal(unfamiliarGroups.length, 37);
+  assert.ok(requiredGroups.every((g) => /Required source in the AP African American Studies course framework/.test(g[0].stimulus.source)));
+  assert.ok(unfamiliarGroups.every((g) => /Original synthetic source/.test(g[0].stimulus.source)));
+  const kinds = new Set(requiredGroups.map((g) => g[0].stimulus.sourceKind));
+  for (const expected of ['text', 'law', 'visual', 'map', 'object']) {
+    assert.ok(kinds.has(expected), `required-source batch is missing source kind ${expected}`);
+  }
+});
+
+test('raw answer positions remain balanced after source and set expansion', () => {
   const counts = [0, 0, 0, 0];
   bank.forEach((q) => counts[q.c[0]]++);
   counts.forEach((n) => assert.ok(n >= 50 && n <= 70, `raw key count ${n} is imbalanced`));
@@ -108,7 +126,7 @@ test('500 weighted forms stay whole, exact-length, and inside official unit band
   }
 });
 
-test('the draft remains explicitly blocked from release on required-source realism', () => {
-  assert.equal(bank.filter((q) => q.stimulus && q.stimulus.requiredSource).length, 0);
-  assert.ok(bank.every((q) => q.stimulus && q.stimulus.requiredSource === false));
+test('required-source conversion does not falsely claim copied source text', () => {
+  const requiredGroups = toBlocks(bank).filter((g) => g[0].stimulus.requiredSource);
+  assert.ok(requiredGroups.every((g) => /original summary\/description/.test(g[0].stimulus.source)));
 });
