@@ -1,6 +1,6 @@
 # AP Computer Science A — May 2027 release evidence
 
-Status: **release gates complete / awaiting promotion**
+Status: **promoted on release branch / awaiting merge verification**
 
 ## Authoritative specification
 
@@ -142,6 +142,13 @@ Draft release candidate:
 - Dependency audit: 0 vulnerabilities.
 - Draft build correctly excluded CSA from the public artifact while all currently released subjects/data layers remained intact.
 
-## Promotion rule
+Promotion:
 
-All content/release gates are now complete. Promotion must remain a tiny integration change from `releaseStatus: "draft"` to `"released"`, followed by a fresh exact-head CI run, PR diff inspection, merge, exact-main CI verification, Pages deployment verification, and public/artifact smoke checks.
+- Content-gate evidence head `c56ac2273f3177c3527cd99b7c651b6464f50a9e` passed Test run **32156011451**.
+- Self-cleaning promotion changed only AP CSA's `releaseStatus` from `draft` to `released`; temporary promotion script/workflow were deleted in the same operation.
+- Promotion bot head: `591cc64ab0fed103251bd78e54621e186562cf91`.
+- The bot-triggered Test surface returned `action_required` without a test job, so this evidence-only commit intentionally triggers a normal exact-head PR Test on the released candidate before merge.
+
+## Merge rule
+
+Merge only after the released candidate's normal exact-head Test is green, PR diff inspection confirms no temporary files or unrelated scope, and the PR is ready for review. After merge, verify exact-main Test, Pages deployment, released artifact contents, and public smoke behavior.
