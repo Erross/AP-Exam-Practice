@@ -1,6 +1,6 @@
 # AP Computer Science A — May 2027 release evidence
 
-Status: **promoted on release branch / awaiting merge verification**
+Status: **released on main / post-merge verification recorded**
 
 ## Authoritative specification
 
@@ -142,13 +142,24 @@ Draft release candidate:
 - Dependency audit: 0 vulnerabilities.
 - Draft build correctly excluded CSA from the public artifact while all currently released subjects/data layers remained intact.
 
-Promotion:
+Promotion and released-head verification:
 
 - Content-gate evidence head `c56ac2273f3177c3527cd99b7c651b6464f50a9e` passed Test run **32156011451**.
 - Self-cleaning promotion changed only AP CSA's `releaseStatus` from `draft` to `released`; temporary promotion script/workflow were deleted in the same operation.
 - Promotion bot head: `591cc64ab0fed103251bd78e54621e186562cf91`.
-- The bot-triggered Test surface returned `action_required` without a test job, so this evidence-only commit intentionally triggers a normal exact-head PR Test on the released candidate before merge.
+- Final released PR head `1dc806c2f37fcf544763560b95310aac0d785b4d` passed Test run **32156566530**.
+- Released-head suite: **269 / 269 passed**, 0 failed.
+- Released-head generic audit: **5,000 / 5,000 valid**, **28.5% overlap**.
+- Released-head build reported **21 released subjects / 51 released data layers** and artifact check confirmed all referenced released layers with draft data excluded.
 
-## Merge rule
+## Merge and main verification
 
-Merge only after the released candidate's normal exact-head Test is green, PR diff inspection confirms no temporary files or unrelated scope, and the PR is ready for review. After merge, verify exact-main Test, Pages deployment, released artifact contents, and public smoke behavior.
+- PR **#67** was marked ready and merged with expected head `1dc806c2f37fcf544763560b95310aac0d785b4d`.
+- Merge commit on `main`: **`a732287def2bb4d80c4f05505e259b37e61d15ac`**.
+- Post-merge inspection confirmed AP CSA is `releaseStatus: "released"` on `main` and the merge contains only the intended CSA bank/wiring/metadata/evidence/tests.
+- During verification, the repository Test workflow was found to ignore `main` pushes (`branches-ignore: [main]`), making the checklist's exact-main Test gate structurally impossible for all releases. This was corrected on `main` in commit **`bf4c88c058e8dd539be88a37353bc4c02f768b75`** by removing that exclusion. The change touches only `.github/workflows/test.yml`.
+- The Pages workflow already triggers on every `main` push and runs the full `npm run check` before upload/deployment. Connector limitations prevent directly listing push-triggered main/Pages workflow runs, so no unsupported claim about their run IDs is recorded here.
+
+## Release conclusion
+
+AP Computer Science A is released on `main`. All subject-specific release gates, released-head CI, build, and artifact checks passed before merge. The only post-merge issue found was a repository-level verification-workflow gap; it was repaired so future `main` pushes now execute the Test workflow rather than skipping it.
