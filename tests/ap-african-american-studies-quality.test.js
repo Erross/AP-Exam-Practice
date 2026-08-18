@@ -71,14 +71,25 @@ test('answer construction stays inside project length-bias limits on effective b
   let correctWords = 0;
   let distractorWords = 0;
   let distractorCount = 0;
+  const sequenceStats = {};
+  const uniqueLongestIds = [];
 
   for (const q of bank) {
+    const seq = String(q.sequence || 0);
+    sequenceStats[seq] ||= { total: 0, uniqueLongest: 0, amongLongest: 0 };
+    sequenceStats[seq].total++;
+
     const lens = q.o.map(words);
     const correct = q.c[0];
     const max = Math.max(...lens);
     if (lens[correct] === max) {
       amongLongest++;
-      if (lens.filter((n) => n === max).length === 1) uniqueLongest++;
+      sequenceStats[seq].amongLongest++;
+      if (lens.filter((n) => n === max).length === 1) {
+        uniqueLongest++;
+        sequenceStats[seq].uniqueLongest++;
+        uniqueLongestIds.push(q.id);
+      }
     }
     correctWords += lens[correct];
     q.o.forEach((o, i) => {
@@ -95,7 +106,18 @@ test('answer construction stays inside project length-bias limits on effective b
   const distractorMean = distractorWords / distractorCount;
   const ratioDelta = Math.abs(correctMean - distractorMean) / distractorMean;
 
-  assert.ok(uniqueRate <= 0.25, `uniquely-longest correct rate ${(uniqueRate * 100).toFixed(1)}% exceeds 25%`);
+  console.log('AP AAS answer metrics', {
+    uniqueLongest: `${(uniqueRate * 100).toFixed(1)}%`,
+    amongLongest: `${(amongRate * 100).toFixed(1)}%`,
+    correctWords: correctMean.toFixed(2),
+    distractorWords: distractorMean.toFixed(2),
+    sequenceStats,
+  });
+
+  assert.ok(
+    uniqueRate <= 0.25,
+    `uniquely-longest correct rate ${(uniqueRate * 100).toFixed(1)}% exceeds 25%; by sequence ${JSON.stringify(sequenceStats)}; ids ${uniqueLongestIds.join(', ')}`
+  );
   assert.ok(amongRate <= 0.58, `among-longest correct rate ${(amongRate * 100).toFixed(1)}% exceeds 58%`);
   assert.ok(ratioDelta <= 0.12, `correct/distractor mean length differs by ${(ratioDelta * 100).toFixed(1)}%`);
 });
@@ -143,5 +165,6 @@ test('5,000 independent retake pairs average no more than 40% shared questions',
     overlapTotal += second.filter((q) => ids.has(q.id)).length / 60;
   }
   const average = overlapTotal / trials;
+  console.log(`AP AAS Monte Carlo overlap: ${(average * 100).toFixed(1)}%`);
   assert.ok(average <= 0.40, `average retake overlap ${(average * 100).toFixed(1)}% exceeds 40%`);
 });
