@@ -60,8 +60,13 @@
   window.QUESTIONS_AP_COMPUTER_SCIENCE_A = [];
   const titleByCode=new Map(window.AP_COMPUTER_SCIENCE_A_TOPICS.map(x=>[x[1],x[2]]));
   window.__APCSA_ADD=function(q){
-    const key=q.correctIndex==null?0:q.correctIndex;
-    const options=q.options||[q.correct,...q.distractors];
+    let options, key;
+    if(q.options){ options=q.options.slice(); key=q.correctIndex; }
+    else {
+      key=window.QUESTIONS_AP_COMPUTER_SCIENCE_A.length%4;
+      options=q.distractors.slice(0,3);
+      options.splice(key,0,q.correct);
+    }
     window.QUESTIONS_AP_COMPUTER_SCIENCE_A.push({
       id:q.id, unit:q.unit, topicCode:q.topicCode, topic:titleByCode.get(q.topicCode), skill:String(q.skill),
       type:"s", stimulusGroupId:q.stimulusGroupId||null, stimulus:q.stimulus||null,
