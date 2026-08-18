@@ -586,7 +586,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: false,
     tierNote: "Fully digital Java-based practice. The official exam provides the AP Computer Science A Java Quick Reference in Bluebook; this site currently practices the multiple-choice section only.",
