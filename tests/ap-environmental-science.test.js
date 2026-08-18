@@ -10,21 +10,21 @@ const topicCodes = topicCounts.flatMap((n,i)=>Array.from({length:n},(_,j)=>`${i+
 const unitTargets = {U1:6,U2:6,U3:10,U4:10,U5:10,U6:10,U7:7,U8:7,U9:14};
 const practiceRanges = subject.skillCountRanges;
 
-test('APES effective development bank has exact 99-topic coverage and deep standalone inventory',()=>{
+test('APES effective development bank has exact 99-topic coverage and deep semantic inventory',()=>{
   assert.equal(subject.mcqCount,80);
   assert.equal(subject.mcqTimeMinutes,90);
   assert.equal(subject.totalExamTimeLabel,'2h 40m');
   assert.equal(subject.formatVerified,true);
   assert.equal(subject.releaseStatus,'draft');
   assert.equal(subject.calculatorAllowed,true);
-  assert.equal(bank.length,258);
-  assert.equal(new Set(bank.map(q=>q.id)).size,258);
+  assert.equal(bank.length,285);
+  assert.equal(new Set(bank.map(q=>q.id)).size,285);
   assert.equal(new Set(bank.map(q=>q.topicCode)).size,99);
   for (const code of topicCodes) {
     assert.ok(bank.some(q=>q.topicCode===code),`${code}: missing topic`);
-    assert.equal(bank.filter(q=>q.topicCode===code && !q.stimulusGroupId).length,2,`${code}: expected two standalone candidates`);
+    assert.ok(bank.filter(q=>q.topicCode===code && !q.stimulusGroupId).length>=2,`${code}: expected at least two standalone candidates`);
   }
-  assert.equal(scripts.length,15);
+  assert.equal(scripts.length,16);
   bank.forEach(q=>{
     assert.equal(q.type,'s',q.id);
     assert.equal(q.o.length,4,q.id);
@@ -32,6 +32,21 @@ test('APES effective development bank has exact 99-topic coverage and deep stand
     assert.match(q.skill,/^[1-7]$/,q.id);
     assert.ok(q.e.length>=90,`${q.id}: rationale too short`);
   });
+});
+
+test('APES practice labels perform their declared source or standalone task',()=>{
+  const baseConcept=bank.filter(q=>/^apes-\d+-\d+-0[12]$/.test(q.id));
+  assert.equal(baseConcept.length,198);
+  baseConcept.forEach(q=>assert.equal(q.skill,'1',q.id));
+  const experiments=bank.filter(q=>q.id.startsWith('apes-exp-'));
+  assert.equal(experiments.length,9);
+  experiments.forEach(q=>{assert.equal(q.skill,'4',q.id);assert.match(q.q,/design|tests?|investigat/i,q.id);});
+  const solutions=bank.filter(q=>q.id.startsWith('apes-sol-'));
+  assert.equal(solutions.length,18);
+  solutions.forEach(q=>{assert.equal(q.skill,'7',q.id);assert.match(q.q,/action|measure|policy|response|intervention|practice|strategy/i,q.id);});
+  bank.filter(q=>q.stimulus&&q.stimulus.type==='quantitative').forEach(q=>assert.ok(['5','6'].includes(q.skill),q.id));
+  bank.filter(q=>q.stimulus&&q.stimulus.type==='visual').forEach(q=>assert.ok(['2','7'].includes(q.skill),q.id));
+  bank.filter(q=>q.stimulus&&q.stimulus.type==='text').forEach(q=>assert.equal(q.skill,'3',q.id));
 });
 
 test('APES source portfolio has 8 quantitative, 8 visual/model, and 4 text candidate sets',()=>{
@@ -48,18 +63,24 @@ test('APES source portfolio has 8 quantitative, 8 visual/model, and 4 text candi
   assert.deepEqual(kinds,{quantitative:8,visual:8,text:4});
 });
 
-test('APES randomized forms satisfy the exact unit, source-set, and science-practice blueprint',()=>{
+test('APES raw answer positions remain balanced after source-set rotation',()=>{
+  const keys=[0,0,0,0];bank.forEach(q=>keys[q.c[0]]++);
+  keys.forEach((n,i)=>assert.ok(n/bank.length>=0.20&&n/bank.length<=0.30,`key ${i}=${n}/${bank.length}`));
+});
+
+test('APES randomized forms satisfy the May 2027 unit, source-set, and science-practice blueprint',()=>{
   for(let i=0;i<250;i++){
     const draw=drawExam(subject,bank);
     assert.equal(draw.length,80);
     for(const [unit,n] of Object.entries(unitTargets)) assert.equal(draw.filter(q=>q.unit===unit).length,n,`${unit} mismatch on draw ${i}`);
     const ids=[...new Set(draw.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId))];
-    assert.equal(ids.length,10);
+    assert.equal(ids.length,12);
     const kinds=ids.map(id=>draw.find(q=>q.stimulusGroupId===id).stimulus.type);
-    assert.equal(kinds.filter(x=>x==='quantitative').length,4);
-    assert.equal(kinds.filter(x=>x==='visual').length,4);
+    assert.equal(kinds.filter(x=>x==='quantitative').length,5);
+    assert.equal(kinds.filter(x=>x==='visual').length,5);
     assert.equal(kinds.filter(x=>x==='text').length,2);
     const counts={};draw.forEach(q=>counts[q.skill]=(counts[q.skill]||0)+1);
     for(const [skill,[lo,hi]] of Object.entries(practiceRanges)) assert.ok((counts[skill]||0)>=lo&&(counts[skill]||0)<=hi,`practice ${skill}=${counts[skill]||0} outside ${lo}-${hi} on draw ${i}`);
+    assert.equal(counts['2'],10);assert.equal(counts['3'],6);assert.equal(counts['5'],10);assert.equal(counts['6'],5);
   }
 });
