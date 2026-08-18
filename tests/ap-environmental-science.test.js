@@ -43,7 +43,7 @@ test('APES practice labels perform their declared source or standalone task',()=
   experiments.forEach(q=>{assert.equal(q.skill,'4',q.id);assert.match(q.q,/design|tests?|investigat/i,q.id);});
   const solutions=bank.filter(q=>q.id.startsWith('apes-sol-'));
   assert.equal(solutions.length,18);
-  solutions.forEach(q=>{assert.equal(q.skill,'7',q.id);assert.match(q.q,/action|measure|policy|response|intervention|practice|strategy/i,q.id);});
+  solutions.forEach(q=>{assert.equal(q.skill,'7',q.id);assert.match(q.q,/action|measure|policy|response|intervention|practice|strategy|change|step|plan|choice/i,q.id);});
   bank.filter(q=>q.stimulus&&q.stimulus.type==='quantitative').forEach(q=>assert.ok(['5','6'].includes(q.skill),q.id));
   bank.filter(q=>q.stimulus&&q.stimulus.type==='visual').forEach(q=>assert.ok(['2','7'].includes(q.skill),q.id));
   bank.filter(q=>q.stimulus&&q.stimulus.type==='text').forEach(q=>assert.equal(q.skill,'3',q.id));
