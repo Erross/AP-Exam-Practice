@@ -84,3 +84,15 @@ test('APES randomized forms satisfy the May 2027 unit, source-set, and science-p
     assert.equal(counts['2'],10);assert.equal(counts['3'],6);assert.equal(counts['5'],10);assert.equal(counts['6'],5);
   }
 });
+
+test('APES independent retake overlap remains at or below the project target',()=>{
+  let total=0;
+  const trials=1000;
+  for(let i=0;i<trials;i++){
+    const first=drawExam(subject,bank),second=drawExam(subject,bank),ids=new Set(first.map(q=>q.id));
+    total+=second.filter(q=>ids.has(q.id)).length/subject.mcqCount;
+  }
+  const overlap=total/trials;
+  console.log(`APES Monte Carlo overlap: ${(100*overlap).toFixed(1)}%`);
+  assert.ok(overlap<=0.40,`APES overlap ${(100*overlap).toFixed(1)}% exceeds 40%`);
+});
