@@ -101,4 +101,12 @@
       "process must be changed from a method into an instance variable before the call.",
       "The call must appear earlier in the source file than the declaration of obj."
     ]);
+
+  replaceOptions("apcsa-u2-12",
+    "The nearest preceding unmatched if.",
+    [
+      "The outermost preceding if in the same method.",
+      "Each preceding if in the nested statement receives the same else branch.",
+      "The preceding if at the smallest indentation level, regardless of braces."
+    ]);
 })();
