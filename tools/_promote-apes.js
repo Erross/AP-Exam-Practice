@@ -1,0 +1,17 @@
+const fs = require('fs');
+const path = 'js/subjects.js';
+const src = fs.readFileSync(path, 'utf8');
+const idMarker = 'id: "ap-environmental-science"';
+const idAt = src.indexOf(idMarker);
+if (idAt < 0) throw new Error('APES registry entry not found');
+const blockStart = src.lastIndexOf('  {', idAt);
+const blockEndMarker = 'dataVar:"QUESTIONS_AP_ENVIRONMENTAL_SCIENCE",\n  },';
+const blockEnd = src.indexOf(blockEndMarker, idAt);
+if (blockStart < 0 || blockEnd < 0) throw new Error('Could not isolate APES registry block');
+const end = blockEnd + blockEndMarker.length;
+const block = src.slice(blockStart, end);
+const oldStatus = 'releaseStatus: "draft"';
+if ((block.split(oldStatus).length - 1) !== 1) throw new Error('APES block must contain exactly one draft releaseStatus');
+const promoted = block.replace(oldStatus, 'releaseStatus: "released"');
+fs.writeFileSync(path, src.slice(0, blockStart) + promoted + src.slice(end));
+console.log('APES releaseStatus promoted exactly once.');
