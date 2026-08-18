@@ -12,6 +12,9 @@ function loadBank() {
     'ap-african-american-studies-required-sources-1.js',
     'ap-african-american-studies-quality-diversity-1.js',
     'ap-african-american-studies-quality-explanations-1.js',
+    'ap-african-american-studies-quantitative-1.js',
+    'ap-african-american-studies-visual-1.js',
+    'ap-african-american-studies-required-sources-2.js',
   ]) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, `../data/${file}`), 'utf8'), context, { filename: file });
   }
@@ -35,12 +38,12 @@ test('student-facing sources are transparent about synthetic versus required-sou
     if (seen.has(q.stimulusGroupId)) continue;
     seen.add(q.stimulusGroupId);
     const s = q.stimulus;
-    assert.ok(s.title && s.text && s.source);
+    assert.ok(s.title && (s.text || s.description || (Array.isArray(s.columns) && Array.isArray(s.rows))) && s.source);
     if (s.requiredSource) {
       assert.match(s.source, /Required source/i);
       assert.match(s.source, /original summary\/description/i);
     } else {
-      assert.match(s.source, /Original synthetic source/i);
+      assert.match(s.source, /Original (synthetic source|simulated data|synthetic visual)/i);
     }
   }
   assert.equal(seen.size, 74);
