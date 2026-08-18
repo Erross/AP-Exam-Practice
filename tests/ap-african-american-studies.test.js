@@ -31,6 +31,15 @@ const subject = {
     { id: 'U4', examWeight: 0.225, examWeightRange: [0.20, 0.25] },
   ],
   stimulusSetRange: [15, 20],
+  attributeRanges: {
+    unit: {
+      U1: [12, 15],
+      U2: [18, 21],
+      U3: [12, 15],
+      U4: [12, 15],
+    },
+  },
+  constraintDrawAttempts: 20000,
 };
 
 function seeded(seed) {
