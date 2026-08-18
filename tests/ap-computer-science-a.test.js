@@ -18,7 +18,7 @@ test('AP CSA revised-framework inventory is complete and structurally valid',()=
   assert.equal(bank.length,159);
   assert.equal(new Set(bank.map(q=>q.id)).size,159);
   assert.equal(new Set(bank.map(q=>q.topicCode)).size,53);
-  assert.equal(scripts.length,5);
+  assert.equal(scripts.length,6);
   for(const code of topicCodes){
     const qs=bank.filter(q=>q.topicCode===code);
     assert.equal(qs.length,3,`${code}: expected exactly three candidates`);
