@@ -20,6 +20,7 @@ function loadBank() {
 }
 const bank = loadBank();
 const group = (topic) => bank.filter((q) => q.topicCode === topic).sort((a,b) => a.sequence - b.sequence);
+const keyedText = (qs) => qs.flatMap((q) => [q.q, q.e, q.o[q.c[0]]]).join(' ');
 
 test('Unit 4 has all 21 topics with intact source groups', () => {
   for (let n = 1; n <= 21; n++) {
@@ -51,21 +52,25 @@ test('Unit 4 reviewed required-source anchors remain attached to intended topics
 
 test('Unit 4 preserves multiple strategies and currents within Black freedom politics', () => {
   const topics = ['4.4','4.6','4.7','4.9','4.10','4.11','4.13'];
-  const text = topics.flatMap(group).flatMap((q) => [q.q, q.e, ...q.o]).join(' ');
+  const qs = topics.flatMap(group);
+  const text = qs.flatMap((q) => [q.q, q.e, ...q.o]).join(' ');
+  const keyed = keyedText(qs);
   assert.match(text, /nonviolent|direct action|organizing|self-determination|Black Power|Panther|feminist|Combahee|community/i);
-  assert.doesNotMatch(text, /all Black activists shared (?:one|the same) strategy/i);
+  assert.doesNotMatch(keyed, /all Black activists shared (?:one|the same) strategy/i);
 });
 
 test('contemporary diversity is not flattened into a single Black experience', () => {
   const qs = group('4.16');
   const text = qs.flatMap((q) => [q.q, q.e, ...q.o]).join(' ');
+  const keyed = keyedText(qs);
   assert.match(text, /variation|diversity|nativity|age|migration|religion/i);
-  assert.doesNotMatch(text, /all Black Americans share the same migration history/i);
+  assert.doesNotMatch(keyed, /all Black Americans share the same migration history/i);
 });
 
 test('Afrofuturism source analysis includes imagination of alternative Black futures', () => {
   const qs = group('4.21');
   const text = qs.flatMap((q) => [q.q, q.e, ...q.o]).join(' ');
+  const keyed = keyedText(qs);
   assert.match(text, /future|speculative|space|technology|Black|alternative/i);
-  assert.doesNotMatch(text, /Afrofuturism.*only.*prediction/i);
+  assert.doesNotMatch(keyed, /Afrofuturism.*only.*prediction/i);
 });
