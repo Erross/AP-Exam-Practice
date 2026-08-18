@@ -297,8 +297,8 @@
   replaceOptions("apcsa-u4-12",
     "The loop variable receives each element value but does not provide the element's array index for assignment.",
     [
-      "An enhanced for loop exposes the array index but makes the loop variable read-only, preventing assignments through that index.",
-      "An enhanced for loop copies the entire array before traversal, so changing an indexed element would update only the copy.",
+      "An enhanced for loop exposes the array index but does not permit assignments through that index.",
+      "An enhanced for loop copies the entire array before traversal, so changing an indexed element would update the copy rather than the original.",
       "The loop variable acts as a reference to each primitive array slot, but assignments are deferred until traversal has finished."
     ]);
 
@@ -362,8 +362,8 @@
     "Initialize max to an actual element such as grid[0][0], then compare all elements.",
     [
       "Initialize max to 0 and compare the elements, which is safe because a nonempty int array necessarily contains a nonnegative value.",
-      "Initialize max to the number of rows plus columns, then update it only when an element exceeds that dimension total.",
-      "Initialize max to Integer.MIN_VALUE only after the first row has been processed, using 0 while examining that first row."
+      "Initialize max to the number of rows plus columns, then update it whenever an element exceeds that dimension total.",
+      "Initialize max to Integer.MIN_VALUE after the first row has been processed, while using 0 for comparisons in that first row."
     ]);
 
   replaceOptions("apcsa-u4-41",
