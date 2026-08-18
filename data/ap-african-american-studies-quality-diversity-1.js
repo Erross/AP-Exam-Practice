@@ -31,24 +31,24 @@
 
   const unitFrames = {
     U1: [
-      "It helps replace a static or isolated picture of Africa with analysis of African institutions, exchange, cultural development, and global connections before and during the early diaspora.",
-      "It shows why African American Studies treats early African history as foundational to understanding later diasporic identities and cultural continuities.",
-      "It connects evidence from Africa to broader questions about political authority, knowledge, religion, trade, mobility, and the formation of diasporic communities.",
+      "it links evidence about African institutions, exchange, culture, and mobility to the formation of diasporic identities and communities.",
+      "it places early African history at the foundation of later questions about diaspora, cultural continuity, political authority, and exchange.",
+      "it connects a specific African setting to broader analysis of knowledge, religion, trade, movement, and the making of diasporic communities.",
     ],
     U2: [
-      "It places enslavement within a history that also includes African and African American agency, resistance, institution building, family, culture, and political thought.",
-      "It helps explain how racial slavery was built through law, commerce, and violence while Black people continually contested bondage and defined freedom for themselves.",
-      "It connects a specific source to the wider Atlantic and U.S. processes through which slavery, resistance, abolition, and Black political ideas developed together.",
+      "it places enslavement alongside African and African American agency, resistance, family, institution building, culture, and political thought.",
+      "it connects the construction of racial slavery through law, commerce, and violence to Black efforts to resist bondage and define freedom.",
+      "it links a specific source to wider Atlantic and U.S. developments in slavery, resistance, abolition, and Black political ideas.",
     ],
     U3: [
-      "It shows that emancipation was a beginning rather than an endpoint, requiring African Americans to build institutions and defend political, economic, cultural, and social visions of freedom.",
-      "It connects the source to the struggle over what citizenship and freedom would mean after slavery amid both Black institution building and organized white resistance.",
-      "It demonstrates how African American Studies analyzes law, migration, culture, organizations, violence, and intellectual life together when studying post-emancipation freedom.",
+      "it shows how emancipation opened continuing struggles over citizenship, institutions, economic opportunity, culture, and the practical meaning of freedom.",
+      "it connects post-emancipation evidence to contests over citizenship and freedom amid Black institution building and organized white resistance.",
+      "it links law, migration, culture, organizations, violence, and intellectual life in analyzing how African Americans practiced freedom after slavery.",
     ],
     U4: [
-      "It connects modern Black freedom struggles to cultural production, political strategy, diaspora, gender, economics, representation, science, and debates over Black identity and futures.",
-      "It demonstrates that twentieth- and twenty-first-century Black politics and culture developed through multiple strategies and institutions rather than one unified movement or ideology.",
-      "It places the source within continuing debates over equality, self-determination, representation, cultural power, and the meaning of freedom in contemporary Black communities.",
+      "it links modern Black freedom struggles to political strategy, cultural production, diaspora, gender, economics, representation, and debates over identity.",
+      "it situates modern Black politics and culture among multiple strategies, institutions, and intellectual traditions rather than one unified approach.",
+      "it connects the source to continuing debates over equality, self-determination, representation, cultural power, and the meaning of freedom.",
     ],
   };
 
@@ -65,11 +65,11 @@
 
     const title = q1.stimulus && q1.stimulus.title ? q1.stimulus.title : `CED Topic ${q1.topicCode}`;
     const frames = unitFrames[q1.unit] || unitFrames.U4;
-    const correct = `${title} matters to African American Studies because ${frames[groupIndex % frames.length].replace(/^It /, "it ")}`;
+    const correct = `${title} matters to African American Studies because ${frames[groupIndex % frames.length]}`;
     const distractors = [
-      `The main disciplinary value of ${title} is that one source can stand in for the experiences of all Black communities across different places and periods.`,
-      `${title} is most useful when interpreted without reference to its creator, historical context, audience, or relationship to other evidence.`,
-      `The source makes broader African American Studies analysis unnecessary because its meaning can be reduced to a single isolated fact about this topic.`,
+      `${title} is most useful as a self-contained illustration of the topic, with its immediate content taking priority over creator, audience, and context.`,
+      `${title} chiefly helps confirm a broad chronology of the period, while comparison across institutions, identities, and forms of power is secondary.`,
+      `${title} mainly documents one historical setting, so its strongest use is descriptive rather than connecting evidence across themes, communities, or periods.`,
     ];
     const pos = (groupIndex * 3 + 2) % 4;
     const options = distractors.slice();
@@ -82,7 +82,7 @@
     ][groupIndex % 4];
     q3.o = options;
     q3.c = [pos];
-    q3.e = `The source is significant because it connects the specific evidence in ${title} to broader analysis of Black history, culture, institutions, identity, power, and change. The distractors misuse one source as universally representative, strip it of context, or reduce interdisciplinary analysis to an isolated fact.`;
+    q3.e = `The stronger interpretation connects the specific evidence in ${title} to broader analysis of Black history, culture, institutions, identity, power, and change. The alternatives narrow the source to description or chronology instead of using context and comparison to build an interdisciplinary interpretation.`;
 
     groupIndex++;
   }
