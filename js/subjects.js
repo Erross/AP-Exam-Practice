@@ -576,14 +576,38 @@ const AP_SUBJECTS = [
     name: "AP Computer Science A",
     category: "Math & Computer Science",
     tier: 1,
-    mcqCount: 40,
+    // VERIFIED 2026-08-18 against the current AP Central exam page and the
+    // AP Computer Science A CED effective Fall 2025. Section I has 42 single-select
+    // MCQs in 90 minutes (55%); mostly individual questions with occasional 2-question
+    // sets. Section II has 4 digital FRQs in 90 minutes (45%).
+    // Unit point weights use normalized published-range midpoints; Hamilton
+    // apportionment on 42 questions yields 8/13/6/15, all inside official bands.
+    mcqCount: 42,
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "3h 0m",
-    formatVerified: false,
+    formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
-    tierNote: null,
-    units: [],
+    calculatorAllowed: false,
+    tierNote: "Fully digital Java-based practice. The official exam provides the AP Computer Science A Java Quick Reference in Bluebook; this site currently practices the multiple-choice section only.",
+    units: [
+      { id:"U1", name:"Using Objects and Methods", examWeight:8/42, examWeightRange:[0.15,0.25] },
+      { id:"U2", name:"Selection and Iteration", examWeight:13/42, examWeightRange:[0.25,0.35] },
+      { id:"U3", name:"Class Creation", examWeight:6/42, examWeightRange:[0.10,0.18] },
+      { id:"U4", name:"Data Collections", examWeight:15/42, examWeightRange:[0.30,0.40] },
+    ],
+    skillCountRanges: { "1":[1,4], "2":[10,15], "3":[16,22], "4":[5,6], "5":[1,4] },
+    stimulusSetRange: [0,2],
+    constraintDrawAttempts: 30000,
+    freeResponse: {
+      timeMinutes:90,
+      questions:[
+        "Question 1 (Methods and Control Structures)",
+        "Question 2 (Class Design)",
+        "Question 3 (Data Analysis with ArrayList)",
+        "Question 4 (2D Array)",
+      ],
+    },
     dataVar: "QUESTIONS_AP_COMPUTER_SCIENCE_A",
   },
   {
