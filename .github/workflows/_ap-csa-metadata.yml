@@ -1,0 +1,24 @@
+name: Apply AP CSA metadata
+on:
+  push:
+    paths: ['.github/workflows/_ap-csa-metadata.yml']
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: subject/ap-computer-science-a
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: node tools/_update-ap-csa-metadata.js
+      - run: rm tools/_update-ap-csa-metadata.js .github/workflows/_ap-csa-metadata.yml
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add js/subjects.js tools/_update-ap-csa-metadata.js .github/workflows/_ap-csa-metadata.yml
+          git commit -m "Verify revised AP CSA exam metadata"
+          git push origin HEAD:subject/ap-computer-science-a
