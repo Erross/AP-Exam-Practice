@@ -11,6 +11,7 @@ function loadBank() {
     'ap-african-american-studies.js',
     'ap-african-american-studies-set-expansion.js',
     'ap-african-american-studies-required-sources-1.js',
+    'ap-african-american-studies-required-sources-2.js',
     'ap-african-american-studies-quality-diversity-1.js',
     'ap-african-american-studies-quality-explanations-1.js',
     'ap-african-american-studies-quantitative-1.js',
@@ -44,12 +45,13 @@ function seeded(seed) {
   };
 }
 
-test('effective bank retains exact source inventory and 50/50 required-source split', () => {
+test('effective bank retains exact source inventory and approximately-half required-source mix', () => {
   const groups = toBlocks(bank);
   assert.equal(bank.length, 238);
   assert.equal(groups.length, 74);
-  assert.equal(groups.filter((g) => g[0].stimulus.requiredSource).length, 37);
-  assert.equal(groups.filter((g) => !g[0].stimulus.requiredSource).length, 37);
+  const required = groups.filter((g) => g[0].stimulus.requiredSource).length;
+  assert.ok(required >= 35 && required <= 40, `required-source group count ${required} is not approximately half of 74`);
+  assert.equal(required, 39, 'reviewed effective bank should currently contain 39 required-source groups');
   assert.equal(groups.filter((g) => g[0].stimulus.type === 'quantitative').length, 4);
   assert.equal(groups.filter((g) => g[0].stimulus.type === 'visual').length, 4);
 });
