@@ -15,9 +15,7 @@ function loadBrowserEffectiveBank() {
     'data/ap-african-american-studies-synthetic-claim-fixes.js',
   ]);
   const context = vm.createContext({ window: {} });
-  for (const script of scripts) {
-    vm.runInContext(fs.readFileSync(path.join(root, script), 'utf8'), context, { filename: script });
-  }
+  for (const script of scripts) vm.runInContext(fs.readFileSync(path.join(root, script), 'utf8'), context, { filename: script });
   return context.window.QUESTIONS_AP_AFRICAN_AMERICAN_STUDIES;
 }
 
@@ -26,9 +24,7 @@ const group = (topic) => bank.filter((q) => q.topicCode === topic).sort((a, b) =
 
 test('required-source questions stay grounded in the browser-effective source rather than inherited synthetic claims', () => {
   const requiredGroups = new Map();
-  for (const q of bank) {
-    if (q.stimulus && q.stimulus.requiredSource) requiredGroups.set(q.stimulusGroupId, group(q.topicCode));
-  }
+  for (const q of bank) if (q.stimulus && q.stimulus.requiredSource) requiredGroups.set(q.stimulusGroupId, group(q.topicCode));
   assert.equal(requiredGroups.size, 39);
   for (const qs of requiredGroups.values()) {
     const q1 = qs.find((q) => q.sequence === 1);
@@ -38,6 +34,19 @@ test('required-source questions stay grounded in the browser-effective source ra
     assert.match(q2.e, /specific evidence|broader conclusions|corrobor/i, `${q2.topicCode}: q2 does not constrain inference`);
     assert.doesNotMatch(q2.o[q2.c[0]], /all Black communities|entire period|every region/i, `${q2.topicCode}: keyed answer overgeneralizes`);
   }
+});
+
+test('required-source third questions now require topic-specific historical contextualization', () => {
+  const requiredQ3 = bank.filter((q) => q.sequence === 3 && q.stimulus && q.stimulus.requiredSource);
+  assert.equal(requiredQ3.length, 39);
+  for (const q of requiredQ3) {
+    assert.equal(q.skill, '1.B', `${q.topicCode}: required q3 should contextualize`);
+    assert.match(q.q, /historical|context|course connection|broader pattern|development|significance/i, `${q.topicCode}: q3 lacks contextualization task`);
+    assert.ok(q.q.includes(q.stimulus.title), `${q.topicCode}: q3 is not tied to its source`);
+    assert.doesNotMatch(q.q, /which next step|which comparison would add|which question would best test the limits|which additional perspective|which method would best connect|which approach would best distinguish|which kind of corroboration/i, `${q.topicCode}: generic source-method scaffold survived`);
+    assert.ok(q.e.length >= 120, `${q.topicCode}: contextual rationale too short`);
+  }
+  assert.equal(new Set(requiredQ3.map((q) => q.o[q.c[0]])).size, 39, 'required q3 keyed contexts are not source-specific');
 });
 
 test('Brookes fourth question analyzes the diagram rather than obsolete ship logs', () => {
@@ -53,7 +62,6 @@ test('Oshe Shango and Chafariz fourth questions no longer overclaim what the fin
   assert.match(oshe.q, /Oshe Shango/i);
   assert.match(oshe.o[oshe.c[0]], /continuity|adaptation|syncretism/i);
   assert.doesNotMatch(oshe.o[oshe.c[0]], /never changed|proof/i);
-
   const lisbon = group('1.11').find((x) => x.sequence === 4);
   assert.match(lisbon.q, /Chafariz/i);
   assert.match(lisbon.o[lisbon.c[0]], /presence and mobility/i);
@@ -67,16 +75,12 @@ test('repetitive old disciplinary-significance scaffold is absent from final tex
     assert.doesNotMatch(q.q, /disciplinary significance|broader work of African American Studies/i, `${q.id}: old template survived`);
     assert.doesNotMatch(q.o.join(' '), /self-contained illustration of the topic|strongest use is descriptive rather than/i, `${q.id}: old template distractor survived`);
   }
-  assert.ok(new Set(textQ3.map((q) => q.q)).size >= 30, 'q3 stem variety regressed');
+  assert.ok(new Set(textQ3.map((q) => q.q)).size >= 50, 'q3 stem/source variety regressed');
 });
 
 test('synthetic text groups retain topic-specific analytical depth and no verbatim keyed thesis', () => {
   const syntheticTextGroups = new Map();
-  for (const q of bank) {
-    if (q.stimulus && !q.stimulus.requiredSource && q.stimulus.type === 'text') {
-      syntheticTextGroups.set(q.stimulusGroupId, group(q.topicCode));
-    }
-  }
+  for (const q of bank) if (q.stimulus && !q.stimulus.requiredSource && q.stimulus.type === 'text') syntheticTextGroups.set(q.stimulusGroupId, group(q.topicCode));
   assert.equal(syntheticTextGroups.size, 27);
   for (const qs of syntheticTextGroups.values()) {
     const q1 = qs.find((q) => q.sequence === 1);
@@ -89,6 +93,17 @@ test('synthetic text groups retain topic-specific analytical depth and no verbat
     assert.ok(!source.includes(keyed), `${q1.topicCode}: keyed q1 answer remains verbatim in stimulus`);
     assert.match(q1.q, /paraphrase|restates|summarizes|interpretation|conclusion|statement|expresses|matches/i, `${q1.topicCode}: q1 no longer tests interpretation`);
   }
+});
+
+test('final browser-effective bank has no stacked absolute-language distractor tells', () => {
+  const absolute = /\b(always|never|every|only|entirely|unlimited|impossible|guaranteed)\b/i;
+  const offenders = [];
+  for (const q of bank) {
+    const wrong = q.o.filter((_, i) => i !== q.c[0]);
+    const hits = wrong.filter((o) => absolute.test(o));
+    if (hits.length > 1) offenders.push(`${q.id} (${hits.length})`);
+  }
+  assert.deepEqual(offenders, []);
 });
 
 test('all 74 browser-effective groups remain intact after semantic repairs', () => {
