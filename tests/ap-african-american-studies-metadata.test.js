@@ -27,14 +27,14 @@ test('official Section I format and draft gate are fixed', () => {
 });
 
 test('four official units and published weighting bands are represented exactly', () => {
-  assert.deepEqual(subject.units.map((u) => u.id), ['U1', 'U2', 'U3', 'U4']);
-  assert.deepEqual(subject.units.map((u) => Array.from(u.examWeightRange)), [
+  assert.deepEqual(Array.from(subject.units, (u) => u.id), ['U1', 'U2', 'U3', 'U4']);
+  assert.deepEqual(Array.from(subject.units, (u) => Array.from(u.examWeightRange)), [
     [0.20, 0.25],
     [0.30, 0.35],
     [0.20, 0.25],
     [0.20, 0.25],
   ]);
-  assert.deepEqual(subject.units.map((u) => u.examWeight), [0.225, 0.325, 0.225, 0.225]);
+  assert.deepEqual(Array.from(subject.units, (u) => u.examWeight), [0.225, 0.325, 0.225, 0.225]);
   assert.ok(Math.abs(subject.units.reduce((sum, u) => sum + u.examWeight, 0) - 1) < 1e-12);
 });
 
