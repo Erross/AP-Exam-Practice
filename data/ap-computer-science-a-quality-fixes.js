@@ -73,9 +73,9 @@
   replaceOptions("apcsa-u1-35",
     "The objects have the same declared type but may hold different instance-variable values.",
     [
-      "The objects must hold identical instance-variable values because they were created from the same class.",
-      "Each reference variable contains a primitive copy of every field in its object.",
-      "Reassigning one reference variable automatically reassigns every reference of the same declared type."
+      "Objects created from one class use a shared copy of each instance field instead of per-object state.",
+      "A reference variable stores the object's field values directly rather than a reference value.",
+      "Reassigning one reference variable also reassigns another variable merely because its declared type matches."
     ]);
 
   replaceOptions("apcsa-u1-38",
