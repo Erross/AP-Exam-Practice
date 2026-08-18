@@ -795,7 +795,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 90,
     totalExamTimeLabel: "2h 40m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: true,
     tierNote: "Calculators are permitted throughout this 80-question multiple-choice practice section. The official fully digital exam also includes three free-response questions, which this product does not simulate.",
