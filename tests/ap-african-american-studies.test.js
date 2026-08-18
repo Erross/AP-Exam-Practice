@@ -11,6 +11,7 @@ function loadBank() {
     'ap-african-american-studies.js',
     'ap-african-american-studies-set-expansion.js',
     'ap-african-american-studies-required-sources-1.js',
+    'ap-african-american-studies-quality-diversity-1.js',
   ]) {
     const src = fs.readFileSync(path.join(__dirname, `../data/${file}`), 'utf8');
     vm.runInContext(src, context, { filename: file });
@@ -98,7 +99,20 @@ test('exactly half of topic source sets are currently converted to named require
   }
 });
 
-test('raw answer positions remain balanced after source and set expansion', () => {
+test('anti-template pass gives source groups varied student-facing stems', () => {
+  const groups = toBlocks(bank).map((g) => g.slice().sort((a, b) => a.sequence - b.sequence));
+  const q1Stems = new Set(groups.map((g) => g[0].q));
+  const q2Stems = new Set(groups.map((g) => g[1].q));
+  const q3Stems = new Set(groups.map((g) => g[2].q));
+  assert.ok(q1Stems.size >= 6);
+  assert.ok(q2Stems.size >= 6);
+  assert.ok(q3Stems.size >= 4);
+  const q3Correct = groups.map((g) => g[2].o[g[2].c[0]]);
+  assert.equal(new Set(q3Correct).size, 74, 'disciplinary-significance answers must be topic/source specific');
+  assert.ok(q3Correct.every((answer) => !/^African American Studies connects specific developments/.test(answer)));
+});
+
+test('raw answer positions remain balanced after source and quality expansion', () => {
   const counts = [0, 0, 0, 0];
   bank.forEach((q) => counts[q.c[0]]++);
   counts.forEach((n) => assert.ok(n >= 50 && n <= 70, `raw key count ${n} is imbalanced`));
