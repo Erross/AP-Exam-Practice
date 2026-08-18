@@ -6,18 +6,14 @@ const vm = require('node:vm');
 const { drawExam, toBlocks } = require('../js/draw.js');
 
 function loadBank() {
+  const root = path.join(__dirname, '..');
+  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  const scripts = [...html.matchAll(/<script src="(data\/ap-african-american-studies[^\"]*\.js)"><\/script>/g)]
+    .map((m) => m[1]);
+  assert.equal(scripts.length, 12, 'quality audit must load every AP AAS browser layer');
   const context = vm.createContext({ window: {} });
-  for (const file of [
-    'ap-african-american-studies.js',
-    'ap-african-american-studies-set-expansion.js',
-    'ap-african-american-studies-required-sources-1.js',
-    'ap-african-american-studies-quality-diversity-1.js',
-    'ap-african-american-studies-quality-explanations-1.js',
-    'ap-african-american-studies-quantitative-1.js',
-    'ap-african-american-studies-visual-1.js',
-    'ap-african-american-studies-required-sources-2.js',
-  ]) {
-    vm.runInContext(fs.readFileSync(path.join(__dirname, `../data/${file}`), 'utf8'), context, { filename: file });
+  for (const script of scripts) {
+    vm.runInContext(fs.readFileSync(path.join(root, script), 'utf8'), context, { filename: script });
   }
   return context.window.QUESTIONS_AP_AFRICAN_AMERICAN_STUDIES;
 }
