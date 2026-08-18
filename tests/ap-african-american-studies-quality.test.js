@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const { drawExam } = require('../js/draw.js');
+const { drawExam, toBlocks } = require('../js/draw.js');
 
 function loadBank() {
   const context = vm.createContext({ window: {} });
@@ -12,6 +12,9 @@ function loadBank() {
     'ap-african-american-studies-set-expansion.js',
     'ap-african-american-studies-required-sources-1.js',
     'ap-african-american-studies-quality-diversity-1.js',
+    'ap-african-american-studies-quality-explanations-1.js',
+    'ap-african-american-studies-quantitative-1.js',
+    'ap-african-american-studies-visual-1.js',
   ]) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, `../data/${file}`), 'utf8'), context, { filename: file });
   }
@@ -41,7 +44,17 @@ function seeded(seed) {
   };
 }
 
-test('answer construction stays inside project length-bias limits', () => {
+test('effective bank retains exact source inventory and 50/50 required-source split', () => {
+  const groups = toBlocks(bank);
+  assert.equal(bank.length, 238);
+  assert.equal(groups.length, 74);
+  assert.equal(groups.filter((g) => g[0].stimulus.requiredSource).length, 37);
+  assert.equal(groups.filter((g) => !g[0].stimulus.requiredSource).length, 37);
+  assert.equal(groups.filter((g) => g[0].stimulus.type === 'quantitative').length, 4);
+  assert.equal(groups.filter((g) => g[0].stimulus.type === 'visual').length, 4);
+});
+
+test('answer construction stays inside project length-bias limits on effective bank', () => {
   let uniqueLongest = 0;
   let amongLongest = 0;
   let correctWords = 0;
@@ -76,7 +89,7 @@ test('answer construction stays inside project length-bias limits', () => {
   assert.ok(ratioDelta <= 0.12, `correct/distractor mean length differs by ${(ratioDelta * 100).toFixed(1)}%`);
 });
 
-test('stacked absolute-language distractors are rare', () => {
+test('stacked absolute-language distractors are rare on effective bank', () => {
   const absolute = /\b(always|never|every|only|entirely|completely|all|none|impossible|identical)\b/i;
   const offenders = [];
   for (const q of bank) {
@@ -87,12 +100,34 @@ test('stacked absolute-language distractors are rare', () => {
   assert.ok(offenders.length <= Math.ceil(bank.length * 0.02), `too many stacked absolute-language items: ${offenders.join(', ')}`);
 });
 
-test('1,000 independent retake pairs average no more than 40% shared questions', () => {
+test('5,000 weighted draws remain valid whole-set 60-question forms', () => {
+  for (let i = 0; i < 5000; i++) {
+    const form = drawExam(subject, bank, seeded(200000 + i));
+    assert.equal(form.length, 60);
+    const groupCounts = new Map();
+    const unitCounts = { U1:0, U2:0, U3:0, U4:0 };
+    for (const q of form) {
+      groupCounts.set(q.stimulusGroupId, (groupCounts.get(q.stimulusGroupId) || 0) + 1);
+      unitCounts[q.unit]++;
+    }
+    assert.ok(groupCounts.size >= 15 && groupCounts.size <= 20);
+    for (const [gid, count] of groupCounts) {
+      const fullSize = bank.filter((q) => q.stimulusGroupId === gid).length;
+      assert.equal(count, fullSize, `${gid}: source set split in draw ${i}`);
+    }
+    assert.ok(unitCounts.U1 >= 12 && unitCounts.U1 <= 15);
+    assert.ok(unitCounts.U2 >= 18 && unitCounts.U2 <= 21);
+    assert.ok(unitCounts.U3 >= 12 && unitCounts.U3 <= 15);
+    assert.ok(unitCounts.U4 >= 12 && unitCounts.U4 <= 15);
+  }
+});
+
+test('5,000 independent retake pairs average no more than 40% shared questions', () => {
   let overlapTotal = 0;
-  const trials = 1000;
+  const trials = 5000;
   for (let i = 0; i < trials; i++) {
-    const first = drawExam(subject, bank, seeded(10000 + i * 2));
-    const second = drawExam(subject, bank, seeded(10001 + i * 2));
+    const first = drawExam(subject, bank, seeded(400000 + i * 2));
+    const second = drawExam(subject, bank, seeded(400001 + i * 2));
     const ids = new Set(first.map((q) => q.id));
     overlapTotal += second.filter((q) => ids.has(q.id)).length / 60;
   }
