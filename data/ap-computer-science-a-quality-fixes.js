@@ -109,4 +109,12 @@
       "Each preceding if in the nested statement receives the same else branch.",
       "The preceding if at the smallest indentation level, regardless of braces."
     ]);
+
+  replaceOptions("apcsa-u2-25",
+    "Initialize count to 0; loop i from 1 through n; increment count when i % 2 == 0.",
+    [
+      "Initialize count to n; decrement count when the current value of i is odd.",
+      "Start i at 1 and continue the loop only while the current value of i is even.",
+      "Increment count on each iteration without testing whether the current value is even."
+    ]);
 })();
