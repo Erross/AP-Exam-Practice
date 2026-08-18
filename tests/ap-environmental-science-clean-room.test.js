@@ -21,7 +21,7 @@ test('APES clean-room Practice 4 items specify controlled comparative investigat
 
 test('APES clean-room Practice 7 items prescribe a concrete environmental intervention', () => {
   const solutions = bank.filter(q => q.skill === '7');
-  assert.equal(solutions.length, 59); // 54 standalone + five selected visual-set solution candidates in the full bank
+  assert.equal(solutions.length, 62); // 54 standalone + eight visual-set solution candidates in the full bank
   const action = /reduce|restore|protect|use|install|expand|improve|limit|retire|replace|stabilize|contain|apply|adjust|prevent|phase out|plan|site|adopt|develop|require|capture|control|manage|clean|drain|dry|enforce|increase reflective|match fertilizer/i;
   for (const q of solutions) {
     const answer = keyText(q);
