@@ -1,6 +1,6 @@
 # AP Environmental Science — May 2027 release evidence
 
-Status: **draft candidate; not yet released**
+Status: **promoted to released on the subject branch; merge pending released-mode CI**
 
 ## Authoritative specification
 
@@ -110,14 +110,18 @@ The naive-student regression passes and exposes the exam-critical facts before p
 
 ## Registry consolidation
 
-The verified May 2027 metadata is now consolidated into the real `js/subjects.js` AP Environmental Science entry while the subject remains `releaseStatus: "draft"`. The APES candidate helper now returns that registry object directly rather than shadowing it with duplicated metadata, so the semantic, quantitative, generic release-audit, randomized-draw, overlap, and naive/preflight regressions exercise the shipping configuration itself.
+The verified May 2027 metadata is consolidated into the real `js/subjects.js` AP Environmental Science entry. The APES helper now returns that registry object directly rather than shadowing it with duplicated metadata, so semantic, quantitative, generic release-audit, randomized-draw, overlap, and naive/preflight regressions exercise the shipping configuration itself.
 
-A first consolidation attempt was rejected during diff inspection because a full-file replacement accidentally altered AP Art History metadata. That commit was removed from the branch before release. The registry edit was then reapplied with an exact one-block transform and independently inspected; the resulting APES-only registry change is `595fafe6274d7d1be9b74e5e860a42a988a7a8f7`. The first registry-parity CI run then correctly caught that the student-facing `tierNote` omitted calculator permission. The test was not weakened; the registry note was corrected in `8e430289f18285765a61fd141fadcf470aac4a6e` to state calculator permission and the MCQ-only/FRQ limitation explicitly.
+A first consolidation attempt was rejected during diff inspection because a full-file replacement accidentally altered AP Art History metadata. That commit was removed from the branch before release. The registry edit was reapplied with an exact one-block transform and independently inspected; the resulting APES-only registry change is `595fafe6274d7d1be9b74e5e860a42a988a7a8f7`. The first registry-parity CI run then correctly caught that the student-facing `tierNote` omitted calculator permission. The test was not weakened; the registry note was corrected in `8e430289f18285765a61fd141fadcf470aac4a6e` to state calculator permission and the MCQ-only/FRQ limitation explicitly.
+
+The fully consolidated draft shipping configuration passed exact-head CI at `e0103f4bbced2562f968f7cb0d2ac4bbb297a109` / Test run `32093697403`. A release-status-agnostic shipping helper then passed at `a061d8d49d2168c72b231f6ce6e7786ab09a2743` / Test run `32093828577`.
+
+## Promotion
+
+AP Environmental Science was promoted with a targeted transform in commit `50c8b048a97b74604be7e19b279ada13bfe4e689`. Independent diff inspection confirms the only persistent product change in that commit is `releaseStatus: "draft"` to `releaseStatus: "released"` for AP Environmental Science; the temporary promotion script and workflow self-deleted.
 
 ## CI / shipping gates
 
-Content, quantitative, generic-audit, retake-overlap, semantic clean-room, naive/preflight, build, artifact, and repository-wide checks were green at `95ebc70a8f9fc0a687885877dc71e6660ac6dcb2` / workflow run `32088580381` before registry consolidation.
+The current commit exists to trigger exact-head full-repository CI against the **released** AP Environmental Science shipping configuration. Merge remains blocked until that released-mode run is green.
 
-The current normal connector commit exists to trigger an exact-head full-repository CI run against the consolidated shipping registry after the calculator-note correction. Promotion remains blocked until that run is green.
-
-**Still required before release:** green exact-head CI on the consolidated draft registry; inspect the final PR diff; then make a tiny draft-to-released promotion and verify released-mode CI, merge, exact-main CI, Pages deployment, and the published artifact/manifest. No release claim should be made before those gates pass.
+**Still required before production release:** green released-mode exact-head CI; mark the PR ready; merge; verify exact-main CI; verify Pages deployment and the published artifact/manifest; attempt public smoke where runtime networking permits it.
