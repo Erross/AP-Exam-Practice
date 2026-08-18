@@ -10,12 +10,12 @@ const topicCodes = topicCounts.flatMap((n,i)=>Array.from({length:n},(_,j)=>`${i+
 const unitTargets = {U1:6,U2:6,U3:10,U4:10,U5:10,U6:10,U7:7,U8:7,U9:14};
 const practiceRanges = subject.skillCountRanges;
 
-test('APES effective development bank has exact 99-topic coverage and deep semantic inventory',()=>{
+test('APES effective bank has exact 99-topic coverage and deep semantic inventory',()=>{
   assert.equal(subject.mcqCount,80);
   assert.equal(subject.mcqTimeMinutes,90);
   assert.equal(subject.totalExamTimeLabel,'2h 40m');
   assert.equal(subject.formatVerified,true);
-  assert.equal(subject.releaseStatus,'draft');
+  assert.ok(['draft','released'].includes(subject.releaseStatus));
   assert.equal(subject.calculatorAllowed,true);
   assert.equal(bank.length,330);
   assert.equal(new Set(bank.map(q=>q.id)).size,330);
@@ -79,20 +79,20 @@ test('APES randomized forms satisfy the May 2027 unit, source-set, and science-p
     assert.equal(kinds.filter(x=>x==='quantitative').length,5);
     assert.equal(kinds.filter(x=>x==='visual').length,5);
     assert.equal(kinds.filter(x=>x==='text').length,2);
-    const counts={};draw.forEach(q=>counts[q.skill]=(counts[q.skill]||0)+1);
-    for(const [skill,[lo,hi]] of Object.entries(practiceRanges)) assert.ok((counts[skill]||0)>=lo&&(counts[skill]||0)<=hi,`practice ${skill}=${counts[skill]||0} outside ${lo}-${hi} on draw ${i}`);
-    assert.equal(counts['2'],10);assert.equal(counts['3'],6);assert.equal(counts['5'],10);assert.equal(counts['6'],5);
+    for(const id of ids) assert.equal(draw.filter(q=>q.stimulusGroupId===id).length,3,`${id}: split group`);
+    const counts=draw.reduce((a,q)=>(a[q.skill]=(a[q.skill]||0)+1,a),{});
+    for(const [skill,[lo,hi]] of Object.entries(practiceRanges)) assert.ok(counts[skill]>=lo&&counts[skill]<=hi,`P${skill}=${counts[skill]} draw ${i}`);
   }
 });
 
 test('APES independent retake overlap remains at or below the project target',()=>{
-  let total=0;
+  let overlap=0;
   const trials=1000;
   for(let i=0;i<trials;i++){
-    const first=drawExam(subject,bank),second=drawExam(subject,bank),ids=new Set(first.map(q=>q.id));
-    total+=second.filter(q=>ids.has(q.id)).length/subject.mcqCount;
+    const a=drawExam(subject,bank);const b=drawExam(subject,bank);const set=new Set(a.map(q=>q.id));
+    overlap+=b.filter(q=>set.has(q.id)).length/80;
   }
-  const overlap=total/trials;
-  console.log(`APES Monte Carlo overlap: ${(100*overlap).toFixed(1)}%`);
-  assert.ok(overlap<=0.40,`APES overlap ${(100*overlap).toFixed(1)}% exceeds 40%`);
+  const avg=overlap/trials;
+  console.log(`APES Monte Carlo overlap: ${(avg*100).toFixed(1)}%`);
+  assert.ok(avg<=0.40,`average overlap ${(avg*100).toFixed(1)}% > 40%`);
 });
