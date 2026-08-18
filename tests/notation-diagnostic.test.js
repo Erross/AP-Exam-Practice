@@ -68,6 +68,10 @@ function remainingTextAfterRendering(text) {
     .join("");
 }
 
+function isProgrammingText(text) {
+  return /(?:\b(?:if|for|while|return|new|int|double|boolean|String|ArrayList|System\.out|Math\.)\b|&&|\|\||==|!=|;|\{[^}]*\}|\[[^\]]*\]|\.\w+\s*\()/m.test(text);
+}
+
 const patterns = {
   caretExponent: /\^(?:\{|\(|[+\-−]?\d|[+\-−]|[A-Za-z])/,
   rawSqrt: /\bsqrt\s*\(/i,
@@ -87,7 +91,9 @@ test("all loaded banks are presentation-ready after notation normalization", () 
   rows.forEach(({ bank, q }) => {
     stringsFor(q).forEach((original) => {
       const text = remainingTextAfterRendering(original);
+      const programming = bank === "QUESTIONS_AP_COMPUTER_SCIENCE_A" && isProgrammingText(original);
       Object.entries(patterns).forEach(([name, regex]) => {
+        if (programming && (name === "asciiArrow" || name === "asciiInequality")) return;
         if (regex.test(text) && hits[name].length < 12) hits[name].push(`${bank}/${q.id}: ${original.slice(0, 180)}`);
       });
     });
