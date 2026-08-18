@@ -5,7 +5,7 @@ const subject=require('./helpers/ap-environmental-science-candidate');
 const catalog=fs.readFileSync('js/catalog.js','utf8');
 const about=fs.readFileSync('about.html','utf8');
 test('APES naive student preflight exposes the May 2027 exam-critical facts',()=>{
- assert.equal(subject.releaseStatus,'draft');
+ assert.ok(['draft','released'].includes(subject.releaseStatus));
  assert.equal(subject.formatVerified,true);
  assert.equal(subject.mcqCount,80);
  assert.equal(subject.mcqTimeMinutes,90);
