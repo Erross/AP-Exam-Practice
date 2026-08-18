@@ -93,7 +93,11 @@ test('all items are single-select, sourced, explained, and use real CED skill co
     assert.ok(q.id && q.topicCode && q.unit && q.stimulusGroupId);
     assert.ok(allowedSkills.has(q.skill), `${q.id}: unexpected skill ${q.skill}`);
     assert.ok(q.e.length >= 90, `${q.id}: explanation too short`);
-    assert.ok(q.stimulus && q.stimulus.source && q.stimulus.text);
+    assert.ok(q.stimulus && q.stimulus.source, `${q.id}: missing stimulus source`);
+    const hasText = typeof q.stimulus.text === 'string' && q.stimulus.text.trim().length > 0;
+    const hasAccessibleImage = typeof q.stimulus.image === 'string' && q.stimulus.image.trim().length > 0
+      && typeof q.stimulus.alt === 'string' && q.stimulus.alt.trim().length > 0;
+    assert.ok(hasText || hasAccessibleImage, `${q.id}: stimulus needs text or an accessible image`);
     assert.equal(typeof q.stimulus.requiredSource, 'boolean');
   }
 });
