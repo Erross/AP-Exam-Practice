@@ -1,0 +1,28 @@
+name: One-time APES release promotion
+on:
+  push:
+    branches: [subject/ap-environmental-science]
+    paths:
+      - 'tools/_promote-apes.js'
+      - '.github/workflows/_promote-apes.yml'
+permissions:
+  contents: write
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: subject/ap-environmental-science
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/_promote-apes.js
+      - name: Commit APES promotion and remove temporary tooling
+        run: |
+          rm tools/_promote-apes.js .github/workflows/_promote-apes.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add js/subjects.js tools/_promote-apes.js .github/workflows/_promote-apes.yml
+          git commit -m "Promote AP Environmental Science to released"
+          git push origin HEAD:subject/ap-environmental-science
