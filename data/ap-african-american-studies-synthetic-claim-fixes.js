@@ -1,7 +1,8 @@
 // AP African American Studies — independent-review synthetic claim-cue repair.
 // The generated base bank originally keyed the source's thesis sentence nearly
 // verbatim in q1. This final overlay replaces those keyed answers with genuine
-// paraphrases for every remaining synthetic text source group.
+// paraphrases for every remaining synthetic text source group while retaining
+// the already-reviewed same-unit distractors.
 (() => {
   "use strict";
   const bank = window.QUESTIONS_AP_AFRICAN_AMERICAN_STUDIES;
@@ -18,7 +19,7 @@
     "2.13": "Opposition to slavery ranged from everyday refusal and escape to conspiracy and revolt, demonstrating that enslaved people did not simply accept bondage.",
     "2.15": "Maroon communities created varying degrees of autonomy through difficult terrain, local knowledge, collective defense, and organized community life beyond direct slaveholder control.",
     "2.16": "Brazil and the United States shared Atlantic systems of slavery but developed important differences in law, demography, manumission, racial classification, and emancipation.",
-    "2.23": "Black self-emancipation, military service, labor, intelligence, and political pressure made African Americans active participants in turning Civil War into a struggle over emancipation.",
+    "2.23": "Black self-emancipation, military service, labor, intelligence, and political pressure made African Americans active participants in turning the Civil War into a struggle over emancipation.",
     "3.3": "Formal freedom after the Civil War did not automatically deliver economic independence because Black Codes, labor arrangements, and unequal land access constrained freedpeople's choices.",
     "3.9": "Black-led institutions under segregation supplied community resources while also creating networks, leadership, information, and organizational power for collective action.",
     "3.10": "HBCUs and Black Greek-letter organizations expanded education and professional opportunity while building durable networks for service, leadership, and institution building.",
@@ -39,18 +40,13 @@
 
   let i = 0;
   for (const [topic, correct] of Object.entries(paraphrases)) {
-    const group = bank.filter((q) => q.topicCode === topic).sort((a, b) => a.sequence - b.sequence);
-    const q1 = group.find((q) => q.sequence === 1);
+    const q1 = bank.find((q) => q.topicCode === topic && q.sequence === 1);
     if (!q1 || !q1.stimulus || q1.stimulus.requiredSource || q1.stimulus.type !== "text") {
       throw new Error(`${topic}: synthetic claim repair found unexpected final source`);
     }
-    const peerGroups = bank.filter((q) => q.sequence === 1 && q.unit === q1.unit && q.topicCode !== topic && q.stimulus && !q.stimulus.requiredSource && q.stimulus.type === "text");
-    const peerAnswers = peerGroups.map((q) => paraphrases[q.topicCode]).filter(Boolean);
-    if (peerAnswers.length < 3) throw new Error(`${topic}: insufficient peer paraphrases`);
-    const distractors = [0, 1, 2].map((j) => peerAnswers[(i * 2 + j * 3) % peerAnswers.length]);
-    const pos = (i * 5 + 1) % 4;
-    const options = distractors.slice();
-    options.splice(pos, 0, correct);
+    const pos = q1.c[0];
+    const options = q1.o.slice();
+    options[pos] = correct;
     q1.q = [
       "Which paraphrase best captures the historical argument made by the source?",
       "Which interpretation most accurately restates the source's central historical claim?",
