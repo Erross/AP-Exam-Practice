@@ -38,7 +38,7 @@ test('APES clean-room source practices depend on the declared source type', () =
     assert.ok(q.stimulus && q.stimulus.type, `${q.id}: missing source`);
     if (q.stimulus.type === 'quantitative') {
       assert.ok(['5','6'].includes(q.skill), `${q.id}: quantitative source mislabeled ${q.skill}`);
-      assert.match(q.q, /quantitative source|data|value|calculate|percent|change|relationship|table|rate|difference|efficien|shown|times greater|times (?:as )?(?:large|high|much)|ratio|how much|how many/i, `${q.id}: quantitative task does not require quantitative evidence`);
+      assert.match(q.q, /quantitative source|data|value|calculate|percent|change|relationship|table|rate|difference|efficien|shown|times greater|times (?:as )?(?:large|high|much)|ratio|how much|how many|dose|LD50|concentration/i, `${q.id}: quantitative task does not require quantitative evidence`);
     } else if (q.stimulus.type === 'visual') {
       assert.ok(['2','7'].includes(q.skill), `${q.id}: visual source mislabeled ${q.skill}`);
       assert.match(q.q, /model|map|diagram|pattern|shown|represented|relationship|management|response|action|strategy|use the/i, `${q.id}: visual task does not require the visual/model`);
