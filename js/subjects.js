@@ -195,7 +195,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 70,
     totalExamTimeLabel: "2h 45m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: false,
     tierNote: "Source-based practice for Section I only. The official exam is fully digital and also includes an exam-day project validation question, short-answer questions, a document-based question, and the course project.",
