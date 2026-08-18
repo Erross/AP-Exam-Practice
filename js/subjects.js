@@ -186,18 +186,30 @@ const AP_SUBJECTS = [
     name: "AP African American Studies",
     category: "History & Social Sciences",
     tier: 1,
-    // VERIFIED 2026-08-09: apstudents.collegeboard.org/courses/ap-african-american-studies/assessment
-    // — Section I: Multiple Choice, 60 questions, 1hr 10mins, 60% of score.
-    // Total exam duration 2hrs 45mins (also includes a 10-min project validation question
-    // and a 1hr 25min free-response section). Previous repo value (50 / 60 min) was stale.
+    // VERIFIED 2026-08-18 against current AP Central course and exam pages.
+    // Section I: 60 questions / 70 minutes / 60% of exam score, normally in
+    // 3–4 question sets using 1–2 shared sources. Unit bands: 20–25, 30–35,
+    // 20–25, 20–25. Midpoints sum to 100%, so they are used directly as
+    // Hamilton draw weights, with published count bands enforced explicitly.
     mcqCount: 60,
     mcqTimeMinutes: 70,
     totalExamTimeLabel: "2h 45m",
     formatVerified: true,
     releaseStatus: "draft",
     allowsMultiSelect: false,
-    tierNote: null,
-    units: [],
+    calculatorAllowed: false,
+    tierNote: "Source-based practice for Section I only. The official exam is fully digital and also includes an exam-day project validation question, short-answer questions, a document-based question, and the course project.",
+    units: [
+      { id:"U1", name:"Origins of the African Diaspora", examWeight:0.225, examWeightRange:[0.20,0.25] },
+      { id:"U2", name:"Freedom, Enslavement, and Resistance", examWeight:0.325, examWeightRange:[0.30,0.35] },
+      { id:"U3", name:"The Practice of Freedom", examWeight:0.225, examWeightRange:[0.20,0.25] },
+      { id:"U4", name:"Movements and Debates", examWeight:0.225, examWeightRange:[0.20,0.25] },
+    ],
+    stimulusSetRange: [15,20],
+    attributeRanges: {
+      unit: { U1:[12,15], U2:[18,21], U3:[12,15], U4:[12,15] },
+    },
+    constraintDrawAttempts: 20000,
     dataVar: "QUESTIONS_AP_AFRICAN_AMERICAN_STUDIES",
   },
   {
