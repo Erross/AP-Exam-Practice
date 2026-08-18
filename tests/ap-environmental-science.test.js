@@ -24,7 +24,7 @@ test('APES effective development bank has exact 99-topic coverage and deep seman
     assert.ok(bank.some(q=>q.topicCode===code),`${code}: missing topic`);
     assert.ok(bank.filter(q=>q.topicCode===code && !q.stimulusGroupId).length>=2,`${code}: expected at least two standalone candidates`);
   }
-  assert.equal(scripts.length,17);
+  assert.equal(scripts.length,18);
   bank.forEach(q=>{
     assert.equal(q.type,'s',q.id);
     assert.equal(q.o.length,4,q.id);
