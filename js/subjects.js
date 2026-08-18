@@ -798,7 +798,7 @@ const AP_SUBJECTS = [
     releaseStatus: "draft",
     allowsMultiSelect: false,
     calculatorAllowed: true,
-    tierNote: "This practice product simulates the 80-question multiple-choice section; the official fully digital exam also includes three free-response questions.",
+    tierNote: "Calculators are permitted throughout this 80-question multiple-choice practice section. The official fully digital exam also includes three free-response questions, which this product does not simulate.",
     units: [
       { id:"U1", name:"The Living World: Ecosystems", examWeight:6/80, examWeightRange:[0.06,0.08] },
       { id:"U2", name:"The Living World: Biodiversity", examWeight:6/80, examWeightRange:[0.06,0.08] },
