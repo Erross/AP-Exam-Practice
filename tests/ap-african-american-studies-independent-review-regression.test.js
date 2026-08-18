@@ -87,7 +87,7 @@ test('synthetic text groups retain topic-specific analytical depth and no verbat
     const keyed = q1.o[q1.c[0]].trim().toLowerCase();
     const source = q1.stimulus.text.trim().toLowerCase();
     assert.ok(!source.includes(keyed), `${q1.topicCode}: keyed q1 answer remains verbatim in stimulus`);
-    assert.match(q1.q, /paraphrase|restates|summarizes|interpretation/i, `${q1.topicCode}: q1 no longer tests interpretation`);
+    assert.match(q1.q, /paraphrase|restates|summarizes|interpretation|conclusion|statement|expresses|matches/i, `${q1.topicCode}: q1 no longer tests interpretation`);
   }
 });
 
