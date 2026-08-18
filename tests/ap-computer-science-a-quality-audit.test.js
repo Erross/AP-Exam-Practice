@@ -8,33 +8,33 @@ const ABSOLUTE = /\b(always|never|every|only|entirely|unlimited|impossible|guara
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean).length;
 
 test('AP CSA has no stacked absolute-language distractor tells', () => {
-  const offenderQuestions = bank.filter(q => {
+  const offenderQuestions = Array.from(bank).filter(q => {
     const key = q.c[0];
-    return q.o.filter((_, i) => i !== key).filter(x => ABSOLUTE.test(x)).length > 1;
+    return Array.from(q.o).filter((_, i) => i !== key).filter(x => ABSOLUTE.test(x)).length > 1;
   });
   if (offenderQuestions.length) {
     console.log('CSA stacked-absolute details', JSON.stringify(offenderQuestions.map(q => ({
       id: q.id,
       stem: q.q,
       key: q.c[0],
-      options: q.o,
+      options: Array.from(q.o),
     })), null, 2));
   }
   const offenders = offenderQuestions.map(q => q.id);
-  assert.deepEqual(offenders, [], `stacked absolute-language distractors: ${offenders.join(', ')}`);
+  assert.equal(offenders.length, 0, `stacked absolute-language distractors: ${offenders.join(', ')}`);
 });
 
 test('AP CSA aggregate answer construction remains within project limits', () => {
   let unique = 0, among = 0, cw = 0, dw = 0;
   const keys = [0, 0, 0, 0];
   const uniqueOutliers = [];
-  bank.forEach(q => {
+  Array.from(bank).forEach(q => {
     const key = q.c[0]; keys[key]++;
-    const lens = q.o.map(words), longest = Math.max(...lens), ties = lens.filter(n => n === longest).length;
+    const lens = Array.from(q.o).map(words), longest = Math.max(...lens), ties = lens.filter(n => n === longest).length;
     if (lens[key] === longest && ties < 4) among++;
     if (lens[key] === longest && ties === 1) {
       unique++;
-      uniqueOutliers.push({ id: q.id, keyWords: lens[key], maxDistractorWords: Math.max(...lens.filter((_, i) => i !== key)), options: q.o });
+      uniqueOutliers.push({ id: q.id, keyWords: lens[key], maxDistractorWords: Math.max(...lens.filter((_, i) => i !== key)), options: Array.from(q.o) });
     }
     cw += lens[key];
     lens.forEach((n, i) => { if (i !== key) dw += n; });
