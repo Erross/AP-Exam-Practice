@@ -61,4 +61,17 @@
     q1.skill = "2.A";
     i++;
   }
+
+  // Keep the Topic 2.9 analytical competitors plausible without stacking
+  // absolute-language tells that make elimination mechanical.
+  const cultureQ3 = bank.find((q) => q.topicCode === "2.9" && q.sequence === 3);
+  if (!cultureQ3) throw new Error("2.9: synthetic claim repair could not find q3");
+  const cultureCorrect = cultureQ3.o[cultureQ3.c[0]];
+  const cultureOptions = [
+    "A practice that preserves recognizable African features but is interpreted without considering how migration and new social conditions may have changed its meaning.",
+    "A cultural form whose shared features are attributed mainly to European institutions even though evidence also indicates African continuity and Black innovation.",
+    "A list of African customs used to generalize from one community to enslaved communities across North America without evidence of how widely each practice circulated.",
+  ];
+  cultureOptions.splice(cultureQ3.c[0], 0, cultureCorrect);
+  cultureQ3.o = cultureOptions;
 })();
