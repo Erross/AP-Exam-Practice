@@ -1,72 +1,115 @@
 # AP Environmental Science — May 2027 release evidence
 
-Status: **development / draft**
+Status: **draft candidate; not yet released**
 
-Verified 2026-08-17 against current official College Board AP Environmental Science course/exam pages, Course at a Glance, Fall 2026 Course and Exam Description clarifications, and calculator policy.
+## Authoritative specification
 
-## Official exam format
+Verified against current College Board material for the 2026-27 course / May 2027 exam cycle:
 
-- Fully digital exam.
-- Section I: 80 MCQs, 90 minutes, 60%.
-- Section II: 3 FRQs, 70 minutes, 40%.
-- Calculator use permitted throughout.
-- This project remains MCQ-only and does not simulate the written free-response section.
+- AP Central course page: https://apcentral.collegeboard.org/courses/ap-environmental-science
+- AP Central exam page: https://apcentral.collegeboard.org/courses/ap-environmental-science/exam
+- AP Students assessment page: https://apstudents.collegeboard.org/courses/ap-environmental-science/assessment
+- AP calculator policy: https://apstudents.collegeboard.org/exam-policies-guidelines/calculator-policies
+- Fall 2026 / 2026-27 Clarifications PDF linked from the AP Central course and exam pages.
 
-## Published MCQ unit weights
+The May 2027 exam is fully digital in Bluebook. Section I is 80 multiple-choice questions in 90 minutes and is 60% of the exam score. Section II is three free-response questions in 70 minutes and is 40% of the score. Total testing time represented in the registry is 2h 40m. Calculators are allowed in both sections; College Board allows a 4-function calculator with square root, scientific calculator, or graphing calculator, and provides the Bluebook Desmos scientific calculator.
 
-- U1 The Living World: Ecosystems — 6–8%
-- U2 The Living World: Biodiversity — 6–8%
-- U3 Populations — 10–15%
-- U4 Earth Systems and Resources — 10–15%
-- U5 Land and Water Use — 10–15%
-- U6 Energy Resources and Consumption — 10–15%
-- U7 Atmospheric Pollution — 7–10%
-- U8 Aquatic and Terrestrial Pollution — 7–10%
-- U9 Global Change — 15–20%
+This application is an **MCQ-only practice product**. It does not simulate written FRQ responses; the preflight text explicitly says the official exam also contains three FRQs.
 
-Candidate 80-question project blueprint: 6/6/10/10/10/10/7/7/14. Every delivered share remains inside the published range.
+## Unit weighting bands
 
-## Published MCQ science-practice weights
+| Unit | College Board MCQ band | Project 80-question target |
+|---|---:|---:|
+| U1 The Living World: Ecosystems | 6-8% | 6 |
+| U2 The Living World: Biodiversity | 6-8% | 6 |
+| U3 Populations | 10-15% | 10 |
+| U4 Earth Systems and Resources | 10-15% | 10 |
+| U5 Land and Water Use | 10-15% | 10 |
+| U6 Energy Resources and Consumption | 10-15% | 10 |
+| U7 Atmospheric Pollution | 7-10% | 7 |
+| U8 Aquatic and Terrestrial Pollution | 7-10% | 7 |
+| U9 Global Change | 15-20% | 14 |
 
-- Practice 1 Concept Explanation — 30–38% → 24–30 questions
-- Practice 2 Visual Representations — 12–19% → 10–15 questions
-- Practice 3 Text Analysis — 6–8% → 5–6 questions
-- Practice 4 Scientific Experiments — 2–4% → 2–3 questions
-- Practice 5 Data Analysis — 12–19% → 10–15 questions
-- Practice 6 Mathematical Routines — 6–9% → 5–7 questions
-- Practice 7 Environmental Solutions — 17–23% → 14–18 questions
+The integer targets are a project blueprint selected inside the published ranges; College Board does not prescribe these exact per-form integer counts.
 
-## Source-set candidate architecture
+## Science-practice weighting bands
 
-The May 2027 exam page specifies 3–5 quantitative-data sets, 3–5 qualitative/model/map sets, and 2 text-source sets. The current candidate form uses a valid 5 quantitative + 5 qualitative/model/map + 2 text configuration. The development pool contains 8 quantitative, 8 qualitative/model/map, and 4 text candidate sets so retakes are not forced to repeat every source-linked question.
+College Board's current AP Central course page gives these Section I bands:
 
-The source practices are now semantic rather than distribution-only:
+- Practice 1 Concept Explanation: 30-38%
+- Practice 2 Visual Representations: 12-19%
+- Practice 3 Text Analysis: 6-8%
+- Practice 4 Scientific Experiments: 2-4%
+- Practice 5 Data Analysis: 12-19%
+- Practice 6 Mathematical Routines: 6-9%
+- Practice 7 Environmental Solutions: 17-23%
 
-- selected quantitative sets contribute Practice 5 data-analysis and Practice 6 calculation tasks;
-- selected visual/model/map sets contribute Practice 2 analysis plus source-specific Practice 7 solution tasks;
-- selected text sets contribute Practice 3 source-analysis tasks;
-- ordinary written concept/application standalones are Practice 1 only;
-- dedicated standalone pools provide Practice 4 experimental-design tasks and Practice 7 environmental-solution tasks.
+The candidate drawer enforces compatible integer count ranges on every 80-question form: P1 24-30, P2 10-15, P3 5-6, P4 2-3, P5 10-15, P6 5-7, P7 14-18.
 
-This design was introduced after a clean-room semantic review caught that the earlier structural prototype could satisfy practice percentages by assigning source-analysis labels to ordinary standalone concept questions. The prototype was not promoted; the semantic defect was repaired before release auditing.
+## Source-set clarification
 
-## Current candidate inventory
+The 2026-27 clarification changes the Section I source portfolio to ranges of **3-5 quantitative sets, 3-5 qualitative/model/map sets, and exactly 2 text sets**. The project deliberately chooses **5 quantitative + 5 visual/model/map + 2 text sets** on each delivered form. That 5/5/2 mix is a project choice within the official ranges, not a claim that College Board fixes every operational form at exactly 5/5/2.
 
-- Exact 99-topic Course-at-a-Glance inventory represented.
-- 198 original concept/application standalones covering every topic twice.
-- 18 additional topic-specific Practice 7 environmental-solution standalones.
-- 9 additional Practice 4 experimental-design standalones, one per unit.
-- 20 original/synthetic three-question source sets: 60 linked questions.
-- Effective development bank: 285 questions.
+## Content inventory
 
-## Development gates completed so far
+Browser-effective candidate bank: **330 original/synthetic MCQs**.
 
-- 99/99 topic inventory regression.
-- Whole-set source draw regression.
-- Independent recomputation of all eight explicit quantitative calculation anchors.
-- Naive/student-facing May 2027 preflight regression.
-- Answer-position rotation repair for the 60 source-set questions.
-- Semantic practice-family regression preventing concept questions from being relabeled as visual/text/data/experiment/math/solution tasks.
-- Source-specific hardening of all eight visual-set Practice 7 questions.
+- Exact CED topic coverage: **99 / 99 topics**.
+- Standalone inventory: **270 questions**.
+  - Practice 1: 198
+  - Practice 4: 18
+  - Practice 7: 54
+- Source-linked inventory: **60 questions in 20 atomic three-question candidate sets**.
+  - 8 quantitative candidate sets
+  - 8 visual/model/map candidate sets
+  - 4 text candidate sets
+- Delivered form: 80 questions, including 12 whole source sets (5 quantitative, 5 visual/model/map, 2 text).
 
-Still required before promotion: green exact-head full-repo CI after the semantic rebuild, generic 5,000/5,000 release audit, retake-overlap gate, answer-construction metrics, fresh clean-room zero-new-finding review, final consolidation into shipping shape, registry wiring, tiny draft→released promotion, exact-head integration checks, main merge, Pages artifact verification, and public smoke where the runtime permits it.
+All source sets use original/synthetic data, models, maps, or text created for AP Exam Practice and retain shared stimulus provenance. Whole-set selection is atomic.
+
+## Semantic review and repair history
+
+The first distribution-oriented draft was rejected because ordinary standalone concept questions had been assigned source-analysis practice labels merely to satisfy percentage bands. The bank was redesigned rather than cosmetically retagged:
+
+- ordinary topic standalones are Practice 1 only;
+- dedicated controlled-comparison questions supply Practice 4;
+- dedicated environmental-intervention questions supply standalone Practice 7;
+- Practices 2, 3, 5, and 6 are source-linked to the visual, textual, or quantitative material they actually analyze;
+- visual Practice 7 questions require concrete source-specific environmental decisions rather than generic monitor/respond language.
+
+A fresh post-repair clean-room test checks controlled-experiment structure, concrete solution mechanisms, source dependence, standalone practice inventory, and selected post-wording-repair scientific anchors.
+
+**Fresh zero-finding clean-room restart:** branch head `95ebc70a8f9fc0a687885877dc71e6660ac6dcb2`, Test workflow run `32088580381`, conclusion **success**.
+
+## Quantitative recomputation
+
+The APES quantitative regression inventory detects the synthetic calculation anchors and independently recomputes every inventoried result. The inventory and recomputation tests pass on the green clean-room head above.
+
+## Generic release audit
+
+The repository's generic release-audit functions run against the same effective candidate bank and metadata object used by the APES tests.
+
+Latest green-head metrics:
+
+- Generic constrained draws: **5,000 / 5,000 valid**.
+- Independent retake pairs: **5,000**.
+- Mean retake overlap: **38.6%**, below the project ceiling of 40%.
+- Uniquely-longest correct option: **23.9%**, below the project ~25% ceiling.
+- Correct option among the longest: **40.6%**, below the project ~58% ceiling.
+- Mean correct-option length: **9.23 words**.
+- Mean distractor length: **8.87 words**.
+- Raw correct positions: **24.8% / 24.8% / 25.2% / 25.2%**.
+- Stacked absolute-language distractor audit: pass.
+- Rationale/schema/id/source-set integrity audits: pass.
+
+Answer-length repair was semantic: overlong keys were tightened while preserving the scientific mechanism rather than padding distractors with generic qualifiers. A post-repair clean-room anchor test protects those meanings.
+
+## Naive/preflight gate
+
+The naive-student regression passes and exposes the exam-critical facts before practice begins: 80 MCQs, 90 minutes, fully digital official exam context, calculator permission, and the fact that this product practices the MCQ section only while the official exam also contains three FRQs.
+
+## CI / shipping gates
+
+Content, quantitative, generic-audit, retake-overlap, semantic clean-room, naive/preflight, build, artifact, and repository-wide checks are green at `95ebc70a8f9fc0a687885877dc71e6660ac6dcb2` / workflow run `32088580381`.
+
+**Still required before release:** consolidate the verified metadata into `js/subjects.js` while keeping `releaseStatus: "draft"`; prove candidate/registry parity and exact-head CI; inspect the final PR diff; then make a tiny draft-to-released promotion and verify exact-main CI, Pages deployment, and the published artifact/manifest. No release claim should be made before those gates pass.
