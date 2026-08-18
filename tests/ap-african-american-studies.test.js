@@ -7,13 +7,25 @@ const { drawExam, toBlocks } = require('../js/draw.js');
 
 function loadBank() {
   const context = vm.createContext({ window: {} });
-  const src = fs.readFileSync(path.join(__dirname, '../data/ap-african-american-studies.js'), 'utf8');
-  vm.runInContext(src, context, { filename: 'ap-african-american-studies.js' });
+  for (const file of ['ap-african-american-studies.js', 'ap-african-american-studies-set-expansion.js']) {
+    const src = fs.readFileSync(path.join(__dirname, `../data/${file}`), 'utf8');
+    vm.runInContext(src, context, { filename: file });
+  }
   return context.window.QUESTIONS_AP_AFRICAN_AMERICAN_STUDIES;
 }
 
 const bank = loadBank();
 const expectedTopicCounts = { U1: 11, U2: 24, U3: 18, U4: 21 };
+const subject = {
+  mcqCount: 60,
+  units: [
+    { id: 'U1', examWeight: 0.225, examWeightRange: [0.20, 0.25] },
+    { id: 'U2', examWeight: 0.325, examWeightRange: [0.30, 0.35] },
+    { id: 'U3', examWeight: 0.225, examWeightRange: [0.20, 0.25] },
+    { id: 'U4', examWeight: 0.225, examWeightRange: [0.20, 0.25] },
+  ],
+  stimulusSetRange: [15, 20],
+};
 
 function seeded(seed) {
   let state = seed >>> 0;
@@ -24,13 +36,16 @@ function seeded(seed) {
 }
 
 test('draft bank covers the exact 74-topic CED inventory once by source set', () => {
-  assert.equal(bank.length, 222);
+  assert.equal(bank.length, 238);
   const groups = toBlocks(bank);
   assert.equal(groups.length, 74);
-  assert.ok(groups.every((g) => g.length === 3));
+  assert.equal(groups.filter((g) => g.length === 4).length, 16);
+  assert.equal(groups.filter((g) => g.length === 3).length, 58);
+  assert.ok(groups.every((g) => g.length === 3 || g.length === 4));
 
   const topicGroups = new Map();
   for (const group of groups) {
+    const ordered = group.slice().sort((a, b) => a.sequence - b.sequence);
     const codes = new Set(group.map((q) => q.topicCode));
     const units = new Set(group.map((q) => q.unit));
     assert.equal(codes.size, 1);
@@ -39,7 +54,7 @@ test('draft bank covers the exact 74-topic CED inventory once by source set', ()
     assert.match(code, /^[1-4]\.\d+$/);
     assert.ok(!topicGroups.has(code), `duplicate source set for ${code}`);
     topicGroups.set(code, group);
-    assert.deepEqual(group.map((q) => q.sequence), [1, 2, 3]);
+    assert.deepEqual(ordered.map((q) => q.sequence), group.length === 4 ? [1, 2, 3, 4] : [1, 2, 3]);
     assert.ok(group.every((q) => q.stimulusGroupId === group[0].stimulusGroupId));
     assert.ok(group.every((q) => q.stimulus === group[0].stimulus));
   }
@@ -50,8 +65,8 @@ test('draft bank covers the exact 74-topic CED inventory once by source set', ()
   assert.deepEqual(counts, expectedTopicCounts);
 });
 
-test('all items are single-select, sourced, explained, and carry current skill families', () => {
-  const allowedSkills = new Set(['1.D', '2.A', '3.B']);
+test('all items are single-select, sourced, explained, and use real CED skill codes', () => {
+  const allowedSkills = new Set(['1.B', '1.C', '1.D', '2.A', '2.B', '2.C', '2.D', '3.B', '3.C']);
   for (const q of bank) {
     assert.equal(q.type, 's');
     assert.equal(q.o.length, 4);
@@ -65,21 +80,31 @@ test('all items are single-select, sourced, explained, and carry current skill f
   }
 });
 
-test('raw answer positions are deliberately balanced', () => {
+test('raw answer positions remain balanced after 3-4 question expansion', () => {
   const counts = [0, 0, 0, 0];
   bank.forEach((q) => counts[q.c[0]]++);
-  counts.forEach((n) => assert.ok(n >= 50 && n <= 62, `raw key count ${n} is imbalanced`));
+  counts.forEach((n) => assert.ok(n >= 50 && n <= 70, `raw key count ${n} is imbalanced`));
 });
 
-test('structural source-set draws produce exact 60-question forms without splitting groups', () => {
-  const subject = { mcqCount: 60, units: [] };
+test('500 weighted forms stay whole, exact-length, and inside official unit bands', () => {
   for (let i = 1; i <= 500; i++) {
     const form = drawExam(subject, bank, seeded(i));
     assert.equal(form.length, 60);
     const groupCounts = new Map();
-    form.forEach((q) => groupCounts.set(q.stimulusGroupId, (groupCounts.get(q.stimulusGroupId) || 0) + 1));
-    assert.equal(groupCounts.size, 20);
-    assert.ok([...groupCounts.values()].every((n) => n === 3));
+    const unitCounts = { U1: 0, U2: 0, U3: 0, U4: 0 };
+    form.forEach((q) => {
+      groupCounts.set(q.stimulusGroupId, (groupCounts.get(q.stimulusGroupId) || 0) + 1);
+      unitCounts[q.unit]++;
+    });
+    assert.ok(groupCounts.size >= 15 && groupCounts.size <= 20);
+    for (const [gid, count] of groupCounts) {
+      const fullSize = bank.filter((q) => q.stimulusGroupId === gid).length;
+      assert.equal(count, fullSize, `${gid}: source set was split`);
+    }
+    assert.ok(unitCounts.U1 >= 12 && unitCounts.U1 <= 15);
+    assert.ok(unitCounts.U2 >= 18 && unitCounts.U2 <= 21);
+    assert.ok(unitCounts.U3 >= 12 && unitCounts.U3 <= 15);
+    assert.ok(unitCounts.U4 >= 12 && unitCounts.U4 <= 15);
   }
 });
 
