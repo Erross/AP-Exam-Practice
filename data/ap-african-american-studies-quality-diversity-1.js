@@ -29,26 +29,29 @@
     "Which evidence would best support the same line of reasoning as the source?",
   ];
 
+  // Keep the disciplinary-significance key substantive but concise. Each option
+  // repeats the source title, so the discriminating language is comparable in
+  // length rather than making the nuanced answer visibly longest.
   const unitFrames = {
     U1: [
-      "it links evidence about African institutions, exchange, culture, and mobility to the formation of diasporic identities and communities.",
-      "it places early African history at the foundation of later questions about diaspora, cultural continuity, political authority, and exchange.",
-      "it connects a specific African setting to broader analysis of knowledge, religion, trade, movement, and the making of diasporic communities.",
+      "it connects an African context to broader patterns of movement, exchange, institutions, cultural change, and diaspora.",
+      "it connects early African history to broader questions of diaspora, cultural continuity, political authority, and exchange.",
+      "it connects a specific African setting to broader patterns of knowledge, religion, trade, movement, and diaspora.",
     ],
     U2: [
-      "it places enslavement alongside African and African American agency, resistance, family, institution building, culture, and political thought.",
-      "it connects the construction of racial slavery through law, commerce, and violence to Black efforts to resist bondage and define freedom.",
-      "it links a specific source to wider Atlantic and U.S. developments in slavery, resistance, abolition, and Black political ideas.",
+      "it connects enslavement to broader patterns of Black agency, resistance, family life, institutions, culture, and political thought.",
+      "it connects racial slavery through law and violence to broader struggles over resistance, bondage, and freedom.",
+      "it connects a specific source to broader Atlantic patterns of slavery, resistance, abolition, and Black political thought.",
     ],
     U3: [
-      "it shows how emancipation opened continuing struggles over citizenship, institutions, economic opportunity, culture, and the practical meaning of freedom.",
-      "it connects post-emancipation evidence to contests over citizenship and freedom amid Black institution building and organized white resistance.",
-      "it links law, migration, culture, organizations, violence, and intellectual life in analyzing how African Americans practiced freedom after slavery.",
+      "it connects emancipation to broader struggles over citizenship, institutions, economic opportunity, culture, and the practice of freedom.",
+      "it connects post-emancipation evidence to broader contests over citizenship, institution building, racial violence, and freedom.",
+      "it connects law, migration, culture, organizations, and violence to broader analysis of how African Americans practiced freedom.",
     ],
     U4: [
-      "it links modern Black freedom struggles to political strategy, cultural production, diaspora, gender, economics, representation, and debates over identity.",
-      "it situates modern Black politics and culture among multiple strategies, institutions, and intellectual traditions rather than one unified approach.",
-      "it connects the source to continuing debates over equality, self-determination, representation, cultural power, and the meaning of freedom.",
+      "it connects modern Black freedom struggles to broader debates over political strategy, culture, diaspora, gender, and representation.",
+      "it connects modern Black politics and culture to broader differences in strategy, institutions, and intellectual traditions.",
+      "it connects the source to broader debates over equality, self-determination, representation, cultural power, and freedom.",
     ],
   };
 
