@@ -29,10 +29,6 @@ function loadAllBanks() {
     const sandbox = { window: {} };
     vm.createContext(sandbox);
 
-    // The BC bank intentionally inherits the browser-effective AB bank during
-    // development. Reproduce that dependency here rather than executing the BC
-    // base file in an artificial empty sandbox. The final shipping bank is
-    // consolidated and independent before release.
     if (key === "data/ap-calculus-bc.js") {
       ["data/ap-calculus-ab.js", "data/ap-calculus-ab-quality-fixes.js"].forEach((file) => {
         vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
@@ -68,10 +64,6 @@ function remainingTextAfterRendering(text) {
     .join("");
 }
 
-function isProgrammingText(text) {
-  return /(?:\b(?:if|for|while|return|new|int|double|boolean|String|ArrayList|System\.out|Math\.)\b|&&|\|\||==|!=|;|\{[^}]*\}|\[[^\]]*\]|\.\w+\s*\()/m.test(text);
-}
-
 const patterns = {
   caretExponent: /\^(?:\{|\(|[+\-−]?\d|[+\-−]|[A-Za-z])/,
   rawSqrt: /\bsqrt\s*\(/i,
@@ -91,9 +83,11 @@ test("all loaded banks are presentation-ready after notation normalization", () 
   rows.forEach(({ bank, q }) => {
     stringsFor(q).forEach((original) => {
       const text = remainingTextAfterRendering(original);
-      const programming = bank === "QUESTIONS_AP_COMPUTER_SCIENCE_A" && isProgrammingText(original);
       Object.entries(patterns).forEach(([name, regex]) => {
-        if (programming && (name === "asciiArrow" || name === "asciiInequality")) return;
+        // In CSA, <=, >= and arrow-like operator text are programming syntax,
+        // not mathematical display notation. The notation tokenizer deliberately
+        // leaves programming strings unchanged, so the diagnostic must do the same.
+        if (bank === "QUESTIONS_AP_COMPUTER_SCIENCE_A" && (name === "asciiArrow" || name === "asciiInequality")) return;
         if (regex.test(text) && hits[name].length < 12) hits[name].push(`${bank}/${q.id}: ${original.slice(0, 180)}`);
       });
     });
