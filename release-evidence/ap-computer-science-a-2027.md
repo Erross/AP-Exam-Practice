@@ -1,6 +1,6 @@
 # AP Computer Science A — May 2027 release evidence
 
-Status: **development / draft**
+Status: **release gates complete / awaiting promotion**
 
 ## Authoritative specification
 
@@ -12,7 +12,7 @@ Verified 2026-08-18 against current College Board sources:
 - Current AP Computer Science A CED Clarifications and Corrections.
 - AP calculator policy: https://apstudents.collegeboard.org/exam-policies-guidelines/calculator-policies
 
-Current exam:
+Current exam target:
 
 - Fully digital in Bluebook.
 - Section I: 42 single-select MCQs / 90 minutes / 55% of exam score.
@@ -22,9 +22,11 @@ Current exam:
 - Java Quick Reference is available in Bluebook and may be printed for students.
 - Calculators are not allowed for AP Computer Science A except as an approved accommodation.
 
+The current AP Central course-changes page still identifies the Fall 2025 CED as the governing framework and reports no later content framework change. The current clarification sheet contains administrative/resource-language updates, not a change to the assessed CSA content used by this bank.
+
 ## Revised four-unit framework
 
-The governing CED is effective Fall 2025 and contains four assessed units:
+The governing CED contains four assessed units:
 
 | Unit | Official MCQ band | Project 42-question target |
 |---|---:|---:|
@@ -37,28 +39,109 @@ The 8/13/6/15 project blueprint comes from normalizing the published-range midpo
 
 ## Computational Thinking Practice bands
 
-Published MCQ weighting bands:
+Published MCQ weighting bands and project integer envelopes:
 
-- Practice 1 Design Code: 2–10% → 1–4 questions on a 42-question form.
+- Practice 1 Design Code: 2–10% → 1–4 questions.
 - Practice 2 Develop Code: 22–38% → 10–15.
 - Practice 3 Analyze Code: 37–53% → 16–22.
 - Practice 4 Document Code and Computing Systems: 10–15% → 5–6.
 - Practice 5 Use Computers Responsibly: 2–10% → 1–4.
 
-## Exact topic inventory
+## Candidate bank
 
-The effective Fall 2025 CED contains 53 topics: 15 in U1, 12 in U2, 9 in U3, and 17 in U4. The effective candidate bank currently contains 159 original standalone questions, exactly three independently authored candidates per topic.
+- Effective browser bank: **159 original single-select questions** from **6 browser data layers**.
+- Exact CED inventory: **53/53 topics**, with exactly three independently authored candidates per topic.
+- Unit inventory: U1 45, U2 36, U3 27, U4 51.
+- No borrowed College Board question text is used; provenance is original AP Exam Practice material.
+- Current baseline uses standalone questions; `stimulusSetRange: [0,2]` allows the official occasional-set structure without falsely requiring sets in every practice draw.
 
-## Development verification to date
+## Adversarial construction audit and repairs
 
-- Browser wiring loads the CSA base file followed by U1/U2/U3/U4 layers.
-- Initial full-repository run 32149481294: 261/262 tests passed. All four CSA-specific tests passed, including 159 unique IDs, 53/53 topics, raw-key balance, selected Java API guardrails, and 500/500 constrained 42-question forms.
-- The sole failure was the repository-wide notation diagnostic executing a CSA unit layer without first loading the CSA base helper. The diagnostic loader has been repaired to group `data/ap-computer-science-a-*` layers under `data/ap-computer-science-a.js`, matching browser execution order.
+The generic release audit initially exposed answer-construction defects rather than blueprint failures. Repairs were made at stable question IDs and then re-audited against the browser-effective bank.
 
-## Development gates still required
+Final answer-construction metrics on draft head `72ccf26dff4618cab9f7cee9af12a1474604b1db`:
 
-- Independently recompute every code trace/output and verify Java semantics against the CED/Java Quick Reference.
-- Run generic 5,000-draw / 5,000-overlap release audit.
-- Run fresh clean-room semantic review; repair and restart until zero findings.
-- Run naive/preflight audit.
-- Only then promote `releaseStatus` from `draft` to `released`.
+- Uniquely-longest correct answer: **10.7%** (project limit 25%).
+- Exploitable among-longest correct answer: **28.9%** (project limit 58%; four-way ties excluded).
+- Mean correct-option length: **9.05 words**.
+- Mean distractor length: **9.67 words** (difference well within the ~12% project limit).
+- Raw answer positions: **A 40 / B 40 / C 40 / D 39** = 25.2% / 25.2% / 25.2% / 24.5%.
+- Stacked absolute-language distractors: **0** under the repository-wide release regex.
+
+The repair pass used substantive Java misconceptions and competing interpretations rather than qualifier padding. Earlier over-broad U1 wording changes that accidentally created true distractors were detected and reversed before the final candidate.
+
+## Independent Java result audit
+
+Persistent gate: `tests/ap-computer-science-a-trace-audit.test.js`.
+
+A detector independently identifies result/state/output-bearing Java questions and requires exact equality with an explicit audit inventory. The final inventory contains **25 questions** spanning:
+
+- integer arithmetic and casting;
+- boolean expressions and branching;
+- while/for/nested-loop traces;
+- String comparison and traversal;
+- object construction and reference/null behavior;
+- arrays and ArrayLists;
+- 2D arrays;
+- recursion.
+
+For every inventoried item, the expected result was derived from Java semantics independently of the stored key index. Final result: **25/25 keyed answers matched the independently derived result**, and the detector/inventory equality gate passed.
+
+## Generic randomized release audit
+
+Persistent gate: `tests/ap-computer-science-a-release-audit.test.js`, invoking the repository's production `tools/subject-release-audit.js` path.
+
+Final draft-head run:
+
+- **5,000 / 5,000 valid constrained 42-question forms**.
+- Every form obeyed exact 8/13/6/15 unit counts and all five practice envelopes.
+- **5,000 independent retake pairs: 28.5% average shared questions**, safely below the 40% project ceiling.
+- Schema, answer construction, notation, browser-layer discovery, and API-boundary checks all passed.
+
+## Fresh clean-room semantic review
+
+After the final answer-quality repairs, a fresh review was restarted from the browser-effective bank rather than relying on authoring rationale or raw source alone.
+
+Review lenses:
+
+- all 53 CED topic codes and their three candidate questions;
+- practice semantics (Design / Develop / Analyze / Document / Responsible Computing);
+- Java correctness and one-best-answer status;
+- control flow, overloaded methods, casting, object/reference semantics, scope/static/`this`;
+- File/Scanner, wrapper, ArrayList, arrays/2D arrays, search/sort, and recursion boundaries against the current CED/Java Quick Reference;
+- responsible-computing and data-collection questions for topic/task fit;
+- all browser-effective quality overrides rather than superseded raw options.
+
+**Final clean-room result: zero new substantive findings.** The independent 25-item Java-result gate and selected API-boundary regressions remain as persistent safeguards.
+
+## Naive student/preflight audit
+
+Persistent gate: `tests/ap-computer-science-a-naive-audit.test.js`.
+
+The naive audit confirms that before starting practice a student-facing configuration exposes or preserves the critical facts:
+
+- 42 MCQs / 90 minutes;
+- full exam context 3 hours;
+- calculator not allowed;
+- fully digital Java-based exam context and Java Quick Reference;
+- four 90-minute FRQ types are represented in metadata even though this site does not simulate them;
+- the About page explicitly states that the product is MCQ-only and explains local saved-progress behavior.
+
+Final result: **pass**.
+
+## Exact-head CI evidence
+
+Draft release candidate:
+
+- Branch head: `72ccf26dff4618cab9f7cee9af12a1474604b1db`
+- Test workflow run: **32155737311**
+- Result: **success**
+- Node test suite: **269 / 269 passed**, 0 failed.
+- `npm run build`: success.
+- `npm run test:artifact`: success.
+- Dependency audit: 0 vulnerabilities.
+- Draft build correctly excluded CSA from the public artifact while all currently released subjects/data layers remained intact.
+
+## Promotion rule
+
+All content/release gates are now complete. Promotion must remain a tiny integration change from `releaseStatus: "draft"` to `"released"`, followed by a fresh exact-head CI run, PR diff inspection, merge, exact-main CI verification, Pages deployment verification, and public/artifact smoke checks.
