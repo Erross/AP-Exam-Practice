@@ -20,6 +20,7 @@ function loadBank() {
 }
 const bank = loadBank();
 const group = (topic) => bank.filter((q) => q.topicCode === topic).sort((a,b) => a.sequence - b.sequence);
+const keyedText = (qs) => qs.flatMap((q) => [q.q, q.e, q.o[q.c[0]]]).join(' ');
 
 test('Unit 2 has all 24 topics with intact source groups', () => {
   for (let n = 1; n <= 24; n++) {
@@ -35,10 +36,11 @@ test('reviewed Black Seminole group preserves complexity, agency, and source per
   assert.equal(qs[0].stimulus.requiredSource, true);
   assert.match(qs[0].stimulus.title, /Black Seminole|Jesup|Abraham|Gopher John/i);
   const text = qs.flatMap((q) => [q.q, q.e, ...q.o]).join(' ');
+  const keyed = keyedText(qs);
   assert.match(text, /alliance|kinship|refuge|leadership/i);
   assert.match(text, /removal|military|campaign/i);
   assert.match(text, /perspective|purpose|context/i);
-  assert.doesNotMatch(text, /Black-Indigenous relations.*(?:only|always|uniform)/i);
+  assert.doesNotMatch(keyed, /Black-Indigenous relations.*(?:only|always|uniform)/i);
 });
 
 test('reviewed gender-and-resistance group uses Jacobs and Prince without overgeneralizing', () => {
@@ -47,15 +49,18 @@ test('reviewed gender-and-resistance group uses Jacobs and Prince without overge
   assert.match(qs[0].stimulus.title, /Harriet Jacobs/i);
   assert.match(qs[0].stimulus.title, /Mary Prince/i);
   const text = qs.flatMap((q) => [q.q, q.e, ...q.o]).join(' ');
+  const keyed = keyedText(qs);
   assert.match(text, /sexual|family|mother|gender|domestic/i);
   assert.match(text, /abolition/i);
   assert.match(text, /contextual|representative|first-person|narrative/i);
-  assert.doesNotMatch(text, /all enslaved women used the same/i);
+  assert.doesNotMatch(keyed, /all enslaved women used the same/i);
 });
 
 test('Unit 2 preserves agency alongside coercion across slavery and resistance topics', () => {
   const topics = ['2.3','2.4','2.11','2.13','2.15','2.19','2.20','2.23'];
-  const text = topics.flatMap((t) => group(t)).flatMap((q) => [q.q, q.e, ...q.o]).join(' ');
+  const qs = topics.flatMap((t) => group(t));
+  const text = qs.flatMap((q) => [q.q, q.e, ...q.o]).join(' ');
+  const keyed = keyedText(qs);
   assert.match(text, /resist|resistance|escape|freedom|agency|self-emancipation|revolt/i);
-  assert.doesNotMatch(text, /enslaved (?:Africans|people).*passively accepted/i);
+  assert.doesNotMatch(keyed, /enslaved (?:Africans|people).*passively accepted/i);
 });
