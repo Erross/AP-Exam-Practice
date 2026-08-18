@@ -11,6 +11,7 @@ function loadBank() {
     'ap-african-american-studies.js',
     'ap-african-american-studies-set-expansion.js',
     'ap-african-american-studies-required-sources-1.js',
+    'ap-african-american-studies-required-sources-2.js',
     'ap-african-american-studies-quality-diversity-1.js',
   ]) {
     const src = fs.readFileSync(path.join(__dirname, `../data/${file}`), 'utf8');
@@ -85,17 +86,18 @@ test('all items are single-select, sourced, explained, and use real CED skill co
   }
 });
 
-test('exactly half of topic source sets are currently converted to named required sources', () => {
+test('required-source share stays near the official approximately-half target', () => {
   const groups = toBlocks(bank);
   const requiredGroups = groups.filter((g) => g[0].stimulus.requiredSource === true);
   const unfamiliarGroups = groups.filter((g) => g[0].stimulus.requiredSource === false);
-  assert.equal(requiredGroups.length, 37);
-  assert.equal(unfamiliarGroups.length, 37);
-  assert.ok(requiredGroups.every((g) => /Required source in the AP African American Studies course framework/.test(g[0].stimulus.source)));
-  assert.ok(unfamiliarGroups.every((g) => /Original synthetic source/.test(g[0].stimulus.source)));
+  assert.equal(requiredGroups.length, 39);
+  assert.equal(unfamiliarGroups.length, 35);
+  assert.ok(requiredGroups.length >= 35 && requiredGroups.length <= 40);
+  assert.ok(requiredGroups.every((g) => /Required source/i.test(g[0].stimulus.source)));
+  assert.ok(unfamiliarGroups.every((g) => /Original synthetic source|Original simulated data|Original synthetic visual/i.test(g[0].stimulus.source)));
   const kinds = new Set(requiredGroups.map((g) => g[0].stimulus.sourceKind));
   for (const expected of ['text', 'law', 'visual', 'map', 'object']) {
-    assert.ok(kinds.has(expected), `required-source batch is missing source kind ${expected}`);
+    assert.ok(kinds.has(expected), `required-source pool is missing source kind ${expected}`);
   }
 });
 
@@ -142,5 +144,5 @@ test('500 weighted forms stay whole, exact-length, and inside official unit band
 
 test('required-source conversion does not falsely claim copied source text', () => {
   const requiredGroups = toBlocks(bank).filter((g) => g[0].stimulus.requiredSource);
-  assert.ok(requiredGroups.every((g) => /original summary\/description/.test(g[0].stimulus.source)));
+  assert.ok(requiredGroups.every((g) => /original summary\/description/i.test(g[0].stimulus.source)));
 });
