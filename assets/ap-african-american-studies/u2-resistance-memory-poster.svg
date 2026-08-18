@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-labelledby="title desc">
+<title id="title">Synthetic memory and resistance poster</title>
+<desc id="desc">An original practice poster combining three silhouetted figures, broken chain links, and the words Remember, Resist, and Freedom to symbolize historical memory and resistance.</desc>
+<rect width="800" height="480" fill="#f3efe7"/>
+<text x="400" y="58" text-anchor="middle" font-family="sans-serif" font-size="34" font-weight="700">REMEMBER • RESIST • FREEDOM</text>
+<g fill="#252525">
+<circle cx="260" cy="198" r="36"/><rect x="230" y="234" width="60" height="120" rx="20"/>
+<circle cx="400" cy="178" r="40"/><rect x="365" y="218" width="70" height="140" rx="22"/>
+<circle cx="540" cy="198" r="36"/><rect x="510" y="234" width="60" height="120" rx="20"/>
+</g>
+<g fill="none" stroke="#555" stroke-width="18" stroke-linecap="round">
+<path d="M145 310 C115 280 115 235 145 205 C175 175 220 175 250 205"/>
+<path d="M650 205 C680 175 725 175 755 205 C785 235 785 280 755 310"/>
+</g>
+<path d="M250 205 L285 170" stroke="#f3efe7" stroke-width="26"/><path d="M615 170 L650 205" stroke="#f3efe7" stroke-width="26"/>
+<text x="400" y="420" text-anchor="middle" font-family="sans-serif" font-size="18">Original synthetic visual created for source-analysis practice</text>
+</svg>

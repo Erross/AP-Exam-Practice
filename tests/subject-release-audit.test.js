@@ -1,7 +1,13 @@
 const fs = require("node:fs");
 const assert = require("node:assert/strict");
 const test = require("node:test");
-const { parseArgs, dataScriptsForSubject, auditGenericContent } = require("../tools/subject-release-audit");
+const {
+  parseArgs,
+  dataScriptsForSubject,
+  metadataScriptForSubject,
+  loadEffectiveSubject,
+  auditGenericContent,
+} = require("../tools/subject-release-audit");
 
 test("subject release audit parses explicit trial counts", () => {
   const args = parseArgs(["--subject", "ap-statistics", "--trials", "5000", "--overlap-trials", "4000", "--json"]);
@@ -19,6 +25,22 @@ test("subject release audit discovers effective browser layers in index order", 
     "data/ap-chemistry-curation.js",
     "data/ap-chemistry-quality-fixes.js",
   ]);
+});
+
+test("subject release audit discovers an explicitly wired metadata overlay", () => {
+  const tag = (src) => `<script src="${src}"></script>`;
+  const html = [tag("js/subjects.js"), tag("js/ap-fixture-metadata.js?v=3"), tag("js/draw.js")].join("\n");
+  assert.equal(metadataScriptForSubject("ap-fixture", html), "js/ap-fixture-metadata.js");
+  assert.equal(metadataScriptForSubject("ap-other", html), null);
+});
+
+test("AP African American Studies audit resolves the browser-effective metadata", () => {
+  const subject = loadEffectiveSubject("ap-african-american-studies");
+  assert.equal(subject.mcqCount, 60);
+  assert.equal(subject.mcqTimeMinutes, 70);
+  assert.deepEqual(Array.from(subject.units, (unit) => unit.id), ["U1", "U2", "U3", "U4"]);
+  assert.deepEqual(Array.from(subject.stimulusSetRange), [15, 20]);
+  assert.equal(subject.constraintDrawAttempts, 20000);
 });
 
 test("four-way option-length ties are not counted as an exploitable longest-answer cue", () => {

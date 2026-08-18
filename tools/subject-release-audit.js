@@ -26,7 +26,7 @@ function usage() {
     "Usage:",
     "  node tools/subject-release-audit.js --subject ap-<id> [--trials 5000] [--overlap-trials 5000] [--json]",
     "",
-    "Loads the effective browser bank from data scripts referenced by index.html.",
+    "Loads the effective browser metadata and bank from scripts referenced by index.html.",
   ].join("\n");
 }
 
@@ -37,6 +37,31 @@ function dataScriptsForSubject(subjectId, html = fs.readFileSync("index.html", "
       const filename = path.basename(source, ".js");
       return filename === subjectId || filename.startsWith(`${subjectId}-`);
     });
+}
+
+function metadataScriptForSubject(subjectId, html = fs.readFileSync("index.html", "utf8")) {
+  const expected = `js/${subjectId}-metadata.js`;
+  const scripts = [...html.matchAll(/<script src="(js\/[^"?]+\.js)(?:\?[^\"]*)?"><\/script>/g)]
+    .map((match) => match[1]);
+  return scripts.includes(expected) ? expected : null;
+}
+
+function loadEffectiveSubject(subjectId, html = fs.readFileSync("index.html", "utf8")) {
+  const canonical = AP_SUBJECTS.find((candidate) => candidate.id === subjectId);
+  assert.ok(canonical, `Unknown subject: ${subjectId}`);
+
+  const metadataScript = metadataScriptForSubject(subjectId, html);
+  if (!metadataScript) return canonical;
+  assert.ok(fs.existsSync(metadataScript), `${subjectId}: missing metadata layer ${metadataScript}`);
+
+  const registry = fs.readFileSync(path.join("js", "subjects.js"), "utf8");
+  const sandbox = {};
+  vm.createContext(sandbox);
+  vm.runInContext(`${registry}\n;globalThis.__AP_SUBJECTS = AP_SUBJECTS;`, sandbox, { filename: "js/subjects.js" });
+  vm.runInContext(fs.readFileSync(metadataScript, "utf8"), sandbox, { filename: metadataScript });
+  const effective = sandbox.__AP_SUBJECTS.find((candidate) => candidate.id === subjectId);
+  assert.ok(effective, `${subjectId}: metadata layer removed subject from registry`);
+  return effective;
 }
 
 function loadEffectiveBank(subject, scripts = dataScriptsForSubject(subject.id)) {
@@ -107,9 +132,6 @@ function auditGenericContent(subject, bank) {
     const longest = Math.max(...lengths);
     const correctLength = lengths[key];
     const longestCount = lengths.filter((length) => length === longest).length;
-    // A four-way length tie carries zero answer-position information. Keep
-    // two- and three-way longest ties in the conservative among-longest metric,
-    // but do not count a tie shared by every option as an exploitable cue.
     if (correctLength === longest && longestCount < lengths.length) amongLongest++;
     if (correctLength === longest && longestCount === 1) uniqueLongest++;
     correctWords += correctLength;
@@ -144,8 +166,6 @@ function auditGenericContent(subject, bank) {
   for (const [groupId, questions] of stimulusGroups) {
     assert.ok(questions.length >= 2, `${groupId}: stimulus group has fewer than two questions`);
     assert.equal(new Set(questions.map((q) => q.unit)).size, 1, `${groupId}: stimulus group crosses units`);
-    // Compare stimulus content rather than object identity. Standalone shipping
-    // banks may deserialize equivalent stimulus objects into distinct references.
     assert.equal(new Set(questions.map((q) => JSON.stringify(q.stimulus))).size, 1, `${groupId}: stimulus object mismatch`);
     const stimulus = questions[0].stimulus;
     assert.ok(stimulus && typeof stimulus === "object", `${groupId}: missing stimulus`);
@@ -196,8 +216,7 @@ function measureOverlap(subject, bank, trials) {
 
 function runAudit(args) {
   assert.ok(args.subjectId, "--subject is required");
-  const subject = AP_SUBJECTS.find((candidate) => candidate.id === args.subjectId);
-  assert.ok(subject, `Unknown subject: ${args.subjectId}`);
+  const subject = loadEffectiveSubject(args.subjectId);
   const { bank, scripts } = loadEffectiveBank(subject);
   const content = auditGenericContent(subject, bank);
   const draws = auditDraws(subject, bank, args.trials);
@@ -229,4 +248,15 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseArgs, dataScriptsForSubject, loadEffectiveBank, wordCount, auditGenericContent, auditDraws, measureOverlap, runAudit };
+module.exports = {
+  parseArgs,
+  dataScriptsForSubject,
+  metadataScriptForSubject,
+  loadEffectiveSubject,
+  loadEffectiveBank,
+  wordCount,
+  auditGenericContent,
+  auditDraws,
+  measureOverlap,
+  runAudit,
+};
