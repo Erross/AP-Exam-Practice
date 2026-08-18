@@ -108,8 +108,16 @@ Answer-length repair was semantic: overlong keys were tightened while preserving
 
 The naive-student regression passes and exposes the exam-critical facts before practice begins: 80 MCQs, 90 minutes, fully digital official exam context, calculator permission, and the fact that this product practices the MCQ section only while the official exam also contains three FRQs.
 
+## Registry consolidation
+
+The verified May 2027 metadata is now consolidated into the real `js/subjects.js` AP Environmental Science entry while the subject remains `releaseStatus: "draft"`. The APES candidate helper now returns that registry object directly rather than shadowing it with duplicated metadata, so the semantic, quantitative, generic release-audit, randomized-draw, overlap, and naive/preflight regressions exercise the shipping configuration itself.
+
+A first consolidation attempt was rejected during diff inspection because a full-file replacement accidentally altered AP Art History metadata. That commit was removed from the branch before release. The registry edit was then reapplied with an exact one-block transform and independently inspected; the resulting APES-only registry change is `595fafe6274d7d1be9b74e5e860a42a988a7a8f7`. The first registry-parity CI run then correctly caught that the student-facing `tierNote` omitted calculator permission. The test was not weakened; the registry note was corrected in `8e430289f18285765a61fd141fadcf470aac4a6e` to state calculator permission and the MCQ-only/FRQ limitation explicitly.
+
 ## CI / shipping gates
 
-Content, quantitative, generic-audit, retake-overlap, semantic clean-room, naive/preflight, build, artifact, and repository-wide checks are green at `95ebc70a8f9fc0a687885877dc71e6660ac6dcb2` / workflow run `32088580381`.
+Content, quantitative, generic-audit, retake-overlap, semantic clean-room, naive/preflight, build, artifact, and repository-wide checks were green at `95ebc70a8f9fc0a687885877dc71e6660ac6dcb2` / workflow run `32088580381` before registry consolidation.
 
-**Still required before release:** consolidate the verified metadata into `js/subjects.js` while keeping `releaseStatus: "draft"`; prove candidate/registry parity and exact-head CI; inspect the final PR diff; then make a tiny draft-to-released promotion and verify exact-main CI, Pages deployment, and the published artifact/manifest. No release claim should be made before those gates pass.
+The current normal connector commit exists to trigger an exact-head full-repository CI run against the consolidated shipping registry after the calculator-note correction. Promotion remains blocked until that run is green.
+
+**Still required before release:** green exact-head CI on the consolidated draft registry; inspect the final PR diff; then make a tiny draft-to-released promotion and verify released-mode CI, merge, exact-main CI, Pages deployment, and the published artifact/manifest. No release claim should be made before those gates pass.
