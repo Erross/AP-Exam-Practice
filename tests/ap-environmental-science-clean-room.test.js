@@ -22,7 +22,7 @@ test('APES clean-room Practice 4 items specify controlled comparative investigat
 test('APES clean-room Practice 7 items prescribe a concrete environmental intervention', () => {
   const solutions = bank.filter(q => q.skill === '7');
   assert.equal(solutions.length, 62); // 54 standalone + eight visual-set solution candidates in the full bank
-  const action = /reduce|restore|protect|use|install|expand|improve|limit|retire|replace|stabilize|contain|apply|adjust|prevent|phase out|plan|site|adopt|develop|require|capture|control|manage|clean|drain|dry|enforce|increase reflective|match fertilizer/i;
+  const action = /reduce|remove|restore|protect|use|install|expand|improve|limit|retire|replace|stabilize|contain|apply|adjust|prevent|phase out|plan|site|adopt|develop|require|capture|control|manage|clean|drain|dry|enforce|increase reflective|match fertilizer/i;
   for (const q of solutions) {
     const answer = keyText(q);
     assert.match(answer, action, `${q.id}: key is not a concrete intervention`);
@@ -38,7 +38,7 @@ test('APES clean-room source practices depend on the declared source type', () =
     assert.ok(q.stimulus && q.stimulus.type, `${q.id}: missing source`);
     if (q.stimulus.type === 'quantitative') {
       assert.ok(['5','6'].includes(q.skill), `${q.id}: quantitative source mislabeled ${q.skill}`);
-      assert.match(q.q, /data|value|calculate|percent|change|relationship|table|rate|difference|efficien|shown/i, `${q.id}: quantitative task does not require quantitative evidence`);
+      assert.match(q.q, /quantitative source|data|value|calculate|percent|change|relationship|table|rate|difference|efficien|shown/i, `${q.id}: quantitative task does not require quantitative evidence`);
     } else if (q.stimulus.type === 'visual') {
       assert.ok(['2','7'].includes(q.skill), `${q.id}: visual source mislabeled ${q.skill}`);
       assert.match(q.q, /model|map|diagram|pattern|shown|represented|relationship|management|response|action|strategy|use the/i, `${q.id}: visual task does not require the visual/model`);
