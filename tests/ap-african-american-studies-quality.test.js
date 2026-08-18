@@ -11,11 +11,11 @@ function loadBank() {
     'ap-african-american-studies.js',
     'ap-african-american-studies-set-expansion.js',
     'ap-african-american-studies-required-sources-1.js',
-    'ap-african-american-studies-required-sources-2.js',
     'ap-african-american-studies-quality-diversity-1.js',
     'ap-african-american-studies-quality-explanations-1.js',
     'ap-african-american-studies-quantitative-1.js',
     'ap-african-american-studies-visual-1.js',
+    'ap-african-american-studies-required-sources-2.js',
   ]) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, `../data/${file}`), 'utf8'), context, { filename: file });
   }
