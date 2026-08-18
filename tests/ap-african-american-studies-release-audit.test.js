@@ -12,7 +12,7 @@ test('AP African American Studies generic release audit CLI passes 5000 draws an
 
   if (run.stdout) console.log(run.stdout.trim());
   assert.equal(run.status, 0, run.stderr || run.stdout);
-  assert.match(run.stdout, /238 questions from 11 browser data layer\(s\)/);
+  assert.match(run.stdout, /238 questions from 12 browser data layer\(s\)/);
   assert.match(run.stdout, /Draw audit: 5000\/5000 valid/);
   assert.match(run.stdout, /Retake overlap: \d+\.\d+% average shared questions/);
 });
