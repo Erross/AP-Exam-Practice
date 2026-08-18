@@ -9,8 +9,8 @@
   // Section I: 60 questions / 70 minutes / 60% of exam score, normally in
   // 3–4 question sets using 1–2 shared sources. Unit bands: 20–25, 30–35,
   // 20–25, 20–25. Midpoints sum to 100%, so they are used directly as
-  // Hamilton draw weights: 13/20/14/13 or equivalent feasible allocations
-  // depending on whole-set geometry, with every accepted form kept in-band.
+  // Hamilton draw weights: 14/20/13/13 on a 60-question form, with the
+  // published count bands also enforced explicitly by the constrained drawer.
   subject.mcqCount = 60;
   subject.mcqTimeMinutes = 70;
   subject.totalExamTimeLabel = "2h 45m";
@@ -27,5 +27,17 @@
   ];
   // 60 questions delivered in intact 3–4 item source groups implies 15–20 sets.
   subject.stimulusSetRange = [15,20];
+  // Express the published percentage bands as 60-question count ranges. This
+  // deliberately routes AP AAS through the generic constrained whole-set
+  // sampler, so stimulus-set geometry and official unit bands are validated
+  // together rather than relying on the simpler 200-attempt weighted path.
+  subject.attributeRanges = {
+    unit: {
+      U1: [12,15],
+      U2: [18,21],
+      U3: [12,15],
+      U4: [12,15],
+    },
+  };
   subject.constraintDrawAttempts = 20000;
 })();
