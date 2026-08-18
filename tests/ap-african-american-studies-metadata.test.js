@@ -4,12 +4,12 @@ const { AP_SUBJECTS } = require('../js/subjects.js');
 
 const subject = AP_SUBJECTS.find((s) => s.id === 'ap-african-american-studies');
 
-test('official Section I format and draft gate are fixed', () => {
+test('official Section I format and release gate are fixed', () => {
   assert.equal(subject.mcqCount, 60);
   assert.equal(subject.mcqTimeMinutes, 70);
   assert.equal(subject.totalExamTimeLabel, '2h 45m');
   assert.equal(subject.formatVerified, true);
-  assert.equal(subject.releaseStatus, 'draft');
+  assert.equal(subject.releaseStatus, 'released');
   assert.equal(subject.allowsMultiSelect, false);
   assert.equal(subject.calculatorAllowed, false);
   assert.deepEqual(subject.stimulusSetRange, [15, 20]);
