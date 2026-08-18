@@ -53,7 +53,7 @@ test('quantitative answers are independently recomputable from the embedded tabl
   assert.match(t32.o[t32.c[0]], /24 notices/);
 
   const t416 = bank.find((q) => q.topicCode === '4.16' && q.sequence === 1);
-  assert.deepEqual(t416.stimulus.rows.map((r) => r[3]), [42, 51, 68]);
+  assert.deepEqual(Array.from(t416.stimulus.rows, (r) => r[3]), [42, 51, 68]);
   assert.match(t416.o[t416.c[0]], /rises across the three age categories/);
 });
 
