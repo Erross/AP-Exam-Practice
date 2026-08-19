@@ -17,6 +17,8 @@ function loadAllBanks() {
         ? "data/ap-human-geography.js"
         : file.startsWith("data/ap-european-history-")
           ? "data/ap-european-history.js"
+          : file.startsWith("data/ap-world-history-")
+            ? "data/ap-world-history.js"
           : file.startsWith("data/ap-art-history-")
           ? "data/ap-art-history.js"
           : file.startsWith("data/ap-calculus-bc-")
@@ -86,9 +88,6 @@ test("all loaded banks are presentation-ready after notation normalization", () 
     stringsFor(q).forEach((original) => {
       const text = remainingTextAfterRendering(original);
       Object.entries(patterns).forEach(([name, regex]) => {
-        // In CSA, <=, >= and arrow-like operator text are programming syntax,
-        // not mathematical display notation. The notation tokenizer deliberately
-        // leaves programming strings unchanged, so the diagnostic must do the same.
         if (bank === "QUESTIONS_AP_COMPUTER_SCIENCE_A" && (name === "asciiArrow" || name === "asciiInequality")) return;
         if (regex.test(text) && hits[name].length < 12) hits[name].push(`${bank}/${q.id}: ${original.slice(0, 180)}`);
       });
