@@ -17,7 +17,7 @@ for (const file of files) vm.runInContext(fs.readFileSync(path.join(root,file),'
 const bank = context.window.QUESTIONS_AP_US_HISTORY;
 
 const subject = {
-  id:'ap-us-history', mcqCount:55,
+  id:'ap-us-history', mcqCount:55, stimulusSetRange:[15,15],
   units:[
     {id:'U1',examWeight:3/55},{id:'U2',examWeight:4/55},{id:'U3',examWeight:8/55},
     {id:'U4',examWeight:8/55},{id:'U5',examWeight:8/55},{id:'U6',examWeight:7/55},
@@ -93,6 +93,16 @@ test('APUSH has no stacked absolute-language distractor tells', () => {
   assert.deepEqual(bad,[]);
 });
 
+test('answer hardening does not repeat one boilerplate tail within a question', () => {
+  for (const q of bank) {
+    const ds=q.o.filter((_,i)=>i!==keyIndex(q));
+    for (let i=0;i<ds.length;i++) for (let j=i+1;j<ds.length;j++) {
+      const a=ds[i].split(', ').slice(-1)[0], b=ds[j].split(', ').slice(-1)[0];
+      assert.notEqual(a,b,`${q.id} repeats qualifier: ${a}`);
+    }
+  }
+});
+
 test('5,000 APUSH draws are exact 55-question whole-set forms with the official unit blueprint', () => {
   for (let i=0;i<5000;i++) {
     const exam=draw(); assert.equal(exam.length,55,`draw ${i}`);
@@ -100,6 +110,7 @@ test('5,000 APUSH draws are exact 55-question whole-set forms with the official 
     assert.deepEqual(counts,target);
     const selected=new Set(exam.map(q=>q.id));
     const gids=new Set(exam.map(q=>q.stimulusGroupId));
+    assert.equal(gids.size,15);
     for (const gid of gids) {
       const whole=bank.filter(q=>q.stimulusGroupId===gid);
       assert.ok(whole.every(q=>selected.has(q.id)),`split ${gid}`);
