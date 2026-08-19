@@ -9,7 +9,8 @@ const root = path.join(__dirname, '..');
 function loadRegistry() {
   const context={window:{}}; vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(root,'js/subjects.js'),'utf8'),context,{filename:'js/subjects.js'});
-  return context.window.AP_SUBJECTS.find(s=>s.id==='ap-us-history');
+  const subjects=vm.runInContext('AP_SUBJECTS',context);
+  return subjects.find(s=>s.id==='ap-us-history');
 }
 
 test('APUSH browser wiring exposes every authored layer in canonical order',()=>{
