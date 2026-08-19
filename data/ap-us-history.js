@@ -103,6 +103,7 @@
         id: `${gid}-${String(index + 1).padStart(2, "0")}`,
         unit: def.unit,
         topic: item.topic,
+        topicCode: item.topic,
         skill: String(item.skill || "1"),
         type: "s",
         q: item.q,
