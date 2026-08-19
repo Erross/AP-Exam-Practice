@@ -38,7 +38,7 @@ test('APUSH naive student preflight exposes current May 2027 exam-critical facts
   assert.match(s.tierNote,/document-based question/i);
   assert.match(s.tierNote,/long essay/i);
   assert.equal(s.units.length,9);
-  assert.equal(s.releaseStatus,'draft');
+  assert.equal(s.releaseStatus,'released');
 });
 
 test('APUSH rationale-depth inventory is release-grade',()=>{

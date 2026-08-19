@@ -450,7 +450,7 @@ const AP_SUBJECTS = [
     mcqTimeMinutes: 55,
     totalExamTimeLabel: "3h 15m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: false,
     tierNote: "Source-based Section I Part A practice only. The official fully digital exam also includes three short-answer questions, a document-based question, and a long essay.",
