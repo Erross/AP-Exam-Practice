@@ -24,6 +24,42 @@
     U9: "reflecting Cold War rivalry, integration, and social change",
   };
 
+  // Targeted replacements from the first independent semantic review. These
+  // keep the same keyed answer while replacing cartoonishly wrong alternatives
+  // with historically plausible but still unambiguously inferior competitors.
+  const semanticDistractors = {
+    "apeuro-3-6-02": [
+      "The War of the Austrian Succession, which also reflected dynastic and balance-of-power calculations but not the Bourbon succession to Spain",
+      "The Seven Years' War, which widened great-power rivalry into a global conflict several decades after the Spanish succession crisis",
+      "The Great Northern War, which shifted power around the Baltic rather than resolving the feared union of the French and Spanish crowns",
+    ],
+    "apeuro-5-8-02": [
+      "Neoclassical confidence that political and artistic order could be modeled on rational principles",
+      "Enlightened-absolutist efforts to make administration more systematic while preserving monarchical authority",
+      "The growing prestige of scientific explanation and utilitarian reform among eighteenth-century elites",
+    ],
+    "apeuro-6-2-03": [
+      "Court expenditure records showing changing aristocratic demand for luxury goods but little about industrial labor or infrastructure",
+      "Diplomatic correspondence on dynastic marriages that reveals state relations more directly than regional industrial capacity",
+      "Parish records of church construction styles that illuminate local culture more directly than capital, transport, or labor mobility",
+    ],
+    "apeuro-6-7-02": [
+      "Whether constitutional liberty could coexist with large inequalities in ownership and bargaining power",
+      "Whether private property encouraged individual independence or entrenched unequal control over productive resources",
+      "Whether market exchange alone could protect workers from insecurity during rapid industrial change",
+    ],
+    "apeuro-7-6-03": [
+      "Improved cartography and surveying, which aided imperial administration but did not by themselves create the decisive military-logistical advantage",
+      "Earlier oceanic sailing techniques, which supported overseas contact but lacked the speed and inland reach of industrial transport systems",
+      "Mechanized textile production, which increased manufacturing capacity without directly supplying the same combination of transport, firepower, communications, and disease control",
+    ],
+    "apeuro-9-7-03": [
+      "The construction of the Berlin Wall in 1961, which demonstrated coercive bloc control but was carried out by East German authorities rather than a Warsaw Pact invasion",
+      "The imposition of martial law in Poland in 1981, which suppressed Solidarity under Soviet pressure without direct Soviet military intervention",
+      "The Brezhnev Doctrine announced after 1968, which justified intervention but was a policy statement rather than an earlier use of force",
+    ],
+  };
+
   function wordCount(value) {
     return String(value).trim().split(/\s+/).filter(Boolean).length;
   }
@@ -109,9 +145,11 @@
 
     def.questions.forEach((item, index) => {
       const sequence = index + 1;
-      const ordered = buildOptions(item.correct, item.distractors, optionOrder(def.code, sequence), def.unit);
+      const id = `apeuro-${def.code.replace(".", "-")}-${String(sequence).padStart(2, "0")}`;
+      const distractors = semanticDistractors[id] || item.distractors;
+      const ordered = buildOptions(item.correct, distractors, optionOrder(def.code, sequence), def.unit);
       window.QUESTIONS_AP_EUROPEAN_HISTORY.push({
-        id: `apeuro-${def.code.replace(".", "-")}-${String(sequence).padStart(2, "0")}`,
+        id,
         unit: def.unit,
         topicCode: def.code,
         topic: def.topic,
