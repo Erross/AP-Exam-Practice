@@ -6,7 +6,7 @@ const vm=require('node:vm');
 const {execFileSync}=require('node:child_process');
 const root=path.join(__dirname,'..');
 const metadata='js/ap-world-history-metadata.js';
-const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`)];
+const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`),'data/ap-world-history-final-review.js'];
 function loadBrowserState(){
   const c={window:{}};vm.createContext(c);
   vm.runInContext(fs.readFileSync(path.join(root,'js/subjects.js'),'utf8'),c,{filename:'js/subjects.js'});
@@ -14,7 +14,7 @@ function loadBrowserState(){
   for(const f of layers) vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c,{filename:f});
   return {subject:vm.runInContext('AP_SUBJECTS',c).find(s=>s.id==='ap-world-history'),bank:c.window.QUESTIONS_AP_WORLD_HISTORY};
 }
-test('AP World browser wiring exposes metadata then all ten canonical data layers',()=>{
+test('AP World browser wiring exposes metadata then all browser-effective data layers',()=>{
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   const metadataAt=html.indexOf(`<script src="${metadata}"></script>`);
   const registryAt=html.indexOf('<script src="js/subjects.js"></script>');
@@ -33,14 +33,22 @@ test('AP World rationale-depth inventory is release-grade',()=>{
   if(short.length) console.log('APWORLD_SHORT_RATIONALES\n'+short.join('\n'));
   assert.equal(short.length,0,'AP World rationales below 90 characters');
 });
-test('AP World medieval distractors avoid cartoon anachronisms and wrong-region joke answers',()=>{
-  const bank=loadBrowserState().bank.filter(q=>q.unit==='U1'||q.unit==='U2');
-  const forbidden=/\b(jet propulsion|steam engines?|railroads?|mechanical refrigeration|Spanish settlers|Atlantic colonies|plantation sugar exports to the Americas|trans-Atlantic merchant guilds|ocean-going junks traveling across desert|free mechanical transport|modern sanitation systems|New World maize before 1300|cavalry armies equipped with firearms)\b/i;
+test('AP World distractors avoid the cartoon anachronism and wrong-domain patterns found in clean-room review',()=>{
+  const bank=loadBrowserState().bank;
+  const forbidden=/\b(jet propulsion|commercial jet aircraft|steam propulsion developed before 1500|rail transport in overseas trade|railroads across the Sahara|mechanical refrigeration|Spanish settlers|Atlantic colonies|Atlantic silver mining|plantation sugar exports to the Americas|trans-Atlantic merchant guilds|ocean-going junks traveling across desert|free mechanical transport|modern sanitation systems|New World maize before 1300|cavalry armies equipped with firearms|encomienda distributed Ottoman offices|Estates-General selected janissaries|Chinese tributary system appointed Ottoman|electronic container tracking used on eighteenth-century canals|Mughal taxation of Chinese coastal ports)\b/i;
   const offenders=[];
-  for(const q of bank){
-    q.o.forEach((option,i)=>{if(i!==q.c[0]&&forbidden.test(option)) offenders.push(`${q.id}: ${option}`);});
-  }
+  for(const q of bank){q.o.forEach((option,i)=>{if(i!==q.c[0]&&forbidden.test(option)) offenders.push(`${q.id}: ${option}`);});}
   assert.equal(offenders.length,0,offenders.join('\n'));
+});
+test('AP World exact final-review items retain serious same-domain competitors',()=>{
+  const bank=loadBrowserState().bank;
+  const ids=['apworld-u3-ottoman-safavid-01','apworld-u5-industrial-beginnings-02','apworld-u7-wwi-causes-01','apworld-u7-mass-atrocity-01','apworld-u8-korea-01','apworld-u9-resistance-01'];
+  for(const id of ids){
+    const q=bank.find(item=>item.id===id);assert.ok(q,`missing ${id}`);
+    const distractors=q.o.filter((_,i)=>i!==q.c[0]);
+    assert.equal(distractors.length,3);
+    distractors.forEach(option=>assert.ok(option.split(/\s+/).length>=8,`${id}: shallow distractor ${option}`));
+  }
 });
 test('AP World generic release audit passes browser-effective 5000-form and retake gates',()=>{
   const out=execFileSync(process.execPath,[path.join(root,'tools/subject-release-audit.js'),'--subject','ap-world-history','--trials','5000','--overlap-trials','5000'],{cwd:root,encoding:'utf8'});
