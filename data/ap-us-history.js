@@ -48,15 +48,25 @@
   function competitiveDistractors(unit, setId, sequence, correct, distractors) {
     const clauses = unitQualifiers[unit] || [];
     const target = Math.max(5, wordCount(correct) - 1);
+    const used = new Set();
     return distractors.map((raw, index) => {
       let text = softenAbsoluteLanguage(raw);
       if (wordCount(text) >= target || clauses.length === 0) return text;
+
       const seed = optionPosition(`${setId}-${index}`, sequence + index);
-      const first = clauses[seed % clauses.length];
+      let firstIndex = seed % clauses.length;
+      while (used.has(firstIndex) && used.size < clauses.length) firstIndex = (firstIndex + 1) % clauses.length;
+      used.add(firstIndex);
+      const first = clauses[firstIndex];
       text = `${text}, ${first}`;
-      if (wordCount(text) < target) {
-        const second = clauses[(seed + 3) % clauses.length];
-        if (second !== first) text = `${text}, ${second}`;
+
+      if (wordCount(text) < target && used.size < clauses.length) {
+        let secondIndex = (firstIndex + 3) % clauses.length;
+        while (used.has(secondIndex) && used.size < clauses.length) secondIndex = (secondIndex + 1) % clauses.length;
+        if (!used.has(secondIndex)) {
+          used.add(secondIndex);
+          text = `${text}, ${clauses[secondIndex]}`;
+        }
       }
       return text;
     });
