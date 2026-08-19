@@ -25,7 +25,7 @@ test('AP World naive preflight exposes May 2027 exam-critical facts in browser-e
 test('AP World rationale-depth inventory is release-grade',()=>{
   const short=loadBrowserState().bank.filter(q=>typeof q.e!=='string'||q.e.trim().length<90).map(q=>`${q.id} (${(q.e||'').length}): ${q.e}`);
   if(short.length) console.log('APWORLD_SHORT_RATIONALES\n'+short.join('\n'));
-  assert.deepEqual(short,[],'AP World rationales below 90 characters');
+  assert.equal(short.length,0,'AP World rationales below 90 characters');
 });
 test('AP World generic release audit passes browser-effective 5000-form and retake gates',()=>{
   const out=execFileSync(process.execPath,[path.join(root,'tools/subject-release-audit.js'),'--subject','ap-world-history','--trials','5000','--overlap-trials','5000'],{cwd:root,encoding:'utf8'});
