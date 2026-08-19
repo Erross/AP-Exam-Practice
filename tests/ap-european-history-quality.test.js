@@ -36,7 +36,7 @@ test('effective AP Euro bank covers all 88 topics as intact 3-4 question source 
     for (let i = 0; i < group.length; i++) assert.equal(group[i].sequence, i + 1);
   }
   assert.equal(groups.filter((g) => g.length === 4).length, 5);
-  assert.equal(groups.filter((g) => g[0].stimulus.type === 'quantitative').length, 12);
+  assert.equal(groups.filter((g) => g[0].stimulus.type === 'quantitative').length, 16);
   assert.equal(groups.filter((g) => g[0].stimulus.type === 'visual').length, 5);
 });
 
