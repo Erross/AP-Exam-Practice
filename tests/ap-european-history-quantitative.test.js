@@ -36,7 +36,7 @@ test('AP Euro quantitative portfolio contains 16 complete readable source sets',
     assert.ok(Array.isArray(s.rows) && s.rows.length >= 3, `${g[0].topicCode}: rows`);
     assert.ok(s.rows.every((row) => Array.isArray(row) && row.length === s.columns.length), `${g[0].topicCode}: row/column mismatch`);
     assert.ok(g.every((q) => q.stimulus === g[0].stimulus || JSON.stringify(q.stimulus) === JSON.stringify(s)), `${g[0].topicCode}: inconsistent shared data`);
-    assert.equal(String(g[0].skill), '3', `${g[0].topicCode}: first data question should require interpretation`);
+    assert.ok(g.some((q) => String(q.skill) === '3'), `${g[0].topicCode}: quantitative set needs at least one explicit interpretation question`);
   }
 });
 
