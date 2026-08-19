@@ -15,7 +15,9 @@ function loadAllBanks() {
         ? "data/ap-environmental-science.js"
         : file.startsWith("data/ap-human-geography-")
         ? "data/ap-human-geography.js"
-        : file.startsWith("data/ap-art-history-")
+        : file.startsWith("data/ap-european-history-")
+          ? "data/ap-european-history.js"
+          : file.startsWith("data/ap-art-history-")
           ? "data/ap-art-history.js"
           : file.startsWith("data/ap-calculus-bc-")
             ? "data/ap-calculus-bc.js"
@@ -96,4 +98,43 @@ test("all loaded banks are presentation-ready after notation normalization", () 
   const failures = Object.entries(hits).filter(([, examples]) => examples.length);
   failures.forEach(([name, examples]) => console.log(`NOTATION_DIAGNOSTIC ${name}: ${examples.join(" || ")}`));
   assert.deepEqual(failures, [], "raw math/science notation remains after display normalization");
+});
+
+test("notation tokenizer turns scientific-notation powers into superscripts", () => {
+  const tokens = tokenizeNotation("6.02 x 10^23 particles");
+  assert.ok(tokens.some((token) => token.type === "sup" && token.value === "23"));
+});
+
+test("notation tokenizer handles powers, units, and caret ionic charges", () => {
+  const text = tokenizeNotation("x^2 m^2 Fe^3+ e^-1").map((token) => token.value).join("");
+  assert.match(text, /x2/);
+  assert.match(text, /m2/);
+  assert.match(text, /Fe3\+/);
+});
+
+test("notation tokenizer renders whitelisted scientific subscripts", () => {
+  const tokens = tokenizeNotation("v_x and a_y");
+  assert.ok(tokens.some((token) => token.type === "sub" && token.value === "x"));
+  assert.ok(tokens.some((token) => token.type === "sub" && token.value === "y"));
+});
+
+test("notation tokenizer renders chemical subscripts and common plain ionic charges", () => {
+  const tokens = tokenizeNotation("H2O, CO2, Na+, Cl-");
+  assert.ok(tokens.some((token) => token.type === "sub" && token.value === "2"));
+  assert.ok(tokens.some((token) => token.type === "sup" && /[+−-]/.test(token.value)));
+});
+
+test("notation tokenizer uses familiar radical, arrow, plus-minus, and infinity symbols", () => {
+  const text = tokenizeNotation("sqrt(4) -> 2 +/- 0 as x approaches infinity").map((token) => token.value).join("");
+  assert.match(text, /√/);
+  assert.match(text, /→/);
+  assert.match(text, /±/);
+  assert.match(text, /∞/);
+});
+
+test("notation tokenizer leaves programming/unit-like text alone", () => {
+  const text = tokenizeNotation("if (x <= 3) return y -> z; 5 m/s").map((token) => token.value).join("");
+  assert.match(text, /<=/);
+  assert.match(text, /->/);
+  assert.match(text, /m\/s/);
 });
