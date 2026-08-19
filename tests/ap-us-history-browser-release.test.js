@@ -44,7 +44,7 @@ test('APUSH naive student preflight exposes current May 2027 exam-critical facts
 test('APUSH rationale-depth inventory is release-grade',()=>{
   const short=loadBank().filter(q=>typeof q.e!=='string'||q.e.trim().length<90).map(q=>`${q.id} (${(q.e||'').length}): ${q.e}`);
   if(short.length) console.log('APUSH_SHORT_RATIONALES\n'+short.join('\n'));
-  assert.deepEqual(short,[],'APUSH rationales below 90 characters');
+  assert.equal(short.length,0,'APUSH rationales below 90 characters');
 });
 
 test('APUSH generic release audit passes browser-effective 5000-form and retake gates',()=>{
