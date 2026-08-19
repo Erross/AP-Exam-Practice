@@ -15,9 +15,9 @@
   }
 
   replaceDistractors("apeuro-3-6-02", [
-    "The War of the Austrian Succession, which also reflected competing dynastic and balance-of-power calculations",
-    "The Seven Years' War, in which shifting alliances reflected strategic rivalry among major European states",
-    "The Great Northern War, which altered the balance of power around the Baltic without centering the Spanish succession",
+    "The War of the Austrian Succession, which also reflected dynastic and balance-of-power calculations but not the Bourbon succession to Spain",
+    "The Seven Years' War, which widened great-power rivalry into a global conflict several decades after the Spanish succession crisis",
+    "The Great Northern War, which shifted power around the Baltic rather than resolving the feared union of the French and Spanish crowns",
   ]);
 
   replaceDistractors("apeuro-5-8-02", [
@@ -27,9 +27,9 @@
   ]);
 
   replaceDistractors("apeuro-6-2-03", [
-    "Regional wage and population records showing whether labor was available for factory employment",
-    "Banking and investment records showing whether firms could obtain capital for machinery and railways",
-    "Coal-price and railway-freight records showing the cost of energy and access to wider markets",
+    "Court expenditure records showing changing aristocratic demand for luxury goods but little about industrial labor or infrastructure",
+    "Diplomatic correspondence on dynastic marriages that reveals state relations more directly than regional industrial capacity",
+    "Parish records of church construction styles that illuminate local culture more directly than capital, transport, or labor mobility",
   ]);
 
   replaceDistractors("apeuro-6-7-02", [
@@ -39,14 +39,14 @@
   ]);
 
   replaceDistractors("apeuro-7-6-03", [
-    "Railways and steam navigation that lowered the logistical cost of moving troops and supplies",
-    "Repeating rifles and machine guns that increased the battlefield advantage of industrial armies",
-    "Telegraph networks that allowed imperial governments to coordinate distant campaigns more rapidly",
+    "Improved cartography and surveying, which aided imperial administration but did not by themselves create the decisive military-logistical advantage",
+    "Earlier oceanic sailing techniques, which supported overseas contact but lacked the speed and inland reach of industrial transport systems",
+    "Mechanized textile production, which increased manufacturing capacity without directly supplying the same combination of transport, firepower, communications, and disease control",
   ]);
 
   replaceDistractors("apeuro-9-7-03", [
-    "The Soviet intervention in Hungary in 1956, which restored a communist government after a reform uprising",
-    "The construction of the Berlin Wall in 1961, which used coercive state power to contain movement from East Germany",
-    "The imposition of martial law in Poland in 1981, which suppressed Solidarity without a direct Warsaw Pact invasion",
+    "The construction of the Berlin Wall in 1961, which demonstrated coercive bloc control but was carried out by East German authorities rather than a Warsaw Pact invasion",
+    "The imposition of martial law in Poland in 1981, which suppressed Solidarity under Soviet pressure without direct Soviet military intervention",
+    "The Brezhnev Doctrine announced after 1968, which justified intervention but was a policy statement rather than an earlier use of force",
   ]);
 })();
