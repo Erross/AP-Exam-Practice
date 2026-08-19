@@ -3,6 +3,7 @@
 ## Candidate
 
 - Audited candidate before promotion: `a60b022700bbc1ea2ed531ff53da06caec76f032`
+- Promotion commit: `6b030a1e97fa9c474a7992f6b50b2a03511038e3`
 - GitHub Actions Test run: **#1675 / 32280652915**
 - Result: **362/362 tests passed**, build passed, artifact check passed, npm audit reported 0 vulnerabilities.
 
