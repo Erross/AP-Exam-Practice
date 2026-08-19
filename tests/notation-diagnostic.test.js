@@ -19,6 +19,8 @@ function loadAllBanks() {
           ? "data/ap-european-history.js"
           : file.startsWith("data/ap-us-history-")
             ? "data/ap-us-history.js"
+            : file.startsWith("data/ap-world-history-")
+              ? "data/ap-world-history.js"
           : file.startsWith("data/ap-art-history-")
           ? "data/ap-art-history.js"
           : file.startsWith("data/ap-calculus-bc-")
