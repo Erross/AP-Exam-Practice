@@ -12,6 +12,12 @@ function loadRegistry() {
   const subjects=vm.runInContext('AP_SUBJECTS',context);
   return subjects.find(s=>s.id==='ap-us-history');
 }
+function loadBank(){
+  const context={window:{}}; vm.createContext(context);
+  const files=['data/ap-us-history.js',...Array.from({length:9},(_,i)=>`data/ap-us-history-u${i+1}.js`),'data/ap-us-history-coverage.js'];
+  for(const file of files) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
+  return context.window.QUESTIONS_AP_US_HISTORY;
+}
 
 test('APUSH browser wiring exposes every authored layer in canonical order',()=>{
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
@@ -33,6 +39,12 @@ test('APUSH naive student preflight exposes current May 2027 exam-critical facts
   assert.match(s.tierNote,/long essay/i);
   assert.equal(s.units.length,9);
   assert.equal(s.releaseStatus,'draft');
+});
+
+test('APUSH rationale-depth inventory is release-grade',()=>{
+  const short=loadBank().filter(q=>typeof q.e!=='string'||q.e.trim().length<90).map(q=>`${q.id} (${(q.e||'').length}): ${q.e}`);
+  if(short.length) console.log('APUSH_SHORT_RATIONALES\n'+short.join('\n'));
+  assert.deepEqual(short,[],'APUSH rationales below 90 characters');
 });
 
 test('APUSH generic release audit passes browser-effective 5000-form and retake gates',()=>{
