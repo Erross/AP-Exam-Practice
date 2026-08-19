@@ -33,6 +33,15 @@ test('AP World rationale-depth inventory is release-grade',()=>{
   if(short.length) console.log('APWORLD_SHORT_RATIONALES\n'+short.join('\n'));
   assert.equal(short.length,0,'AP World rationales below 90 characters');
 });
+test('AP World medieval distractors avoid cartoon anachronisms and wrong-region joke answers',()=>{
+  const bank=loadBrowserState().bank.filter(q=>q.unit==='U1'||q.unit==='U2');
+  const forbidden=/\b(jet propulsion|steam engines?|railroads?|mechanical refrigeration|Spanish settlers|Atlantic colonies|plantation sugar exports to the Americas|trans-Atlantic merchant guilds|ocean-going junks traveling across desert|free mechanical transport|modern sanitation systems|New World maize before 1300|cavalry armies equipped with firearms)\b/i;
+  const offenders=[];
+  for(const q of bank){
+    q.o.forEach((option,i)=>{if(i!==q.c[0]&&forbidden.test(option)) offenders.push(`${q.id}: ${option}`);});
+  }
+  assert.equal(offenders.length,0,offenders.join('\n'));
+});
 test('AP World generic release audit passes browser-effective 5000-form and retake gates',()=>{
   const out=execFileSync(process.execPath,[path.join(root,'tools/subject-release-audit.js'),'--subject','ap-world-history','--trials','5000','--overlap-trials','5000'],{cwd:root,encoding:'utf8'});
   assert.match(out,/Draw audit:\s*5000\/5000 valid/i);assert.match(out,/Retake overlap:/i);
