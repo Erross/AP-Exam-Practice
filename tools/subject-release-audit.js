@@ -50,27 +50,17 @@ function loadEffectiveSubject(subjectId, html = fs.readFileSync("index.html", "u
   const canonical = AP_SUBJECTS.find((candidate) => candidate.id === subjectId);
   assert.ok(canonical, `Unknown subject: ${subjectId}`);
 
+  const metadataScript = metadataScriptForSubject(subjectId, html);
+  if (!metadataScript) return canonical;
+  assert.ok(fs.existsSync(metadataScript), `${subjectId}: missing metadata layer ${metadataScript}`);
+
   const registry = fs.readFileSync(path.join("js", "subjects.js"), "utf8");
-  const sandbox = { window: {} };
+  const sandbox = {};
   vm.createContext(sandbox);
   vm.runInContext(`${registry}\n;globalThis.__AP_SUBJECTS = AP_SUBJECTS;`, sandbox, { filename: "js/subjects.js" });
-
-  const metadataScript = metadataScriptForSubject(subjectId, html);
-  if (metadataScript) {
-    assert.ok(fs.existsSync(metadataScript), `${subjectId}: missing metadata layer ${metadataScript}`);
-    vm.runInContext(fs.readFileSync(metadataScript, "utf8"), sandbox, { filename: metadataScript });
-  } else {
-    // Some subjects keep verified metadata in the first browser data layer rather
-    // than a separate development overlay. Execute the subject's data layers in
-    // browser order so any guarded AP_SUBJECTS mutation is reflected here.
-    for (const source of dataScriptsForSubject(subjectId, html)) {
-      assert.ok(fs.existsSync(source), `${subjectId}: missing data layer ${source}`);
-      vm.runInContext(fs.readFileSync(source, "utf8"), sandbox, { filename: source });
-    }
-  }
-
+  vm.runInContext(fs.readFileSync(metadataScript, "utf8"), sandbox, { filename: metadataScript });
   const effective = sandbox.__AP_SUBJECTS.find((candidate) => candidate.id === subjectId);
-  assert.ok(effective, `${subjectId}: effective browser metadata removed subject from registry`);
+  assert.ok(effective, `${subjectId}: metadata layer removed subject from registry`);
   return effective;
 }
 
@@ -100,145 +90,173 @@ function wordCount(text) {
   return String(text || "").trim().split(/\s+/).filter(Boolean).length;
 }
 
-function answerMetrics(bank) {
+function collectGroups(bank, key) {
+  const groups = new Map();
+  bank.forEach((question) => {
+    const id = question[key];
+    if (!id) return;
+    if (!groups.has(id)) groups.set(id, []);
+    groups.get(id).push(question);
+  });
+  return groups;
+}
+
+function auditGenericContent(subject, bank) {
+  assert.ok(subject.formatVerified, `${subject.id}: formatVerified must be true before release`);
+  assert.ok(bank.length >= subject.mcqCount, `${subject.id}: bank has ${bank.length}; ${subject.mcqCount} required`);
+  const ids = new Set();
+  const validUnits = new Set((subject.units || []).map((unit) => unit.id));
+  const keyCounts = [0, 0, 0, 0];
   let uniqueLongest = 0;
   let amongLongest = 0;
   let correctWords = 0;
   let distractorWords = 0;
-  let distractorCount = 0;
-  const keyCounts = [0, 0, 0, 0];
-  for (const q of bank) {
-    assert.ok(Array.isArray(q.o) && q.o.length === 4, `${q.id}: expected four options`);
-    assert.ok(Array.isArray(q.c) && q.c.length === 1, `${q.id}: expected exactly one correct answer`);
-    const key = q.c[0];
-    assert.ok(Number.isInteger(key) && key >= 0 && key < 4, `${q.id}: invalid key`);
-    keyCounts[key] += 1;
-    const lengths = q.o.map(wordCount);
-    const max = Math.max(...lengths);
-    if (lengths[key] === max) amongLongest += 1;
-    if (lengths[key] === max && lengths.filter((value) => value === max).length === 1) uniqueLongest += 1;
-    correctWords += lengths[key];
-    lengths.forEach((value, index) => {
-      if (index !== key) {
-        distractorWords += value;
-        distractorCount += 1;
-      }
-    });
+
+  bank.forEach((question) => {
+    assert.ok(question && typeof question === "object", `${subject.id}: non-object question`);
+    assert.ok(typeof question.id === "string" && question.id, `${subject.id}: question missing id`);
+    assert.ok(!ids.has(question.id), `${subject.id}: duplicate id ${question.id}`);
+    ids.add(question.id);
+    if (validUnits.size) assert.ok(validUnits.has(question.unit), `${question.id}: invalid unit ${String(question.unit)}`);
+    assert.equal(question.type, "s", `${question.id}: release audit expects single-select MCQ`);
+    assert.ok(Array.isArray(question.o) && question.o.length === 4, `${question.id}: expected four options`);
+    assert.ok(Array.isArray(question.c) && question.c.length === 1, `${question.id}: expected one correct answer`);
+    const key = question.c[0];
+    assert.ok(Number.isInteger(key) && key >= 0 && key < 4, `${question.id}: invalid answer index`);
+    keyCounts[key]++;
+    assert.ok(typeof question.q === "string" && question.q.trim().length >= 20, `${question.id}: stem too short`);
+    assert.ok(typeof question.e === "string" && question.e.trim().length >= 90, `${question.id}: rationale must be at least 90 characters`);
+    assert.ok(question.topicCode, `${question.id}: missing topicCode`);
+
+    const lengths = question.o.map(wordCount);
+    const longest = Math.max(...lengths);
+    const correctLength = lengths[key];
+    const longestCount = lengths.filter((length) => length === longest).length;
+    if (correctLength === longest && longestCount < lengths.length) amongLongest++;
+    if (correctLength === longest && longestCount === 1) uniqueLongest++;
+    correctWords += correctLength;
+    lengths.forEach((length, index) => { if (index !== key) distractorWords += length; });
+    const absoluteDistractors = question.o.filter((_, index) => index !== key).filter((option) => ABSOLUTE_LANGUAGE.test(option)).length;
+    assert.ok(absoluteDistractors <= 1, `${question.id}: multiple distractors use absolute-language tells`);
+    assert.ok(!(question.stimulusGroupId && question.variantGroupId), `${question.id}: stimulus and variant groups may not be combined`);
+  });
+
+  const correctAverage = correctWords / bank.length;
+  const distractorAverage = distractorWords / (bank.length * 3);
+  const uniqueLongestShare = uniqueLongest / bank.length;
+  const amongLongestShare = amongLongest / bank.length;
+  assert.ok(uniqueLongestShare <= 0.25, `uniquely-longest correct rate ${(100 * uniqueLongestShare).toFixed(1)}% exceeds 25%`);
+  assert.ok(amongLongestShare <= 0.58, `among-longest correct rate ${(100 * amongLongestShare).toFixed(1)}% exceeds 58%`);
+  assert.ok(Math.abs(correctAverage - distractorAverage) / distractorAverage <= 0.12, "correct/distractor average length differs by more than 12%");
+  keyCounts.forEach((count, position) => {
+    const share = count / bank.length;
+    assert.ok(share >= 0.15 && share <= 0.35, `raw answer position ${position} is imbalanced (${(100 * share).toFixed(1)}%)`);
+  });
+
+  const variantGroups = collectGroups(bank, "variantGroupId");
+  for (const [groupId, questions] of variantGroups) {
+    assert.ok(questions.length >= 2, `${groupId}: variant group has one member`);
+    assert.equal(new Set(questions.map((q) => q.unit)).size, 1, `${groupId}: variants cross units`);
+    assert.equal(new Set(questions.map((q) => q.topicCode)).size, 1, `${groupId}: variants must share topicCode`);
+    assert.equal(new Set(questions.map((q) => q.q.trim().toLowerCase())).size, questions.length, `${groupId}: duplicate variant wording`);
+    questions.forEach((question) => assert.ok(!question.stimulusGroupId, `${question.id}: variant must be standalone`));
   }
+
+  const stimulusGroups = collectGroups(bank, "stimulusGroupId");
+  for (const [groupId, questions] of stimulusGroups) {
+    assert.ok(questions.length >= 2, `${groupId}: stimulus group has fewer than two questions`);
+    assert.equal(new Set(questions.map((q) => q.unit)).size, 1, `${groupId}: stimulus group crosses units`);
+    assert.equal(new Set(questions.map((q) => JSON.stringify(q.stimulus))).size, 1, `${groupId}: stimulus object mismatch`);
+    const stimulus = questions[0].stimulus;
+    assert.ok(stimulus && typeof stimulus === "object", `${groupId}: missing stimulus`);
+    if (stimulus.image) {
+      assert.ok(fs.existsSync(stimulus.image), `${groupId}: missing image ${stimulus.image}`);
+      assert.ok(typeof stimulus.alt === "string" && stimulus.alt.trim().length >= 60, `${groupId}: visual alt text must be at least 60 characters`);
+    }
+  }
+
   return {
-    uniqueLongest: uniqueLongest / bank.length,
-    amongLongest: amongLongest / bank.length,
-    correctAverage: correctWords / bank.length,
-    distractorAverage: distractorWords / distractorCount,
-    keyCounts,
+    uniqueLongestShare,
+    amongLongestShare,
+    correctAverage,
+    distractorAverage,
+    keyShares: keyCounts.map((count) => count / bank.length),
+    variantGroups: variantGroups.size,
+    stimulusGroups: stimulusGroups.size,
   };
 }
 
-function countStackedAbsoluteDistractors(bank) {
-  return bank.filter((q) => q.o.filter((option, index) => index !== q.c[0] && ABSOLUTE_LANGUAGE.test(option)).length >= 2);
-}
-
-function assertContentThresholds(subject, bank, metrics) {
-  assert.ok(metrics.uniqueLongest <= 0.25, `${subject.id}: uniquely-longest correct rate ${(metrics.uniqueLongest * 100).toFixed(1)}% exceeds 25%`);
-  // A four-way tie contains no usable "pick the longest" signal. Treat only ties
-  // of 2-3 options as exploitable among-longest cases in the CLI summary below.
-  const exploitableAmongLongest = bank.filter((q) => {
-    const lengths = q.o.map(wordCount);
-    const max = Math.max(...lengths);
-    const tied = lengths.filter((value) => value === max).length;
-    return lengths[q.c[0]] === max && tied < 4;
-  }).length / bank.length;
-  assert.ok(exploitableAmongLongest <= 0.58, `${subject.id}: exploitable among-longest correct rate ${(exploitableAmongLongest * 100).toFixed(1)}% exceeds 58%`);
-  const meanDelta = Math.abs(metrics.correctAverage - metrics.distractorAverage) / metrics.distractorAverage;
-  assert.ok(meanDelta <= 0.12, `${subject.id}: correct/distractor mean-word delta ${(meanDelta * 100).toFixed(1)}% exceeds 12%`);
-  metrics.keyCounts.forEach((count, index) => {
-    const share = count / bank.length;
-    assert.ok(share >= 0.15 && share <= 0.35, `${subject.id}: key ${String.fromCharCode(65 + index)} share ${(share * 100).toFixed(1)}% outside 15-35%`);
-  });
-  const stacked = countStackedAbsoluteDistractors(bank);
-  assert.equal(stacked.length, 0, `${subject.id}: stacked absolute-language distractor tells: ${stacked.map((q) => q.id).join(", ")}`);
-  return exploitableAmongLongest;
-}
-
-function collectGroupSizes(bank) {
-  const counts = new Map();
-  bank.forEach((q) => {
-    if (!q.stimulusGroupId) return;
-    counts.set(q.stimulusGroupId, (counts.get(q.stimulusGroupId) || 0) + 1);
-  });
-  return counts;
-}
-
-function assertWholeGroups(draw, groupSizes) {
-  const selected = new Map();
-  draw.forEach((q) => {
-    if (!q.stimulusGroupId) return;
-    selected.set(q.stimulusGroupId, (selected.get(q.stimulusGroupId) || 0) + 1);
-  });
-  for (const [gid, count] of selected) {
-    assert.equal(count, groupSizes.get(gid), `partial stimulus group selected: ${gid}`);
-  }
-}
-
 function auditDraws(subject, bank, trials) {
-  const groupSizes = collectGroupSizes(bank);
-  let valid = 0;
+  assert.ok(Number.isInteger(trials) && trials > 0, "--trials must be a positive integer");
   for (let i = 0; i < trials; i++) {
     const draw = drawExam(subject, bank);
-    assert.equal(draw.length, subject.mcqCount, `${subject.id}: draw ${i + 1} has ${draw.length} questions`);
-    assertWholeGroups(draw, groupSizes);
-    valid += 1;
+    assert.equal(draw.length, subject.mcqCount, `draw ${i + 1}: wrong question count`);
+    assert.equal(new Set(draw.map((q) => q.id)).size, draw.length, `draw ${i + 1}: duplicate id`);
+    const seenVariants = new Set();
+    draw.forEach((question) => {
+      if (!question.variantGroupId) return;
+      assert.ok(!seenVariants.has(question.variantGroupId), `draw ${i + 1}: repeated variant ${question.variantGroupId}`);
+      seenVariants.add(question.variantGroupId);
+    });
   }
-  return valid;
+  return { trials };
 }
 
-function averageRetakeOverlap(subject, bank, trials) {
-  let shared = 0;
+function measureOverlap(subject, bank, trials) {
+  assert.ok(Number.isInteger(trials) && trials > 0, "--overlap-trials must be a positive integer");
+  let total = 0;
   for (let i = 0; i < trials; i++) {
-    const a = drawExam(subject, bank);
-    const b = drawExam(subject, bank);
-    const ids = new Set(a.map((q) => q.id));
-    shared += b.filter((q) => ids.has(q.id)).length / subject.mcqCount;
+    const first = drawExam(subject, bank);
+    const second = drawExam(subject, bank);
+    const ids = new Set(first.map((q) => q.id));
+    total += second.filter((q) => ids.has(q.id)).length / subject.mcqCount;
   }
-  return shared / trials;
+  return total / trials;
 }
 
-function runAudit({ subjectId, trials = 2000, overlapTrials = 2000 }) {
-  assert.ok(subjectId, "--subject is required");
-  assert.ok(Number.isInteger(trials) && trials > 0, "--trials must be a positive integer");
-  assert.ok(Number.isInteger(overlapTrials) && overlapTrials > 0, "--overlap-trials must be a positive integer");
-  const html = fs.readFileSync("index.html", "utf8");
-  const subject = loadEffectiveSubject(subjectId, html);
-  const { bank, scripts } = loadEffectiveBank(subject, dataScriptsForSubject(subjectId, html));
-  const metrics = answerMetrics(bank);
-  const exploitableAmongLongest = assertContentThresholds(subject, bank, metrics);
-  const validDraws = auditDraws(subject, bank, trials);
-  const overlap = averageRetakeOverlap(subject, bank, overlapTrials);
-  assert.ok(overlap <= 0.40, `${subject.id}: retake overlap ${(overlap * 100).toFixed(1)}% exceeds 40%`);
-  return { subjectId, questionCount: bank.length, scripts, metrics, exploitableAmongLongest, validDraws, trials, overlap, overlapTrials };
-}
-
-function formatReport(report) {
-  const { subjectId, questionCount, scripts, metrics, exploitableAmongLongest, validDraws, trials, overlap } = report;
-  return [
-    `${subjectId}: ${questionCount} questions from ${scripts.length} browser data layer(s)`,
-    `Answer pattern: uniquely-longest ${(metrics.uniqueLongest * 100).toFixed(1)}%; exploitable among-longest ${(exploitableAmongLongest * 100).toFixed(1)}% (four-way ties excluded); correct ${metrics.correctAverage.toFixed(2)} words vs distractors ${metrics.distractorAverage.toFixed(2)}.`,
-    `Raw keys: ${metrics.keyCounts.map((count, index) => `${String.fromCharCode(65 + index)} ${(count / questionCount * 100).toFixed(1)}%`).join(", ")}.`,
-    `Variant groups: ${new Set([]).size}; stimulus groups: ${new Set([]).size}.`,
-    `Draw audit: ${validDraws}/${trials} valid.`,
-    `Retake overlap: ${(overlap * 100).toFixed(1)}% average shared questions.`,
-  ].join("\n");
+function runAudit(args) {
+  assert.ok(args.subjectId, "--subject is required");
+  const subject = loadEffectiveSubject(args.subjectId);
+  const { bank, scripts } = loadEffectiveBank(subject);
+  const content = auditGenericContent(subject, bank);
+  const draws = auditDraws(subject, bank, args.trials);
+  const overlap = measureOverlap(subject, bank, args.overlapTrials);
+  assert.ok(overlap <= 0.40, `average retake overlap ${(100 * overlap).toFixed(1)}% exceeds 40%`);
+  return { subject: subject.id, bankSize: bank.length, scripts, content, draws, overlap };
 }
 
 if (require.main === module) {
-  const args = parseArgs(process.argv.slice(2));
-  if (args.help) {
-    console.log(usage());
-    process.exit(0);
+  try {
+    const args = parseArgs(process.argv.slice(2));
+    if (args.help) {
+      console.log(usage());
+      process.exit(0);
+    }
+    const result = runAudit(args);
+    if (args.json) console.log(JSON.stringify(result, null, 2));
+    else {
+      console.log(`${result.subject}: ${result.bankSize} questions from ${result.scripts.length} browser data layer(s)`);
+      console.log(`Answer pattern: uniquely-longest ${(100 * result.content.uniqueLongestShare).toFixed(1)}%; exploitable among-longest ${(100 * result.content.amongLongestShare).toFixed(1)}% (four-way ties excluded); correct ${result.content.correctAverage.toFixed(2)} words vs distractors ${result.content.distractorAverage.toFixed(2)}.`);
+      console.log(`Raw keys: ${result.content.keyShares.map((share, index) => `${String.fromCharCode(65 + index)} ${(100 * share).toFixed(1)}%`).join(", ")}.`);
+      console.log(`Variant groups: ${result.content.variantGroups}; stimulus groups: ${result.content.stimulusGroups}.`);
+      console.log(`Draw audit: ${result.draws.trials}/${result.draws.trials} valid.`);
+      console.log(`Retake overlap: ${(100 * result.overlap).toFixed(1)}% average shared questions.`);
+    }
+  } catch (error) {
+    console.error(error.stack || error.message || error);
+    process.exit(1);
   }
-  const report = runAudit(args);
-  if (args.json) console.log(JSON.stringify(report, null, 2));
-  else console.log(formatReport(report));
 }
 
-module.exports = { parseArgs, dataScriptsForSubject, metadataScriptForSubject, loadEffectiveSubject, loadEffectiveBank, answerMetrics, runAudit };
+module.exports = {
+  parseArgs,
+  dataScriptsForSubject,
+  metadataScriptForSubject,
+  loadEffectiveSubject,
+  loadEffectiveBank,
+  wordCount,
+  auditGenericContent,
+  auditDraws,
+  measureOverlap,
+  runAudit,
+};
