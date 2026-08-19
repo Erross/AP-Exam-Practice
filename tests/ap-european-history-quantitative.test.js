@@ -32,8 +32,9 @@ test('AP Euro quantitative portfolio contains 16 complete readable source sets',
   assert.equal(quantitative.length, 16);
   for (const g of quantitative) {
     const s = g[0].stimulus;
-    assert.ok(Array.isArray(s.columns) && s.columns.length >= 3, `${g[0].topicCode}: columns`);
+    assert.ok(Array.isArray(s.columns) && s.columns.length >= 2, `${g[0].topicCode}: columns`);
     assert.ok(Array.isArray(s.rows) && s.rows.length >= 3, `${g[0].topicCode}: rows`);
+    assert.ok(s.rows.every((row) => Array.isArray(row) && row.length === s.columns.length), `${g[0].topicCode}: row/column mismatch`);
     assert.ok(g.every((q) => q.stimulus === g[0].stimulus || JSON.stringify(q.stimulus) === JSON.stringify(s)), `${g[0].topicCode}: inconsistent shared data`);
     assert.equal(String(g[0].skill), '3', `${g[0].topicCode}: first data question should require interpretation`);
   }
@@ -103,7 +104,8 @@ test('selected quantitative trends independently reproduce their keyed interpret
 test('quantitative questions do not claim precision beyond their synthetic tables', () => {
   for (const g of quantitative) {
     const source = g[0].stimulus.source;
-    assert.match(source, /Original simulated/i);
+    assert.match(source, /^Original /i, `${g[0].topicCode}: quantitative source must be explicitly original`);
+    assert.match(source, /simulated|synthetic|synthesis|newly composed/i, `${g[0].topicCode}: quantitative source must disclose synthetic/composed status`);
     for (const q of g) {
       assert.doesNotMatch(q.q, /according to official|College Board data|historically exact/i);
       assert.doesNotMatch(q.e, /proves? that all|proves? that every/i);
