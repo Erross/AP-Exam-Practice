@@ -47,6 +47,18 @@ test('APUSH rationale-depth inventory is release-grade',()=>{
   assert.equal(short.length,0,'APUSH rationales below 90 characters');
 });
 
+test('APUSH post-9/11 item keeps the direct causal claim historically narrow',()=>{
+  const q=loadBank().find(item=>item.id==='apush-u9-e-02');
+  assert.ok(q,'missing post-9/11 regression target');
+  assert.match(q.q,/most directly led to/i);
+  const answer=q.o[q.c[0]];
+  assert.match(answer,/Afghanistan/i);
+  assert.doesNotMatch(answer,/Iraq/i);
+  assert.match(q.e,/Afghanistan/i);
+  assert.match(q.e,/al-Qaeda|Taliban/i);
+  assert.doesNotMatch(q.e,/Iraq/i);
+});
+
 test('APUSH generic release audit passes browser-effective 5000-form and retake gates',()=>{
   const out=execFileSync(process.execPath,[path.join(root,'tools/subject-release-audit.js'),'--subject','ap-us-history','--trials','5000','--overlap-trials','5000'],{cwd:root,encoding:'utf8'});
   assert.match(out,/Draw audit:\s*5000\/5000 valid/i);
