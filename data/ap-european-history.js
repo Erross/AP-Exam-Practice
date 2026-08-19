@@ -116,6 +116,11 @@
       "Military production statistics revealing mobilization without identifying policies of exclusion, deportation, or mass killing",
       "Diplomatic correspondence on neutral trade showing international relations while providing limited direct evidence about persecuted populations",
     ],
+    "apeuro-8-11-03": [
+      "Wartime mobilization expanded state intervention temporarily, but governments generally returned to pre-1914 limits immediately after each conflict",
+      "Economic crisis reduced governments' capacity to regulate society, so ideological regimes relied mainly on private organizations rather than state institutions",
+      "The principal growth of state power occurred in colonial administration overseas while European domestic governments changed comparatively little",
+    ],
     "apeuro-9-5-03": [
       "Statements by nationalist leaders that reveal political goals but require corroboration because belligerents had incentives to frame events selectively",
       "International diplomatic cables that record outside reactions but may not capture local patterns of displacement and violence on their own",
