@@ -28,4 +28,11 @@
     {topic:"8.9",skill:"5",q:"Which program most directly expanded federal health insurance?",correct:"Medicare and Medicaid",distractors:["The Tennessee Valley Authority and CCC","The Interstate Commerce Commission and Sherman Act","The GI Bill and Homestead Act"],e:"Medicare and Medicaid, created in 1965, greatly expanded the federal role in health insurance."},
     {topic:"8.15",skill:"5",q:"Opposition to programs like these contributed to",correct:"the growth of modern conservatism emphasizing lower taxes, local control, and skepticism of federal social programs",distractors:["the disappearance of conservative politics after 1964","a national consensus favoring unlimited expansion of welfare programs","the end of debates over federalism"],e:"Great Society expansion became one important target for the conservative resurgence of the late twentieth century."}
   ]});
+
+  // Final clean-room repair: keep the post-9/11 item narrowly tied to the direct
+  // consequence of the attacks. The 2003 Iraq invasion belongs to the broader
+  // post-9/11 security context but is not presented here as a direct consequence.
+  const post911 = window.QUESTIONS_AP_US_HISTORY.find((q) => q.id === "apush-u9-e-02");
+  if (!post911) throw new Error("APUSH post-9/11 repair target missing");
+  post911.e = "The September 11 attacks led directly to a major expansion of U.S. counterterrorism policy and the U.S.-led intervention in Afghanistan against al-Qaeda and the Taliban government that had sheltered it.";
 })();
