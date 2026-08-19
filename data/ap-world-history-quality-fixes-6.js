@@ -29,6 +29,11 @@
     });
   }
   const R={
+    "apworld-u5-atlantic-revolutions-03":[
+      "hereditary aristocratic privilege remained influential in several postrevolutionary political systems",
+      "property ownership continued to shape political participation in many postrevolutionary states",
+      "slavery and coerced labor persisted in significant parts of the Atlantic world after political revolutions"
+    ],
     "apworld-u6-resistance-03":[
       "Qing officials expanding treaty-port privileges in order to attract additional foreign investment",
       "Chinese reformers seeking stronger foreign missionary influence as a route to institutional modernization",
