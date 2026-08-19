@@ -12,16 +12,16 @@
 
   window.QUESTIONS_AP_EUROPEAN_HISTORY = [];
 
-  const contextualQualifier = {
-    U1: "reflecting changing commercial and dynastic pressures",
-    U2: "reflecting shifting confessional and institutional pressures",
-    U3: "reflecting changing bargains between rulers and established elites",
-    U4: "reflecting expanding print culture and learned institutions",
-    U5: "reflecting fiscal crisis, war, and political contention",
-    U6: "reflecting mechanization, urbanization, and changing labor relations",
-    U7: "reflecting nationalism, liberalism, and expanding mass politics",
-    U8: "reflecting total war, ideological conflict, and state mobilization",
-    U9: "reflecting Cold War rivalry, integration, and social change",
+  const contextualQualifiers = {
+    U1: ["within expanding early-modern commercial networks", "amid dynastic competition among territorial states", "during growing European maritime expansion"],
+    U2: ["amid confessional competition after the Reformation", "within expanding print and religious controversy", "as rulers negotiated church-state authority"],
+    U3: ["within dynastic balance-of-power politics", "amid stronger central states and elite resistance", "as rulers bargained with established estates"],
+    U4: ["within expanding print and learned networks", "amid new confidence in empirical and rational inquiry", "during debates over enlightened political reform"],
+    U5: ["amid fiscal crisis and revolutionary political contention", "within expanding Atlantic markets and imperial rivalry", "during conflict over privilege, rights, and sovereignty"],
+    U6: ["amid mechanization and changing labor relations", "within rapid urban and demographic growth", "during expanding industrial markets and infrastructure"],
+    U7: ["amid nationalism and expanding mass politics", "within intensifying imperial and great-power rivalry", "during widening literacy and political organization"],
+    U8: ["amid total war and state mobilization", "within ideological polarization and mass politics", "during repeated economic and diplomatic crises"],
+    U9: ["amid Cold War rivalry and postwar reconstruction", "within European integration and changing welfare states", "during decolonization, migration, and globalization"],
   };
 
   const visualAssets = {
@@ -124,10 +124,11 @@
       .replace(/\ball\b/gi, "most");
   }
 
-  function qualifyAlternative(value, unit, correctLength) {
+  function qualifyAlternative(value, unit, correctLength, distractorIndex) {
     let text = softenCategoricalLanguage(value);
     if (wordCount(text) + 3 < correctLength) {
-      text = `${text}, ${contextualQualifier[unit]}`;
+      const choices = contextualQualifiers[unit];
+      text = `${text}, ${choices[distractorIndex % choices.length]}`;
     }
     return text;
   }
@@ -142,7 +143,7 @@
       throw new Error("AP Euro questions require exactly three distractors");
     }
     const correctLength = wordCount(correct);
-    const options = distractors.map((value) => qualifyAlternative(value, unit, correctLength));
+    const options = distractors.map((value, index) => qualifyAlternative(value, unit, correctLength, index));
     options.splice(position, 0, correct);
     return { options, correctIndex: position };
   }
