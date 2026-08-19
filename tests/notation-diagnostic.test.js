@@ -15,7 +15,9 @@ function loadAllBanks() {
         ? "data/ap-environmental-science.js"
         : file.startsWith("data/ap-human-geography-")
         ? "data/ap-human-geography.js"
-        : file.startsWith("data/ap-art-history-")
+        : file.startsWith("data/ap-european-history-")
+          ? "data/ap-european-history.js"
+          : file.startsWith("data/ap-art-history-")
           ? "data/ap-art-history.js"
           : file.startsWith("data/ap-calculus-bc-")
             ? "data/ap-calculus-bc.js"
