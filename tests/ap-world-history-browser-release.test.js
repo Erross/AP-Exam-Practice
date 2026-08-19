@@ -5,7 +5,7 @@ const path=require('node:path');
 const vm=require('node:vm');
 const {execFileSync}=require('node:child_process');
 const root=path.join(__dirname,'..');
-const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`),'data/ap-world-history-quality-fixes.js'];
+const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`),'data/ap-world-history-quality-fixes.js','data/ap-world-history-quality-fixes-2.js','data/ap-world-history-quality-fixes-3.js'];
 function loadBrowserState(){
   const c={window:{}};vm.createContext(c);
   vm.runInContext(fs.readFileSync(path.join(root,'js/subjects.js'),'utf8'),c,{filename:'js/subjects.js'});
@@ -40,7 +40,7 @@ test('AP World distractors avoid the cartoon anachronism and wrong-domain patter
 });
 test('AP World exact final-review items retain serious same-domain competitors',()=>{
   const bank=loadBrowserState().bank;
-  const ids=['apworld-u3-ottoman-safavid-01','apworld-u5-industrial-beginnings-02','apworld-u7-wwi-causes-01','apworld-u7-mass-atrocity-01','apworld-u8-korea-01','apworld-u9-resistance-01'];
+  const ids=['apworld-u3-ottoman-safavid-01','apworld-u4-maritime-empires-01','apworld-u5-industrial-beginnings-02','apworld-u6-migration-causes-02','apworld-u7-wwi-causes-01','apworld-u7-mass-atrocity-01','apworld-u8-korea-01','apworld-u9-resistance-01'];
   for(const id of ids){
     const q=bank.find(item=>item.id===id);assert.ok(q,`missing ${id}`);
     const distractors=q.o.filter((_,i)=>i!==q.c[0]);
