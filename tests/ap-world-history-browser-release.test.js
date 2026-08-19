@@ -5,7 +5,7 @@ const path=require('node:path');
 const vm=require('node:vm');
 const {execFileSync}=require('node:child_process');
 const root=path.join(__dirname,'..');
-const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`),'data/ap-world-history-quality-fixes.js','data/ap-world-history-quality-fixes-2.js','data/ap-world-history-quality-fixes-3.js','data/ap-world-history-quality-fixes-4.js','data/ap-world-history-quality-fixes-5.js'];
+const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`),'data/ap-world-history-quality-fixes.js','data/ap-world-history-quality-fixes-2.js','data/ap-world-history-quality-fixes-3.js','data/ap-world-history-quality-fixes-4.js','data/ap-world-history-quality-fixes-5.js','data/ap-world-history-quality-fixes-6.js'];
 function loadBrowserState(){
   const c={window:{}};vm.createContext(c);
   vm.runInContext(fs.readFileSync(path.join(root,'js/subjects.js'),'utf8'),c,{filename:'js/subjects.js'});
