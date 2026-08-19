@@ -5,15 +5,21 @@ const path=require('node:path');
 const vm=require('node:vm');
 const {execFileSync}=require('node:child_process');
 const root=path.join(__dirname,'..');
+const metadata='js/ap-world-history-metadata.js';
 const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`)];
 function loadBrowserState(){
   const c={window:{}};vm.createContext(c);
   vm.runInContext(fs.readFileSync(path.join(root,'js/subjects.js'),'utf8'),c,{filename:'js/subjects.js'});
+  vm.runInContext(fs.readFileSync(path.join(root,metadata),'utf8'),c,{filename:metadata});
   for(const f of layers) vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c,{filename:f});
   return {subject:vm.runInContext('AP_SUBJECTS',c).find(s=>s.id==='ap-world-history'),bank:c.window.QUESTIONS_AP_WORLD_HISTORY};
 }
-test('AP World browser wiring exposes all ten canonical data layers',()=>{
-  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');let prev=-1;
+test('AP World browser wiring exposes metadata then all ten canonical data layers',()=>{
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const metadataAt=html.indexOf(`<script src="${metadata}"></script>`);
+  const registryAt=html.indexOf('<script src="js/subjects.js"></script>');
+  assert.ok(metadataAt>registryAt,'AP World metadata must load after registry');
+  let prev=metadataAt;
   for(const f of layers){const at=html.indexOf(`<script src="${f}"></script>`);assert.ok(at>=0,`missing ${f}`);assert.ok(at>prev,`out of order ${f}`);prev=at;}
 });
 test('AP World naive preflight exposes May 2027 exam-critical facts in browser-effective registry',()=>{
