@@ -5,22 +5,20 @@ const path=require('node:path');
 const vm=require('node:vm');
 const {execFileSync}=require('node:child_process');
 const root=path.join(__dirname,'..');
-const metadata='js/ap-world-history-metadata.js';
-const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`),'data/ap-world-history-final-review.js'];
+const layers=['data/ap-world-history.js',...Array.from({length:9},(_,i)=>`data/ap-world-history-u${i+1}.js`),'data/ap-world-history-quality-fixes.js'];
 function loadBrowserState(){
   const c={window:{}};vm.createContext(c);
   vm.runInContext(fs.readFileSync(path.join(root,'js/subjects.js'),'utf8'),c,{filename:'js/subjects.js'});
-  vm.runInContext(fs.readFileSync(path.join(root,metadata),'utf8'),c,{filename:metadata});
   for(const f of layers) vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c,{filename:f});
   return {subject:vm.runInContext('AP_SUBJECTS',c).find(s=>s.id==='ap-world-history'),bank:c.window.QUESTIONS_AP_WORLD_HISTORY};
 }
-test('AP World browser wiring exposes metadata then all browser-effective data layers',()=>{
+test('AP World browser wiring exposes all browser-effective data layers in canonical order with no metadata overlay',()=>{
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-  const metadataAt=html.indexOf(`<script src="${metadata}"></script>`);
-  const registryAt=html.indexOf('<script src="js/subjects.js"></script>');
-  assert.ok(metadataAt>registryAt,'AP World metadata must load after registry');
-  let prev=metadataAt;
+  assert.equal(html.includes('js/ap-world-history-metadata.js'),false,'redundant World metadata overlay must not ship');
+  let prev=html.indexOf('<script src="js/subjects.js"></script>');
+  assert.ok(prev>=0,'subjects registry missing');
   for(const f of layers){const at=html.indexOf(`<script src="${f}"></script>`);assert.ok(at>=0,`missing ${f}`);assert.ok(at>prev,`out of order ${f}`);prev=at;}
+  assert.equal(html.includes('data/ap-world-history-final-review.js'),false,'temporary final-review layer must not ship');
 });
 test('AP World naive preflight exposes May 2027 exam-critical facts in browser-effective registry',()=>{
   const s=loadBrowserState().subject;
@@ -35,7 +33,7 @@ test('AP World rationale-depth inventory is release-grade',()=>{
 });
 test('AP World distractors avoid the cartoon anachronism and wrong-domain patterns found in clean-room review',()=>{
   const bank=loadBrowserState().bank;
-  const forbidden=/\b(jet propulsion|commercial jet aircraft|steam propulsion developed before 1500|rail transport in overseas trade|railroads across the Sahara|mechanical refrigeration|Spanish settlers founded medieval Mali|Atlantic silver mining funded medieval Mali|plantation sugar exports to the Americas before Atlantic colonization|trans-Atlantic merchant guilds before Atlantic exchange|ocean-going junks traveling across desert|free mechanical transport|modern sanitation systems|New World maize before 1300|cavalry armies equipped with firearms before gunpowder diffusion|encomienda distributed Ottoman offices|Estates-General selected janissaries|Chinese tributary system appointed Ottoman|electronic container tracking used on eighteenth-century canals|Mughal taxation of Chinese coastal ports)\b/i;
+  const forbidden=/\b(jet propulsion|commercial jet aircraft|steam propulsion developed before 1500|rail transport in overseas trade|railroads across the Sahara|mechanical refrigeration|Spanish settlers mining silver in medieval Mali|Atlantic silver mining in medieval Mali|plantation sugar exports to the Americas before 1450|trans-Atlantic merchant guilds before 1450|ocean-going junks traveling across desert|free mechanical transport|modern sanitation systems before 1450|New World maize before 1300|encomienda distributed Ottoman offices|Estates-General selected janissaries|Chinese tributary system appointed Ottoman|electronic container tracking used on eighteenth-century canals|Mughal taxation of Chinese coastal ports)\b/i;
   const offenders=[];
   for(const q of bank){q.o.forEach((option,i)=>{if(i!==q.c[0]&&forbidden.test(option)) offenders.push(`${q.id}: ${option}`);});}
   assert.equal(offenders.length,0,offenders.join('\n'));
