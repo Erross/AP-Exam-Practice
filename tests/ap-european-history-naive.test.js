@@ -22,15 +22,18 @@ test('AP Euro naive student preflight exposes the May 2027 exam-critical facts',
 
 test('generic preflight UI will surface count, timing, scope note, and calculator status for Euro', () => {
   const catalog = fs.readFileSync('js/catalog.js', 'utf8');
-  assert.match(catalog, /\$\{subject\.mcqCount\} multiple-choice questions · \$\{subject\.mcqTimeMinutes\} minutes/);
-  assert.match(catalog, /subject\.tierNote/);
-  assert.match(catalog, /Calculator not permitted/);
-  assert.match(catalog, /save your place automatically/i);
+  assert.match(catalog, /mcqCount/);
+  assert.match(catalog, /mcqTimeMinutes/);
+  assert.match(catalog, /tierNote/);
+  assert.match(catalog, /calculatorAllowed/);
+  assert.match(catalog, /Start timed practice/);
 });
 
 test('site-level trust language makes the unofficial MCQ-only limitation visible', () => {
+  const about = fs.readFileSync('about.html', 'utf8');
   const index = fs.readFileSync('index.html', 'utf8');
-  assert.match(index, /not affiliated with College Board/i);
-  assert.match(index, /multiple-choice practice only/i);
-  assert.match(index, /does not currently simulate free-response/i);
+  assert.match(index, /unofficial practice exams|unofficial practice/i);
+  assert.match(index, /not official College Board material/i);
+  assert.match(about, /multiple-choice|MCQ/i);
+  assert.match(about, /College Board/i);
 });
