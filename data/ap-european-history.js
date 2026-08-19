@@ -24,6 +24,29 @@
     U9: "reflecting Cold War rivalry, integration, and social change",
   };
 
+  const visualAssets = {
+    "2.7": {
+      image: "assets/ap-european-history/u2-mannerism-baroque-comparison.svg",
+      alt: "Original two-panel schematic: Work A uses elongated figures and a compressed unstable arrangement; Work B uses a strong diagonal, concentrated light, and figures shown in pronounced movement.",
+    },
+    "4.5": {
+      image: "assets/ap-european-history/u4-rococo-neoclassical-interiors.svg",
+      alt: "Original two-panel interior schematic: Interior A uses curved asymmetrical ornament and an intimate leisure grouping; Interior B uses symmetry, columns, restrained geometry, and a central civic scene.",
+    },
+    "5.8": {
+      image: "assets/ap-european-history/u5-romantic-sublime-landscape.svg",
+      alt: "Original landscape schematic showing a solitary traveler on a rocky foreground facing layered mountains and mist, with the human figure very small relative to the landscape.",
+    },
+    "7.8": {
+      image: "assets/ap-european-history/u7-realist-impressionist-comparison.svg",
+      alt: "Original two-panel schematic: Work A shows two laborers bent over field work; Work B shows a railway platform, moving figures, steam, and broken strokes suggesting changing light.",
+    },
+    "8.10": {
+      image: "assets/ap-european-history/u8-modernist-fragmented-still-life.svg",
+      alt: "Original geometric still-life schematic in which familiar bottle, bowl, table, and paper-like forms are broken into overlapping angular planes shown from more than one viewpoint.",
+    },
+  };
+
   // Targeted replacements from the first independent semantic review. These
   // keep the same keyed answer while replacing cartoonishly wrong alternatives
   // with historically plausible but still unambiguously inferior competitors.
@@ -133,14 +156,17 @@
     }
 
     const groupId = `apeuro-${def.code.replace(".", "-")}`;
+    const visual = visualAssets[def.code];
     const stimulus = {
       type: def.stimulus.type || "text",
       title: def.stimulus.title,
-      source: def.stimulus.source,
+      source: visual ? "Original synthetic visual created for AP Exam Practice; not a historical artifact or College Board source." : def.stimulus.source,
       description: def.stimulus.description,
       text: def.stimulus.text,
       columns: def.stimulus.columns,
       rows: def.stimulus.rows,
+      image: visual && visual.image,
+      alt: visual && visual.alt,
     };
 
     def.questions.forEach((item, index) => {
