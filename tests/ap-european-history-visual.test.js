@@ -32,7 +32,7 @@ test('all five AP Euro visual sets use real local original SVG stimuli', () => {
     assert.match(svg, /<title\b/);
     assert.match(svg, /<desc\b/);
     assert.match(q.stimulus.source, /Original synthetic visual/i);
-    assert.doesNotMatch(q.stimulus.source, /historical artifact|College Board source(?!.+not)/i);
+    assert.match(q.stimulus.source, /not a historical artifact or College Board source/i);
   }
 });
 
