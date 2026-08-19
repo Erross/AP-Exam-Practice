@@ -9,6 +9,41 @@
   "use strict";
   window.QUESTIONS_AP_WORLD_HISTORY = [];
 
+  // This base layer is already loaded immediately after js/subjects.js in the
+  // browser. Keep the verified draft registry metadata browser-effective here
+  // until final promotion; isolated bank tests intentionally do not expose the
+  // lexical AP_SUBJECTS binding, so the guard preserves standalone test loading.
+  if (typeof AP_SUBJECTS !== "undefined") {
+    const subject = AP_SUBJECTS.find((s) => s.id === "ap-world-history");
+    if (!subject) throw new Error("AP World History registry entry missing");
+    Object.assign(subject, {
+      mcqCount: 55,
+      mcqTimeMinutes: 55,
+      totalExamTimeLabel: "3h 15m",
+      formatVerified: true,
+      releaseStatus: "draft",
+      allowsMultiSelect: false,
+      calculatorAllowed: false,
+      tierNote: "Source-based Section I Part A practice only. The official fully digital exam also includes three short-answer questions, a document-based question, and a long essay.",
+      units: [
+        {id:"U1",name:"The Global Tapestry",examWeight:5/55,examWeightRange:[0.08,0.10]},
+        {id:"U2",name:"Networks of Exchange",examWeight:5/55,examWeightRange:[0.08,0.10]},
+        {id:"U3",name:"Land-Based Empires",examWeight:8/55,examWeightRange:[0.12,0.15]},
+        {id:"U4",name:"Transoceanic Interconnections",examWeight:8/55,examWeightRange:[0.12,0.15]},
+        {id:"U5",name:"Revolutions",examWeight:7/55,examWeightRange:[0.12,0.15]},
+        {id:"U6",name:"Consequences of Industrialization",examWeight:7/55,examWeightRange:[0.12,0.15]},
+        {id:"U7",name:"Global Conflict",examWeight:5/55,examWeightRange:[0.08,0.10]},
+        {id:"U8",name:"Cold War and Decolonization",examWeight:5/55,examWeightRange:[0.08,0.10]},
+        {id:"U9",name:"Globalization",examWeight:5/55,examWeightRange:[0.08,0.10]},
+      ],
+      stimulusSetRange: [13,13],
+      attributeRanges: {unit:{U1:[5,5],U2:[5,5],U3:[8,8],U4:[8,8],U5:[7,7],U6:[7,7],U7:[5,5],U8:[5,5],U9:[5,5]}},
+      constraintDrawAttempts: 30000,
+      freeResponse: {timeMinutes:140,questions:["Short Answer 1","Short Answer 2","Short Answer 3","Document-Based Question","Long Essay"]},
+      dataVar: "QUESTIONS_AP_WORLD_HISTORY",
+    });
+  }
+
   const unitQualifiers={
     U1:["within the c. 1200–1450 regional order","amid expanding state institutions","within established Afro-Eurasian political traditions","during the era of regional state building","within premodern agrarian societies","amid growing interregional exchange"],
     U2:["within the c. 1200–1450 exchange system","along expanding interregional trade networks","amid intensified Eurasian and Indian Ocean connectivity","within merchant and diasporic communities","during the Mongol-era expansion of exchange","across established caravan and maritime routes"],
@@ -55,7 +90,7 @@
     if (!item.topic || !item.q || !item.correct || !Array.isArray(item.distractors) || item.distractors.length !== 3 || !item.e) throw new Error(`Malformed AP World item ${seed}`);
     const p = position(seed, sequence);
     const o = competitiveDistractors(unit,seed,sequence,item.correct,item.distractors); o.splice(p,0,item.correct);
-    return { id:`apworld-${seed}-${String(sequence).padStart(2,'0')}`, unit, topic:item.topic, skill:String(item.skill||'1'), type:'s', q:item.q, o, c:[p], e:item.e, ...(gid?{stimulusGroupId:gid,stimulus}:{}), };
+    return { id:`apworld-${seed}-${String(sequence).padStart(2,'0')}`, unit, topic:item.topic, topicCode:item.topic, skill:String(item.skill||'1'), type:'s', q:item.q, o, c:[p], e:item.e, ...(gid?{stimulusGroupId:gid,stimulus}:{}), };
   }
   window.__APWORLD_ADD_SET__ = function(def) {
     if (!def || !def.id || !def.unit || !def.stimulus || !Array.isArray(def.questions) || def.questions.length<3 || def.questions.length>4) throw new Error('Malformed AP World set');
