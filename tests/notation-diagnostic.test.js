@@ -23,6 +23,8 @@ function loadAllBanks() {
               ? "data/ap-world-history.js"
               : file.startsWith("data/ap-latin-")
                 ? "data/ap-latin.js"
+                : file.startsWith("data/ap-business-personal-finance-")
+                  ? "data/ap-business-personal-finance.js"
           : file.startsWith("data/ap-art-history-")
           ? "data/ap-art-history.js"
           : file.startsWith("data/ap-calculus-bc-")
