@@ -40,9 +40,9 @@ test('AP Business browser wiring exposes metadata and every authored layer in ca
   ]);
 });
 
-test('AP Business browser-effective draft resolves the reviewed metadata and complete all-set bank',()=>{
+test('AP Business browser-effective release resolves the reviewed metadata and complete all-set bank',()=>{
   const {subject,bank}=loadBrowserEffective();
-  assert.equal(subject.releaseStatus,'draft');
+  assert.equal(subject.releaseStatus,'released');
   assert.equal(subject.mcqCount,60);
   assert.equal(subject.mcqTimeMinutes,70);
   assert.equal(subject.totalExamTimeLabel,'2h 40m');
@@ -62,10 +62,10 @@ test('AP Business browser-effective draft resolves the reviewed metadata and com
   assert.match(bank.find(q=>q.id==='apbpf-set4-u1-borrowing-2').o[bank.find(q=>q.id==='apbpf-set4-u1-borrowing-2').c[0]],/\$2,360/);
 });
 
-test('draft AP Business remains excluded from the public artifact while browser source can be audited',()=>{
+test('released AP Business is public-artifact eligible in the browser-effective metadata',()=>{
   const source=fs.readFileSync('js/ap-business-personal-finance-metadata.js','utf8');
-  assert.match(source,/releaseStatus:\s*"draft"/);
-  const subject=AP_SUBJECTS.find(s=>s.id==='ap-business-personal-finance');
-  assert.ok(subject);
-  assert.notEqual(subject.releaseStatus,'released');
+  assert.match(source,/releaseStatus:\s*"released"/);
+  assert.doesNotMatch(source,/releaseStatus:\s*"draft"/);
+  const {subject}=loadBrowserEffective();
+  assert.equal(subject.releaseStatus,'released');
 });
