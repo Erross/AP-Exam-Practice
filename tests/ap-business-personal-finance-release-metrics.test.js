@@ -14,6 +14,7 @@ const scripts = [
   'data/ap-business-personal-finance-sets.js',
   'data/ap-business-personal-finance-sets-2.js',
   'data/ap-business-personal-finance-sets-3.js',
+  'data/ap-business-personal-finance-sets-4.js',
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
   'data/ap-business-personal-finance-exact-skill.js',
@@ -52,7 +53,7 @@ test('AP Business answer construction stays inside project cue limits',()=>{
 });
 
 test('AP Business bank is entirely composed of intact three-question source sets',()=>{
-  assert.equal(bank.length,168);
+  assert.equal(bank.length,192);
   assert.ok(bank.every(q=>q.stimulusGroupId),'standalone AP Business question remains');
   assert.ok(bank.every(q=>q.variantGroupId===undefined),'variant groups are unnecessary in the all-set bank');
   const groups=new Map();
@@ -60,7 +61,7 @@ test('AP Business bank is entirely composed of intact three-question source sets
     if(!groups.has(q.stimulusGroupId)) groups.set(q.stimulusGroupId,[]);
     groups.get(q.stimulusGroupId).push(q);
   });
-  assert.equal(groups.size,56);
+  assert.equal(groups.size,64);
   for(const [gid,qs] of groups){
     assert.equal(qs.length,3,gid);
     assert.deepEqual(qs.map(q=>q.sequence),[1,2,3],gid);
