@@ -25,10 +25,9 @@ const byId=id=>bank.find(q=>q.id===id);
 const family=q=>String(q.skill).split('.')[0];
 const generated=q=>String(q.stimulusGroupId||'').startsWith('apbpf-topic-');
 
-test('clean-room: generated topic sets are source-based Concept Application only',()=>{
+test('clean-room: generated topic sets are source-based and use exact Concept Application subskills',()=>{
   const generatedItems=bank.filter(generated);
   assert.equal(generatedItems.length,84);
-  assert.ok(generatedItems.every(q=>['1.A','1.B'].includes(q.skill)),generatedItems.filter(q=>!['1.A','1.B'].includes(q.skill)).map(q=>`${q.id}:${q.skill}`).join(','));
   const groups=new Map();
   generatedItems.forEach(q=>{
     if(!groups.has(q.stimulusGroupId)) groups.set(q.stimulusGroupId,[]);
@@ -39,26 +38,26 @@ test('clean-room: generated topic sets are source-based Concept Application only
     assert.equal(qs.length,3,gid);
     assert.equal(new Set(qs.map(q=>q.topicCode)).size,1,gid);
     assert.deepEqual(qs.map(q=>q.sequence),[1,2,3],gid);
+    assert.deepEqual(qs.map(q=>q.skill),['1.A','1.B','1.C'],gid);
     assert.ok(qs.every(q=>q.stimulus===qs[0].stimulus),gid);
     assert.match(qs[0].stimulus.note,/not a College Board case/i,gid);
     assert.match(qs[0].stimulus.source,/AP Exam Practice original scenario/i,gid);
   }
 });
 
-test('clean-room: generated topic-set questions use same-unit competitors without target-name action cues',()=>{
+test('clean-room: generated Concept Application tasks perform their exact CED functions',()=>{
   const generatedItems=bank.filter(generated);
-  const topicNamesByUnit=new Map();
-  generatedItems.forEach(q=>{
-    if(!topicNamesByUnit.has(q.unit)) topicNamesByUnit.set(q.unit,new Set());
-    topicNamesByUnit.get(q.unit).add(q.topicName);
-  });
-  for(const q of generatedItems.filter(q=>q.sequence===1)){
-    assert.equal(q.o[q.c[0]],q.topicName,q.id);
-    assert.ok(q.o.every(option=>topicNamesByUnit.get(q.unit).has(option)),`${q.id}: ${q.o.join(' | ')}`);
+  for(const q of generatedItems.filter(q=>q.skill==='1.A')){
+    assert.match(q.q,/description.*concept/i,q.id);
+    assert.ok(q.o.every(option=>String(option).split(/\s+/).length>=8),q.id);
   }
-  for(const q of generatedItems.filter(q=>q.sequence===3)){
-    assert.equal(q.q,'Which action is best supported by the situation?',q.id);
-    assert.ok(!q.q.toLowerCase().includes(q.topicName.toLowerCase()),q.id);
+  for(const q of generatedItems.filter(q=>q.skill==='1.B')){
+    assert.match(q.q,/interpretation.*qualitative evidence/i,q.id);
+    assert.ok(q.o.every(option=>String(option).length>20),q.id);
+  }
+  for(const q of generatedItems.filter(q=>q.skill==='1.C')){
+    assert.match(q.q,/explanation.*action.*concept/i,q.id);
+    assert.ok(q.o.every(option=>/This action fits because/i.test(option)),q.id);
   }
 });
 
