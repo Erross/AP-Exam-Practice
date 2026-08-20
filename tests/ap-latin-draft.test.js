@@ -16,7 +16,7 @@ const DATA = [
   'data/ap-latin-long-aen4.js',
   'data/ap-latin-long-aen6.js',
   'data/ap-latin-skill-fixes.js',
-  'data/ap-latin-answer-hardening.js',
+  'data/ap-latin-answer-curation.js',
 ];
 
 function loadLatin() {
@@ -56,9 +56,6 @@ const EXPECTED_TOPICS = [
 
 test('Latin draft bank has the intended 166-question alternate inventory', () => {
   const { bank } = loadLatin();
-  // The base layer has 29 independently composed sight sentences. Each produces
-  // two distinct one-question blocks (meaning + grammar), so the discrete pool
-  // is 58 questions rather than the stale 50-question planning estimate.
   assert.equal(bank.length, 166);
   assert.equal(new Set(bank.map((q) => q.id)).size, 166);
   const byType = Object.groupBy(bank, (q) => q.setType);
@@ -97,7 +94,7 @@ test('Latin schema, sources, keys, and rationales are structurally release-grade
   }
 });
 
-test('Latin answer construction stays within project cue limits', () => {
+test('Latin answer construction stays within project cue limits without qualifier padding', () => {
   const { bank } = loadLatin();
   let uniqueLongest = 0, correctWords = 0, distractorWords = 0, distractorCount = 0;
   const keys = [0,0,0,0];
