@@ -13,6 +13,7 @@ const scripts = [
   'data/ap-business-personal-finance-u4.js',
   'data/ap-business-personal-finance-sets.js',
   'data/ap-business-personal-finance-sets-2.js',
+  'data/ap-business-personal-finance-sets-3.js',
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
 ];
@@ -37,26 +38,54 @@ test('AP Business draft matches the May 2027 Section I metadata and exact 28-top
   assert.equal(subject.mcqCount,60); assert.equal(subject.mcqTimeMinutes,70);
   assert.equal(subject.totalExamTimeLabel,'2h 40m'); assert.equal(subject.calculatorAllowed,true);
   assert.deepEqual(Array.from(subject.units,u=>u.id),['U1','U2','U3','U4']);
+  assert.deepEqual(Array.from(subject.freeResponse.questions),[
+    'Business Canvas Project Exam-Day Validation','Personal Finance','Business Concept Application','Business Decision'
+  ]);
   assert.deepEqual([...new Set(bank.map(q=>q.topicCode))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})),expected);
-  assert.equal(bank.length,200);
+  assert.equal(bank.length,224);
   expected.forEach(code=>assert.ok(bank.filter(q=>q.topicCode===code).length>=5,code));
 });
 
-test('AP Business draft has sound schema, twenty intact three-question synthetic source sets, and MCQ skills 1-4 only',()=>{
+test('AP Business draft has sound schema, twenty-eight intact source sets, and MCQ skills 1-4 only',()=>{
   const ids=new Set(); const groups=new Map();
   bank.forEach(q=>{
     assert.ok(!ids.has(q.id),q.id); ids.add(q.id);
     assert.equal(q.type,'s',q.id); assert.equal(q.o.length,4,q.id); assert.equal(q.c.length,1,q.id);
-    assert.ok(q.c[0]>=0&&q.c[0]<4,q.id); assert.ok(q.e.split(/\s+/).length>=8,q.id);
+    assert.ok(q.c[0]>=0&&q.c[0]<4,q.id); assert.ok(String(q.e||'').trim().length>=90,q.id);
     assert.ok(['1','2','3','4'].includes(family(q)),q.id);
     if(q.stimulusGroupId){if(!groups.has(q.stimulusGroupId))groups.set(q.stimulusGroupId,[]);groups.get(q.stimulusGroupId).push(q);}
   });
-  assert.equal(groups.size,20);
-  for(const [id,qs] of groups){assert.equal(qs.length,3,id);assert.deepEqual(qs.map(q=>q.sequence),[1,2,3],id);assert.ok(qs[0].stimulus.source,id);}
-  assert.equal(bank.filter(q=>q.personalFinance).length,41);
+  assert.equal(groups.size,28);
+  for(const [id,qs] of groups){
+    assert.equal(qs.length,3,id); assert.deepEqual(qs.map(q=>q.sequence),[1,2,3],id);
+    assert.ok(qs[0].stimulus.source,id); assert.ok(qs.every(q=>q.stimulus===qs[0].stimulus),id);
+  }
+  assert.equal(bank.filter(q=>q.personalFinance).length,38);
 });
 
-test('AP Business draft can construct exact unit, skill, source-set, and 20-25% personal-finance forms',()=>{
+test('generated standalone variants stay Concept Application and are mutually exclusive by topic',()=>{
+  const standalones=bank.filter(q=>!q.stimulusGroupId);
+  assert.equal(standalones.length,140);
+  assert.ok(standalones.every(q=>family(q)==='1'));
+  const groups=new Map();
+  standalones.forEach(q=>{
+    assert.ok(q.variantGroupId,q.id);
+    if(!groups.has(q.variantGroupId)) groups.set(q.variantGroupId,[]);
+    groups.get(q.variantGroupId).push(q);
+  });
+  assert.equal(groups.size,28);
+  for(const [id,qs] of groups){
+    assert.equal(qs.length,5,id);
+    assert.equal(new Set(qs.map(q=>q.unit)).size,1,id);
+    assert.equal(new Set(qs.map(q=>q.topicCode)).size,1,id);
+    assert.equal(new Set(qs.map(q=>q.q)).size,5,id);
+    assert.ok(qs.every(q=>!q.stimulusGroupId),id);
+  }
+  const sourceItems=bank.filter(q=>q.stimulusGroupId);
+  ['2','3','4'].forEach(f=>assert.ok(sourceItems.some(q=>family(q)===f),`missing authored skill ${f}`));
+});
+
+test('AP Business draft can construct exact unit, skill, source-set, variant, and 20-25% personal-finance forms',()=>{
   const target={U1:15,U2:15,U3:18,U4:12};
   let minPF=99,maxPF=0,minSets=99,maxSets=0;
   for(let i=0;i<500;i++){
@@ -66,8 +95,11 @@ test('AP Business draft can construct exact unit, skill, source-set, and 20-25% 
     const skills=countBy(draw,family);
     Object.entries(subject.skillCountRanges).forEach(([f,r])=>assert.ok((skills[f]||0)>=r[0]&&(skills[f]||0)<=r[1],`skill ${f}: ${skills[f]||0}`));
     const pf=draw.filter(q=>q.personalFinance).length; assert.ok(pf>=12&&pf<=15,`PF ${pf}`); minPF=Math.min(minPF,pf);maxPF=Math.max(maxPF,pf);
-    const sets=new Set(draw.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId)).size; assert.ok(sets>=8&&sets<=14,`sets ${sets}`);minSets=Math.min(minSets,sets);maxSets=Math.max(maxSets,sets);
+    const sets=new Set(draw.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId)).size;
+    assert.ok(sets>=subject.stimulusSetRange[0]&&sets<=subject.stimulusSetRange[1],`sets ${sets}`); minSets=Math.min(minSets,sets);maxSets=Math.max(maxSets,sets);
     for(const gid of new Set(draw.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId))){assert.equal(draw.filter(q=>q.stimulusGroupId===gid).length,3,gid);}
+    const variants=draw.filter(q=>q.variantGroupId).map(q=>q.variantGroupId);
+    assert.equal(new Set(variants).size,variants.length,'same-topic standalone variants co-occurred');
   }
   console.log('AP Business draft draw envelope',{personalFinance:[minPF,maxPF],sourceSets:[minSets,maxSets]});
 });
@@ -83,4 +115,12 @@ test('AP Business quantitative anchors independently recompute',()=>{
   assert.equal(96/160,0.6); assert.equal(72/180,0.4); assert.equal(33/110,0.3);
   assert.equal(50-2-7,41); assert.equal(50-15-3,32); assert.equal(50-10-6,34);
   assert.equal(3.20+0.80,4); assert.equal(2400+600,3000);
+
+  assert.equal(40*2.50,100); assert.ok(100>80);
+  assert.equal(3200-180-250,2770); assert.equal(3450-100-650,2700);
+  assert.equal(14-7.40,6.60); assert.equal(14-8.10,5.90);
+  assert.equal(6000*0.02-95,25); assert.equal(6000*0.01,60);
+  assert.equal(14000+38000+18000,70000); assert.equal(22000+9000,31000); assert.equal(70000-31000,39000);
+  assert.ok(Math.abs(120000/36000-(10/3))<1e-12); assert.ok(Math.abs(15000/18000-(5/6))<1e-12);
+  assert.match(byId('apbpf-set3-u2-credit-2').o[byId('apbpf-set3-u2-credit-2').c[0]],/^Card B,/);
 });
