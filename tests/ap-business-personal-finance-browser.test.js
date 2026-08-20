@@ -37,22 +37,24 @@ test('AP Business browser wiring exposes metadata and every authored layer in ca
   ]);
 });
 
-test('AP Business browser-effective draft resolves the reviewed metadata and complete bank',()=>{
+test('AP Business browser-effective draft resolves the reviewed metadata and complete all-set bank',()=>{
   const {subject,bank}=loadBrowserEffective();
   assert.equal(subject.releaseStatus,'draft');
   assert.equal(subject.mcqCount,60);
   assert.equal(subject.mcqTimeMinutes,70);
   assert.equal(subject.totalExamTimeLabel,'2h 40m');
   assert.equal(subject.calculatorAllowed,true);
-  assert.deepEqual(Array.from(subject.stimulusSetRange),[12,14]);
+  assert.deepEqual(Array.from(subject.stimulusSetRange),[20,20]);
+  assert.match(subject.tierNote,/all 60 official multiple-choice questions appear in stimulus sets of 3 or 4/i);
   assert.deepEqual(Array.from(subject.freeResponse.questions),[
     'Business Canvas Project Exam-Day Validation','Personal Finance','Business Concept Application','Business Decision'
   ]);
-  assert.equal(bank.length,224);
-  assert.equal(new Set(bank.map(q=>q.id)).size,224);
-  assert.equal(new Set(bank.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId)).size,28);
-  assert.equal(new Set(bank.filter(q=>q.variantGroupId).map(q=>q.variantGroupId)).size,28);
-  assert.equal(bank.filter(q=>q.personalFinance).length,38);
+  assert.equal(bank.length,168);
+  assert.equal(new Set(bank.map(q=>q.id)).size,168);
+  assert.ok(bank.every(q=>q.stimulusGroupId));
+  assert.equal(new Set(bank.map(q=>q.stimulusGroupId)).size,56);
+  assert.equal(bank.filter(q=>q.variantGroupId).length,0);
+  assert.equal(bank.filter(q=>q.personalFinance).length,36);
 });
 
 test('draft AP Business remains excluded from the public artifact while browser source can be audited',()=>{
