@@ -23,47 +23,49 @@ function load(){
 const bank=load();
 const byId=id=>bank.find(q=>q.id===id);
 const family=q=>String(q.skill).split('.')[0];
+const generated=q=>String(q.stimulusGroupId||'').startsWith('apbpf-topic-');
 
-test('clean-room: generated standalones make no false higher-order skill claims',()=>{
-  const standalones=bank.filter(q=>!q.stimulusGroupId);
-  assert.equal(standalones.length,140);
-  assert.ok(standalones.every(q=>['1.A','1.B'].includes(q.skill)),standalones.filter(q=>!['1.A','1.B'].includes(q.skill)).map(q=>`${q.id}:${q.skill}`).join(','));
-  assert.equal(new Set(standalones.map(q=>q.variantGroupId)).size,28);
-  for(const gid of new Set(standalones.map(q=>q.variantGroupId))){
-    const qs=standalones.filter(q=>q.variantGroupId===gid);
-    assert.equal(qs.length,5,gid);
+test('clean-room: generated topic sets are source-based Concept Application only',()=>{
+  const generatedItems=bank.filter(generated);
+  assert.equal(generatedItems.length,84);
+  assert.ok(generatedItems.every(q=>['1.A','1.B'].includes(q.skill)),generatedItems.filter(q=>!['1.A','1.B'].includes(q.skill)).map(q=>`${q.id}:${q.skill}`).join(','));
+  const groups=new Map();
+  generatedItems.forEach(q=>{
+    if(!groups.has(q.stimulusGroupId)) groups.set(q.stimulusGroupId,[]);
+    groups.get(q.stimulusGroupId).push(q);
+  });
+  assert.equal(groups.size,28);
+  for(const [gid,qs] of groups){
+    assert.equal(qs.length,3,gid);
     assert.equal(new Set(qs.map(q=>q.topicCode)).size,1,gid);
+    assert.deepEqual(qs.map(q=>q.sequence),[1,2,3],gid);
+    assert.ok(qs.every(q=>q.stimulus===qs[0].stimulus),gid);
+    assert.match(qs[0].stimulus.note,/not a College Board case/i,gid);
+    assert.match(qs[0].stimulus.source,/AP Exam Practice original scenario/i,gid);
   }
 });
 
-test('clean-room: standalone definition and distinction variants use same-unit topic competitors',()=>{
-  const standalones=bank.filter(q=>!q.stimulusGroupId);
+test('clean-room: generated topic-set questions use same-unit competitors without target-name action cues',()=>{
+  const generatedItems=bank.filter(generated);
   const topicNamesByUnit=new Map();
-  for(const q of standalones){
+  generatedItems.forEach(q=>{
     if(!topicNamesByUnit.has(q.unit)) topicNamesByUnit.set(q.unit,new Set());
     topicNamesByUnit.get(q.unit).add(q.topicName);
-  }
-  const classificationVariants=standalones.filter(q=>/-[15]$/.test(q.id));
-  assert.equal(classificationVariants.length,56);
-  for(const q of classificationVariants){
+  });
+  for(const q of generatedItems.filter(q=>q.sequence===1)){
     assert.equal(q.o[q.c[0]],q.topicName,q.id);
     assert.ok(q.o.every(option=>topicNamesByUnit.get(q.unit).has(option)),`${q.id}: ${q.o.join(' | ')}`);
   }
-});
-
-test('clean-room: standalone action variants infer action from evidence without naming the target topic',()=>{
-  const actions=bank.filter(q=>!q.stimulusGroupId&&/-4$/.test(q.id));
-  assert.equal(actions.length,28);
-  for(const q of actions){
-    assert.match(q.q,/following situation:/i,q.id);
-    assert.doesNotMatch(q.q,new RegExp(q.topicName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i'),q.id);
+  for(const q of generatedItems.filter(q=>q.sequence===3)){
+    assert.equal(q.q,'Which action is best supported by the situation?',q.id);
+    assert.ok(!q.q.toLowerCase().includes(q.topicName.toLowerCase()),q.id);
   }
 });
 
-test('clean-room: Entrepreneurship, Decision Making, and Communication are authored source tasks',()=>{
+test('clean-room: Entrepreneurship, Decision Making, and Communication are independently authored source tasks',()=>{
   const higher=bank.filter(q=>['2','3','4'].includes(family(q)));
   assert.ok(higher.length>0);
-  assert.ok(higher.every(q=>q.stimulusGroupId),higher.filter(q=>!q.stimulusGroupId).map(q=>q.id));
+  assert.ok(higher.every(q=>q.stimulusGroupId&&!generated(q)),higher.filter(q=>!q.stimulusGroupId||generated(q)).map(q=>q.id));
   const twoB=bank.filter(q=>q.skill==='2.B');
   assert.ok(twoB.length>=2);
   assert.ok(twoB.every(q=>/hypothes|test/i.test(q.q)),twoB.map(q=>`${q.id}: ${q.q}`));
@@ -72,9 +74,6 @@ test('clean-room: Entrepreneurship, Decision Making, and Communication are autho
   assert.ok(twoC.every(q=>/viab|financial|contribution|profit|cost/i.test(`${q.q} ${q.e}`)),twoC.map(q=>q.id));
   const threeD=bank.filter(q=>q.skill==='3.D');
   assert.ok(threeD.length>=2);
-  // College Board Skill 3.D is recommending a course of action with reasoning
-  // and evidence. Selection prompts may say recommendation, action, option, or
-  // alternative; do not force one literal verb when the task construct is clear.
   assert.ok(threeD.every(q=>/recommend|action|option|alternative|choose|best supported/i.test(`${q.q} ${q.o[q.c[0]]}`)),threeD.map(q=>`${q.id}: ${q.q}`));
   assert.ok(threeD.every(q=>String(q.e||'').trim().length>=90),threeD.map(q=>q.id));
 });
@@ -88,11 +87,13 @@ test('clean-room: Communication questions explicitly target an audience or purpo
 
 test('clean-room: personal-finance classification is semantic and excludes business cash-flow reporting',()=>{
   const pf=bank.filter(q=>q.personalFinance);
-  assert.equal(pf.length,38);
+  assert.equal(pf.length,36);
   assert.equal(bank.filter(q=>q.topicCode==='3.8'&&q.personalFinance).length,0);
-  ['apbpf-set3-u1-career','apbpf-set3-u2-credit','apbpf-set3-u3-networth'].forEach(gid=>{
-    assert.equal(bank.filter(q=>q.stimulusGroupId===gid&&q.personalFinance).length,3,gid);
-  });
+  [
+    'apbpf-topic-1-6','apbpf-topic-2-2','apbpf-topic-3-1','apbpf-topic-3-2','apbpf-topic-3-7',
+    'apbpf-set-u1-ethics','apbpf-set-u2-segment','apbpf-set-u3-saving','apbpf-set-u3-credit',
+    'apbpf-set3-u1-career','apbpf-set3-u2-credit','apbpf-set3-u3-networth'
+  ].forEach(gid=>assert.equal(bank.filter(q=>q.stimulusGroupId===gid&&q.personalFinance).length,3,gid));
 });
 
 test('clean-room: repaired quantitative and semantic anchors retain one coherent key',()=>{
@@ -118,7 +119,7 @@ test('clean-room: known exact-skill repairs remain in place',()=>{
   assert.match(byId('apbpf-set2-u2-promo-3').q,/message.*homeowners/i);
 });
 
-test('clean-room: hardened source-set distractors stay same-domain rather than cartoon wrong',()=>{
+test('clean-room: hardened authored-set distractors stay same-domain rather than cartoon wrong',()=>{
   const banned=[
     /free money with no borrowing costs/i,
     /68% is greater than 80%/i,
