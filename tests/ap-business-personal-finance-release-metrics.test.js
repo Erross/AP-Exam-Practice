@@ -13,6 +13,7 @@ const scripts = [
   'data/ap-business-personal-finance-u4.js',
   'data/ap-business-personal-finance-sets.js',
   'data/ap-business-personal-finance-sets-2.js',
+  'data/ap-business-personal-finance-sets-3.js',
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
 ];
@@ -44,11 +45,11 @@ test('AP Business answer construction stays inside project cue limits',()=>{
   console.log('AP Business answer metrics',{uniqueLongest:`${(u*100).toFixed(1)}%`,amongLongest:`${(a*100).toFixed(1)}%`,correctWords:ca.toFixed(2),distractorWords:da.toFixed(2),keys});
   assert.ok(u<=0.25,`unique-longest ${(u*100).toFixed(1)}%`);
   assert.ok(a<=0.58,`among-longest ${(a*100).toFixed(1)}%`);
-  assert.ok(Math.abs(ca-da)/da<=0.15,`word-length averages ${ca.toFixed(2)}/${da.toFixed(2)}`);
+  assert.ok(Math.abs(ca-da)/da<=0.12,`word-length averages ${ca.toFixed(2)}/${da.toFixed(2)}`);
   keys.forEach((n,i)=>assert.ok(n/bank.length>=0.15&&n/bank.length<=0.35,`key ${i}: ${n}`));
 });
 
-test('5,000 AP Business forms satisfy official unit, skill, source-set, and personal-finance constraints',()=>{
+test('5,000 AP Business forms satisfy official unit, skill, source-set, variant, and personal-finance constraints',()=>{
   const units={U1:15,U2:15,U3:18,U4:12};
   let pfMin=99,pfMax=0,setMin=99,setMax=0;
   for(let i=0;i<5000;i++){
@@ -60,8 +61,10 @@ test('5,000 AP Business forms satisfy official unit, skill, source-set, and pers
     for(const [f,r] of Object.entries(subject.skillCountRanges)) assert.ok((skills[f]||0)>=r[0]&&(skills[f]||0)<=r[1],`draw ${i+1} skill ${f}=${skills[f]||0}`);
     const pf=draw.filter(q=>q.personalFinance).length; assert.ok(pf>=12&&pf<=15,`draw ${i+1} PF ${pf}`); pfMin=Math.min(pfMin,pf);pfMax=Math.max(pfMax,pf);
     const gids=[...new Set(draw.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId))];
-    assert.ok(gids.length>=8&&gids.length<=14,`draw ${i+1} sets ${gids.length}`);setMin=Math.min(setMin,gids.length);setMax=Math.max(setMax,gids.length);
+    assert.ok(gids.length>=subject.stimulusSetRange[0]&&gids.length<=subject.stimulusSetRange[1],`draw ${i+1} sets ${gids.length}`);setMin=Math.min(setMin,gids.length);setMax=Math.max(setMax,gids.length);
     for(const gid of gids) assert.equal(draw.filter(q=>q.stimulusGroupId===gid).length,3,`draw ${i+1} ${gid}`);
+    const variants=draw.filter(q=>q.variantGroupId).map(q=>q.variantGroupId);
+    assert.equal(new Set(variants).size,variants.length,`draw ${i+1} repeated standalone variant group`);
   }
   console.log('AP Business 5000-form envelope',{personalFinance:[pfMin,pfMax],sourceSets:[setMin,setMax]});
 });
