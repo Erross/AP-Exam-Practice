@@ -12,6 +12,14 @@
   // bands are 45–55 / 5–15 / 25–35 / 5–15 for Skills 1–4. The live exam
   // page permits either a handheld 4-function calculator or Bluebook's
   // built-in Desmos 4-function calculator.
+  const standaloneTopicRanges = {};
+  [
+    "1-1","1-2","1-3","1-4","1-5","1-6","1-7","1-8",
+    "2-1","2-2","2-3","2-4","2-5","2-6","2-7",
+    "3-1","3-2","3-3","3-4","3-5","3-6","3-7","3-8","3-9",
+    "4-1","4-2","4-3","4-4",
+  ].forEach((code) => { standaloneTopicRanges[`apbpf-${code}-standalone`] = [0,1]; });
+
   Object.assign(subject, {
     mcqCount: 60,
     mcqTimeMinutes: 70,
@@ -28,7 +36,10 @@
       { id:"U4", name:"Management and Strategy", examWeight:12/60, examWeightRange:[0.15,0.20] },
     ],
     skillCountRanges: { "1":[27,33], "2":[3,9], "3":[15,21], "4":[3,9] },
-    attributeRanges: { personalFinance: { "true":[12,15] } },
+    attributeRanges: {
+      personalFinance: { "true":[12,15] },
+      variantGroupId: standaloneTopicRanges,
+    },
     stimulusSetRange: [12,14],
     constraintDrawAttempts: 30000,
     freeResponse: {
