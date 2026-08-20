@@ -31,10 +31,10 @@ const count=(xs,fn)=>xs.reduce((o,x)=>{const k=fn(x);o[k]=(o[k]||0)+1;return o;}
 
 test('AP Business answer construction stays inside project cue limits',()=>{
   let unique=0, among=0, correctWords=0, distractorWords=0;
-  const keys=[0,0,0,0];
+  const keys=[0,0,0,0], uniqueIds=[];
   for(const q of bank){
     const lens=q.o.map(wc), key=q.c[0], max=Math.max(...lens), maxCount=lens.filter(n=>n===max).length;
-    if(lens[key]===max&&maxCount===1) unique++;
+    if(lens[key]===max&&maxCount===1){unique++;uniqueIds.push({id:q.id,lens,key,answer:q.o[key]});}
     if(lens[key]===max&&maxCount<4) among++;
     correctWords+=lens[key];
     lens.forEach((n,i)=>{if(i!==key)distractorWords+=n;});
@@ -43,10 +43,18 @@ test('AP Business answer construction stays inside project cue limits',()=>{
   const u=unique/bank.length, a=among/bank.length;
   const ca=correctWords/bank.length, da=distractorWords/(bank.length*3);
   console.log('AP Business answer metrics',{uniqueLongest:`${(u*100).toFixed(1)}%`,amongLongest:`${(a*100).toFixed(1)}%`,correctWords:ca.toFixed(2),distractorWords:da.toFixed(2),keys});
+  if(u>0.25) console.log('AP Business uniquely-longest keyed items',uniqueIds);
   assert.ok(u<=0.25,`unique-longest ${(u*100).toFixed(1)}%`);
   assert.ok(a<=0.58,`among-longest ${(a*100).toFixed(1)}%`);
   assert.ok(Math.abs(ca-da)/da<=0.12,`word-length averages ${ca.toFixed(2)}/${da.toFixed(2)}`);
   keys.forEach((n,i)=>assert.ok(n/bank.length>=0.15&&n/bank.length<=0.35,`key ${i}: ${n}`));
+});
+
+test('AP Business variant-group constraints are explicit for all 28 standalone topics',()=>{
+  const ranges=subject.attributeRanges&&subject.attributeRanges.variantGroupId;
+  assert.ok(ranges);
+  assert.equal(Object.keys(ranges).length,28);
+  Object.values(ranges).forEach(range=>assert.deepEqual(Array.from(range),[0,1]));
 });
 
 test('5,000 AP Business forms satisfy official unit, skill, source-set, variant, and personal-finance constraints',()=>{
