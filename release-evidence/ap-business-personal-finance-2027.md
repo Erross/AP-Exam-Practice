@@ -4,9 +4,9 @@
 
 - Subject branch: `subject/ap-business-personal-finance-2027`
 - Fresh post-repair reviewed content candidate: `337ececabcd0a884e3af2c090ddd1223c360d237`
-- PR: #78
+- Reviewed-content PR: #78
 - Verification date: 2026-08-20
-- Release state at reviewed candidate: `draft`
+- Release state at reviewed content candidate: `draft`
 
 ## Official format verification
 
@@ -76,7 +76,7 @@ College Board specifies that Section I questions appear in sets of 3 or 4 but do
 
 ## Findings and repairs
 
-Development and independent clean-room review rejected several earlier candidate shapes and repaired substantive defects before this reviewed SHA:
+Development and independent clean-room review rejected several earlier candidate shapes and repaired substantive defects before the reviewed SHA:
 
 - The original mixed architecture used generated standalone questions even though live College Board verification showed that **all** Section I MCQs appear in source sets of 3 or 4. The bank was rebuilt as an all-set bank rather than accepting that mismatch.
 - Generated standalones had previously carried false higher-order Skill 2–4 tags. The final generated topic sets are limited to exact Concept Application subskills **1.A / 1.B / 1.C**; higher-order skills occur only in independently authored source sets.
@@ -90,7 +90,7 @@ Development and independent clean-room review rejected several earlier candidate
 - A new installment-loan comparison initially omitted Offer A's $80 origination fee from its all-in comparison. Final review recomputed and rewrote the set: Offer A = **$2,360** total listed cash paid; Offer B = **$2,500**.
 - A new Unit 3 PF set initially used an emergency-fund scenario under Topic 3.1, whose current topic is **Saving for Future Purchases**. It was rewritten around a six-month used-car down-payment goal while preserving the valid savings-versus-debt calculation.
 
-Temporary focused-diagnostic CI scaffolding was removed after the AP Business suite became green; the reviewed candidate uses the repository's normal single `npm run check` workflow.
+Temporary focused-diagnostic CI scaffolding was removed after the AP Business suite became green; the reviewed and promoted candidates use the repository's normal single `npm run check` workflow.
 
 ## Independent exact-skill/content review
 
@@ -124,24 +124,22 @@ The browser-effective preflight exposes the facts a student needs before startin
 
 The generic catalog/preflight UI is regression-tested to surface question count, timing, total duration, calculator status, and the AP Business-specific scope note without implementation jargon.
 
-## Focused release-metric evidence
+## Release metrics
 
-The final content-equivalent focused AP Business diagnostic run on candidate `9193f6eb3418f4b63f1454cd95bd8dd6d724da39` completed with **28/28 AP Business tests passing** before the temporary diagnostic workflow was removed. The subsequent clean candidate changes only restored the normal workflow; AP Business content was unchanged.
-
-Focused final metrics:
+The final browser-effective AP Business bank has repeatedly produced the same cue envelope across clean and promoted candidates:
 
 - **192 questions / 64 complete source sets**.
 - Uniquely-longest keyed answer: **22.4%**.
 - Exploitable among-longest: **35.9%**.
 - Correct-answer length: **22.37 words average**.
 - Distractor length: **22.33 words average**.
-- Raw answer keys: **[51, 49, 43, 49]**.
+- Raw answer keys: **[46, 51, 48, 47]** = 24.0%, 26.6%, 25.0%, 24.5%.
 - Rationales under 90 characters: **0**.
 - Stacked absolute-language items: **0**.
 - Draw simulation: **5,000/5,000 valid** exact 60-question forms.
 - Personal-finance envelope: **12–15 questions**.
 - Source-set envelope: exactly **20 complete sets**.
-- Independent retake overlap: **37.6%** average shared questions.
+- Independent retake overlap: **37.5–37.6%** average shared questions across final runs.
 - Exact-skill semantic suite: green.
 - Naive student-facing suite: green.
 - Browser-effective layer/order suite: green.
@@ -150,28 +148,50 @@ Focused final metrics:
 
 After temporary diagnostic CI was removed, clean reviewed candidate `337ececabcd0a884e3af2c090ddd1223c360d237` ran through the repository's normal full `npm run check` workflow.
 
-GitHub Actions Test run **#2011**, run ID **32406514593**, completed successfully on the clean candidate.
+GitHub Actions Test run **#2011**, run ID **32406514593**, completed successfully.
 
 - Full repository `npm run check`: **passed**.
-- Full repository test suite: **passed**.
-- AP Business browser/draft/clean-room/naive/quality/release-metric suites: **passed**.
+- AP Business browser/clean-room/naive/quality/release-metric suites: **passed**.
 - Cross-bank notation/presentation diagnostic: **passed**.
 - Build: **passed** while AP Business remained `draft`.
 - Artifact verification: **passed** with draft AP Business excluded from the released public artifact.
 - Dependency audit: **passed**.
 
-The readable AP Business metrics above come from the content-equivalent focused run; the exact clean-candidate full-suite run independently establishes that removing diagnostic scaffolding did not introduce a repository-wide regression.
+## Promotion evidence
 
-## Promotion and production gates still required
+Promotion was intentionally limited to the release state and tests whose purpose is to assert that state.
 
-The reviewed content candidate above is ready for promotion, but production release is not complete until:
+- Evidence-only pre-promotion head: `6140a06d5e9ed8d815dd4a8abe942da4b96e565f`.
+- Promoted subject head: `132ec06d39cbc63799c3688a3c63c5516f12d7bc`.
+- Promotion diff from the evidence-only head changed exactly four files:
+  - `js/ap-business-personal-finance-metadata.js`: `draft` → `released`;
+  - browser release-state assertions;
+  - subject release-state assertions;
+  - naive release-state assertion.
+- **No AP Business question/data file changed during promotion.**
+- Exact promoted prospective-main merge commit: `c557ae4954f02b01290ea32abcc4f11365d3d880`.
+- Its parents are current `main` `57e0d8fb912424714d977728bfa394cd7071b8ab` and promoted subject head `132ec06d39cbc63799c3688a3c63c5516f12d7bc`.
+- GitHub Actions Test run **#2021**, run ID **32408932297**, explicitly checked out `c557ae4954f02b01290ea32abcc4f11365d3d880` and completed successfully.
+- **419/419 tests passed**.
+- AP Business: **5,000/5,000 valid forms**; PF **12–15**; exactly **20 complete source sets**; retake overlap **37.5%**.
+- Answer metrics remained **22.4% uniquely-longest**, **35.9% exploitable among-longest**, **22.37 vs 22.33 words**.
+- Build: **27 released subjects / 122 released data layers**.
+- Artifact check: **27 released subjects and all 122 referenced released layers**, with draft data excluded.
+- Dependency audit: **0 vulnerabilities**.
 
-1. the small `draft` → `released` promotion change is made;
-2. tests that intentionally assert draft/release state are updated only for that state transition;
-3. fresh CI passes on the exact promoted PR merge candidate;
-4. a fresh integration candidate is produced from current `main`;
-5. full CI passes on that exact integration SHA;
-6. the production artifact includes AP Business and all 13 AP Business data layers;
-7. the exact tested integration commit is merged/moved to `main`;
-8. the GitHub Pages deployment from that exact `main` commit is verified if available tooling exposes it;
-9. public catalog/preflight/exam-start smoke verification succeeds where observable.
+## Integration and production status
+
+A fresh integration branch was created from current `main` and fast-forwarded to the exact tested promoted merge commit before the release PR was opened.
+
+- Integration branch: `release/ap-business-personal-finance-2027-integration-20260820`.
+- Release PR: **#79**, `Release AP Business with Personal Finance for May 2027`.
+- Initial integration commit: `c557ae4954f02b01290ea32abcc4f11365d3d880`.
+- This evidence update is the only intentional post-promotion integration change.
+
+Production release remains gated on:
+
+1. full CI passing on PR #79's exact final prospective `main` merge SHA after this evidence update;
+2. the resulting production artifact still reporting **27 released subjects / 122 released data layers** and containing AP Business;
+3. merging PR #79 to `main` only after that exact final merge-tree gate is green;
+4. GitHub Pages deployment completing successfully from the exact resulting `main` commit;
+5. public catalog → AP Business preflight → exam-start smoke verification succeeding.
