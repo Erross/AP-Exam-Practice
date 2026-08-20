@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const ROOT = path.join(__dirname, '..');
-const PRE_HARDENING = [
+const BASE = [
   'data/ap-latin.js',
   'data/ap-latin-sight-sets.js',
   'data/ap-latin-syllabus-short.js',
@@ -15,6 +15,7 @@ const PRE_HARDENING = [
   'data/ap-latin-long-aen6.js',
   'data/ap-latin-skill-fixes.js',
 ];
+const SHIPPING = BASE.concat('data/ap-latin-answer-curation.js');
 
 function load(files) {
   const context = {};
@@ -30,66 +31,36 @@ function words(value) {
 }
 
 function metrics(bank) {
-  let unique = 0;
-  let correct = 0;
-  let distractor = 0;
-  const bySkill = {};
+  let unique = 0, correct = 0, distractor = 0;
   const offenders = [];
   for (const q of bank) {
     const lengths = q.o.map(words);
     const key = q.c[0];
     const max = Math.max(...lengths);
+    const maxDistractor = Math.max(...lengths.filter((_, i) => i !== key));
     const isUnique = lengths[key] === max && lengths.filter((n) => n === max).length === 1;
-    const maxDistractor = Math.max(...lengths.filter((_, index) => index !== key));
+    if (isUnique) offenders.push({ id:q.id, skill:q.skill, gap:lengths[key]-maxDistractor, answer:q.o[key] });
     unique += isUnique ? 1 : 0;
     correct += lengths[key];
-    lengths.forEach((n, index) => { if (index !== key) distractor += n; });
-    const bucket = bySkill[q.skill] || (bySkill[q.skill] = { n:0, unique:0, correct:0, distractor:0 });
-    bucket.n++;
-    bucket.unique += isUnique ? 1 : 0;
-    bucket.correct += lengths[key];
-    lengths.forEach((n, index) => { if (index !== key) bucket.distractor += n; });
-    if (isUnique) {
-      offenders.push({
-        id:q.id,
-        skill:q.skill,
-        gap:lengths[key] - maxDistractor,
-        correct:lengths[key],
-        maxDistractor,
-        stem:q.q,
-        answer:q.o[key]
-      });
-    }
+    lengths.forEach((n,i) => { if (i !== key) distractor += n; });
   }
-  offenders.sort((a,b) => b.gap - a.gap || b.correct - a.correct || a.id.localeCompare(b.id));
-  return {
-    unique: unique / bank.length,
-    correct: correct / bank.length,
-    distractor: distractor / (bank.length * 3),
-    bySkill: Object.fromEntries(Object.entries(bySkill).map(([skill,b]) => [skill, {
-      n:b.n,
-      unique:Number((b.unique/b.n).toFixed(3)),
-      correct:Number((b.correct/b.n).toFixed(2)),
-      distractor:Number((b.distractor/(b.n*3)).toFixed(2)),
-    }])),
-    offenders,
-  };
+  offenders.sort((a,b) => b.gap-a.gap || a.id.localeCompare(b.id));
+  return { unique:unique/bank.length, correct:correct/bank.length, distractor:distractor/(bank.length*3), offenders };
 }
 
-test('Latin clean-room audit exposes pre-hardening length pressure by exact skill', () => {
-  const bank = load(PRE_HARDENING);
+test('Latin substantive curation removes the systemic answer-length cue', () => {
+  const bank = load(SHIPPING);
   const result = metrics(bank);
-  console.log('AP Latin pre-hardening metrics', {
-    unique:result.unique,
-    correct:result.correct,
-    distractor:result.distractor,
-    bySkill:result.bySkill,
-  });
-  console.log('AP Latin unique-longest offenders', result.offenders);
+  console.log('AP Latin curated metrics', { unique:result.unique, correct:result.correct, distractor:result.distractor });
+  console.log('AP Latin remaining unique-longest offenders', result.offenders);
   assert.equal(bank.length, 166);
+  assert.ok(result.unique <= 0.25, `unique-longest ${(100*result.unique).toFixed(1)}%`);
+  assert.ok(Math.abs(result.correct-result.distractor)/result.distractor <= 0.12,
+    `mean-word gap ${result.correct.toFixed(2)}/${result.distractor.toFixed(2)}`);
 });
 
-test('Latin shipping answer layers may not contain synthetic qualifier-tail machinery', () => {
-  const source = fs.readFileSync(path.join(ROOT, 'data/ap-latin-answer-hardening.js'), 'utf8');
+test('Latin shipping answer curation contains no synthetic qualifier-tail machinery', () => {
+  const source = fs.readFileSync(path.join(ROOT, 'data/ap-latin-answer-curation.js'), 'utf8');
   assert.doesNotMatch(source, /tails\s*=|immediate context|surrounding syntax|passage’s thematic logic|textual support for that interpretation/i);
+  assert.doesNotMatch(source, /while maintaining|within this passage|as the form functions here/i);
 });
