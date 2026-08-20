@@ -54,17 +54,20 @@ const EXPECTED_TOPICS = [
   '4.1','4.2','4.3','4.4','4.5','4.6','5.1','5.2','5.3','5.4','5.5','5.6','5.7','6.1','6.2'
 ];
 
-test('Latin draft bank has the intended 158-question alternate inventory', () => {
+test('Latin draft bank has the intended 166-question alternate inventory', () => {
   const { bank } = loadLatin();
-  assert.equal(bank.length, 158);
-  assert.equal(new Set(bank.map((q) => q.id)).size, 158);
+  // The base layer has 29 independently composed sight sentences. Each produces
+  // two distinct one-question blocks (meaning + grammar), so the discrete pool
+  // is 58 questions rather than the stale 50-question planning estimate.
+  assert.equal(bank.length, 166);
+  assert.equal(new Set(bank.map((q) => q.id)).size, 166);
   const byType = Object.groupBy(bank, (q) => q.setType);
-  assert.equal(byType['discrete-sight'].length, 50);
+  assert.equal(byType['discrete-sight'].length, 58);
   assert.equal(byType['short-sight'].length, 24);
   assert.equal(byType['short-syllabus'].length, 24);
   assert.equal(byType['long-syllabus'].length, 60);
   const g = groups(bank);
-  assert.equal([...g.values()].filter((x) => x[0].setType === 'discrete-sight').length, 50);
+  assert.equal([...g.values()].filter((x) => x[0].setType === 'discrete-sight').length, 58);
   assert.ok([...g.values()].filter((x) => x[0].setType === 'discrete-sight').every((x) => x.length === 1));
   assert.equal([...g.values()].filter((x) => x[0].setType === 'short-sight').length, 8);
   assert.ok([...g.values()].filter((x) => x[0].setType === 'short-sight').every((x) => x.length === 3));
