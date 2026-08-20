@@ -36,6 +36,7 @@ test('AP Business browser wiring exposes metadata and every authored layer in ca
     'data/ap-business-personal-finance-quality.js',
     'data/ap-business-personal-finance-classification.js',
     'data/ap-business-personal-finance-exact-skill.js',
+    'data/ap-business-personal-finance-final-review.js',
   ]);
 });
 
@@ -57,6 +58,8 @@ test('AP Business browser-effective draft resolves the reviewed metadata and com
   assert.equal(new Set(bank.map(q=>q.stimulusGroupId)).size,64);
   assert.equal(bank.filter(q=>q.variantGroupId).length,0);
   assert.equal(bank.filter(q=>q.personalFinance).length,45);
+  assert.match(bank.find(q=>q.id==='apbpf-set4-u3-emergency-1').stimulus.title,/Planned car down payment/i);
+  assert.match(bank.find(q=>q.id==='apbpf-set4-u1-borrowing-2').o[bank.find(q=>q.id==='apbpf-set4-u1-borrowing-2').c[0]],/\$2,360/);
 });
 
 test('draft AP Business remains excluded from the public artifact while browser source can be audited',()=>{
