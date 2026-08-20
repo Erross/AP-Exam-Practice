@@ -14,6 +14,7 @@ const scripts = [
   'data/ap-business-personal-finance-sets-3.js',
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
+  'data/ap-business-personal-finance-exact-skill.js',
 ];
 function load(){
   const c={}; c.window=c; c.globalThis=c; vm.createContext(c);
@@ -61,20 +62,35 @@ test('clean-room: generated Concept Application tasks perform their exact CED fu
   }
 });
 
+test('clean-room: Entrepreneurship items perform the exact hypothesis and viability tasks',()=>{
+  const twoB=bank.filter(q=>q.skill==='2.B');
+  assert.ok(twoB.length>=2);
+  assert.ok(twoB.every(q=>/hypothes.*test|test.*hypothes/i.test(`${q.q} ${q.o[q.c[0]]}`)),twoB.map(q=>`${q.id}: ${q.q} :: ${q.o[q.c[0]]}`));
+  const twoC=bank.filter(q=>q.skill==='2.C');
+  assert.ok(twoC.length>=2);
+  assert.ok(twoC.every(q=>/viab|feasib|desir|financial|contribution|profit|cost/i.test(`${q.q} ${q.e}`)),twoC.map(q=>q.id));
+});
+
+test('clean-room: Decision Making subskills 3.B and 3.D carry their required reasoning in the student task',()=>{
+  const threeB=bank.filter(q=>q.skill==='3.B');
+  assert.ok(threeB.length>=6);
+  for(const q of threeB){
+    assert.match(q.q,/explanation|how/i,q.id);
+    assert.match(q.o[q.c[0]],/because|\bso\b/i,q.id);
+  }
+  const threeD=bank.filter(q=>q.skill==='3.D');
+  assert.ok(threeD.length>=3);
+  for(const q of threeD){
+    assert.match(q.q,/recommend|recommendation/i,q.id);
+    assert.match(q.o[q.c[0]],/because/i,q.id);
+    assert.ok(String(q.e||'').trim().length>=90,q.id);
+  }
+});
+
 test('clean-room: Entrepreneurship, Decision Making, and Communication are independently authored source tasks',()=>{
   const higher=bank.filter(q=>['2','3','4'].includes(family(q)));
   assert.ok(higher.length>0);
   assert.ok(higher.every(q=>q.stimulusGroupId&&!generated(q)),higher.filter(q=>!q.stimulusGroupId||generated(q)).map(q=>q.id));
-  const twoB=bank.filter(q=>q.skill==='2.B');
-  assert.ok(twoB.length>=2);
-  assert.ok(twoB.every(q=>/hypothes|test/i.test(q.q)),twoB.map(q=>`${q.id}: ${q.q}`));
-  const twoC=bank.filter(q=>q.skill==='2.C');
-  assert.ok(twoC.length>=2);
-  assert.ok(twoC.every(q=>/viab|financial|contribution|profit|cost/i.test(`${q.q} ${q.e}`)),twoC.map(q=>q.id));
-  const threeD=bank.filter(q=>q.skill==='3.D');
-  assert.ok(threeD.length>=2);
-  assert.ok(threeD.every(q=>/recommend|action|option|alternative|choose|best supported/i.test(`${q.q} ${q.o[q.c[0]]}`)),threeD.map(q=>`${q.id}: ${q.q}`));
-  assert.ok(threeD.every(q=>String(q.e||'').trim().length>=90),threeD.map(q=>q.id));
 });
 
 test('clean-room: Communication questions explicitly target an audience or purpose',()=>{
@@ -114,6 +130,7 @@ test('clean-room: known exact-skill repairs remain in place',()=>{
   assert.equal(byId('apbpf-set2-u3-expenses-3').skill,'1.B');
   assert.equal(byId('apbpf-set2-u3-reporting-3').skill,'1.A');
   assert.equal(byId('apbpf-set-u4-kpi-2').skill,'3.B');
+  assert.equal(byId('apbpf-set-u3-capital-3').skill,'4.B');
   assert.match(byId('apbpf-set2-u1-structure-3').q,/message to employees/i);
   assert.match(byId('apbpf-set2-u2-promo-3').q,/message.*homeowners/i);
 });
