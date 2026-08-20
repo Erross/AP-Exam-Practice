@@ -77,4 +77,71 @@
     "Senior leaders should retain most approval decisions centrally so employees receive consistent direction as the studio grows.",
     "The studio should emphasize weekly expense visibility before defining which customer outcomes or capabilities matter most."
   ]);
+
+  // Correct answers should not advertise themselves by being systematically
+  // longer. These are substantive same-domain competitors, not padding: each
+  // misses the criterion for a specific business or personal-finance reason.
+  const answerCueHardening = {
+    "apbpf-set-u1-market-2": [
+      "Pilot the service with target customers and measure initial purchases, but do not track whether customers return after the first order.",
+      "Run a larger survey asking target customers how likely they are to buy, without offering the service for actual purchase.",
+      "Test several brand names with target customers before collecting evidence about willingness to pay or repeat use."
+    ],
+    "apbpf-set-u1-market-3": [
+      "Customization and delivery speed received the highest ratings, so the survey is sufficient evidence that a differentiated service will generate repeat purchases.",
+      "Dietary customization led the survey, which shows that price should receive little weight when management evaluates the proposed service.",
+      "Delivery speed and customization were highly rated, so management can infer the precise share of local residents who would become customers."
+    ],
+    "apbpf-set-u1-ethics-2": [
+      "Whether users can identify the monthly payment before agreeing, even when total borrowing cost and repayment duration remain less prominent.",
+      "Whether the disclosure produces the highest application completion rate while still placing required terms somewhere in the process.",
+      "Whether all numerical terms appear on one screen, regardless of whether a typical first-time borrower understands what those terms mean."
+    ],
+    "apbpf-set-u1-ethics-3": [
+      "Show the APR and monthly payment before the application link, while placing repayment term and estimated total repayment on the following screen.",
+      "Show estimated total repayment and the repayment term before the link, but emphasize the monthly payment and APR after application begins.",
+      "Summarize the account as affordable credit before the link and provide the full borrowing-cost terms during the later application flow."
+    ],
+    "apbpf-set-u2-segment-3": [
+      "Save on a fixed weekly schedule, with alerts explaining after each transfer how the transaction affected the user's checking balance.",
+      "Build savings faster with larger automatic transfers and a simple progress display designed for customers with predictable monthly income.",
+      "Set one automatic transfer amount and receive a monthly summary showing progress toward the savings goal."
+    ],
+    "apbpf-set-u3-saving-2": [
+      "Schedule the calculated deposit manually each month in the same liquid account, reviewing the amount before each transfer is submitted.",
+      "Deposit a larger amount whenever extra cash is available and leave the regular monthly saving amount otherwise unspecified.",
+      "Move the goal balance to an investment with more short-term price volatility in exchange for a higher expected return."
+    ],
+    "apbpf-set-u3-saving-3": [
+      "The plan requires $200 each month for 24 months because the $1,200 already saved should remain separate from the amount assigned to the car goal.",
+      "With $1,200 saved, depositing $150 for 24 months would add $3,600, but the calculation shows a $3,600 final balance rather than a $4,800 balance.",
+      "The current $1,200 reduces the required monthly deposit to $50 because the starting balance can be divided equally across the remaining 24 months."
+    ],
+    "apbpf-set-u3-credit-3": [
+      "Loan B lowers the monthly payment by extending repayment, and the longer term also lowers the total amount paid despite its higher APR.",
+      "Loan A has the lower APR and total repayment, but Loan B is less costly because its monthly payment is smaller.",
+      "The two loans have the same borrowing cost because each begins with the same principal, despite their different APRs and terms."
+    ],
+    "apbpf-set-u3-capital-3": [
+      "Debt preserves ownership and requires scheduled repayment, while equity generally preserves the founders' ownership percentage but replaces fixed payments with a share of future profits.",
+      "Debt gives up some control to the lender but avoids scheduled repayment; equity preserves full control while requiring payments tied to profit.",
+      "Debt and equity both preserve the current ownership shares, but debt creates interest expense while equity creates a variable repayment obligation."
+    ],
+    "apbpf-set-u4-kpi-3": [
+      "Recurring revenue is above target and retention is below target, while the six-hour response time should be treated as favorable because it exceeds the four-hour target.",
+      "Revenue and support response both exceed their numerical targets, so management should treat those two measures as favorable and focus on retention.",
+      "Retention and response time are below their numerical targets, so both should be treated as favorable because lower values generally indicate better performance."
+    ],
+    "apbpf-set-u4-strategy-3": [
+      "Launch same-day delivery permanently, track demand and contribution for 90 days, and establish continuation criteria after management sees the initial results.",
+      "Pilot delivery for 90 days and track customer demand, but postpone measuring contribution and retention until the service has expanded beyond one store.",
+      "Open a second location on a limited basis for 90 days, using demand and retention to decide whether to add same-day delivery later."
+    ],
+    "apbpf-set2-u4-framework-2": [
+      "Run the small pilot without preset thresholds, then define customer-acquisition and unit-economics criteria after seeing which results make expansion appear most attractive.",
+      "Commit to the full regional launch but reserve some marketing spending until customer-acquisition results indicate whether demand is strong.",
+      "Delay entry until the incumbent weakens, using regional growth as the main signal for when uncertainty has fallen enough to proceed."
+    ]
+  };
+  Object.entries(answerCueHardening).forEach(([id, values]) => replaceDistractors(id, values));
 })();
