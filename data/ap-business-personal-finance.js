@@ -27,9 +27,9 @@
     });
   }
 
-  function otherValues(records, index, field) {
+  function otherRecords(records, index) {
     const out=[];
-    for(let step=1; out.length<3; step++) out.push(records[(index+step)%records.length][field]);
+    for(let step=1; out.length<3; step++) out.push(records[(index+step)%records.length]);
     return out;
   }
 
@@ -37,42 +37,47 @@
     return String(text).replace(/\s+Which\b.*$/i, "").trim();
   }
 
+  function actionExplanation(record) {
+    return `${record.action} This action fits because ${record.concept}`;
+  }
+
   function addUnit(records) {
     records.forEach((r,index) => {
-      const competingTopics = otherValues(records,index,"title");
+      const competitors=otherRecords(records,index);
+      const competingTopics=competitors.map(x=>x.title);
       const stimulus = {
         type:"text",
         title:"Original business scenario",
-        text:`${scenarioText(r.scenario)} ${r.evidence}`,
+        text:scenarioText(r.scenario),
         note:"Original synthetic business scenario; not a College Board case.",
         source:"AP Exam Practice original scenario.",
       };
       const groupId=`apbpf-topic-${r.code.replace(".","-")}`;
       const questions = [
         {
-          id:`apbpf-${r.code.replace(".","-")}-2`, skill:"1.B", sequence:1,
-          stem:"Which course topic best explains the situation?", field:"title", answer:r.title,
-          explanation:`The situation is best explained by ${r.title}: ${r.concept} The competing choices name ${competingTopics.join(", ")}, which do not fit the scenario as directly.`,
+          id:`apbpf-${r.code.replace(".","-")}-2`, skill:"1.A", sequence:1,
+          stem:"Which description best characterizes the business or personal-finance concept illustrated by the scenario?",
+          options:[r.concept,...competitors.map(x=>x.concept)],
+          explanation:`The scenario illustrates ${r.title}: ${r.concept} The competing descriptions correspond to ${competingTopics.join(", ")}, which do not characterize the scenario as directly.`,
         },
         {
           id:`apbpf-${r.code.replace(".","-")}-3`, skill:"1.B", sequence:2,
-          stem:"Which interpretation is best supported by the situation?", field:"concept", answer:r.concept,
-          explanation:`The evidence supports ${r.title} because ${r.concept} The competing interpretations describe ${competingTopics.join(", ")}, which do not fit the stated evidence as directly.`,
+          stem:"Which interpretation of the qualitative evidence in the scenario is best supported?",
+          options:[r.evidence,...competitors.map(x=>x.evidence)],
+          explanation:`The scenario supports this interpretation: ${r.evidence} That evidence is characteristic of ${r.title}; the competing interpretations fit different same-unit situations.`,
         },
         {
-          id:`apbpf-${r.code.replace(".","-")}-4`, skill:"1.A", sequence:3,
-          stem:"Which action is best supported by the situation?", field:"action", answer:r.action,
-          explanation:`${r.action} is the action best supported by the situation because ${r.concept} The competing actions respond to different business problems.`,
+          id:`apbpf-${r.code.replace(".","-")}-4`, skill:"1.C", sequence:3,
+          stem:"Which explanation best connects an appropriate action to the concept illustrated by the scenario?",
+          options:[actionExplanation(r),...competitors.map(actionExplanation)],
+          explanation:`${r.action} is appropriate here because ${r.concept} The other choices pair actions with explanations suited to different business problems rather than this scenario.`,
         },
       ];
-      questions.forEach((q) => {
-        const distractors=otherValues(records,index,q.field);
-        addQuestion({
-          id:q.id, unit:r.unit, topicCode:r.code, topicName:r.title, skill:q.skill,
-          personalFinance:false, stem:q.stem, options:[q.answer,...distractors],
-          explanation:q.explanation, stimulusGroupId:groupId, sequence:q.sequence, stimulus,
-        });
-      });
+      questions.forEach((q) => addQuestion({
+        id:q.id, unit:r.unit, topicCode:r.code, topicName:r.title, skill:q.skill,
+        personalFinance:false, stem:q.stem, options:q.options,
+        explanation:q.explanation, stimulusGroupId:groupId, sequence:q.sequence, stimulus,
+      }));
     });
   }
 
