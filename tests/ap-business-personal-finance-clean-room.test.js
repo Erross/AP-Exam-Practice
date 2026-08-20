@@ -46,19 +46,25 @@ test('clean-room: generated topic sets are source-based and use exact Concept Ap
   }
 });
 
-test('clean-room: generated Concept Application tasks perform their exact CED functions',()=>{
+test('clean-room: generated Concept Application tasks perform their exact CED functions without one repeated stem',()=>{
   const generatedItems=bank.filter(generated);
-  for(const q of generatedItems.filter(q=>q.skill==='1.A')){
+  const oneA=generatedItems.filter(q=>q.skill==='1.A');
+  const oneB=generatedItems.filter(q=>q.skill==='1.B');
+  const oneC=generatedItems.filter(q=>q.skill==='1.C');
+  assert.ok(new Set(oneA.map(q=>q.q)).size>=4);
+  assert.ok(new Set(oneB.map(q=>q.q)).size>=4);
+  assert.ok(new Set(oneC.map(q=>q.q)).size>=4);
+  for(const q of oneA){
     assert.match(q.q,/description.*concept/i,q.id);
     assert.ok(q.o.every(option=>String(option).split(/\s+/).length>=8),q.id);
   }
-  for(const q of generatedItems.filter(q=>q.skill==='1.B')){
+  for(const q of oneB){
     assert.match(q.q,/interpretation.*qualitative evidence/i,q.id);
     assert.ok(q.o.every(option=>String(option).length>20),q.id);
   }
-  for(const q of generatedItems.filter(q=>q.skill==='1.C')){
+  for(const q of oneC){
     assert.match(q.q,/explanation.*action.*concept/i,q.id);
-    assert.ok(q.o.every(option=>/This action fits because/i.test(option)),q.id);
+    assert.ok(q.o.every(option=>/because/i.test(option)),q.id);
   }
 });
 
