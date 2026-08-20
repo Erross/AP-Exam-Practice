@@ -34,11 +34,13 @@ function metrics(bank) {
   let correct = 0;
   let distractor = 0;
   const bySkill = {};
+  const offenders = [];
   for (const q of bank) {
     const lengths = q.o.map(words);
     const key = q.c[0];
     const max = Math.max(...lengths);
     const isUnique = lengths[key] === max && lengths.filter((n) => n === max).length === 1;
+    const maxDistractor = Math.max(...lengths.filter((_, index) => index !== key));
     unique += isUnique ? 1 : 0;
     correct += lengths[key];
     lengths.forEach((n, index) => { if (index !== key) distractor += n; });
@@ -47,7 +49,19 @@ function metrics(bank) {
     bucket.unique += isUnique ? 1 : 0;
     bucket.correct += lengths[key];
     lengths.forEach((n, index) => { if (index !== key) bucket.distractor += n; });
+    if (isUnique) {
+      offenders.push({
+        id:q.id,
+        skill:q.skill,
+        gap:lengths[key] - maxDistractor,
+        correct:lengths[key],
+        maxDistractor,
+        stem:q.q,
+        answer:q.o[key]
+      });
+    }
   }
+  offenders.sort((a,b) => b.gap - a.gap || b.correct - a.correct || a.id.localeCompare(b.id));
   return {
     unique: unique / bank.length,
     correct: correct / bank.length,
@@ -57,14 +71,21 @@ function metrics(bank) {
       unique:Number((b.unique/b.n).toFixed(3)),
       correct:Number((b.correct/b.n).toFixed(2)),
       distractor:Number((b.distractor/(b.n*3)).toFixed(2)),
-    }]))
+    }])),
+    offenders,
   };
 }
 
 test('Latin clean-room audit exposes pre-hardening length pressure by exact skill', () => {
   const bank = load(PRE_HARDENING);
   const result = metrics(bank);
-  console.log('AP Latin pre-hardening metrics', result);
+  console.log('AP Latin pre-hardening metrics', {
+    unique:result.unique,
+    correct:result.correct,
+    distractor:result.distractor,
+    bySkill:result.bySkill,
+  });
+  console.log('AP Latin unique-longest offenders', result.offenders);
   assert.equal(bank.length, 166);
 });
 
