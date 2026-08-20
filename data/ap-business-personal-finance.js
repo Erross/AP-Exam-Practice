@@ -1,7 +1,7 @@
 // AP Business with Personal Finance — May 2027 original/synthetic practice bank.
 // Unit layers call the helper below with topic-specific concepts, scenarios,
-// evidence, actions, and distinctions. All scenarios/data are original unless a
-// stimulus explicitly says otherwise.
+// evidence, and actions. All scenarios/data are original unless a stimulus
+// explicitly says otherwise.
 (() => {
   "use strict";
   const root = typeof window !== "undefined" ? window : globalThis;
@@ -33,40 +33,44 @@
     return out;
   }
 
+  function scenarioText(text) {
+    return String(text).replace(/\s+Which\b.*$/i, "").trim();
+  }
+
   function addUnit(records) {
     records.forEach((r,index) => {
-      const pf = new Set(r.pfVariants || []);
       const competingTopics = otherValues(records,index,"title");
-      // Generated standalones stay within Concept Application. The action-choice
-      // variant is 1.A rather than 1.C because it identifies an aligned
-      // application but does not itself require a how/why explanation. Genuine
-      // Entrepreneurship, Decision Making, and Communication tasks are authored
-      // in source sets. Definition and distinction variants use same-unit topic
-      // labels as competitors so students must identify the concept rather than
-      // eliminate unrelated full-sentence statements. The action variant begins
-      // from observed evidence rather than naming the target concept in its stem,
-      // avoiding a keyword-match cue between the stem and keyed action.
-      const skills = ["1.A","1.B","1.B","1.A","1.A"];
-      const variants = [
-        { stem:`Which course topic is best described by the following statement? ${r.concept}`, field:"title", answer:r.title,
-          exp:`The statement describes ${r.title}: ${r.concept} The competing choices name ${competingTopics.join(", ")}, which describe different course concepts.` },
-        { stem:r.scenario, field:"title", answer:r.title,
-          exp:`${r.evidence} That pattern is characteristic of ${r.title}: ${r.concept}` },
-        { stem:`A manager observes the following evidence: ${r.evidence} Which interpretation is best supported?`, field:"concept", answer:r.concept,
-          exp:`The observation supports ${r.title} because ${r.concept} The competing interpretations describe ${competingTopics.join(", ")}, which do not fit the stated evidence as directly.` },
-        { stem:`A manager faces the following situation: ${r.evidence} Which action is best supported?`, field:"action", answer:r.action,
-          exp:`${r.action} is the action best supported by the evidence because ${r.concept} The competing actions respond to different business problems.` },
-        { stem:`Which course topic is best identified by this distinction? ${r.contrast}`, field:"title", answer:r.title,
-          exp:`The distinction identifies ${r.title}: ${r.contrast} The competing choices name ${competingTopics.join(", ")}, which concern different boundaries.` },
+      const stimulus = {
+        type:"text",
+        title:"Original business scenario",
+        text:`${scenarioText(r.scenario)} ${r.evidence}`,
+        note:"Original synthetic business scenario; not a College Board case.",
+        source:"AP Exam Practice original scenario.",
+      };
+      const groupId=`apbpf-topic-${r.code.replace(".","-")}`;
+      const questions = [
+        {
+          id:`apbpf-${r.code.replace(".","-")}-2`, skill:"1.B", sequence:1,
+          stem:"Which course topic best explains the situation?", field:"title", answer:r.title,
+          explanation:`The situation is best explained by ${r.title}: ${r.concept} The competing choices name ${competingTopics.join(", ")}, which do not fit the scenario as directly.`,
+        },
+        {
+          id:`apbpf-${r.code.replace(".","-")}-3`, skill:"1.B", sequence:2,
+          stem:"Which interpretation is best supported by the situation?", field:"concept", answer:r.concept,
+          explanation:`The evidence supports ${r.title} because ${r.concept} The competing interpretations describe ${competingTopics.join(", ")}, which do not fit the stated evidence as directly.`,
+        },
+        {
+          id:`apbpf-${r.code.replace(".","-")}-4`, skill:"1.A", sequence:3,
+          stem:"Which action is best supported by the situation?", field:"action", answer:r.action,
+          explanation:`${r.action} is the action best supported by the situation because ${r.concept} The competing actions respond to different business problems.`,
+        },
       ];
-      variants.forEach((v,vi) => {
-        const distractors = otherValues(records,index,v.field);
+      questions.forEach((q) => {
+        const distractors=otherValues(records,index,q.field);
         addQuestion({
-          id:`apbpf-${r.code.replace(".","-")}-${vi+1}`,
-          unit:r.unit, topicCode:r.code, topicName:r.title, skill:skills[vi],
-          personalFinance:pf.has(vi+1), stem:v.stem,
-          options:[v.answer,...distractors], explanation:v.exp,
-          variantGroupId:`apbpf-${r.code.replace(".","-")}-standalone`,
+          id:q.id, unit:r.unit, topicCode:r.code, topicName:r.title, skill:q.skill,
+          personalFinance:false, stem:q.stem, options:[q.answer,...distractors],
+          explanation:q.explanation, stimulusGroupId:groupId, sequence:q.sequence, stimulus,
         });
       });
     });
