@@ -18,7 +18,7 @@ test('AP Business naive student preflight exposes the May 2027 exam-critical fac
   assert.equal(s.totalExamTimeLabel,'2h 40m');
   assert.equal(s.calculatorAllowed,true);
   assert.equal(s.formatVerified,true);
-  assert.equal(s.releaseStatus,'draft');
+  assert.equal(s.releaseStatus,'released');
   assert.deepEqual(Array.from(s.stimulusSetRange),[20,20]);
   assert.match(s.tierNote,/Section I practice/i);
   assert.match(s.tierNote,/fully digital/i);
