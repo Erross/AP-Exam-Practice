@@ -37,12 +37,12 @@
     records.forEach((r,index) => {
       const pf = new Set(r.pfVariants || []);
       const competingTopics = otherValues(records,index,"title");
-      // These five generated standalones are deliberately confined to Concept
-      // Application. Higher-order Entrepreneurship, Decision Making, and
-      // Communication skills are assessed in authored source sets where the task
-      // actually requires hypothesis testing, criteria, recommendations, or
-      // audience-targeted communication.
-      const skills = ["1.A","1.B","1.B","1.C","1.A"];
+      // Generated standalones stay within Concept Application. The action-choice
+      // variant is 1.A rather than 1.C because it identifies an aligned
+      // application but does not itself require a how/why explanation. Genuine
+      // Entrepreneurship, Decision Making, and Communication tasks are authored
+      // in source sets.
+      const skills = ["1.A","1.B","1.B","1.A","1.A"];
       const variants = [
         { stem:`Which statement best explains ${r.title}?`, field:"concept", answer:r.concept,
           exp:`${r.concept} The competing choices describe ${competingTopics.join(", ")}, which address different course concepts rather than ${r.title}.` },
