@@ -35,8 +35,8 @@ const expected=[...Array.from({length:8},(_,i)=>`1.${i+1}`),...Array.from({lengt
 const countBy=(xs,fn)=>xs.reduce((o,x)=>{const k=fn(x);o[k]=(o[k]||0)+1;return o;},{});
 const family=q=>String(q.skill).split('.')[0];
 
-test('AP Business draft matches the May 2027 Section I metadata and exact 28-topic inventory',()=>{
-  assert.equal(subject.releaseStatus,'draft');
+test('AP Business release matches the May 2027 Section I metadata and exact 28-topic inventory',()=>{
+  assert.equal(subject.releaseStatus,'released');
   assert.equal(subject.formatVerified,true);
   assert.equal(subject.mcqCount,60); assert.equal(subject.mcqTimeMinutes,70);
   assert.equal(subject.totalExamTimeLabel,'2h 40m'); assert.equal(subject.calculatorAllowed,true);
@@ -92,7 +92,7 @@ test('generated topic sets stay Concept Application and cover every topic once',
   ['2','3','4'].forEach(f=>assert.ok(authored.some(q=>family(q)===f),`missing authored skill ${f}`));
 });
 
-test('AP Business draft constructs exact all-set unit, skill, and 20-25% personal-finance forms',()=>{
+test('AP Business release constructs exact all-set unit, skill, and 20-25% personal-finance forms',()=>{
   const target={U1:15,U2:15,U3:18,U4:12};
   let minPF=99,maxPF=0;
   for(let i=0;i<500;i++){
@@ -107,7 +107,7 @@ test('AP Business draft constructs exact all-set unit, skill, and 20-25% persona
     assert.equal(groupIds.size,20,`sets ${groupIds.size}`);
     for(const gid of groupIds) assert.equal(draw.filter(q=>q.stimulusGroupId===gid).length,3,gid);
   }
-  console.log('AP Business draft draw envelope',{personalFinance:[minPF,maxPF],sourceSets:[20,20]});
+  console.log('AP Business release draw envelope',{personalFinance:[minPF,maxPF],sourceSets:[20,20]});
 });
 
 test('AP Business quantitative anchors independently recompute',()=>{
