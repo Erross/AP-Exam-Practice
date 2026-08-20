@@ -41,19 +41,21 @@
       // variant is 1.A rather than 1.C because it identifies an aligned
       // application but does not itself require a how/why explanation. Genuine
       // Entrepreneurship, Decision Making, and Communication tasks are authored
-      // in source sets.
+      // in source sets. Definition and distinction variants use same-unit topic
+      // labels as competitors so students must identify the concept rather than
+      // eliminate unrelated full-sentence statements.
       const skills = ["1.A","1.B","1.B","1.A","1.A"];
       const variants = [
-        { stem:`Which statement best explains ${r.title}?`, field:"concept", answer:r.concept,
-          exp:`${r.concept} The competing choices describe ${competingTopics.join(", ")}, which address different course concepts rather than ${r.title}.` },
+        { stem:`Which course topic is best described by the following statement? ${r.concept}`, field:"title", answer:r.title,
+          exp:`The statement describes ${r.title}: ${r.concept} The competing choices name ${competingTopics.join(", ")}, which describe different course concepts.` },
         { stem:r.scenario, field:"title", answer:r.title,
           exp:`${r.evidence} That pattern is characteristic of ${r.title}: ${r.concept}` },
         { stem:`A manager observes the following evidence: ${r.evidence} Which interpretation is best supported?`, field:"concept", answer:r.concept,
           exp:`The observation supports ${r.title} because ${r.concept} The competing interpretations describe ${competingTopics.join(", ")}, which do not fit the stated evidence as directly.` },
         { stem:`A decision maker wants to apply ${r.title}. Which action is best aligned with the concept?`, field:"action", answer:r.action,
           exp:`${r.action} is aligned with ${r.title} because ${r.concept} The competing actions address ${competingTopics.join(", ")} instead of the stated concept.` },
-        { stem:`Which distinction about ${r.title} is most accurate?`, field:"contrast", answer:r.contrast,
-          exp:`${r.contrast} This is the relevant boundary for ${r.title}; the competing distinctions concern ${competingTopics.join(", ")} instead.` },
+        { stem:`Which course topic is best identified by this distinction? ${r.contrast}`, field:"title", answer:r.title,
+          exp:`The distinction identifies ${r.title}: ${r.contrast} The competing choices name ${competingTopics.join(", ")}, which concern different boundaries.` },
       ];
       variants.forEach((v,vi) => {
         const distractors = otherValues(records,index,v.field);
