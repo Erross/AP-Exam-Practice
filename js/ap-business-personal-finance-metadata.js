@@ -18,7 +18,7 @@
     mcqTimeMinutes: 70,
     totalExamTimeLabel: "2h 40m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: true,
     tierNote: "Section I practice for the fully digital May 2027 exam. All 60 official multiple-choice questions appear in stimulus sets of 3 or 4. The official exam also includes the Business Canvas Project Exam-Day Validation question plus Personal Finance, Business Concept Application, and Business Decision free-response questions. A handheld or Bluebook 4-function calculator is permitted.",
