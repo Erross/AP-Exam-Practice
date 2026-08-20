@@ -37,14 +37,40 @@
     return String(text).replace(/\s+Which\b.*$/i, "").trim();
   }
 
-  function actionExplanation(record) {
-    return `${record.action} This action fits because ${record.concept}`;
-  }
+  const stemFamilies = {
+    "1.A": [
+      "Which description best characterizes the business or personal-finance concept illustrated by the scenario?",
+      "Which description most accurately states the business or personal-finance concept shown in the scenario?",
+      "Which description best captures the business or personal-finance concept at work in the scenario?",
+      "Which description most precisely matches the business or personal-finance concept illustrated here?",
+    ],
+    "1.B": [
+      "Which interpretation of the qualitative evidence in the scenario is best supported?",
+      "Which interpretation is most consistent with the qualitative evidence in the scenario?",
+      "Which interpretation best follows from the qualitative evidence provided in the scenario?",
+      "Which interpretation most accurately reflects the qualitative evidence described in the scenario?",
+    ],
+    "1.C": [
+      "Which explanation best connects an appropriate action to the concept illustrated by the scenario?",
+      "Which explanation most clearly links an appropriate action to the concept illustrated by the scenario?",
+      "Which explanation best shows why an action fits the concept illustrated by the scenario?",
+      "Which explanation best relates a proposed action to the concept illustrated by the scenario?",
+    ],
+  };
+
+  const actionLinks = [
+    (record) => `${record.action} This action fits because ${record.concept}`,
+    (record) => `${record.action} This response is appropriate because ${record.concept}`,
+    (record) => `${record.action} This course of action is supported because ${record.concept}`,
+    (record) => `${record.action} This approach fits because ${record.concept}`,
+  ];
 
   function addUnit(records) {
     records.forEach((r,index) => {
       const competitors=otherRecords(records,index);
       const competingTopics=competitors.map(x=>x.title);
+      const stemIndex=index%stemFamilies["1.A"].length;
+      const actionExplanation=actionLinks[stemIndex];
       const stimulus = {
         type:"text",
         title:"Original business scenario",
@@ -56,19 +82,19 @@
       const questions = [
         {
           id:`apbpf-${r.code.replace(".","-")}-2`, skill:"1.A", sequence:1,
-          stem:"Which description best characterizes the business or personal-finance concept illustrated by the scenario?",
+          stem:stemFamilies["1.A"][stemIndex],
           options:[r.concept,...competitors.map(x=>x.concept)],
           explanation:`The scenario illustrates ${r.title}: ${r.concept} The competing descriptions correspond to ${competingTopics.join(", ")}, which do not characterize the scenario as directly.`,
         },
         {
           id:`apbpf-${r.code.replace(".","-")}-3`, skill:"1.B", sequence:2,
-          stem:"Which interpretation of the qualitative evidence in the scenario is best supported?",
+          stem:stemFamilies["1.B"][stemIndex],
           options:[r.evidence,...competitors.map(x=>x.evidence)],
           explanation:`The scenario supports this interpretation: ${r.evidence} That evidence is characteristic of ${r.title}; the competing interpretations fit different same-unit situations.`,
         },
         {
           id:`apbpf-${r.code.replace(".","-")}-4`, skill:"1.C", sequence:3,
-          stem:"Which explanation best connects an appropriate action to the concept illustrated by the scenario?",
+          stem:stemFamilies["1.C"][stemIndex],
           options:[actionExplanation(r),...competitors.map(actionExplanation)],
           explanation:`${r.action} is appropriate here because ${r.concept} The other choices pair actions with explanations suited to different business problems rather than this scenario.`,
         },
