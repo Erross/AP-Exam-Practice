@@ -50,31 +50,40 @@ test('AP Business answer construction stays inside project cue limits',()=>{
   keys.forEach((n,i)=>assert.ok(n/bank.length>=0.15&&n/bank.length<=0.35,`key ${i}: ${n}`));
 });
 
-test('AP Business variant-group constraints are explicit for all 28 standalone topics',()=>{
-  const ranges=subject.attributeRanges&&subject.attributeRanges.variantGroupId;
-  assert.ok(ranges);
-  assert.equal(Object.keys(ranges).length,28);
-  Object.values(ranges).forEach(range=>assert.deepEqual(Array.from(range),[0,1]));
+test('AP Business bank is entirely composed of intact three-question source sets',()=>{
+  assert.equal(bank.length,168);
+  assert.ok(bank.every(q=>q.stimulusGroupId),'standalone AP Business question remains');
+  assert.ok(bank.every(q=>q.variantGroupId===undefined),'variant groups are unnecessary in the all-set bank');
+  const groups=new Map();
+  bank.forEach(q=>{
+    if(!groups.has(q.stimulusGroupId)) groups.set(q.stimulusGroupId,[]);
+    groups.get(q.stimulusGroupId).push(q);
+  });
+  assert.equal(groups.size,56);
+  for(const [gid,qs] of groups){
+    assert.equal(qs.length,3,gid);
+    assert.deepEqual(qs.map(q=>q.sequence),[1,2,3],gid);
+  }
+  assert.deepEqual(Array.from(subject.stimulusSetRange),[20,20]);
 });
 
-test('5,000 AP Business forms satisfy official unit, skill, source-set, variant, and personal-finance constraints',()=>{
+test('5,000 AP Business forms satisfy official unit, skill, all-set, and personal-finance constraints',()=>{
   const units={U1:15,U2:15,U3:18,U4:12};
-  let pfMin=99,pfMax=0,setMin=99,setMax=0;
+  let pfMin=99,pfMax=0;
   for(let i=0;i<5000;i++){
     const draw=drawExam(subject,bank);
     assert.equal(draw.length,60,`draw ${i+1}`);
     assert.equal(new Set(draw.map(q=>q.id)).size,60,`duplicate draw ${i+1}`);
+    assert.ok(draw.every(q=>q.stimulusGroupId),`draw ${i+1} contains a standalone`);
     assert.deepEqual(count(draw,q=>q.unit),units,`unit draw ${i+1}`);
     const skills=count(draw,fam);
     for(const [f,r] of Object.entries(subject.skillCountRanges)) assert.ok((skills[f]||0)>=r[0]&&(skills[f]||0)<=r[1],`draw ${i+1} skill ${f}=${skills[f]||0}`);
     const pf=draw.filter(q=>q.personalFinance).length; assert.ok(pf>=12&&pf<=15,`draw ${i+1} PF ${pf}`); pfMin=Math.min(pfMin,pf);pfMax=Math.max(pfMax,pf);
-    const gids=[...new Set(draw.filter(q=>q.stimulusGroupId).map(q=>q.stimulusGroupId))];
-    assert.ok(gids.length>=subject.stimulusSetRange[0]&&gids.length<=subject.stimulusSetRange[1],`draw ${i+1} sets ${gids.length}`);setMin=Math.min(setMin,gids.length);setMax=Math.max(setMax,gids.length);
+    const gids=[...new Set(draw.map(q=>q.stimulusGroupId))];
+    assert.equal(gids.length,20,`draw ${i+1} sets ${gids.length}`);
     for(const gid of gids) assert.equal(draw.filter(q=>q.stimulusGroupId===gid).length,3,`draw ${i+1} ${gid}`);
-    const variants=draw.filter(q=>q.variantGroupId).map(q=>q.variantGroupId);
-    assert.equal(new Set(variants).size,variants.length,`draw ${i+1} repeated standalone variant group`);
   }
-  console.log('AP Business 5000-form envelope',{personalFinance:[pfMin,pfMax],sourceSets:[setMin,setMax]});
+  console.log('AP Business 5000-form envelope',{personalFinance:[pfMin,pfMax],sourceSets:[20,20]});
 });
 
 test('5,000 AP Business retake pairs average no more than 40% shared questions',()=>{
