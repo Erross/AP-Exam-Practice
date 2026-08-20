@@ -44,6 +44,17 @@
       o:['te propter','per conubia nostra','Mene fugis?','hiberno ... sidere'], c:[0],
       e:'The repeated te propter, “because of you,” directly links Aeneas to the hostility of neighboring peoples, Tyrian resentment, and Dido’s loss of pudor and former fama.'
     },
+    'aplatin-long-aen4-10': {
+      skill:'2B',
+      q:'In its Roman social context, Dido’s concern with pudor and fama most directly reflects which cultural expectation?',
+      o:[
+        'Public reputation and recognized moral standing were important components of elite social identity.',
+        'Private emotion was expected to remain completely separate from a ruler’s public reputation.',
+        'Military command automatically erased concerns about personal reputation for aristocratic leaders.',
+        'Marriage customs made public standing irrelevant once a political leader entered a personal relationship.'
+      ], c:[0],
+      e:'Roman elite identity placed substantial weight on publicly recognized standing and reputation. Dido’s language of lost pudor and former fama therefore carries social and political force beyond private heartbreak.'
+    },
     'aplatin-long-aen6-09': {
       skill:'3B',
       q:'Which evidence most strongly supports the interpretation that Dido refuses emotional engagement with Aeneas?',
