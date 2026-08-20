@@ -5,22 +5,26 @@
   if (!Array.isArray(bank)) throw new Error("AP Business bank must load before classification");
   bank.forEach((q) => { q.personalFinance = false; });
 
+  // Only count standalones whose actual student-facing task is personal finance.
+  // In particular, Topic 3.8 cash-flow-statement questions are business-finance
+  // content in the current CED and must not be used to satisfy the 20–25% PF gate.
   const standaloneIds = new Set([
-    "apbpf-1-6-2","apbpf-1-6-3",
-    "apbpf-2-2-1","apbpf-2-2-2","apbpf-2-2-4","apbpf-2-5-2","apbpf-2-5-3",
+    "apbpf-1-6-2",
+    "apbpf-2-2-2",
     "apbpf-3-1-1","apbpf-3-1-2","apbpf-3-1-3","apbpf-3-1-4","apbpf-3-1-5",
     "apbpf-3-2-1","apbpf-3-2-2","apbpf-3-2-3","apbpf-3-2-4","apbpf-3-2-5",
-    "apbpf-3-7-1","apbpf-3-7-2","apbpf-3-7-3","apbpf-3-7-4","apbpf-3-7-5",
-    "apbpf-3-8-1","apbpf-3-8-2","apbpf-3-8-3",
-    "apbpf-4-3-2","apbpf-4-3-3"
+    "apbpf-3-7-1","apbpf-3-7-2","apbpf-3-7-3","apbpf-3-7-4","apbpf-3-7-5"
   ]);
   const personalSets = new Set([
-    "apbpf-set-u1-ethics","apbpf-set-u2-segment","apbpf-set-u3-saving","apbpf-set-u3-credit"
-  ]);
-  const personalItemsInMixedSets = new Set([
-    "apbpf-set-u3-statements-2","apbpf-set-u3-statements-3"
+    "apbpf-set-u1-ethics",
+    "apbpf-set-u2-segment",
+    "apbpf-set-u3-saving",
+    "apbpf-set-u3-credit",
+    "apbpf-set3-u1-career",
+    "apbpf-set3-u2-credit",
+    "apbpf-set3-u3-networth"
   ]);
   bank.forEach((q) => {
-    if (standaloneIds.has(q.id) || personalSets.has(q.stimulusGroupId) || personalItemsInMixedSets.has(q.id)) q.personalFinance = true;
+    if (standaloneIds.has(q.id) || personalSets.has(q.stimulusGroupId)) q.personalFinance = true;
   });
 })();
