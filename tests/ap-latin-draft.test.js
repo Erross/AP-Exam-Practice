@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { AP_SUBJECTS } = require('../js/subjects.js');
-const { drawExam } = require('../js/draw.js');
+const { drawExam } = require('../js/set-blueprint-draw.js');
 
 const ROOT = path.join(__dirname, '..');
 const DATA = [
