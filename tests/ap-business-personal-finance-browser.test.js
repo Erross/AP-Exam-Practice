@@ -32,6 +32,7 @@ test('AP Business browser wiring exposes metadata and every authored layer in ca
     'data/ap-business-personal-finance-sets.js',
     'data/ap-business-personal-finance-sets-2.js',
     'data/ap-business-personal-finance-sets-3.js',
+    'data/ap-business-personal-finance-sets-4.js',
     'data/ap-business-personal-finance-quality.js',
     'data/ap-business-personal-finance-classification.js',
     'data/ap-business-personal-finance-exact-skill.js',
@@ -50,12 +51,12 @@ test('AP Business browser-effective draft resolves the reviewed metadata and com
   assert.deepEqual(Array.from(subject.freeResponse.questions),[
     'Business Canvas Project Exam-Day Validation','Personal Finance','Business Concept Application','Business Decision'
   ]);
-  assert.equal(bank.length,168);
-  assert.equal(new Set(bank.map(q=>q.id)).size,168);
+  assert.equal(bank.length,192);
+  assert.equal(new Set(bank.map(q=>q.id)).size,192);
   assert.ok(bank.every(q=>q.stimulusGroupId));
-  assert.equal(new Set(bank.map(q=>q.stimulusGroupId)).size,56);
+  assert.equal(new Set(bank.map(q=>q.stimulusGroupId)).size,64);
   assert.equal(bank.filter(q=>q.variantGroupId).length,0);
-  assert.equal(bank.filter(q=>q.personalFinance).length,36);
+  assert.equal(bank.filter(q=>q.personalFinance).length,45);
 });
 
 test('draft AP Business remains excluded from the public artifact while browser source can be audited',()=>{
