@@ -19,8 +19,10 @@ test('AP Business naive student preflight exposes the May 2027 exam-critical fac
   assert.equal(s.calculatorAllowed,true);
   assert.equal(s.formatVerified,true);
   assert.equal(s.releaseStatus,'draft');
+  assert.deepEqual(Array.from(s.stimulusSetRange),[20,20]);
   assert.match(s.tierNote,/Section I practice/i);
   assert.match(s.tierNote,/fully digital/i);
+  assert.match(s.tierNote,/all 60 official multiple-choice questions appear in stimulus sets of 3 or 4/i);
   assert.match(s.tierNote,/4-function calculator/i);
   assert.match(s.tierNote,/Business Canvas Project Exam-Day Validation/i);
   assert.match(s.tierNote,/Personal Finance/i);
