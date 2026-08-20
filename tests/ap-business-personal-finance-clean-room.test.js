@@ -36,6 +36,30 @@ test('clean-room: generated standalones make no false higher-order skill claims'
   }
 });
 
+test('clean-room: standalone definition and distinction variants use same-unit topic competitors',()=>{
+  const standalones=bank.filter(q=>!q.stimulusGroupId);
+  const topicNamesByUnit=new Map();
+  for(const q of standalones){
+    if(!topicNamesByUnit.has(q.unit)) topicNamesByUnit.set(q.unit,new Set());
+    topicNamesByUnit.get(q.unit).add(q.topicName);
+  }
+  const classificationVariants=standalones.filter(q=>/-[15]$/.test(q.id));
+  assert.equal(classificationVariants.length,56);
+  for(const q of classificationVariants){
+    assert.equal(q.o[q.c[0]],q.topicName,q.id);
+    assert.ok(q.o.every(option=>topicNamesByUnit.get(q.unit).has(option)),`${q.id}: ${q.o.join(' | ')}`);
+  }
+});
+
+test('clean-room: standalone action variants infer action from evidence without naming the target topic',()=>{
+  const actions=bank.filter(q=>!q.stimulusGroupId&&/-4$/.test(q.id));
+  assert.equal(actions.length,28);
+  for(const q of actions){
+    assert.match(q.q,/following situation:/i,q.id);
+    assert.doesNotMatch(q.q,new RegExp(q.topicName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i'),q.id);
+  }
+});
+
 test('clean-room: Entrepreneurship, Decision Making, and Communication are authored source tasks',()=>{
   const higher=bank.filter(q=>['2','3','4'].includes(family(q)));
   assert.ok(higher.length>0);
