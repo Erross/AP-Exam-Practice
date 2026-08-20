@@ -1,7 +1,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { AP_SUBJECTS } = require("../js/subjects");
+const { loadEffectiveSubjects } = require("./effective-subjects");
 
+const AP_SUBJECTS = loadEffectiveSubjects();
 const out = "_site";
 const assetVersion = "ui-20260813";
 fs.rmSync(out, { recursive: true, force: true });

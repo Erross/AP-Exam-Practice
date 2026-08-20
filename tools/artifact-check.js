@@ -1,8 +1,9 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
-const { AP_SUBJECTS } = require("../js/subjects");
+const { loadEffectiveSubjects } = require("./effective-subjects");
 
+const AP_SUBJECTS = loadEffectiveSubjects();
 assert.ok(fs.existsSync("_site/index.html"));
 const released = AP_SUBJECTS.filter((subject) => subject.releaseStatus === "released");
 const releasedIds = new Set(released.map((subject) => subject.id));
