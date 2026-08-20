@@ -12,6 +12,7 @@ const scripts = [
   'data/ap-business-personal-finance-u3.js',
   'data/ap-business-personal-finance-u4.js',
   'data/ap-business-personal-finance-sets.js',
+  'data/ap-business-personal-finance-sets-2.js',
   'data/ap-business-personal-finance-classification.js',
 ];
 
@@ -36,11 +37,11 @@ test('AP Business draft matches the May 2027 Section I metadata and exact 28-top
   assert.equal(subject.totalExamTimeLabel,'2h 40m'); assert.equal(subject.calculatorAllowed,true);
   assert.deepEqual(subject.units.map(u=>u.id),['U1','U2','U3','U4']);
   assert.deepEqual([...new Set(bank.map(q=>q.topicCode))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})),expected);
-  assert.equal(bank.length,170);
+  assert.equal(bank.length,200);
   expected.forEach(code=>assert.ok(bank.filter(q=>q.topicCode===code).length>=5,code));
 });
 
-test('AP Business draft has sound schema, ten intact three-question synthetic source sets, and MCQ skills 1-4 only',()=>{
+test('AP Business draft has sound schema, twenty intact three-question synthetic source sets, and MCQ skills 1-4 only',()=>{
   const ids=new Set(); const groups=new Map();
   bank.forEach(q=>{
     assert.ok(!ids.has(q.id),q.id); ids.add(q.id);
@@ -49,7 +50,7 @@ test('AP Business draft has sound schema, ten intact three-question synthetic so
     assert.ok(['1','2','3','4'].includes(family(q)),q.id);
     if(q.stimulusGroupId){if(!groups.has(q.stimulusGroupId))groups.set(q.stimulusGroupId,[]);groups.get(q.stimulusGroupId).push(q);}
   });
-  assert.equal(groups.size,10);
+  assert.equal(groups.size,20);
   for(const [id,qs] of groups){assert.equal(qs.length,3,id);assert.deepEqual(qs.map(q=>q.sequence),[1,2,3],id);assert.ok(qs[0].stimulus.source,id);}
   assert.equal(bank.filter(q=>q.personalFinance).length,41);
 });
@@ -78,4 +79,7 @@ test('AP Business quantitative anchors independently recompute',()=>{
   assert.equal((4800-1200)/24,150);
   assert.equal(11124-10000,1124); assert.equal(12240-10000,2240);
   assert.equal(96000-79000,17000); assert.equal(90000-86000,4000); assert.equal(145000-61000,84000);
+  assert.equal(96/160,0.6); assert.equal(72/180,0.4); assert.equal(33/110,0.3);
+  assert.equal(50-2-7,41); assert.equal(50-15-3,32); assert.equal(50-10-6,34);
+  assert.equal(3.20+0.80,4); assert.equal(2400+600,3000);
 });
