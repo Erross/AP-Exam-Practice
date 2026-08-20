@@ -35,7 +35,7 @@ test('AP Business draft matches the May 2027 Section I metadata and exact 28-top
   assert.equal(subject.formatVerified,true);
   assert.equal(subject.mcqCount,60); assert.equal(subject.mcqTimeMinutes,70);
   assert.equal(subject.totalExamTimeLabel,'2h 40m'); assert.equal(subject.calculatorAllowed,true);
-  assert.deepEqual(subject.units.map(u=>u.id),['U1','U2','U3','U4']);
+  assert.deepEqual(Array.from(subject.units,u=>u.id),['U1','U2','U3','U4']);
   assert.deepEqual([...new Set(bank.map(q=>q.topicCode))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})),expected);
   assert.equal(bank.length,200);
   expected.forEach(code=>assert.ok(bank.filter(q=>q.topicCode===code).length>=5,code));
