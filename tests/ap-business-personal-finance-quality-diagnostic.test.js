@@ -12,6 +12,7 @@ const scripts = [
   'data/ap-business-personal-finance-sets.js',
   'data/ap-business-personal-finance-sets-2.js',
   'data/ap-business-personal-finance-sets-3.js',
+  'data/ap-business-personal-finance-sets-4.js',
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
   'data/ap-business-personal-finance-exact-skill.js',
