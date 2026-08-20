@@ -47,7 +47,7 @@ test('AP Latin browser-effective bank passes content-cue and 5000/5000 draw gate
   const { subject, bank } = loadBrowserEffectiveLatin();
   assert.equal(subject.mcqCount, 52);
   assert.equal(subject.mcqTimeMinutes, 65);
-  assert.equal(subject.releaseStatus, 'draft');
+  assert.equal(subject.releaseStatus, 'released');
   assert.equal(bank.length, 166);
 
   let uniqueLongest = 0;
