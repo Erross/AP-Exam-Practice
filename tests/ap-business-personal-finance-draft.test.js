@@ -14,6 +14,7 @@ const scripts = [
   'data/ap-business-personal-finance-sets.js',
   'data/ap-business-personal-finance-sets-2.js',
   'data/ap-business-personal-finance-sets-3.js',
+  'data/ap-business-personal-finance-sets-4.js',
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
   'data/ap-business-personal-finance-exact-skill.js',
@@ -43,11 +44,11 @@ test('AP Business draft matches the May 2027 Section I metadata and exact 28-top
     'Business Canvas Project Exam-Day Validation','Personal Finance','Business Concept Application','Business Decision'
   ]);
   assert.deepEqual([...new Set(bank.map(q=>q.topicCode))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})),expected);
-  assert.equal(bank.length,168);
+  assert.equal(bank.length,192);
   expected.forEach(code=>assert.ok(bank.filter(q=>q.topicCode===code).length>=3,code));
 });
 
-test('AP Business bank has 56 intact three-question source sets and no standalone MCQs',()=>{
+test('AP Business bank has 64 intact three-question source sets and no standalone MCQs',()=>{
   const ids=new Set(); const groups=new Map();
   bank.forEach(q=>{
     assert.ok(!ids.has(q.id),q.id); ids.add(q.id);
@@ -58,12 +59,12 @@ test('AP Business bank has 56 intact three-question source sets and no standalon
     assert.equal(q.variantGroupId,undefined,q.id);
     if(!groups.has(q.stimulusGroupId))groups.set(q.stimulusGroupId,[]);groups.get(q.stimulusGroupId).push(q);
   });
-  assert.equal(groups.size,56);
+  assert.equal(groups.size,64);
   for(const [id,qs] of groups){
     assert.equal(qs.length,3,id); assert.deepEqual(qs.map(q=>q.sequence),[1,2,3],id);
     assert.ok(qs[0].stimulus.source,id); assert.ok(qs.every(q=>q.stimulus===qs[0].stimulus),id);
   }
-  assert.equal(bank.filter(q=>q.personalFinance).length,36);
+  assert.equal(bank.filter(q=>q.personalFinance).length,45);
 });
 
 test('generated topic sets stay Concept Application and cover every topic once',()=>{
@@ -85,6 +86,8 @@ test('generated topic sets stay Concept Application and cover every topic once',
   }
   assert.deepEqual([...new Set(generated.map(q=>q.topicCode))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})),expected);
   const authored=bank.filter(q=>!q.stimulusGroupId.startsWith('apbpf-topic-'));
+  assert.equal(authored.length,108);
+  assert.equal(new Set(authored.map(q=>q.stimulusGroupId)).size,36);
   ['2','3','4'].forEach(f=>assert.ok(authored.some(q=>family(q)===f),`missing authored skill ${f}`));
 });
 
@@ -125,4 +128,9 @@ test('AP Business quantitative anchors independently recompute',()=>{
   assert.equal(14000+38000+18000,70000); assert.equal(22000+9000,31000); assert.equal(70000-31000,39000);
   assert.ok(Math.abs(120000/36000-(10/3))<1e-12); assert.ok(Math.abs(15000/18000-(5/6))<1e-12);
   assert.match(byId('apbpf-set3-u2-credit-2').o[byId('apbpf-set3-u2-credit-2').c[0]],/^Card B,/);
+
+  assert.equal(34*18-520,92);
+  assert.equal(3*3,9); assert.equal(600*0.005,3); assert.equal(8-3,5);
+  assert.equal(2400*2,4800); assert.equal(6000+3000-4800,4200);
+  assert.equal(18000+42000-50000-16000,-6000);
 });
