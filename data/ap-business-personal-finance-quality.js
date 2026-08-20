@@ -15,8 +15,17 @@
     const indexes = [0,1,2,3].filter((index) => index !== key);
     distractors.forEach((text, index) => { q.o[indexes[index]] = text; });
   }
+  function replaceKey(id, text) {
+    const q = item(id);
+    q.o[q.c[0]] = text;
+  }
 
   item("apbpf-set2-u2-channel-1").e = "The own website leaves $41 per unit, compared with $32 for the specialty retailer and $34 for the marketplace.";
+
+  // The original wording began with "Card A" even though the calculation and
+  // conclusion correctly selected Card B. Keep the arithmetic but make the
+  // selected alternative unambiguous in the keyed response.
+  replaceKey("apbpf-set3-u2-credit-2", "Card B, because its $60 expected cash back with no annual fee exceeds Card A's approximately $25 net reward after its fee.");
 
   replaceDistractors("apbpf-set-u1-market-1", [
     "Customers place the greatest importance on having the largest possible menu.",
