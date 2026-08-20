@@ -16,6 +16,7 @@ const scripts = [
   'data/ap-business-personal-finance-sets-3.js',
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
+  'data/ap-business-personal-finance-exact-skill.js',
 ];
 function load(){
   const subjects=structuredClone(AP_SUBJECTS);
