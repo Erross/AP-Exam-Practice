@@ -43,7 +43,9 @@
       // Entrepreneurship, Decision Making, and Communication tasks are authored
       // in source sets. Definition and distinction variants use same-unit topic
       // labels as competitors so students must identify the concept rather than
-      // eliminate unrelated full-sentence statements.
+      // eliminate unrelated full-sentence statements. The action variant begins
+      // from observed evidence rather than naming the target concept in its stem,
+      // avoiding a keyword-match cue between the stem and keyed action.
       const skills = ["1.A","1.B","1.B","1.A","1.A"];
       const variants = [
         { stem:`Which course topic is best described by the following statement? ${r.concept}`, field:"title", answer:r.title,
@@ -52,8 +54,8 @@
           exp:`${r.evidence} That pattern is characteristic of ${r.title}: ${r.concept}` },
         { stem:`A manager observes the following evidence: ${r.evidence} Which interpretation is best supported?`, field:"concept", answer:r.concept,
           exp:`The observation supports ${r.title} because ${r.concept} The competing interpretations describe ${competingTopics.join(", ")}, which do not fit the stated evidence as directly.` },
-        { stem:`A decision maker wants to apply ${r.title}. Which action is best aligned with the concept?`, field:"action", answer:r.action,
-          exp:`${r.action} is aligned with ${r.title} because ${r.concept} The competing actions address ${competingTopics.join(", ")} instead of the stated concept.` },
+        { stem:`A manager faces the following situation: ${r.evidence} Which action is best supported?`, field:"action", answer:r.action,
+          exp:`${r.action} is the action best supported by the evidence because ${r.concept} The competing actions respond to different business problems.` },
         { stem:`Which course topic is best identified by this distinction? ${r.contrast}`, field:"title", answer:r.title,
           exp:`The distinction identifies ${r.title}: ${r.contrast} The competing choices name ${competingTopics.join(", ")}, which concern different boundaries.` },
       ];
