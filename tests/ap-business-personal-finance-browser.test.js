@@ -34,6 +34,7 @@ test('AP Business browser wiring exposes metadata and every authored layer in ca
     'data/ap-business-personal-finance-sets-3.js',
     'data/ap-business-personal-finance-quality.js',
     'data/ap-business-personal-finance-classification.js',
+    'data/ap-business-personal-finance-exact-skill.js',
   ]);
 });
 
