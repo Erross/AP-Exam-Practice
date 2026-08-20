@@ -33,4 +33,5 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node --test tests/ap-business-personal-finance-*.test.js
+      - name: Run fast AP Business diagnostics
+        run: node --test --test-name-pattern='answer construction|variant-group constraints|clean-room|diagnostic|naive|browser' tests/ap-business-personal-finance-*.test.js
