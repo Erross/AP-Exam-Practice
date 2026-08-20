@@ -27,10 +27,26 @@
     });
   }
 
-  function otherRecords(records, index) {
-    const out=[];
-    for(let step=1; out.length<3; step++) out.push(records[(index+step)%records.length]);
-    return out;
+  function wordCount(value) {
+    return String(value || "").trim().split(/\s+/).filter(Boolean).length;
+  }
+
+  // Choose same-unit competitors that are naturally close in length to the key.
+  // This improves parallel option construction without padding or shortening any
+  // answer. A deterministic circular-distance tiebreaker keeps builds stable.
+  function closestRecords(records, index, render) {
+    const target = wordCount(render(records[index]));
+    return records
+      .map((record, candidateIndex) => ({
+        record,
+        candidateIndex,
+        gap: Math.abs(wordCount(render(record)) - target),
+        distance: (candidateIndex - index + records.length) % records.length,
+      }))
+      .filter(({ candidateIndex }) => candidateIndex !== index)
+      .sort((a,b) => a.gap - b.gap || a.distance - b.distance)
+      .slice(0,3)
+      .map(({record}) => record);
   }
 
   function scenarioText(text) {
@@ -67,10 +83,11 @@
 
   function addUnit(records) {
     records.forEach((r,index) => {
-      const competitors=otherRecords(records,index);
-      const competingTopics=competitors.map(x=>x.title);
       const stemIndex=index%stemFamilies["1.A"].length;
       const actionExplanation=actionLinks[stemIndex];
+      const conceptCompetitors=closestRecords(records,index,x=>x.concept);
+      const evidenceCompetitors=closestRecords(records,index,x=>x.evidence);
+      const actionCompetitors=closestRecords(records,index,actionExplanation);
       const stimulus = {
         type:"text",
         title:"Original business scenario",
@@ -83,19 +100,19 @@
         {
           id:`apbpf-${r.code.replace(".","-")}-2`, skill:"1.A", sequence:1,
           stem:stemFamilies["1.A"][stemIndex],
-          options:[r.concept,...competitors.map(x=>x.concept)],
-          explanation:`The scenario illustrates ${r.title}: ${r.concept} The competing descriptions correspond to ${competingTopics.join(", ")}, which do not characterize the scenario as directly.`,
+          options:[r.concept,...conceptCompetitors.map(x=>x.concept)],
+          explanation:`The scenario illustrates ${r.title}: ${r.concept} The competing descriptions are same-unit concepts but do not characterize this scenario as directly.`,
         },
         {
           id:`apbpf-${r.code.replace(".","-")}-3`, skill:"1.B", sequence:2,
           stem:stemFamilies["1.B"][stemIndex],
-          options:[r.evidence,...competitors.map(x=>x.evidence)],
-          explanation:`The scenario supports this interpretation: ${r.evidence} That evidence is characteristic of ${r.title}; the competing interpretations fit different same-unit situations.`,
+          options:[r.evidence,...evidenceCompetitors.map(x=>x.evidence)],
+          explanation:`The scenario supports this interpretation: ${r.evidence} The competing interpretations describe other plausible same-unit situations rather than the evidence in this scenario.`,
         },
         {
           id:`apbpf-${r.code.replace(".","-")}-4`, skill:"1.C", sequence:3,
           stem:stemFamilies["1.C"][stemIndex],
-          options:[actionExplanation(r),...competitors.map(actionExplanation)],
+          options:[actionExplanation(r),...actionCompetitors.map(actionExplanation)],
           explanation:`${r.action} is appropriate here because ${r.concept} The other choices pair actions with explanations suited to different business problems rather than this scenario.`,
         },
       ];
