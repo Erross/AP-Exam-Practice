@@ -16,28 +16,28 @@
     values.forEach((value,i) => { q.o[slots[i]] = value; });
   }
 
-  // 20–25% personal-finance classification. Only count questions whose actual
-  // student-facing task is personal finance. Topic 3.8 is the business cash-flow
+  // 20–25% personal-finance draw gate. Classify by the actual browser-effective
+  // scenario, not by broad unit membership. Topic 3.8 is the business cash-flow
   // statement in the current CED and therefore does not satisfy this gate.
   bank.forEach((q) => { q.personalFinance = false; });
-  const standaloneIds = new Set([
-    "apbpf-1-6-2",
-    "apbpf-2-2-2",
-    "apbpf-3-1-1","apbpf-3-1-2","apbpf-3-1-3","apbpf-3-1-4","apbpf-3-1-5",
-    "apbpf-3-2-1","apbpf-3-2-2","apbpf-3-2-3","apbpf-3-2-4","apbpf-3-2-5",
-    "apbpf-3-7-1","apbpf-3-7-2","apbpf-3-7-3","apbpf-3-7-4","apbpf-3-7-5"
+  const generatedPersonalSets = new Set([
+    "apbpf-topic-1-6",
+    "apbpf-topic-2-2",
+    "apbpf-topic-3-1",
+    "apbpf-topic-3-2",
+    "apbpf-topic-3-7",
   ]);
-  const personalSets = new Set([
+  const authoredPersonalSets = new Set([
     "apbpf-set-u1-ethics",
     "apbpf-set-u2-segment",
     "apbpf-set-u3-saving",
     "apbpf-set-u3-credit",
     "apbpf-set3-u1-career",
     "apbpf-set3-u2-credit",
-    "apbpf-set3-u3-networth"
+    "apbpf-set3-u3-networth",
   ]);
   bank.forEach((q) => {
-    if (standaloneIds.has(q.id) || personalSets.has(q.stimulusGroupId)) q.personalFinance = true;
+    if (generatedPersonalSets.has(q.stimulusGroupId) || authoredPersonalSets.has(q.stimulusGroupId)) q.personalFinance = true;
   });
 
   // Older source sets had several correct-but-terse rationales. These versions
