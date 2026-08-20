@@ -20,6 +20,14 @@
     q.o[q.c[0]] = text;
   }
 
+  // Generated action-selection standalones apply/identify a concept but do not
+  // require the how/why explanation demanded by current Skill 1.C. Keep their
+  // effective tag honest; source-set questions carry the genuine higher-order
+  // skill work.
+  bank.forEach((q) => {
+    if (!q.stimulusGroupId && q.skill === "1.C") q.skill = "1.A";
+  });
+
   item("apbpf-set2-u2-channel-1").e = "The own website leaves $41 per unit, compared with $32 for the specialty retailer and $34 for the marketplace.";
 
   // The original wording began with "Card A" even though the calculation and
