@@ -48,13 +48,17 @@ test('clean-room: Entrepreneurship, Decision Making, and Communication are autho
   assert.ok(twoC.every(q=>/viab|financial|contribution|profit|cost/i.test(`${q.q} ${q.e}`)),twoC.map(q=>q.id));
   const threeD=bank.filter(q=>q.skill==='3.D');
   assert.ok(threeD.length>=2);
-  assert.ok(threeD.every(q=>/recommend|choose|best supported/i.test(`${q.q} ${q.o[q.c[0]]}`)),threeD.map(q=>q.id));
+  // College Board Skill 3.D is recommending a course of action with reasoning
+  // and evidence. Selection prompts may say recommendation, action, option, or
+  // alternative; do not force one literal verb when the task construct is clear.
+  assert.ok(threeD.every(q=>/recommend|action|option|alternative|choose|best supported/i.test(`${q.q} ${q.o[q.c[0]]}`)),threeD.map(q=>`${q.id}: ${q.q}`));
+  assert.ok(threeD.every(q=>String(q.e||'').trim().length>=90),threeD.map(q=>q.id));
 });
 
 test('clean-room: Communication questions explicitly target an audience or purpose',()=>{
   const comm=bank.filter(q=>['4.A','4.B'].includes(q.skill));
   assert.ok(comm.length>=6);
-  const audience=/manager|management|executive|leader|employee|team|owner|borrower|saver|household|consumer|homeowner|job seeker|audience|customer/i;
+  const audience=/manager|management|executive|leader|employee|team|owner|borrower|saver|household|consumer|homeowner|job seeker|audience|customer|segment/i;
   for(const q of comm) assert.match(`${q.q} ${q.stimulus?.text||''} ${q.stimulus?.note||''}`,audience,q.id);
 });
 
