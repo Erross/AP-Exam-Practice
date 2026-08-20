@@ -16,6 +16,7 @@ const scripts = [
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
   'data/ap-business-personal-finance-exact-skill.js',
+  'data/ap-business-personal-finance-final-review.js',
 ];
 function load(){
   const c={}; c.window=c; c.globalThis=c; vm.createContext(c);
