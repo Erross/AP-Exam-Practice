@@ -18,6 +18,7 @@ const scripts = [
   'data/ap-business-personal-finance-quality.js',
   'data/ap-business-personal-finance-classification.js',
   'data/ap-business-personal-finance-exact-skill.js',
+  'data/ap-business-personal-finance-final-review.js',
 ];
 
 function load() {
@@ -131,6 +132,8 @@ test('AP Business quantitative anchors independently recompute',()=>{
 
   assert.equal(34*18-520,92);
   assert.equal(3*3,9); assert.equal(600*0.005,3); assert.equal(8-3,5);
-  assert.equal(2400*2,4800); assert.equal(6000+3000-4800,4200);
+  assert.equal(190*12,2280); assert.equal(2280+80,2360); assert.equal(125*20,2500);
+  assert.equal(6000+3000-4800,4200);
   assert.equal(18000+42000-50000-16000,-6000);
+  assert.match(byId('apbpf-set4-u3-emergency-1').stimulus.title,/Planned car down payment/i);
 });
