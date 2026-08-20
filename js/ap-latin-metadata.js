@@ -1,4 +1,4 @@
-// Development metadata overlay for AP Latin. Consolidate into js/subjects.js before release.
+// Browser-effective AP Latin metadata for the revised May 2027 course.
 (function () {
   const subjects = typeof AP_SUBJECTS !== "undefined" ? AP_SUBJECTS : (globalThis.AP_SUBJECTS || []);
   const subject = subjects.find((s) => s.id === "ap-latin");
@@ -9,7 +9,7 @@
     mcqTimeMinutes: 65,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: false,
     calculatorAllowed: false,
     tierNote: "Fully digital Section I practice for the revised Pliny/Vergil course. The official exam also includes five free-response questions and two course-project checkpoint scores.",
