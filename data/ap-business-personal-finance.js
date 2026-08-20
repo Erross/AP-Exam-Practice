@@ -22,6 +22,7 @@
       id:q.id, unit:q.unit, topicCode:q.topicCode, topicName:q.topicName,
       skill:q.skill, personalFinance:Boolean(q.personalFinance), type:"s",
       q:q.stem, o:keyed.options, c:keyed.correct, e:q.explanation,
+      ...(q.variantGroupId ? { variantGroupId:q.variantGroupId } : {}),
       ...(q.stimulusGroupId ? { stimulusGroupId:q.stimulusGroupId, sequence:q.sequence, stimulus:q.stimulus } : {}),
     });
   }
@@ -35,28 +36,33 @@
   function addUnit(records) {
     records.forEach((r,index) => {
       const pf = new Set(r.pfVariants || []);
-      const skills = r.skills || ["1.A","1.B","1.B","3.B","3.D"];
+      const competingTopics = otherValues(records,index,"title");
+      // These five generated standalones are deliberately confined to Concept
+      // Application. Higher-order Entrepreneurship, Decision Making, and
+      // Communication skills are assessed in authored source sets where the task
+      // actually requires hypothesis testing, criteria, recommendations, or
+      // audience-targeted communication.
+      const skills = ["1.A","1.B","1.B","1.C","1.A"];
       const variants = [
         { stem:`Which statement best explains ${r.title}?`, field:"concept", answer:r.concept,
-          exp:`${r.concept} This is the course-relevant meaning of ${r.title}.` },
+          exp:`${r.concept} The competing choices describe ${competingTopics.join(", ")}, which address different course concepts rather than ${r.title}.` },
         { stem:r.scenario, field:"title", answer:r.title,
-          exp:`The scenario most directly illustrates ${r.title}: ${r.concept}` },
-        { stem:`Which evidence would most strongly support an analysis involving ${r.title}?`, field:"evidence", answer:r.evidence,
-          exp:`${r.evidence} is the evidence most directly tied to ${r.title}.` },
-        { stem:`A decision maker wants to apply ${r.title}. Which action is best supported?`, field:"action", answer:r.action,
-          exp:`${r.action} applies ${r.title} directly to the decision.` },
+          exp:`${r.evidence} That pattern is characteristic of ${r.title}: ${r.concept}` },
+        { stem:`A manager observes the following evidence: ${r.evidence} Which interpretation is best supported?`, field:"concept", answer:r.concept,
+          exp:`The observation supports ${r.title} because ${r.concept} The competing interpretations describe ${competingTopics.join(", ")}, which do not fit the stated evidence as directly.` },
+        { stem:`A decision maker wants to apply ${r.title}. Which action is best aligned with the concept?`, field:"action", answer:r.action,
+          exp:`${r.action} is aligned with ${r.title} because ${r.concept} The competing actions address ${competingTopics.join(", ")} instead of the stated concept.` },
         { stem:`Which distinction about ${r.title} is most accurate?`, field:"contrast", answer:r.contrast,
-          exp:`${r.contrast} identifies the important boundary or comparison for ${r.title}.` },
+          exp:`${r.contrast} This is the relevant boundary for ${r.title}; the competing distinctions concern ${competingTopics.join(", ")} instead.` },
       ];
       variants.forEach((v,vi) => {
-        const distractors = v.field === "title"
-          ? otherValues(records,index,"title")
-          : otherValues(records,index,v.field);
+        const distractors = otherValues(records,index,v.field);
         addQuestion({
           id:`apbpf-${r.code.replace(".","-")}-${vi+1}`,
           unit:r.unit, topicCode:r.code, topicName:r.title, skill:skills[vi],
           personalFinance:pf.has(vi+1), stem:v.stem,
           options:[v.answer,...distractors], explanation:v.exp,
+          variantGroupId:`apbpf-${r.code.replace(".","-")}-standalone`,
         });
       });
     });
