@@ -24,7 +24,7 @@
     mcqTimeMinutes: 80,
     totalExamTimeLabel: "2h 10m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     tierNote: "Section I practice for the fully digital May 2027 AP Cybersecurity exam. College Board publishes skill-category weights, not per-unit MCQ percentages; this practice drawer uses CED pacing only to keep all five units represented. The official Device Security Analysis free-response question is not simulated here.",
     units: [
       { id:"U1", name:"Introduction to Security", examWeight:10/110 },
