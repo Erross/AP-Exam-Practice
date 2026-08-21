@@ -61,7 +61,10 @@
   for (const [id, options] of Object.entries(replacements)) {
     const question = bank.find((candidate) => candidate.id === id);
     if (!question) throw new Error(`${id}: passage repair target not found`);
-    if (question.c.length !== 1 || question.c[0] !== 0) throw new Error(`${id}: reviewed passage key changed before final curation`);
-    question.o = options.slice();
+    if (question.c.length !== 1) throw new Error(`${id}: expected one reviewed passage key`);
+    const correctIndex = question.c[0];
+    if (question.o[correctIndex] !== options[0]) throw new Error(`${id}: reviewed passage key text changed before final curation`);
+    let nextDistractor = 1;
+    question.o = question.o.map((option, index) => index === correctIndex ? option : options[nextDistractor++]);
   }
 })();
