@@ -15,7 +15,8 @@ const builtSourcesHtml = fs.readFileSync("_site/official-sources.html", "utf8");
 
 assert.match(builtHtml, /href="official-sources\.html"/);
 assert.match(builtSourcesHtml, /Official AP standards & sources/);
-assert.match(builtSourcesHtml, /August 21, 2026 at 11:15 AM CDT/);
+assert.match(builtSourcesHtml, /August 21, 2026/);
+assert.doesNotMatch(builtSourcesHtml, /\b(?:AM|PM|CDT|UTC)\b/);
 
 const sourceDataScripts = [...sourceHtml.matchAll(/^<script src="(data\/([^"]+)\.js)"><\/script>\s*$/gm)]
   .map((match) => match[1]);
