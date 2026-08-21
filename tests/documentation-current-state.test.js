@@ -15,7 +15,7 @@ const evidenceReadme = fs.readFileSync("release-evidence/README.md", "utf8");
 const subjects = loadEffectiveSubjects();
 const released = subjects.filter((subject) => subject.releaseStatus === "released");
 const outsideScope = subjects.filter((subject) => subject.tier === 2);
-const verificationTimestamp = "August 21, 2026 at 11:15 AM CDT";
+const verificationDate = "August 21, 2026";
 
 test("documentation release count matches effective metadata", () => {
   assert.equal(released.length, 29);
@@ -51,11 +51,14 @@ test("all remaining tier-2 courses are described as outside current scope", () =
   assert.match(catalog, /Audio workflow not currently supported/);
 });
 
-test("every released course has a timestamped official College Board source pair", () => {
-  assert.match(officialSources, new RegExp(verificationTimestamp));
-  assert.match(officialSourcesPage, new RegExp(verificationTimestamp));
+test("every released course has a dated official College Board source pair", () => {
+  assert.match(officialSources, new RegExp(verificationDate));
+  assert.match(officialSourcesPage, new RegExp(verificationDate));
   assert.match(officialSources, /2026–27 course year \/ May 2027 AP exams/);
   assert.match(officialSourcesPage, /2026–27 course year \/ May 2027 AP exams/);
+  assert.doesNotMatch(officialSources, /\b(?:AM|PM|CDT|UTC)\b/);
+  assert.doesNotMatch(officialSourcesPage, /\b(?:AM|PM|CDT|UTC)\b/);
+  assert.doesNotMatch(about, /\b(?:AM|PM|CDT|UTC)\b/);
 
   const markdownCourseLinks = officialSources.match(/\[Course \/ CED\]\(https:\/\/apcentral\.collegeboard\.org\/courses\/[^)]+\)/g) || [];
   const markdownExamLinks = officialSources.match(/\[Exam format\]\(https:\/\/apcentral\.collegeboard\.org\/courses\/[^)]+\/exam\)/g) || [];
@@ -73,6 +76,7 @@ test("official source documentation is part of the published site", () => {
   assert.match(build, /Official AP sources/);
   assert.match(about, /href="official-sources\.html"/);
   assert.match(officialSourcesPage, /College Board master AP Courses and Exams catalog/);
+  assert.match(officialSourcesPage, /class="skip-link"/);
   assert.match(readme, /OFFICIAL_AP_SOURCES\.md/);
 });
 
