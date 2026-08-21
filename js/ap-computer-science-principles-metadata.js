@@ -54,10 +54,14 @@
     freeResponse: {
       timeMinutes:60,
       questions:[
-        "Written Response 1 (Program Design, Function, and Purpose)",
-        "Written Response 2(a) (Algorithm Development)",
-        "Written Response 2(b) (Errors and Testing)",
-        "Written Response 2(c) (Data and Procedural Abstraction)",
+        "Written Response 1",
+        "Written Response 2",
+      ],
+      prompts:[
+        "Written Response 1: Program Design, Function, and Purpose",
+        "Written Response 2(a): Algorithm Development",
+        "Written Response 2(b): Errors and Testing",
+        "Written Response 2(c): Data and Procedural Abstraction",
       ],
     },
     dataVar:"QUESTIONS_AP_COMPUTER_SCIENCE_PRINCIPLES",
