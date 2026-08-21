@@ -90,5 +90,6 @@ test("front-facing documentation exposes scope and limitations", () => {
   assert.match(catalog, /About, scope & limitations/);
   assert.match(about, /multiple-choice practice site/i);
   assert.match(about, /not affiliated with, endorsed by, sponsored by, or reviewed by College Board/i);
-  assert.match(about, /stored locally in your browser/i);
+  assert.match(about, /stored locally for the current browser tab\/session/i);
+  assert.match(about, /does not provide cross-device or long-term cloud saving/i);
 });
