@@ -26,6 +26,8 @@ test("preflight exposes format, controls, consequences, and accurate save behavi
   assert.match(source, /calculatorExpected/);
   assert.match(source, /questions require selecting two answers/);
   assert.match(source, /timer starts only when you choose Start timed practice/i);
+  assert.match(source, /There is no pause control/i);
+  assert.match(source, /refreshing does not stop the clock/i);
   assert.match(source, /cross out options with ×/i);
   assert.match(source, /permanently locks earlier questions/i);
   assert.match(source, /Unanswered or incomplete questions are scored incorrect/i);
