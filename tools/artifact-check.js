@@ -5,10 +5,17 @@ const { loadEffectiveSubjects } = require("./effective-subjects");
 
 const AP_SUBJECTS = loadEffectiveSubjects();
 assert.ok(fs.existsSync("_site/index.html"));
+assert.ok(fs.existsSync("_site/about.html"));
+assert.ok(fs.existsSync("_site/official-sources.html"));
 const released = AP_SUBJECTS.filter((subject) => subject.releaseStatus === "released");
 const releasedIds = new Set(released.map((subject) => subject.id));
 const sourceHtml = fs.readFileSync("index.html", "utf8");
 const builtHtml = fs.readFileSync("_site/index.html", "utf8");
+const builtSourcesHtml = fs.readFileSync("_site/official-sources.html", "utf8");
+
+assert.match(builtHtml, /href="official-sources\.html"/);
+assert.match(builtSourcesHtml, /Official AP standards & sources/);
+assert.match(builtSourcesHtml, /August 21, 2026 at 11:15 AM CDT/);
 
 const sourceDataScripts = [...sourceHtml.matchAll(/^<script src="(data\/([^"]+)\.js)"><\/script>\s*$/gm)]
   .map((match) => match[1]);
@@ -37,4 +44,4 @@ for (const subject of released) {
 const manifest = JSON.parse(fs.readFileSync("_site/release-manifest.json", "utf8"));
 assert.deepEqual([...manifest.releasedSubjects].sort(), [...releasedIds].sort());
 assert.deepEqual([...manifest.files].sort(), expectedScripts);
-console.log(`Public artifact contains ${released.length} released subject(s) and all ${expectedScripts.length} referenced released data layer(s), with draft data excluded.`);
+console.log(`Public artifact contains ${released.length} released subject(s), all ${expectedScripts.length} referenced released data layer(s), and the public About/official-source documentation, with draft data excluded.`);
