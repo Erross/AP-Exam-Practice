@@ -11,6 +11,7 @@ function loadCyber() {
   vm.runInContext(`${fs.readFileSync("js/subjects.js", "utf8")}\n;globalThis.__subjects = AP_SUBJECTS;`, sandbox);
   vm.runInContext(fs.readFileSync("js/ap-cybersecurity-metadata.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("data/ap-cybersecurity.js", "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-cybersecurity-quality.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("data/ap-cybersecurity-sets.js", "utf8"), sandbox);
   return {
     subject:sandbox.__subjects.find((candidate) => candidate.id === "ap-cybersecurity"),
@@ -28,6 +29,7 @@ const topics = [
 ];
 const wordCount = (value) => String(value).trim().split(/\s+/).filter(Boolean).length;
 const family = (skill) => String(skill).split(".")[0];
+const ABSOLUTE_LANGUAGE = /\b(always|never|every|only|entirely|unlimited|impossible|guaranteed|guarantees)\b/i;
 
 test("AP Cybersecurity metadata matches the May 2027 exam and published skill weighting", () => {
   assert.equal(subject.mcqCount, 60);
@@ -81,6 +83,7 @@ test("AP Cybersecurity bank covers all 24 CED topics with deep standalone and so
 });
 
 test("AP Cybersecurity question schema and rationale quality are release-shaped", () => {
+  const absoluteOffenders = [];
   for (const q of bank) {
     assert.match(q.id, /^apcyber-/);
     assert.match(q.topicCode, /^[1-5]\.\d+$/);
@@ -91,9 +94,11 @@ test("AP Cybersecurity question schema and rationale quality are release-shaped"
     assert.ok(Number.isInteger(q.c[0]) && q.c[0] >= 0 && q.c[0] < 4, q.id);
     assert.ok(q.q.length >= 20, q.id);
     assert.ok(q.e.length >= 90, `${q.id}: rationale ${q.e.length}`);
-    const absoluteDistractors = q.o.filter((_, i) => i !== q.c[0]).filter((option) => /\b(always|never|every|only|entirely|unlimited|impossible|guaranteed)\b/i.test(option)).length;
-    assert.ok(absoluteDistractors <= 1, `${q.id}: stacked absolute distractors`);
+    const absoluteDistractors = q.o.filter((_, i) => i !== q.c[0]).filter((option) => ABSOLUTE_LANGUAGE.test(option)).length;
+    if (absoluteDistractors > 1) absoluteOffenders.push(q.id);
   }
+  if (absoluteOffenders.length) console.log("AP Cybersecurity stacked-absolute items", absoluteOffenders);
+  assert.deepEqual(absoluteOffenders, []);
 });
 
 test("AP Cybersecurity answer construction stays inside project cue limits", () => {
@@ -102,12 +107,16 @@ test("AP Cybersecurity answer construction stays inside project cue limits", () 
   let correctWords = 0;
   let distractorWords = 0;
   const keys = [0,0,0,0];
+  const offenders = [];
   for (const q of bank) {
     const lengths = q.o.map(wordCount);
     const longest = Math.max(...lengths);
     const correctLength = lengths[q.c[0]];
     const longestCount = lengths.filter((n) => n === longest).length;
-    if (correctLength === longest && longestCount === 1) uniqueLongest++;
+    if (correctLength === longest && longestCount === 1) {
+      uniqueLongest++;
+      offenders.push({ id:q.id, lengths, key:q.c[0] });
+    }
     if (correctLength === longest && longestCount < 4) amongLongest++;
     correctWords += correctLength;
     lengths.forEach((length, index) => { if (index !== q.c[0]) distractorWords += length; });
@@ -118,6 +127,7 @@ test("AP Cybersecurity answer construction stays inside project cue limits", () 
   const correctMean = correctWords / bank.length;
   const distractorMean = distractorWords / (bank.length * 3);
   console.log("AP Cybersecurity answer metrics", { uniqueShare, amongShare, correctMean, distractorMean, keys });
+  if (uniqueShare > 0.25) console.log("AP Cybersecurity unique-longest sample", offenders.slice(0, 40));
   assert.ok(uniqueShare <= 0.25, `unique-longest ${(100*uniqueShare).toFixed(1)}%`);
   assert.ok(amongShare <= 0.58, `among-longest ${(100*amongShare).toFixed(1)}%`);
   assert.ok(Math.abs(correctMean - distractorMean) / distractorMean <= 0.12, `${correctMean} vs ${distractorMean}`);
