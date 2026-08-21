@@ -122,3 +122,59 @@ Promotion must remain content-frozen. After this evidence-only commit, permitted
 **No CSP question/data layer or runtime file may change during promotion.**
 
 The promoted prospective-main merge commit must pass the full repository CI, including the 5,000-form/5,000-retake CSP gates, select-two tests, build, artifact verification, notation/global-scope diagnostics, and dependency audit before integration or merge to `main`.
+
+## Promotion evidence
+
+The content-frozen promotion completed at subject-branch head **`639ab932fa3a6a09352eac80b340c04d5c52885a`**. Relative to the independently reviewed candidate, promotion changed only the browser-effective CSP `releaseStatus` and the corresponding release-state test assertion. **No CSP question/data layer or runtime file changed.**
+
+GitHub Actions Test run **#2117**, run ID **32483223921**, job **96774016065**, checked out PR #80's exact prospective-main merge commit **`b4761a8da5dc1f4265bb2d912ebe43acf1857c7e`**, merging promoted head `639ab932fa3a6a09352eac80b340c04d5c52885a` into then-current `main` `d0f93fe70f46de500862d9a7580f6ba911b89781`.
+
+Results:
+
+- Full repository `npm run check`: **passed**.
+- **430/430 tests passed**.
+- AP CSP exact release-form gate: **5,000/5,000 passed**.
+- AP CSP 5,000-retake gate: **passed**, **28.6% overlap**.
+- Select-two shuffle/persistence semantics: **passed**.
+- Browser wiring / global-scope / notation diagnostics: **passed**.
+- Public artifact build: **28 released subjects / 126 released data layers**.
+- Artifact verification: **passed**.
+- Dependency audit: **0 vulnerabilities**.
+
+## Production-base reconciliation
+
+AP Cybersecurity was released to `main` after CSP promotion, moving production to **`c57ffd5868b34b31f9fff3d4745346db2daf0556`**. Because CSP and Cybersecurity both touched shared browser wiring/diagnostics, the original CSP PR #80 was no longer mergeable against the new production base.
+
+A fresh CSP release-integration branch, `release/ap-computer-science-principles-2027-integration-20260821`, was therefore built directly from production `c57ffd5868b34b31f9fff3d4745346db2daf0556` rather than resolving the stale branch destructively.
+
+The reconciled integration commit before this evidence update is **`c8c15bec6c4ad813a072a8a60a83091c23efcc4c`**.
+
+Reconciliation properties independently verified:
+
+- every CSP bank, quality, passage, metadata, multi-select runtime, release-test, and release-evidence file reused the exact promoted/reviewed CSP blob;
+- `tests/notation-diagnostic.test.js` reused the exact CSP-reviewed blob, which already contains the Cybersecurity grouping rule;
+- `index.html` was the only newly merged blob and preserves both Cybersecurity and CSP wiring additively;
+- Cybersecurity's metadata and four browser-effective data layers remain intact;
+- CSP metadata loads before drawing/runtime and its four browser-effective data layers remain contiguous in canonical order;
+- `js/multiselect.js` remains wired after `js/app.js` and before catalog startup;
+- the production-to-integration diff is exactly the expected 11 CSP files.
+
+## Exact integration CI evidence
+
+Release PR **#83**, `Release AP Computer Science Principles for May 2027`, tested the reconciled CSP release against the already-released Cybersecurity production base.
+
+GitHub Actions Test run **#2121**, run ID **32483923564**, job **96776101371**, checked out PR #83's exact prospective-main merge commit **`2f7970ee6100d78b09ecd13abc66ea37cb905400`**, combining integration head `c8c15bec6c4ad813a072a8a60a83091c23efcc4c` with production base `c57ffd5868b34b31f9fff3d4745346db2daf0556`.
+
+Results:
+
+- Full repository `npm run check`: **passed**.
+- **440/440 tests passed**.
+- AP CSP exact release-form gate: **5,000/5,000 passed**.
+- AP CSP 5,000-retake gate: **passed**, **28.6% overlap**.
+- AP Cybersecurity regression/release gates: **passed** on the combined tree.
+- Browser wiring / select-two persistence / global-scope / notation diagnostics: **passed**.
+- Public artifact build: **29 released subjects / 130 released data layers**.
+- Artifact verification: **passed**, with draft data excluded.
+- Dependency audit: **0 vulnerabilities**.
+
+This evidence update is the only change after the exact integration candidate above. The resulting final prospective-main merge commit must itself pass the full repository CI before PR #83 may be merged. No further CSP content or runtime changes are permitted.
