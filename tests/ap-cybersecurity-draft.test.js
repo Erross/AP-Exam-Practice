@@ -13,6 +13,7 @@ function loadCyber() {
   vm.runInContext(fs.readFileSync("data/ap-cybersecurity.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("data/ap-cybersecurity-quality.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("data/ap-cybersecurity-sets.js", "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-cybersecurity-source-quality.js", "utf8"), sandbox);
   return {
     subject:sandbox.__subjects.find((candidate) => candidate.id === "ap-cybersecurity"),
     bank:sandbox.window.QUESTIONS_AP_CYBERSECURITY,
