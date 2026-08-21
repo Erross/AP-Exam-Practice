@@ -16,6 +16,7 @@ const subjects = loadEffectiveSubjects();
 const released = subjects.filter((subject) => subject.releaseStatus === "released");
 const outsideScope = subjects.filter((subject) => subject.tier === 2);
 const verificationDate = "August 21, 2026";
+const clockTimePattern = /\b\d{1,2}:\d{2}(?::\d{2})?\b|T\d{2}:\d{2}/;
 
 test("documentation release count matches effective metadata", () => {
   assert.equal(released.length, 29);
@@ -51,7 +52,7 @@ test("all remaining tier-2 courses are described as outside current scope", () =
   assert.match(catalog, /Audio workflow not currently supported/);
 });
 
-test("every released course has a dated official College Board source pair", () => {
+test("every released course has a date-only official College Board source pair", () => {
   assert.match(officialSources, new RegExp(verificationDate));
   assert.match(officialSourcesPage, new RegExp(verificationDate));
   assert.match(officialSources, /2026–27 course year \/ May 2027 AP exams/);
@@ -59,6 +60,9 @@ test("every released course has a dated official College Board source pair", () 
   assert.doesNotMatch(officialSources, /\b(?:AM|PM|CDT|UTC)\b/);
   assert.doesNotMatch(officialSourcesPage, /\b(?:AM|PM|CDT|UTC)\b/);
   assert.doesNotMatch(about, /\b(?:AM|PM|CDT|UTC)\b/);
+  assert.doesNotMatch(officialSources, clockTimePattern);
+  assert.doesNotMatch(officialSourcesPage, clockTimePattern);
+  assert.doesNotMatch(about, clockTimePattern);
 
   const markdownCourseLinks = officialSources.match(/\[Course \/ CED\]\(https:\/\/apcentral\.collegeboard\.org\/courses\/[^)]+\)/g) || [];
   const markdownExamLinks = officialSources.match(/\[Exam format\]\(https:\/\/apcentral\.collegeboard\.org\/courses\/[^)]+\/exam\)/g) || [];
