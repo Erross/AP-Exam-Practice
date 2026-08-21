@@ -150,7 +150,7 @@ test("AP CSP distractors avoid stacked absolute-language tells", () => {
     q.o.filter((_, index) => !q.c.includes(index)).filter((option) => ABSOLUTE_LANGUAGE.test(option)).length > 1
   ).map((q) => q.id);
   if (offenders.length) console.log("AP CSP stacked-absolute items", offenders);
-  assert.deepEqual(offenders, []);
+  assert.equal(offenders.length, 0);
 });
 
 test("AP CSP single-select answer construction stays inside project cue limits", () => {
