@@ -216,16 +216,21 @@ function isPartLocked(questionIndex) {
 function updatePartUI() {
   const label = document.getElementById("part-label");
   const advanceBtn = document.getElementById("advance-part-btn");
+  const submitBtn = document.getElementById("submit-btn");
   const part = currentPart();
-  if (!label || !advanceBtn) return;
+  if (!label || !advanceBtn || !submitBtn) return;
   if (!part) {
     label.hidden = true;
     advanceBtn.hidden = true;
+    submitBtn.hidden = false;
     return;
   }
+  const finalPart = isOnFinalPart();
   label.hidden = false;
   label.textContent = part.label;
-  advanceBtn.hidden = isOnFinalPart();
+  advanceBtn.hidden = finalPart;
+  submitBtn.hidden = !finalPart;
+  if (!finalPart) advanceBtn.textContent = `Finish ${part.label} and lock answers →`;
 }
 
 function showPartTransitionBanner(part) {
@@ -312,7 +317,12 @@ function refreshNavigatorState() {
   const items = document.querySelectorAll("#navigator-grid .nav-item");
   items.forEach((item, i) => {
     const isCurrent = i === state.current;
-    const isAnswered = state.answers[i] !== undefined;
+    const answer = state.answers[i];
+    const expectedSelections = state.questions[i] && Array.isArray(state.questions[i].c)
+      ? state.questions[i].c.length : 1;
+    const selectedCount = Array.isArray(answer) ? answer.length : answer !== undefined ? 1 : 0;
+    const isAnswered = selectedCount === expectedSelections;
+    const isIncomplete = selectedCount > 0 && !isAnswered;
     const isFlagged = state.flagged.has(i);
     const isLocked = isPartLocked(i);
 
@@ -327,6 +337,7 @@ function refreshNavigatorState() {
 
     const states = [];
     if (isAnswered) states.push("answered");
+    else if (isIncomplete) states.push(`incomplete, ${selectedCount} of ${expectedSelections} selections made`);
     else states.push("not answered");
     if (isFlagged) states.push("flagged for review");
     if (isCurrent) states.push("current question");
@@ -707,7 +718,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("next-btn").addEventListener("click", () => goToQuestion(1));
   document.getElementById("flag-btn").addEventListener("click", toggleFlag);
   document.getElementById("submit-btn").addEventListener("click", () => {
-    if (confirm("Submit exam? You can't change answers after this.")) submitExam();
+    if (confirm("Submit exam now? Any unanswered or incomplete questions will be scored incorrect, and you can't change answers after submission.")) submitExam();
   });
   const advanceBtn = document.getElementById("advance-part-btn");
   if (advanceBtn) {
@@ -715,7 +726,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const part = currentPart();
       const nextPart = state.parts && state.parts[state.partIndex + 1];
       const warning = nextPart
-        ? `Move on to ${nextPart.label} now? You won't be able to return to ${part.label} questions.`
+        ? `Finish ${part.label} now and move to ${nextPart.label}? You won't be able to return to ${part.label} questions.`
         : "Move on now?";
       if (confirm(warning)) advanceToNextPart();
     });
