@@ -45,6 +45,11 @@
       },
     },
     stimulusSetRange:[1,1],
+    cspBlueprint: {
+      unitCounts:{ U1:8, U2:14, U3:23, U4:9, U5:16 },
+      multiCount:8,
+      passageQuestionCount:5,
+    },
     constraintDrawAttempts:50000,
     freeResponse: {
       timeMinutes:60,
