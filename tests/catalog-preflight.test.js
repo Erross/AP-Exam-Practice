@@ -20,10 +20,16 @@ test("timer cannot start until the confirmation action invokes the original star
     "original exam starter should only be called from one confirmation path");
 });
 
-test("preflight exposes timing, parts, calculator details, save behavior, and back navigation", () => {
+test("preflight exposes format, controls, consequences, and accurate save behavior", () => {
   assert.match(source, /multiple-choice questions/);
   assert.match(source, /subject\.examParts/);
   assert.match(source, /calculatorExpected/);
-  assert.match(source, /saved in this browser session/);
+  assert.match(source, /questions require selecting two answers/);
+  assert.match(source, /timer starts only when you choose Start timed practice/i);
+  assert.match(source, /cross out options with ×/i);
+  assert.match(source, /permanently locks earlier questions/i);
+  assert.match(source, /Unanswered or incomplete questions are scored incorrect/i);
+  assert.match(source, /saved for this browser tab\/session/i);
+  assert.match(source, /no cross-device or long-term storage/i);
   assert.match(source, /Back to subjects/);
 });
