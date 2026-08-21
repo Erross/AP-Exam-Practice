@@ -18,6 +18,7 @@ for (const file of fs.readdirSync(".").filter((name) => name.endsWith(".css"))) 
 fs.cpSync("js", path.join(out, "js"), { recursive: true });
 fs.cpSync("assets", path.join(out, "assets"), { recursive: true });
 copy("about.html");
+copy("official-sources.html");
 
 const publishedCourseCss = path.join(out, "course-cards.css");
 if (fs.existsSync(publishedCourseCss)) {
@@ -43,7 +44,7 @@ for (const source of allowedScripts) copy(source);
 
 const menuMarkup = `<details class="site-menu">
   <summary aria-label="Open site menu"><span class="hamburger-lines" aria-hidden="true"></span><span class="visually-hidden">Menu</span></summary>
-  <nav aria-label="Site navigation"><a href="index.html">Practice exams</a><a href="about.html">About</a></nav>
+  <nav aria-label="Site navigation"><a href="index.html">Practice exams</a><a href="about.html">About</a><a href="official-sources.html">Official AP sources</a></nav>
 </details>`;
 
 let html = sourceHtml.replace(
@@ -56,14 +57,16 @@ html = html
   .replace('src="js/catalog.js"', `src="js/catalog.js?v=${assetVersion}"`);
 fs.writeFileSync(path.join(out, "index.html"), html);
 
-const aboutPath = path.join(out, "about.html");
-let aboutHtml = fs.readFileSync(aboutPath, "utf8");
-aboutHtml = aboutHtml.replace('href="course-cards.css"', `href="course-cards.css?v=${assetVersion}"`);
-fs.writeFileSync(aboutPath, aboutHtml);
+for (const page of ["about.html", "official-sources.html"]) {
+  const pagePath = path.join(out, page);
+  let pageHtml = fs.readFileSync(pagePath, "utf8");
+  pageHtml = pageHtml.replace('href="course-cards.css"', `href="course-cards.css?v=${assetVersion}"`);
+  fs.writeFileSync(pagePath, pageHtml);
+}
 
 const files = [...allowedScripts].sort();
 fs.writeFileSync(
   path.join(out, "release-manifest.json"),
   JSON.stringify({ generatedBy: "tools/build.js", releasedSubjects: [...releasedIds].sort(), files }, null, 2) + "\n"
 );
-console.log(`Built ${out} with ${released.length} released subject(s), ${files.length} released data layer(s), About page, and refreshed UI assets.`);
+console.log(`Built ${out} with ${released.length} released subject(s), ${files.length} released data layer(s), About and official-source pages, and refreshed UI assets.`);

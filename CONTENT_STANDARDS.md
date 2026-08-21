@@ -1,191 +1,138 @@
 # Content Authoring Standards
 
-This is the checklist a subject's question bank must pass before it can be
-considered review-ready (and before `releaseStatus` moves from `"draft"` to
-`"released"`). It exists because both subjects built so far — AP U.S.
-Government and Politics and AP Biology — shipped real defects on the first
-pass that only surfaced under independent review: fabricated trend claims,
-self-contradicting distractors, a topicCode mismatch, SVG diagrams that
-contradicted their own question, and near-duplicate questions the drawer
-could serve in the same exam or on a retake. Every rule below traces back to
-one of those defects. Follow it up front instead of relearning it by review.
+This is the repository's source of truth for AP question-bank quality. A new or materially revised course is not review-ready until it satisfies these standards and the evidence requirements in [`SUBJECT_RELEASE_CHECKLIST.md`](SUBJECT_RELEASE_CHECKLIST.md).
 
-This file is the source of truth. A skill may point here, but the standard
-itself lives in this repo, versioned with the code it governs.
+The repository is now a mature multi-course system, so these rules apply across the released catalog rather than to an early-course prototype.
 
-## 1. CED alignment — verify, don't recall
+## 1. Verify the official specification
 
-- Unit weights, topic codes/titles, and skill-category codes must be checked
-  against the **current** College Board Course and Exam Description or
-  Course-at-a-Glance for that subject, not reconstructed from training
-  knowledge or a prior AP cycle. CEDs get revised (AP Biology's was
-  restructured effective Fall 2025); confirm you have the version that
-  governs the exam cycle you're targeting.
-- Record the source and date in a code comment next to `mcqCount` /
-  `mcqTimeMinutes` / `units` in `js/subjects.js`, e.g.
-  `// VERIFIED 2026-08-10: <URL>`. Reviewers should be able to re-check the
-  same document.
-- `examWeightRange` per unit should be the College Board's published range,
-  not a rounded guess. If you compute a single `examWeight` point value from
-  the range (e.g. a midpoint), say so in a comment and show the arithmetic —
-  reviewers need to be able to recompute it.
-- Every topic code your bank uses must correspond to a real CED topic; every
-  CED topic in scope should have at least one question, and ideally two or
-  more so a topic isn't representable by a single memorized item.
-- Skill/practice codes (e.g. AP Biology's `1.A`–`6.E`) must be the CED's
-  actual taxonomy, and each question's code should genuinely match what the
-  question asks the student to do (a data-interpretation question tagged as
-  "concept explanation" is a real defect, not a formality).
+Do not build from memory.
 
-## 2. Duplication avoidance
+- Check the **current** College Board exam page and the governing Course and Exam Description (CED), Course-at-a-Glance, or equivalent current specification.
+- Record the verification date and source beside the effective exam metadata. Metadata may live in `js/subjects.js` or in a course-specific metadata overlay loaded later by `index.html`.
+- Maintain a released-course entry in [`OFFICIAL_AP_SOURCES.md`](OFFICIAL_AP_SOURCES.md) linking the stable AP Central course/CED page and current exam-format page. The public source page must expose the same source set and the verification snapshot that supports the project's current-alignment claim.
+- Verify question count, timing, calculator policy, exam parts, unit/category weights, topic codes/titles, skill/practice taxonomy, stimulus/set rules, and any select-two/multi-select behavior.
+- Use College Board's published ranges exactly. If the drawer needs a point estimate, document how it was derived.
+- Every topic/skill code used by the bank must be real and semantically correct for the task the student actually performs.
+- Cover every in-scope topic; two or more independent items per topic is preferred where the course structure permits it.
 
-Two different duplication problems, two different mechanisms:
+If the official specification is uncertain, stop. Do not make a bank conform to an invented blueprint.
 
-**Within one exam** — stimulus sets (`stimulusGroupId`) already prevent a
-shared data table/diagram from being split across a draw; the drawer treats
-them as one atomic block. No extra work needed here beyond building sets
-correctly (see §5).
+## 2. Correct answer and option construction
 
-**Across attempts** — a small bank drawn repeatedly will otherwise show the
-same or near-duplicate questions on retakes. Two things address this:
+Every item must have an unambiguous scoring rule.
 
-- **Bank size relative to draw size.** A bank that's only 2x the draw count
-  will have high overlap between any two attempts almost by construction. Aim
-  for a bank meaningfully larger than the draw, spread so most units have
-  more items available than the draw ever needs.
-- **`variantGroupId`** — tag near-duplicate standalone questions (same
-  narrow CED sub-point, different wording or scenario) with a shared
-  `variantGroupId` so `drawBlocks()` in `js/draw.js` won't place two members
-  of the same group in one exam. Requirements enforced by both existing
-  audits and required of any new one:
-  - a group has 2+ members;
-  - all members share one `unit` and one `topicCode`;
-  - member `q` text is textually distinct (not just reworded);
-  - `variantGroupId` is for standalone questions only — never combine it
-    with `stimulusGroupId` on the same item.
-  - **Tag against the whole existing bank, not just questions added in the
-    same pass.** The single biggest defect found in this project's history
-    was variant-tagging new questions against each other while missing
-    near-duplicates already sitting in the pre-existing bank. Explicitly
-    diff new content against everything already shipped for that subject.
-- **Verify the result, don't assume it.** Run a Monte Carlo simulation: draw
-  two (or more) independent exams from the bank via `drawExam()`, thousands
-  of trials, and measure the average fraction of questions shared between
-  draws. Target **≤40%** average overlap between two independent attempts.
-  (AP Government went from 64.6% → 38.4% after its variant pass; AP Biology
-  went from 51.9% → 35.9%.) Report this number when a subject is proposed as
-  review-ready — it's cheap to compute and it's the single most direct
-  measurement of whether the repeat problem is actually solved.
+- Single-select items require exactly one correct option.
+- A course using official select-two or other multiple-select items must declare that behavior explicitly and have the exact required number of correct options, plus runtime, shuffling, persistence, restoration, and scoring tests.
+- Distractors must be plausible same-domain misconceptions, not cartoonishly false filler.
+- Every distractor must actually be wrong under the stem/stimulus as written.
+- Avoid stems or answers that rely on unstated assumptions, ambiguous terminology, or multiple defensible interpretations.
+- Runtime option shuffling must preserve the semantic key.
 
-## 3. Answer construction — no statistical tells
+### Statistical-tell limits
 
-A test-taker (or a subsequent audit) should not be able to guess the correct
-answer's position from patterns in how options are written. Enforce all of
-the following as automated checks (see `tools/audit.js` for the reference
-implementation):
+Automated checks should keep answer construction from advertising the key:
 
-- **Length bias:** the correct answer is the uniquely-longest option in no
-  more than ~25% of questions, and among-the-longest in no more than ~58%.
-  Average word count of correct answers vs. the average across all
-  distractors should be within ~12% of each other.
-- **Absolute-language distractors:** avoid loading multiple distractors in
-  the same question with "always / never / every / only / entirely /
-  unlimited"-type absolute language — it's a legibility tell even when each
-  individual distractor is otherwise fine. One is usually acceptable; two or
-  more in the same question is a defect.
-- **Raw answer-key position balance:** before runtime shuffling, each of the
-  4 option slots should hold the correct answer roughly 15–35% of the time
-  across the bank (ideally close to even, e.g. exactly 25% each if the bank
-  size divides evenly by 4). Runtime shuffling (`shuffleQuestionOptions`)
-  re-randomizes per attempt regardless, but the raw data shouldn't have a
-  baked-in skew that a static export or dev tool could expose.
+- uniquely longest correct option: roughly **≤25%**;
+- correct option among the longest: roughly **≤58%**;
+- mean correct-answer word count versus distractors: within roughly **12%**;
+- raw key positions for four-option banks: each slot roughly **15–35%**;
+- no stacking multiple conspicuous `always / never / only / entirely / unlimited`-style distractors in one item.
 
-## 4. Quantitative and source accuracy
+Course-specific evidence may justify a different metric, but weakening a gate only to make a failing bank pass is not acceptable.
 
-- Every number a question asks the student to compute or read must be
-  independently re-derivable. Before shipping, actually do the arithmetic
-  (by hand or with a short script) for every calculation-based item — chi-
-  square values, recombination/allele frequencies, percentages, ratios,
-  confidence-interval comparisons, whatever the subject requires. This
-  project has caught real arithmetic/logic errors this way; the "the numbers
-  look plausible" bar is not sufficient.
-- Quantitative and text stimuli need real citations (publisher, dataset/
-  report name, date, direct URL) **or** must be clearly and consistently
-  labeled as original/synthetic data (e.g. `"Original simulated experiment
-  created for AP Exam Practice."`). Never present invented data as if it
-  were a real published source.
-- Watch for invalid inferential leaps in a question's framing — e.g. using a
-  *national* poll to support a claim about one *state's* referendum
-  (ecological inference fallacy). If a stimulus is national/aggregate, keep
-  the question's conclusion at that same level.
-- Don't assert a trend the data doesn't actually show. If a table's values
-  go up, down, up, down, the stem cannot say a quantity "increasingly" did
-  something — describe what's actually there (a persistent pattern despite
-  fluctuation, a net change over the full range, etc).
-- Every distractor must be actually, verifiably false given the stimulus —
-  not just "look wrong." A distractor that happens to be a true statement
-  the student is asked to reject is a real defect, not a subtle trap.
+## 3. Duplicate and retake control
 
-## 5. Visual stimuli
+Two distinct problems need separate controls.
 
-- Alt text and title/desc fields must not leak the term or doctrine the
-  paired questions ask the student to identify (check against a per-image
-  forbidden-term list, the way `tools/audit.js`'s `visualLeakageTerms` does
-  for AP Government).
-- Alt text must be meaningful on its own (≥60 characters is the current
-  floor) and must not pre-interpret the visual with a conclusion ("...which
-  proves that...", "...therefore...") — describe what's shown, not the
-  answer.
-- **The rendered image must actually, self-consistently depict what the
-  alt text and questions claim.** This project shipped two real bugs of
-  exactly this kind: an arrow drawn in the wrong direction relative to the
-  concentration gradient it was supposed to represent, and a cladogram
-  missing a branch line to one of its five labeled tips. Check this by
-  reading the raw SVG path/coordinate data yourself and tracing it against
-  the described scenario — don't just confirm the file exists and the alt
-  text reads correctly.
-- Every stimulus group's image path must resolve (`fs.existsSync`) and
-  every stimulus object must be shared by reference across all questions in
-  its group, not duplicated.
+### Within an attempt
+
+- Shared-source questions use `stimulusGroupId` and are selected as complete atomic groups.
+- Near-duplicate standalone items use `variantGroupId` so one attempt cannot contain multiple variants of the same narrow concept/scenario.
+- A question must not use both `stimulusGroupId` and `variantGroupId`.
+- Variant families must be checked against the **whole effective bank**, not only newly added questions.
+
+### Across attempts
+
+The bank must be large and varied enough to make retakes useful. Measure this rather than assuming it.
+
+Run thousands of independent exam pairs and report mean question overlap. The project target is **≤40% average overlap** unless a documented course structure makes that mathematically impossible and the release review explicitly accepts the limitation.
+
+## 4. Quantitative and factual accuracy
+
+- Independently recompute every calculation-based answer.
+- Check units, rounding, signs, graph/table readings, inferential logic, and denominator choices.
+- Do not describe a trend the source does not show.
+- Do not make conclusions at a more specific level than the evidence supports.
+- Fact-check time-sensitive or course-specific claims against authoritative sources.
+- Add regression tests for any substantive quantitative or factual defect found during review.
+
+## 5. Sources, stimuli, and provenance
+
+- Real text/data/image stimuli need sufficient provenance to identify the source.
+- Invented material must be labeled consistently as original/synthetic/simulated; never imply an invented dataset is published evidence.
+- Shared stimuli must be internally consistent across every linked question.
+- Text transcriptions must be checked where exact wording matters.
+- Visual paths must resolve, render legibly at application size, and agree with the question and alt text.
+- Alt text must describe the visual without leaking the answer or interpreting the source for the student.
+- Source metadata must not falsely suggest College Board authorship.
 
 ## 6. Rationale quality
 
-- Every question's `e` field must be a genuine, per-question explanation —
-  what makes the correct answer right, and ideally why the main distractors
-  are wrong. A generic template (`"${answer}. This item applies CED Topic
-  ${code}."`) is not acceptable; it doesn't teach anything beyond restating
-  the key.
-- Enforce a minimum meaningful length (this project uses ≥90 characters) and
-  explicitly reject known-boilerplate patterns in an automated check, the
-  way AP Biology's test suite does with
-  `assert.doesNotMatch(question.e, /This item applies CED Topic/i)`.
+Every question needs an item-specific explanation that teaches rather than merely restating the key.
 
-## 7. Required verification workflow
+- Explain why the correct answer follows from the concept/stimulus.
+- Address the main misconception behind distractors where useful.
+- Reject generic templates such as “This item applies CED Topic X.”
+- Keep the repository's automated minimum-rationale and boilerplate checks green.
 
-Before calling a subject review-ready, run and report on all of:
+## 7. Browser-effective bank is the thing being released
 
-1. **Schema/metadata audit** — id format, unit/topicCode validity, one
-   correct answer, non-empty rationale, full CED topic coverage, stimulus
-   group integrity, variant group integrity. Follow the pattern in
-   `tools/audit.js` (currently Government-specific — write an equivalent
-   check, or generalize `audit.js` to accept a subject id, for any new
-   subject rather than skipping this step).
-2. **Bias checks** — §3 above, as automated assertions, not eyeballing.
-3. **Draw simulation** — thousands of trials of `drawExam()` confirming the
-   delivered draw always matches the declared unit/blueprint/stimulus-set
-   targets. See `tests/draw.test.js` and `tests/ap-biology.test.js`.
-4. **Monte Carlo retake-overlap simulation** — §2 above; report the actual
-   percentage, not just "we added variant groups."
-5. **Independent content review** — a second pass (ideally by a different
-   reviewer/session than the one that drafted the content) fact-checking
-   CED alignment, quantitative correctness, and visual self-consistency
-   from scratch, not re-reading the author's own claims. Both subjects in
-   this repo needed this step to catch defects the original draft missed.
-6. Only after all of the above pass does `releaseStatus` move from
-   `"draft"` to `"released"` in `js/subjects.js`.
+Many courses use multiple data/quality/source layers. Review and test the bank in the same order the browser loads it.
 
-`npm run check` currently runs the schema/bias/build/security checks that
-exist as of this writing; it does not yet run a subject-agnostic content
-audit or the Monte Carlo step automatically. Until that's automated, run
-those two manually and report the numbers when proposing a subject for
-release.
+- `index.html` load order is authoritative for effective browser content.
+- Tests that manually load layers must match that order.
+- Production `_site/` must contain every required layer for released courses and no draft/out-of-scope data layers.
+- A source file being correct in isolation is insufficient if a later overlay changes it.
+
+## 8. Automated verification
+
+For every new or materially revised course, run the reusable release audit:
+
+```bash
+npm run release:audit -- --subject ap-<course-id> --trials 5000 --overlap-trials 5000
+```
+
+It checks the effective browser bank and reports schema/group integrity, bias metrics, repeated draw success, variant exclusion, and retake overlap. It complements rather than replaces exact course tests.
+
+Also require:
+
+- course-specific CED/topic/skill/part/set tests;
+- thousands of exact constrained draws;
+- known quantitative/source/visual regression tests;
+- `npm ci` from a clean checkout;
+- `npm run check` for the repository-wide test/build/artifact/dependency gate.
+
+## 9. Independent review
+
+A reviewer/session that did not author the content must independently re-check:
+
+- official blueprint and CED semantics;
+- answer correctness and ambiguity;
+- distractor competitiveness;
+- calculations and factual claims;
+- source/provenance claims;
+- visual self-consistency;
+- duplicate/variant handling against the whole bank.
+
+Use **audit → repair → restart from scratch**. A list of repaired findings is not equivalent to a fresh clean pass. Release target: **zero substantive findings on a fresh post-repair review**.
+
+A separate fresh naive assessor must also be able to understand the catalog, preflight, MCQ-only scope, navigation, submission, results, and unofficial status without coaching.
+
+## 10. Promotion rule
+
+Keep unfinished work `releaseStatus: "draft"`. Move a course to `"released"` only after the complete subject gate is satisfied and the promotion itself is small and reviewable.
+
+Before release, confirm the course has an authoritative source row in `OFFICIAL_AP_SOURCES.md`, the public `official-sources.html` page exposes the same College Board source set, and the stated verification snapshot remains accurate. If the governing College Board source set has changed, update the source record and reverify the affected course before promotion.
+
+The promoted course must then pass the integration/release workflow on the exact prospective production tree before `main` is changed. See [`DEVELOPMENT_WORKFLOW.md`](DEVELOPMENT_WORKFLOW.md).

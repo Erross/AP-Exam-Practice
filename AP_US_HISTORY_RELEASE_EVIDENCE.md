@@ -1,5 +1,7 @@
 # AP U.S. History Release Evidence
 
+> **Status: released.** This file is a point-in-time record of the AP U.S. History release candidate and its measured gates. It intentionally preserves the candidate/run evidence from that release; current product state is described in `README.md` and current effective course metadata.
+
 ## Candidate
 
 - Audited candidate before promotion: `a60b022700bbc1ea2ed531ff53da06caec76f032`
@@ -7,9 +9,9 @@
 - GitHub Actions Test run: **#1675 / 32280652915**
 - Result: **362/362 tests passed**, build passed, artifact check passed, npm audit reported 0 vulnerabilities.
 
-## Current exam specification
+## Exam specification recorded for this release
 
-Verified 2026-08-19 against the current College Board AP U.S. History course/exam materials and May 2027 history-exam update. Section I Part A remains **55 MCQs in 55 minutes, 40% of the exam**, primarily using 3–4 question source sets. This product is explicitly Section I Part A practice only; the official digital exam also includes three SAQs, a DBQ, and an LEQ.
+Verified 2026-08-19 against the then-current College Board AP U.S. History course/exam materials and May 2027 history-exam update. Section I Part A remained **55 MCQs in 55 minutes, 40% of the exam**, primarily using 3–4 question source sets. This product is explicitly Section I Part A practice only; the official digital exam also includes three SAQs, a DBQ, and an LEQ.
 
 ## Bank and coverage
 
@@ -42,8 +44,8 @@ The post-repair review restarted from the current exam specification and reviewe
 
 ## Naive student-flow audit
 
-The browser-effective preflight exposes the 55-question / 55-minute format, MCQ-only scope, no-calculator status, and the existence of the official free-response components. Generic application tests also cover preflight confirmation, timer start behavior, session resume, navigation, flagging, submission/review flow, keyboard/screen-reader semantics, and draft exclusion from production artifacts.
+The browser-effective preflight exposed the 55-question / 55-minute format, MCQ-only scope, no-calculator status, and the existence of the official free-response components. Generic application tests also covered preflight confirmation, timer start behavior, session resume, navigation, flagging, submission/review flow, keyboard/screen-reader semantics, and draft exclusion from production artifacts.
 
 ## Release decision
 
-All content, construction, draw, retake, clean-room, naive, build, and artifact gates are satisfied. Promotion changes only the release state and its corresponding assertion; the promoted head must pass the full CI suite again before integration.
+The candidate satisfied the content, construction, draw, retake, clean-room, naive, build, and artifact gates and was subsequently promoted and integrated into production. The figures above remain the recorded release snapshot rather than a live product-status document.
