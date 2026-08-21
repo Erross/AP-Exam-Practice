@@ -51,7 +51,10 @@
   for (const [id, options] of Object.entries(replacements)) {
     const question = bank.find((candidate) => candidate.id === id);
     if (!question) throw new Error(`${id}: source-set repair target not found`);
-    if (question.c.length !== 1 || question.c[0] !== 0) throw new Error(`${id}: reviewed key changed before final curation`);
-    question.o = options.slice();
+    if (question.c.length !== 1) throw new Error(`${id}: expected one reviewed source-set key`);
+    const correctIndex = question.c[0];
+    if (question.o[correctIndex] !== options[0]) throw new Error(`${id}: reviewed source-set key text changed before final curation`);
+    let nextDistractor = 1;
+    question.o = question.o.map((option, index) => index === correctIndex ? option : options[nextDistractor++]);
   }
 })();
