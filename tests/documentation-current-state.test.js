@@ -7,6 +7,7 @@ const readme = fs.readFileSync("README.md", "utf8");
 const plan = fs.readFileSync("PLAN.md", "utf8");
 const about = fs.readFileSync("about.html", "utf8");
 const catalog = fs.readFileSync("js/catalog.js", "utf8");
+const build = fs.readFileSync("tools/build.js", "utf8");
 const evidenceReadme = fs.readFileSync("release-evidence/README.md", "utf8");
 const subjects = loadEffectiveSubjects();
 const released = subjects.filter((subject) => subject.releaseStatus === "released");
@@ -28,6 +29,7 @@ test("all remaining tier-2 courses are described as outside current scope", () =
   assert.match(about, /Eight audio-dependent AP courses are outside the current scope/);
   assert.match(catalog, /Outside current scope: audio-dependent AP courses/);
   assert.match(catalog, /Audio workflow not currently supported/);
+  assert.match(build, /publishedScopeNote = "Audio-dependent AP courses are outside the current scope/);
 });
 
 test("historical release evidence is labeled as point-in-time evidence", () => {
