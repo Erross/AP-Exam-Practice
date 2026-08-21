@@ -10,6 +10,7 @@ Do not build from memory.
 
 - Check the **current** College Board exam page and the governing Course and Exam Description (CED), Course-at-a-Glance, or equivalent current specification.
 - Record the verification date and source beside the effective exam metadata. Metadata may live in `js/subjects.js` or in a course-specific metadata overlay loaded later by `index.html`.
+- Maintain a released-course entry in [`OFFICIAL_AP_SOURCES.md`](OFFICIAL_AP_SOURCES.md) linking the stable AP Central course/CED page and current exam-format page. The public source page must expose the same source set and the verification snapshot that supports the project's current-alignment claim.
 - Verify question count, timing, calculator policy, exam parts, unit/category weights, topic codes/titles, skill/practice taxonomy, stimulus/set rules, and any select-two/multi-select behavior.
 - Use College Board's published ranges exactly. If the drawer needs a point estimate, document how it was derived.
 - Every topic/skill code used by the bank must be real and semantically correct for the task the student actually performs.
@@ -131,5 +132,7 @@ A separate fresh naive assessor must also be able to understand the catalog, pre
 ## 10. Promotion rule
 
 Keep unfinished work `releaseStatus: "draft"`. Move a course to `"released"` only after the complete subject gate is satisfied and the promotion itself is small and reviewable.
+
+Before release, confirm the course has an authoritative source row in `OFFICIAL_AP_SOURCES.md`, the public `official-sources.html` page exposes the same College Board source set, and the stated verification snapshot remains accurate. If the governing College Board source set has changed, update the source record and reverify the affected course before promotion.
 
 The promoted course must then pass the integration/release workflow on the exact prospective production tree before `main` is changed. See [`DEVELOPMENT_WORKFLOW.md`](DEVELOPMENT_WORKFLOW.md).
