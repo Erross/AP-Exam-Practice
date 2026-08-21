@@ -78,7 +78,7 @@ The browser-effective preflight exposes the exam-critical facts without presenti
 
 ## Release metrics
 
-Final reviewed candidate metrics from the exact PR merge-candidate CI run:
+The reviewed and promoted candidates retain the same content envelope:
 
 - Questions: **228**.
 - Raw answer keys: **[57, 57, 57, 57]** — exactly balanced.
@@ -88,9 +88,8 @@ Final reviewed candidate metrics from the exact PR merge-candidate CI run:
 - Distractor length: **21.87 words average**.
 - Stacked absolute-language release gate: passed.
 - Draw simulation: **5,000/5,000 valid** 60-question forms.
-- Independent retake overlap: **33.3%** average shared questions across the 5,000-pair release run.
+- Independent retake overlap: **33.2–33.3%** average shared questions across final 5,000-pair runs.
 - Browser wiring / global-scope / notation diagnostics: green.
-- Build and public-artifact exclusion while draft: green.
 - Dependency audit: **0 vulnerabilities**.
 
 ## Exact clean-candidate CI evidence
@@ -110,14 +109,45 @@ Results:
 - Public artifact: **passed**, with draft Cybersecurity correctly excluded.
 - Dependency audit: **0 vulnerabilities**.
 
-## Promotion gate
+## Promotion evidence
 
-Promotion must remain content-frozen. After this evidence-only commit, the permitted promotion changes are limited to:
+Promotion was content-frozen after evidence-only head `9104371d666eb496076d9e7d8402baf6a9f1ec01`.
 
-1. changing AP Cybersecurity browser-effective `releaseStatus` from `draft` to `released`;
-2. changing only tests whose purpose is to assert that release state;
-3. updating this evidence with the promoted and final integration SHAs/CI facts.
+Promoted subject head: **`033507526d7d63164e19995cca132252a6861f8a`**.
 
-**No AP Cybersecurity question or data layer may change during promotion.**
+The promotion diff from the evidence-only head changed exactly three files:
 
-The promoted prospective-main merge commit must then pass the full repository CI, including the 5,000-form/5,000-retake Cybersecurity gates, build, artifact verification, notation/global-scope diagnostics, and dependency audit before integration or merge to `main`.
+1. `js/ap-cybersecurity-metadata.js`: browser-effective `releaseStatus` from `draft` to `released`;
+2. `tests/ap-cybersecurity-browser.test.js`: release-state test wording/assertion only;
+3. `tests/ap-cybersecurity-draft.test.js`: release-state assertion only.
+
+**No AP Cybersecurity question or data layer changed during promotion.**
+
+The exact promoted prospective-main merge commit was **`16e3dd675faa58588a49bd21461f9873dc173691`**, merging promoted subject head `033507526d7d63164e19995cca132252a6861f8a` into unchanged `main` `d0f93fe70f46de500862d9a7580f6ba911b89781`.
+
+GitHub Actions Test run **#2108**, run ID **32442568547**, job **96656043143**, explicitly checked out that exact merge commit and completed successfully.
+
+- **429/429 tests passed**.
+- AP Cybersecurity 5,000-form gate: **passed**.
+- AP Cybersecurity 5,000-retake overlap: **33.2%**.
+- Answer metrics remained **21.5% uniquely-longest**, **30.3% exploitable among-longest**, **20.83 vs 21.87 words**, keys **[57,57,57,57]**.
+- Build: **28 released subjects / 126 released data layers**.
+- Public artifact: **28 released subjects and all 126 referenced released data layers**, with draft data excluded.
+- Dependency audit: **0 vulnerabilities**.
+
+## Integration and production gate
+
+A fresh release integration branch was created directly at the exact tested promoted merge commit:
+
+- Integration branch: `release/ap-cybersecurity-2027-integration-20260821`.
+- Initial integration commit: **`16e3dd675faa58588a49bd21461f9873dc173691`**.
+- This evidence update is the only intentional post-promotion integration change.
+
+Production release remains gated on:
+
+1. opening the dedicated AP Cybersecurity release PR from the integration branch to current `main`;
+2. full CI passing on that PR's **exact final prospective-main merge SHA** after this evidence update;
+3. the resulting public artifact still reporting **28 released subjects / 126 released data layers** and containing AP Cybersecurity;
+4. merging only after that exact merge-tree gate is green;
+5. confirming the resulting `main` tree is byte-for-byte the tested final merge tree;
+6. GitHub Pages deployment and public catalog → AP Cybersecurity preflight → exam-start smoke verification, where independently observable.
