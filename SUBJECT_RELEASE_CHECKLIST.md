@@ -1,142 +1,116 @@
 # Subject Release Checklist
 
-Use this checklist for every new or materially revised AP course. A course is not release-ready merely because its bank exists or its subject-specific tests pass.
+Use this checklist for every new or materially revised AP course. A bank is not release-ready merely because it exists or its own tests pass.
 
-## 1. Official specification gate
+## 1. Official specification
 
-- [ ] Branch was created from current `main`.
+- [ ] Work started from current `main`.
 - [ ] `releaseStatus` remains `"draft"` during development.
-- [ ] Current College Board exam page and governing CED were checked independently.
-- [ ] Verification date and source are recorded beside exam metadata in `js/subjects.js`.
-- [ ] MCQ count, timing, calculator policy, units/categories, weights, topic codes, and skill/practice taxonomy are current.
-- [ ] Any redesign effective date is explicitly accounted for.
+- [ ] Current College Board exam page and governing CED/current specification were checked independently.
+- [ ] Verification date/source are recorded beside the **effective** metadata (base registry or course metadata overlay).
+- [ ] MCQ count, timing, calculator policy, parts, units/categories, weights, topic codes, skills/practices, set rules, and selection type are current.
+- [ ] Any redesign effective date is accounted for explicitly.
 
-**Stop if the specification is uncertain. Do not build a bank against an unverified blueprint.**
+**Stop if the official blueprint is uncertain.**
 
-## 2. Bank design gate
+## 2. Bank design
 
-- [ ] Target bank size is comfortably larger than one delivered draw.
-- [ ] Every in-scope CED topic has coverage; two or more independent items per topic is preferred.
-- [ ] Required stimulus/data/passage groups are designed as atomic `stimulusGroupId` sets.
-- [ ] Near-duplicate standalone items use `variantGroupId`.
-- [ ] Variant comparisons include the entire effective bank, not only newly added questions.
-- [ ] No item has both `stimulusGroupId` and `variantGroupId`.
+- [ ] Bank size is comfortably larger than one delivered draw.
+- [ ] Every in-scope topic has meaningful coverage; multiple independent items per topic are preferred.
+- [ ] Shared source/data/passage/image questions use complete atomic `stimulusGroupId` sets.
+- [ ] Near-duplicate standalones use `variantGroupId`.
+- [ ] Variant comparison includes the whole effective bank, not only newly added questions.
+- [ ] No question has both `stimulusGroupId` and `variantGroupId`.
+- [ ] Browser layer order is intentional and documented by `index.html`.
 
-## 3. Content quality gate
+## 3. Item quality
 
 - [ ] Stable unique IDs.
-- [ ] Exactly four options for current single-select AP MCQ subjects.
-- [ ] Exactly one unambiguous correct answer.
-- [ ] Plausible AP-level distractors rather than cartoon wrong answers.
-- [ ] Exact CED topic and skill/practice tags match the task actually performed.
-- [ ] Item-specific rationales explain why the answer is correct.
+- [ ] Four-option single-select items have exactly one unambiguous key.
+- [ ] Any official select-two/multiple-select items have the exact required key count and explicit runtime/shuffle/persistence/scoring tests.
+- [ ] Distractors are plausible AP-level misconceptions rather than obvious filler.
+- [ ] Topic and skill/practice tags match the task actually performed.
+- [ ] Item-specific explanations teach why the answer is correct.
 - [ ] Quantitative answers were independently recomputed.
 - [ ] Text/data/visual stimuli have real provenance or are clearly labeled original/synthetic.
-- [ ] Visuals were inspected at application display size and agree with question text and alt text.
+- [ ] Visuals were inspected at application display size and agree with the question and alt text.
 
-## 4. Automated release audit
+## 4. Generic release audit
 
-Run the reusable generic audit:
+Run:
 
 ```bash
 npm run release:audit -- --subject ap-<course-id> --trials 5000 --overlap-trials 5000
 ```
 
-Record the output in the release PR. The command checks the effective browser bank loaded in `index.html` order and reports:
+Record the output in release evidence. The audit checks the effective browser bank and reports schema/group integrity, answer-construction bias, randomized draw success, variant exclusion, and independent-attempt overlap.
 
-- bank size and source layers;
-- generic schema integrity;
-- unit validity where units are declared;
-- stimulus and variant-group integrity;
-- correct-answer length bias;
-- raw answer-position balance;
-- repeated randomized draw success;
-- same-attempt variant exclusion;
-- average independent-attempt overlap.
+Target mean retake overlap: **≤40%** unless an unavoidable course constraint is explicitly reviewed and documented.
 
-Target average overlap is **<= 40%**.
+The generic audit does not replace exact course/CED tests.
 
-The generic audit complements, but does not replace, subject-specific CED/blueprint tests.
+## 5. Course-specific automated gate
 
-## 5. Subject-specific automated gate
-
-- [ ] Subject test file exists in `tests/`.
-- [ ] Exact CED topic inventory is asserted.
-- [ ] Exact skill/science-practice distributions are asserted where applicable.
-- [ ] Exam-part/calculator/set-blueprint behavior is asserted where applicable.
+- [ ] Course test file(s) exist in `tests/`.
+- [ ] Exact in-scope topic inventory is asserted.
+- [ ] Exact skill/practice distributions are asserted where applicable.
+- [ ] Exam-part/calculator/set/multi-select behavior is asserted where applicable.
 - [ ] Known quantitative calculations have regression coverage.
 - [ ] Known visual/source/transcription constraints have regression coverage.
-- [ ] Thousands of draws satisfy every subject-specific constraint.
-- [ ] `npm run check` passes from a clean install.
+- [ ] Thousands of draws satisfy every course-specific constraint.
+- [ ] `npm ci` succeeds from a clean checkout.
+- [ ] `npm run check` passes.
 
 ## 6. Clean-room independent audit
 
-A reviewer/session that did not author the content must independently verify from current sources:
+A reviewer/session that did not author the content independently verifies:
 
-- [ ] official exam blueprint;
-- [ ] exact CED semantic alignment;
+- [ ] official blueprint;
+- [ ] CED/topic/skill semantic alignment;
 - [ ] answer correctness and ambiguity;
 - [ ] distractor competitiveness;
-- [ ] quantitative correctness;
+- [ ] quantitative/factual correctness;
 - [ ] visual self-consistency;
 - [ ] provenance/source claims;
-- [ ] near-duplicate handling against the whole bank.
+- [ ] duplicate/variant handling against the whole bank.
 
-Use **audit -> repair -> restart from scratch**. Do not treat "all findings fixed" as equivalent to a fresh clean pass.
+Use **audit → repair → restart from scratch**. Release target: **zero substantive findings on a fresh post-repair pass**.
 
-Release target: **zero substantive findings on a fresh post-repair pass**.
+## 7. Naive assessor
 
-## 7. Naive assessor gate
-
-Use a fresh assessor who has not been briefed on how the interface is supposed to work. Do not explain controls during the test.
-
-Give only this task:
+Use a fresh assessor who has not been briefed on the interface. Give only:
 
 > You want to take a realistic AP `<subject>` multiple-choice practice exam. Use this site.
 
-### Catalog
+### Catalog and preflight
 
 - [ ] Finds the course immediately.
-- [ ] Understands that released courses are available now.
-- [ ] Understands the MCQ count/time shown on the card.
-- [ ] Knows what action starts practice.
+- [ ] Understands which courses are available now versus outside current scope.
+- [ ] Understands question count and timing.
+- [ ] Understands calculator/part/select-two rules where relevant.
+- [ ] Understands browser-local save/resume behavior.
+- [ ] Understands this is MCQ practice, not FRQ/essay/written/oral/performance-task practice.
 
-### Preflight
+### Exam and completion
 
-Before the assessor starts, ask what they believe they are about to take.
-
-- [ ] Correct question count.
-- [ ] Correct timing.
-- [ ] Correct calculator/part rules where relevant.
-- [ ] Understands save/resume behavior.
-- [ ] Understands current scope is MCQ practice, not FRQ/essay/written-response practice.
-
-### In-exam
-
-- [ ] First question renders without confusing notation or layout.
-- [ ] Can answer and change an answer.
-- [ ] Can flag/review and navigate.
-- [ ] Can handle part transitions where applicable.
-- [ ] Refresh/resume behavior is understandable.
-
-### Completion
-
+- [ ] First question renders clearly.
+- [ ] Can answer/change answers and handle select-two if applicable.
+- [ ] Can flag/review/navigate and handle timed part transitions where applicable.
 - [ ] Can submit without assistance.
-- [ ] Understands the result applies to this practice section, not an official AP score.
-- [ ] Can review explanations.
-- [ ] Can return to the catalog and begin another attempt.
+- [ ] Understands the result is a practice-section result, not an official AP score.
+- [ ] Can review explanations and return to the catalog.
 
 ### Trust comprehension
 
-Without prompting, the assessor should understand approximately:
+Without coaching, the assessor should understand approximately:
 
-> This is free, unofficial, original AP-style MCQ practice using current exam formats. It is not College Board and does not currently provide FRQ/essay/written-response practice.
+> This is free, unofficial, original AP-style multiple-choice practice using current exam configurations. It is not College Board and does not currently provide FRQ/essay/written/oral/performance scoring.
 
-If the assessor materially misunderstands the product, the release fails. After a UX repair, restart with a **new naive assessor**.
+If the product is materially misunderstood, fix the UX and restart with a **new** naive assessor.
 
-## 8. Release evidence package
+## 8. Release evidence
 
-A release PR should include evidence in this form:
+Record at minimum:
 
 ```text
 AP <Subject> release candidate
@@ -147,49 +121,53 @@ Official format:
   verified: <date>
 
 Bank:
-  <n> questions
-  <x>/<x> CED topics covered
+  <n> effective questions
+  <x>/<x> in-scope topics covered
   <n> stimulus groups
 
 Generic release audit:
   <trials>/<trials> valid draws
   retake overlap: <percent>
   uniquely longest correct: <percent>
-  raw keys: A <percent>, B <percent>, C <percent>, D <percent>
+  raw keys/selection metrics: <values>
 
 Clean-room review:
   pass 1: <findings>
-  pass 2: <findings>
+  ...
   final fresh pass: 0 substantive findings
 
 Naive audit:
-  catalog: pass
-  preflight: pass
+  catalog/preflight: pass
   exam navigation: pass
   completion: pass
   trust/scope comprehension: pass
 ```
 
+Release-evidence files are point-in-time records. Do not silently rewrite historical measurements later to match a newer exam cycle; add new evidence for a new release instead.
+
 ## 9. Promotion and integration
 
-Only after the gates above pass:
+Only after all course gates pass:
 
-- [ ] Change `releaseStatus` from `"draft"` to `"released"` in a small, reviewable promotion change.
-- [ ] Create a fresh ephemeral `integration/...` branch from current `main`.
-- [ ] Merge the reviewed subject/core heads into integration.
-- [ ] Run `npm ci` and `npm run check` on the exact integration head.
-- [ ] Re-run large randomized draw/overlap simulations if they are not part of the standard gate.
-- [ ] Build `_site/` and verify the release manifest contains the new released subject and no draft bank.
-- [ ] Smoke-test catalog -> preflight -> exam start using the production artifact.
-- [ ] Merge integration -> `main` only when all required checks are green.
+- [ ] Change `releaseStatus` from `"draft"` to `"released"` in a small reviewable promotion change.
+- [ ] Create a fresh ephemeral integration/release branch from current `main`.
+- [ ] Bring in only the reviewed course/core heads.
+- [ ] Run `npm ci` and `npm run check` on the integrated candidate.
+- [ ] Build `_site/` and verify the release manifest includes the course and excludes draft/out-of-scope banks.
+- [ ] Smoke-test catalog → preflight → exam start in the production artifact.
+- [ ] Verify README/About/catalog scope language is still accurate.
+- [ ] Validate the **exact prospective production merge tree** with the full gate.
+- [ ] Merge only if the base and head remain the tested ones.
+- [ ] After merge, verify the actual `main` tree matches the tested prospective tree when using exact-tree validation.
 
-## 10. Production deployment gate
+## 10. Production deployment
 
-- [ ] GitHub Pages workflow completes from the exact `main` merge commit.
-- [ ] Build and artifact upload passing is not mistaken for successful deployment; the final Pages deploy step must be green.
+- [ ] GitHub Pages workflow completes from the exact `main` merge.
+- [ ] Final deployment—not only build/artifact upload—is green.
 - [ ] Public catalog shows the course and correct metadata.
-- [ ] Public preflight shows the correct format.
-- [ ] A real public-site attempt starts and renders correctly.
-- [ ] Navigation, save/resume, submit, explanations, About/limitations, and return-to-catalog behavior work.
+- [ ] Public scope/out-of-scope grouping and About page are accurate.
+- [ ] Public preflight shows correct format and limitations.
+- [ ] A real public attempt starts and renders correctly.
+- [ ] Navigation, save/resume, submit, explanations, and return-to-catalog work.
 
-If Pages deployment fails after merge, treat production as impaired and fix deployment immediately.
+If deployment fails after merge, treat production as impaired and fix it through a focused hotfix branch.

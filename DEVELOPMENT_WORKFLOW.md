@@ -1,103 +1,136 @@
 # Development and Release Workflow
 
-`main` is the production branch. Every commit on `main` must be deployable, and GitHub Pages deploys only from `main` after the complete validation workflow succeeds.
+`main` is production. Every commit on `main` must be deployable, and GitHub Pages publishes only from successful `main` workflow runs.
 
 ## Branch flow
 
 ```text
-subject or improvement branch
-            ↓
-ephemeral integration branch
-            ↓
-           main
+focused subject / content / core / docs branch
+                    ↓
+     fresh ephemeral integration branch
+                    ↓
+       exact prospective-tree validation
+                    ↓
+                   main
+                    ↓
+         GitHub Pages + public smoke test
 ```
 
-### 1. Development branches
+## 1. Focused development branches
 
-Create each new subject from the current `main` branch:
+Create work from the current `main` branch.
 
-- `subject/ap-biology`
-- `subject/ap-psychology`
+Examples:
 
-Use a focused branch for later improvements:
+- `subject/ap-<course>` for a new course;
+- `content/ap-<course>-<change>` for bank improvements;
+- `fix/<issue>` for a focused defect;
+- `core/<change>` for shared draw/session/build/accessibility infrastructure;
+- `docs/<change>` for documentation/user-facing scope cleanup.
 
-- `content/ap-us-government-expand`
-- `fix/ap-biology-topic-7-4`
+Do not develop directly on `main`.
 
-Use a separate `core/...` branch for shared engine, build, audit, schema, session, accessibility, or styling changes. A subject branch should not invent its own incompatible version of shared infrastructure.
+Unfinished courses remain `releaseStatus: "draft"`. Effective metadata may be defined in the base `js/subjects.js` registry and/or course-specific metadata overlays; review the browser-effective load order rather than assuming the base registry is the whole configuration.
 
-Keep unfinished subjects at `releaseStatus: "draft"`. Draft banks may be merged into an integration branch for testing, but the production builder must not publish them.
+## 2. Subject/content gate
 
-### 2. Integration branches
-
-Create a short-lived integration branch from the latest `main` for each intended release, for example:
-
-- `integration/2026-08-government-biology`
-- `integration/2026-09-content-release`
-
-Merge every subject, improvement, and required core branch for that release into the integration branch. Resolve conflicts there, never directly on `main`. Shared-file resolutions must preserve every subject's constraints; passing one subject's tests is not sufficient.
-
-An integration branch is a release candidate, not a permanent `develop` branch. Delete it after the release is merged or abandoned so it cannot drift from production.
-
-### 3. Main and deployment
-
-Open one pull request from the integration branch to `main`. Merge only after all release gates below pass on the exact integration head. The Pages workflow then rebuilds and deploys the released-only `_site/` artifact from `main`.
-
-Do not merge a subject branch directly to `main`. Emergency production fixes may use a focused hotfix branch, but they must still pass the complete automated gate and receive a production artifact check.
-
-## Subject quality gate
-
-Every new or materially revised subject must have:
-
-- current official exam format, unit weights, topic codes, topic names, and skill definitions;
-- original questions with stable IDs, one unambiguous key, plausible distractors, and item-specific explanations;
-- complete topic coverage with meaningful depth rather than token tagging;
-- source provenance for quantitative, textual, and visual stimuli;
-- whole stimulus groups that are never split during a draw;
-- `variantGroupId` families for genuinely near-duplicate standalone questions;
-- randomized-draw tests for unit, practice, stimulus, and variant constraints;
-- measured cross-attempt overlap appropriate to the bank size;
-- answer-position and answer-length checks that detect systematic clues;
-- rendered visual inspection at the application's actual display width;
-- independent content review before release.
-
-Use [`SUBJECT_RELEASE_CHECKLIST.md`](SUBJECT_RELEASE_CHECKLIST.md) as the required evidence checklist. In addition to subject-specific tests, run the generic release audit while the course is still a release candidate:
+A new or materially revised course must satisfy [`CONTENT_STANDARDS.md`](CONTENT_STANDARDS.md) and [`SUBJECT_RELEASE_CHECKLIST.md`](SUBJECT_RELEASE_CHECKLIST.md), including current official-source verification, independent content review, naive-assessor review, subject-specific tests, and the reusable release audit:
 
 ```bash
 npm run release:audit -- --subject ap-<course-id> --trials 5000 --overlap-trials 5000
 ```
 
-The generic audit loads the effective browser bank in `index.html` order, checks shared schema/bias/group rules, exercises randomized draws, and measures independent-attempt overlap. It does **not** replace exact CED tests, clean-room content review, rendered visual review, or the naive-assessor UX gate in the checklist.
+After any substantive content repair, restart the clean-room audit from scratch. After a meaningful UX repair, use a fresh naive assessor.
 
-After any substantive repair from independent review, restart the clean-room audit from scratch. After a UX repair from naive assessment, use a fresh naive assessor who has not learned the interface from the previous round.
+Shared-engine changes must be tested against the whole released catalog, not only the course that motivated the change.
 
-## Integration release gate
+## 3. Integration branch
 
-The integration pull request may merge to `main` only when:
+For a production release, create a **new short-lived integration/release branch from the latest `main`**. Bring in only the reviewed heads intended for that release.
 
-1. All intended subject and core branches are present at their reviewed heads.
-2. Merge conflicts are resolved with all affected subject tests rerun.
-3. `npm ci` succeeds from a clean checkout.
-4. `npm run check` passes, including audits, all tests, the production build, the artifact check, and the dependency audit.
-5. The subject release evidence in `SUBJECT_RELEASE_CHECKLIST.md` is complete, including the generic release-audit output, clean-room audit, and naive-assessor gate.
-6. Large randomized simulations satisfy every released subject's blueprint on every accepted draw.
-7. No exam contains two questions from the same variant group.
-8. The release manifest and built HTML contain every `released` bank and no `draft` bank.
-9. New or changed SVGs render legibly and match their question text and alternative text.
-10. The integration PR is mergeable and its required GitHub Actions checks pass on the exact head commit.
-11. A deployment preview or local production artifact smoke test confirms catalog selection, preflight, and exam start behavior for every released subject.
+Resolve shared-file conflicts there. A resolution is correct only if it preserves every affected course's behavior and tests.
 
-After merging, verify the Pages deployment completed from the merge commit and smoke-test the public site. Passing tests, building `_site`, and uploading the Pages artifact are not sufficient by themselves: the final Pages deployment step must also complete successfully. If deployment fails, treat `main` as impaired and fix it immediately through a focused hotfix branch.
+Run from a clean checkout:
 
-## Repository protections
+```bash
+npm ci
+npm run check
+```
 
-Recommended GitHub branch protection for `main`:
+The integration candidate must satisfy all of the following:
 
-- require a pull request before merging;
-- require the validation workflow to pass;
-- require the branch to be up to date before merging;
+1. intended reviewed changes are present and nothing unrelated is included;
+2. all repository tests pass;
+3. large randomized form/retake gates pass for affected courses;
+4. no attempt violates course blueprint, set, part, or variant constraints;
+5. the production build contains every released data layer and no draft/out-of-scope bank;
+6. catalog → preflight → exam-start behavior works in the built artifact;
+7. user-facing README/About/scope/limitations copy matches the product being released;
+8. dependency/security checks are green.
+
+## 4. Exact prospective-production tree gate
+
+A green branch head is necessary but not always sufficient. Before merging to `main`, validate the **exact tree GitHub would put into production**.
+
+When the pull-request workflow provides a synthetic/prospective merge commit, record its commit and tree SHA and confirm the full repository gate ran against that candidate. If a candidate is constructed explicitly, it must have current `main` and the exact intended head(s) as parents/content.
+
+Do not merge if `main` moved after the candidate was constructed. Rebuild and revalidate against the new base.
+
+This gate prevents the common failure mode where a feature branch is green but its actual merge result differs because of shared-file integration or a moving base.
+
+## 5. Merge to `main`
+
+Merge only when the exact prospective candidate is green and the PR head is unchanged. Pin the expected head SHA when the GitHub API supports it.
+
+After merge:
+
+- confirm `main` points at the expected merge;
+- compare the actual merge tree SHA with the tested prospective tree SHA when the release used that exact-tree method;
+- treat a tree mismatch as a release failure even if the individual branch had passed.
+
+Integration branches are disposable and should not become a long-lived `develop` branch.
+
+## 6. GitHub Pages deployment gate
+
+The Pages workflow must complete from the production merge. A successful build or artifact upload alone is not a successful deployment.
+
+After deployment, smoke-test the public site:
+
+- landing catalog and search;
+- released/out-of-scope grouping and scope note;
+- About/limitations navigation;
+- course card metadata;
+- preflight question count/timing/calculator/part details;
+- real exam start/rendering;
+- save/resume where practical;
+- navigation, submit, explanations, and return to catalog.
+
+If Pages deployment fails after merge, treat production as impaired and repair through a focused hotfix branch.
+
+## 7. Documentation changes
+
+Documentation is production behavior when users or future contributors rely on it.
+
+A docs/UI-copy release should verify:
+
+- released-course count and current scope;
+- README links and live-site link;
+- About page limitations and privacy language;
+- no obsolete “coming soon” promise for deliberately out-of-scope courses;
+- developer docs describe the current architecture and release process;
+- historical release-evidence files are clearly labeled as point-in-time snapshots rather than live specifications.
+
+Prefer stable statements derived from effective metadata over manually maintained tables of bank sizes or exam numbers unless those numbers are intentionally part of the document's purpose.
+
+## 8. Repository protections
+
+Recommended protection for `main`:
+
+- require pull requests;
+- require the validation workflow;
+- require an up-to-date base before merge;
 - block force pushes and branch deletion;
-- dismiss stale approvals when the head changes;
-- restrict deployment to successful `main` workflow runs.
+- dismiss stale approvals when the head moves;
+- restrict Pages deployment to successful `main` runs.
 
-Subject and integration branches should be squash-merged where practical and deleted after their work is incorporated. Never force-push `main`.
+Never force-push `main`.

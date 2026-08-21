@@ -1,5 +1,5 @@
 // Catalog UX layer: production landing composition, released-first presentation,
-// course-card hierarchy, and pre-exam confirmation.
+// course-card hierarchy, scope grouping, and pre-exam confirmation.
 (function () {
   "use strict";
 
@@ -15,6 +15,19 @@
     return node;
   }
 
+  function subjectForCard(card) {
+    const heading = card.querySelector("h3");
+    if (!heading || !Array.isArray(AP_SUBJECTS)) return null;
+    return AP_SUBJECTS.find((subject) => subject.name === heading.textContent) || null;
+  }
+
+  function releasedCourseCount() {
+    return AP_SUBJECTS.filter((subject) => {
+      const bank = window[subject.dataVar];
+      return subject.releaseStatus === "released" && Array.isArray(bank) && bank.length > 0;
+    }).length;
+  }
+
   function updateHeroCopy() {
     const header = document.querySelector(".site-header");
     const heading = header && header.querySelector("h1");
@@ -26,8 +39,8 @@
       eyebrow.textContent = "AP EXAM PRACTICE";
       header.insertBefore(eyebrow, heading);
     }
-    if (heading) heading.textContent = "Practice AP exams in the format you’ll actually see.";
-    if (tagline) tagline.textContent = "Full-length Section I practice built around current AP formats, unit weighting, skills, and stimulus sets. Free, original questions — no account required. Saves locally in your browser.";
+    if (heading) heading.textContent = "Practice AP multiple-choice sections in the format you’ll actually see.";
+    if (tagline) tagline.textContent = "Full-length Section I practice built around current AP question counts, timing, weighting, skills, and stimulus sets. Free, original, unofficial — no account required. Progress stays in this browser.";
   }
 
   function ensureLandingComposition() {
@@ -36,11 +49,16 @@
     const categories = document.getElementById("catalog-categories");
     if (!screen || !toolbar || !categories) return;
 
+    const scopeNote = screen.querySelector(".catalog-scope-note");
+    if (scopeNote) {
+      scopeNote.textContent = "Audio-dependent AP courses are outside the current scope, including AP Music Theory and world-language/literature exams that require listening, speaking, or aural workflows.";
+    }
+
     if (!screen.querySelector(".catalog-intro")) {
       const intro = document.createElement("section");
       intro.className = "catalog-intro";
       text(intro, "h2", "", "", "Choose your AP course");
-      text(intro, "p", "", "catalog-intro-copy", "Released courses are ready for timed practice now. Search by course name or browse everything available.");
+      text(intro, "p", "", "catalog-intro-copy", `${releasedCourseCount()} released AP courses are ready for timed practice now. Search by course name or browse the available catalog.`);
       screen.insertBefore(intro, toolbar);
     }
 
@@ -73,8 +91,8 @@
       const steps = document.createElement("ol");
       [
         ["Choose a course", "Pick any released AP subject."],
-        ["Check the format", "Review question count, timing, and calculator details before the clock starts."],
-        ["Practice timed", "Work the section under exam-style timing; your in-progress attempt stays in this browser."],
+        ["Check the format", "Review question count, timing, and calculator or part details before the clock starts."],
+        ["Practice timed", "Work the multiple-choice section under exam-style timing; your in-progress attempt stays in this browser."],
       ].forEach(([titleValue, body]) => {
         const item = document.createElement("li");
         text(item, "strong", "", "", titleValue);
@@ -90,6 +108,13 @@
       footer.className = "site-footer";
       text(footer, "p", "", "", "AP Exam Practice is free and unofficial. Questions are original and are not College Board material.");
       text(footer, "p", "", "footer-secondary", "No account required. Practice progress is stored only in this browser.");
+      const docs = document.createElement("p");
+      docs.className = "footer-docs";
+      const about = document.createElement("a");
+      about.href = "about.html";
+      about.textContent = "About, scope & limitations";
+      docs.appendChild(about);
+      footer.appendChild(docs);
       document.body.appendChild(footer);
     }
   }
@@ -97,30 +122,50 @@
   function styleCourseCards(container) {
     Array.from(container.querySelectorAll(".subject-card")).forEach((card) => {
       const playable = !card.disabled;
+      const subject = subjectForCard(card);
+      const outsideScope = !playable && subject && subject.tier === 2;
       card.classList.toggle("released-card", playable);
       card.classList.toggle("development-card", !playable);
+      card.classList.toggle("outside-scope-card", !!outsideScope);
       const heading = card.querySelector("h3");
       if (heading && !card.querySelector(".subject-card-kicker")) {
         const kicker = document.createElement("span");
         kicker.className = "subject-card-kicker";
-        kicker.textContent = playable ? "Ready to practice" : "In development";
+        kicker.textContent = playable ? "Ready to practice" : outsideScope ? "Outside current scope" : "In development";
         card.insertBefore(kicker, heading);
       }
       const status = card.querySelector(".subject-status");
       if (status) {
         status.classList.toggle("subject-cta", playable);
         if (playable) status.textContent = "Start timed Section I →";
+        else if (outsideScope) status.textContent = "Audio workflow not currently supported";
       }
     });
+  }
+
+  function appendCollapsibleGroup(container, className, label, cards, openForSearch) {
+    if (!cards.length) return;
+    const details = document.createElement("details");
+    details.className = `${className} category-section`;
+    const summary = document.createElement("summary");
+    summary.textContent = `${label} (${cards.length})`;
+    details.appendChild(summary);
+    const grid = document.createElement("div");
+    grid.className = "subject-grid";
+    cards.forEach((card) => grid.appendChild(card));
+    details.appendChild(grid);
+    if (openForSearch) details.open = true;
+    container.appendChild(details);
   }
 
   function organizeCatalog() {
     const container = document.getElementById("catalog-categories");
     if (!container) return;
-    container.querySelectorAll(":scope > .available-catalog, :scope > .development-catalog").forEach((node) => node.remove());
+    container.querySelectorAll(":scope > .available-catalog, :scope > .development-catalog, :scope > .outside-scope-catalog").forEach((node) => node.remove());
     styleCourseCards(container);
     const released = [];
     const drafts = [];
+    const outsideScope = [];
     Array.from(container.querySelectorAll(":scope > .category-section")).forEach((section) => {
       const heading = section.querySelector("h2");
       const category = heading ? heading.textContent : "AP Course";
@@ -132,7 +177,10 @@
           const cardHeading = card.querySelector("h3");
           if (cardHeading) card.insertBefore(label, cardHeading);
         }
-        (card.disabled ? drafts : released).push(card);
+        const subject = subjectForCard(card);
+        if (!card.disabled) released.push(card);
+        else if (subject && subject.tier === 2) outsideScope.push(card);
+        else drafts.push(card);
       });
       section.remove();
     });
@@ -148,20 +196,10 @@
       container.appendChild(available);
     }
 
-    if (drafts.length) {
-      const details = document.createElement("details");
-      details.className = "development-catalog category-section";
-      const summary = document.createElement("summary");
-      summary.textContent = `More AP courses in development (${drafts.length})`;
-      details.appendChild(summary);
-      const grid = document.createElement("div");
-      grid.className = "subject-grid";
-      drafts.forEach((card) => grid.appendChild(card));
-      details.appendChild(grid);
-      const search = document.getElementById("catalog-search");
-      if (search && search.value.trim() && released.length === 0) details.open = true;
-      container.appendChild(details);
-    }
+    const search = document.getElementById("catalog-search");
+    const openForSearch = !!(search && search.value.trim() && released.length === 0);
+    appendCollapsibleGroup(container, "development-catalog", "More AP courses in development", drafts, openForSearch && drafts.length > 0);
+    appendCollapsibleGroup(container, "outside-scope-catalog", "Outside current scope: audio-dependent AP courses", outsideScope, openForSearch && drafts.length === 0);
   }
 
   function ensurePreflight() {
