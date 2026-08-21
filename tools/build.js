@@ -21,7 +21,7 @@ copy("about.html");
 
 const publishedCourseCss = path.join(out, "course-cards.css");
 if (fs.existsSync(publishedCourseCss)) {
-  const css = fs.readFileSync("course-cards.css", "utf8")
+  const css = fs.readFileSync(publishedCourseCss, "utf8")
     .replace("aesthetic-polish.css", `aesthetic-polish.css?v=${assetVersion}`)
     .replace("phase7.css", `phase7.css?v=${assetVersion}`);
   fs.writeFileSync(publishedCourseCss, css);
@@ -46,15 +46,11 @@ const menuMarkup = `<details class="site-menu">
   <nav aria-label="Site navigation"><a href="index.html">Practice exams</a><a href="about.html">About</a></nav>
 </details>`;
 
-const sourceScopeNote = "Scope note: AP Language and Culture courses are outside the current scope because their exams require listening and speaking audio workflows this site does not currently support.";
-const publishedScopeNote = "Audio-dependent AP courses are outside the current scope, including AP Music Theory and world-language/literature exams that require listening, speaking, or aural workflows.";
-
 let html = sourceHtml.replace(
   /^<script src="(data\/[^"?]+\.js)(?:\?[^\"]*)?"><\/script>\s*$/gm,
   (line, source) => (allowedScripts.has(source) ? line : "")
 );
 html = html
-  .replace(sourceScopeNote, publishedScopeNote)
   .replace('<header class="site-header">', `<header class="site-header">\n${menuMarkup}`)
   .replace('href="course-cards.css"', `href="course-cards.css?v=${assetVersion}"`)
   .replace('src="js/catalog.js"', `src="js/catalog.js?v=${assetVersion}"`);
