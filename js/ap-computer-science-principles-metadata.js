@@ -19,7 +19,7 @@
     mcqTimeMinutes: 120,
     totalExamTimeLabel: "3h 0m",
     formatVerified: true,
-    releaseStatus: "draft",
+    releaseStatus: "released",
     allowsMultiSelect: true,
     tierNote: "Section I practice for the fully digital AP CSP exam. A 70-question form contains 57 ordinary single-select questions, one five-question computing-innovation passage set, and 8 select-two questions. The through-course Create performance task and its exam-day written responses are not simulated here.",
     units: [
