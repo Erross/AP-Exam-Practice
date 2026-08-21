@@ -81,7 +81,8 @@ test("AP CSP draft metadata matches the current Section I structure", () => {
   assert.equal(subject.cspBlueprint.multiCount, 8);
   assert.equal(subject.cspBlueprint.passageQuestionCount, 5);
   assert.equal(subject.freeResponse.timeMinutes, 60);
-  assert.equal(subject.freeResponse.questions.length, 4);
+  assert.equal(subject.freeResponse.questions.length, 2);
+  assert.equal(subject.freeResponse.prompts.length, 4);
 });
 
 test("AP CSP bank covers all 35 CED topics with deep standalone and passage inventories", () => {
