@@ -22,6 +22,21 @@ test("documentation release count matches effective metadata", () => {
   assert.doesNotMatch(plan, /Goal 1: Framework/i);
 });
 
+test("root markdown no longer presents bootstrap-era state as current", () => {
+  const stalePatterns = [
+    /current production catalog contains eleven released AP courses/i,
+    /both subjects built so far/i,
+    /Goal 1: Framework/i,
+    /every subject ships with an empty question bank/i,
+  ];
+  for (const filename of fs.readdirSync(".").filter((name) => name.endsWith(".md"))) {
+    const content = fs.readFileSync(filename, "utf8");
+    for (const pattern of stalePatterns) {
+      assert.doesNotMatch(content, pattern, `${filename} contains obsolete bootstrap-era documentation`);
+    }
+  }
+});
+
 test("all remaining tier-2 courses are described as outside current scope", () => {
   assert.equal(outsideScope.length, 8);
   assert.ok(outsideScope.every((subject) => subject.releaseStatus !== "released"));

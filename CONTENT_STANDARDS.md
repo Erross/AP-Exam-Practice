@@ -2,7 +2,7 @@
 
 This is the repository's source of truth for AP question-bank quality. A new or materially revised course is not review-ready until it satisfies these standards and the evidence requirements in [`SUBJECT_RELEASE_CHECKLIST.md`](SUBJECT_RELEASE_CHECKLIST.md).
 
-The production catalog currently contains 29 released courses, so these rules are written for a mature multi-course system rather than an early two-course prototype.
+The repository is now a mature multi-course system, so these rules apply across the released catalog rather than to an early-course prototype.
 
 ## 1. Verify the official specification
 
