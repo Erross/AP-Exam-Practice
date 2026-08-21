@@ -12,11 +12,13 @@ const releasedIds = new Set(released.map((subject) => subject.id));
 const sourceHtml = fs.readFileSync("index.html", "utf8");
 const builtHtml = fs.readFileSync("_site/index.html", "utf8");
 const builtSourcesHtml = fs.readFileSync("_site/official-sources.html", "utf8");
+const clockTimePattern = /\b\d{1,2}:\d{2}(?::\d{2})?\b|T\d{2}:\d{2}/;
 
 assert.match(builtHtml, /href="official-sources\.html"/);
 assert.match(builtSourcesHtml, /Official AP standards & sources/);
 assert.match(builtSourcesHtml, /August 21, 2026/);
 assert.doesNotMatch(builtSourcesHtml, /\b(?:AM|PM|CDT|UTC)\b/);
+assert.doesNotMatch(builtSourcesHtml, clockTimePattern);
 
 const sourceDataScripts = [...sourceHtml.matchAll(/^<script src="(data\/([^"]+)\.js)"><\/script>\s*$/gm)]
   .map((match) => match[1]);
