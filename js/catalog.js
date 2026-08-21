@@ -28,6 +28,41 @@
     }).length;
   }
 
+  function ensureSiteMenu() {
+    const header = document.querySelector(".site-header");
+    if (!header || header.querySelector(".site-menu")) return;
+
+    const details = document.createElement("details");
+    details.className = "site-menu";
+    const summary = document.createElement("summary");
+    summary.setAttribute("aria-label", "Open site menu");
+    const lines = document.createElement("span");
+    lines.className = "hamburger-lines";
+    lines.setAttribute("aria-hidden", "true");
+    summary.appendChild(lines);
+    const hiddenLabel = document.createElement("span");
+    hiddenLabel.className = "visually-hidden";
+    hiddenLabel.textContent = "Menu";
+    summary.appendChild(hiddenLabel);
+    details.appendChild(summary);
+
+    const nav = document.createElement("nav");
+    nav.setAttribute("aria-label", "Site navigation");
+    [
+      ["index.html", "Practice exams", true],
+      ["about.html", "About", false],
+      ["official-sources.html", "Official AP sources", false],
+    ].forEach(([href, label, current]) => {
+      const link = document.createElement("a");
+      link.href = href;
+      link.textContent = label;
+      if (current) link.setAttribute("aria-current", "page");
+      nav.appendChild(link);
+    });
+    details.appendChild(nav);
+    header.insertBefore(details, header.firstChild);
+  }
+
   function updateHeroCopy() {
     const header = document.querySelector(".site-header");
     const heading = header && header.querySelector("h1");
@@ -114,6 +149,11 @@
       about.href = "about.html";
       about.textContent = "About, scope & limitations";
       docs.appendChild(about);
+      docs.appendChild(document.createTextNode(" · "));
+      const sources = document.createElement("a");
+      sources.href = "official-sources.html";
+      sources.textContent = "Official AP sources";
+      docs.appendChild(sources);
       footer.appendChild(docs);
       document.body.appendChild(footer);
     }
@@ -295,6 +335,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    ensureSiteMenu();
     updateHeroCopy();
     ensureLandingComposition();
     ensurePreflight();
