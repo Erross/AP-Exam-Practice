@@ -54,7 +54,7 @@ let html = sourceHtml.replace(
 html = html
   .replace('<header class="site-header">', `<header class="site-header">\n${menuMarkup}`)
   .replace('href="course-cards.css"', `href="course-cards.css?v=${assetVersion}"`)
-  .replace('src="js/catalog.js"', `src="js/catalog.js?v=${assetVersion}`);
+  .replace('src="js/catalog.js"', `src="js/catalog.js?v=${assetVersion}"`);
 fs.writeFileSync(path.join(out, "index.html"), html);
 
 for (const page of ["about.html", "official-sources.html"]) {
