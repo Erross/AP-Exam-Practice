@@ -21,7 +21,7 @@ test("AP Cybersecurity browser wiring exposes metadata and every data layer in c
   assert.ok(positions.at(-1) < scripts.indexOf("js/app.js"));
 });
 
-test("AP Cybersecurity browser-effective registry and bank resolve the reviewed draft", () => {
+test("AP Cybersecurity browser-effective registry and bank resolve the reviewed release", () => {
   const sandbox = { window:{} };
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
@@ -32,7 +32,7 @@ test("AP Cybersecurity browser-effective registry and bank resolve the reviewed 
   const subject = sandbox.__subjects.find((candidate) => candidate.id === "ap-cybersecurity");
   const bank = sandbox.window.QUESTIONS_AP_CYBERSECURITY;
   assert.ok(subject);
-  assert.equal(subject.releaseStatus, "draft");
+  assert.equal(subject.releaseStatus, "released");
   assert.equal(subject.formatVerified, true);
   assert.equal(subject.mcqCount, 60);
   assert.equal(subject.mcqTimeMinutes, 80);
