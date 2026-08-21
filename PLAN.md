@@ -1,6 +1,6 @@
 # AP Exam Practice — Current Status and Roadmap
 
-**Last reviewed:** 2026-08-21
+**Last reviewed:** August 21, 2026
 
 This file describes the project as it exists now. Historical framework/bootstrap plans have been retired from this document so that it can serve as a reliable orientation for future work.
 
@@ -14,7 +14,7 @@ The application provides:
 - course-specific question counts, timing, weighting, skills/practices, and stimulus requirements;
 - calculator/noncalculator timed parts where applicable;
 - select-two support where required by the official course format;
-- browser-local save/resume, navigation, flagging, submission, explanations, and per-unit results;
+- same-tab/session persistence across refreshes, navigation, flagging, submission, explanations, and per-unit results;
 - a released-only GitHub Pages build with no accounts, backend, analytics service, or application database.
 
 ## Current scope boundary
