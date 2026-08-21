@@ -7,11 +7,15 @@ const readme = fs.readFileSync("README.md", "utf8");
 const plan = fs.readFileSync("PLAN.md", "utf8");
 const index = fs.readFileSync("index.html", "utf8");
 const about = fs.readFileSync("about.html", "utf8");
+const officialSources = fs.readFileSync("OFFICIAL_AP_SOURCES.md", "utf8");
+const officialSourcesPage = fs.readFileSync("official-sources.html", "utf8");
 const catalog = fs.readFileSync("js/catalog.js", "utf8");
+const build = fs.readFileSync("tools/build.js", "utf8");
 const evidenceReadme = fs.readFileSync("release-evidence/README.md", "utf8");
 const subjects = loadEffectiveSubjects();
 const released = subjects.filter((subject) => subject.releaseStatus === "released");
 const outsideScope = subjects.filter((subject) => subject.tier === 2);
+const verificationTimestamp = "August 21, 2026 at 11:15 AM CDT";
 
 test("documentation release count matches effective metadata", () => {
   assert.equal(released.length, 29);
@@ -45,6 +49,31 @@ test("all remaining tier-2 courses are described as outside current scope", () =
   assert.match(about, /Eight audio-dependent AP courses are outside the current scope/);
   assert.match(catalog, /Outside current scope: audio-dependent AP courses/);
   assert.match(catalog, /Audio workflow not currently supported/);
+});
+
+test("every released course has a timestamped official College Board source pair", () => {
+  assert.match(officialSources, new RegExp(verificationTimestamp));
+  assert.match(officialSourcesPage, new RegExp(verificationTimestamp));
+  assert.match(officialSources, /2026–27 course year \/ May 2027 AP exams/);
+  assert.match(officialSourcesPage, /2026–27 course year \/ May 2027 AP exams/);
+
+  const markdownCourseLinks = officialSources.match(/\[Course \/ CED\]\(https:\/\/apcentral\.collegeboard\.org\/courses\/[^)]+\)/g) || [];
+  const markdownExamLinks = officialSources.match(/\[Exam format\]\(https:\/\/apcentral\.collegeboard\.org\/courses\/[^)]+\/exam\)/g) || [];
+  assert.equal(markdownCourseLinks.length, released.length);
+  assert.equal(markdownExamLinks.length, released.length);
+
+  for (const subject of released) {
+    assert.match(officialSources, new RegExp(`\\| ${subject.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\|`));
+    assert.match(officialSourcesPage, new RegExp(`<tr><td>${subject.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</td>`));
+  }
+});
+
+test("official source documentation is part of the published site", () => {
+  assert.match(build, /copy\("official-sources\.html"\)/);
+  assert.match(build, /Official AP sources/);
+  assert.match(about, /href="official-sources\.html"/);
+  assert.match(officialSourcesPage, /College Board master AP Courses and Exams catalog/);
+  assert.match(readme, /OFFICIAL_AP_SOURCES\.md/);
 });
 
 test("historical release evidence is labeled as point-in-time evidence", () => {
