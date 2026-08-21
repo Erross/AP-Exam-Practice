@@ -68,12 +68,12 @@ function auditDraw(draw) {
   }
 }
 
-test("AP CSP draft metadata matches the current Section I structure", () => {
+test("AP CSP released metadata matches the current Section I structure", () => {
   assert.equal(subject.mcqCount, 70);
   assert.equal(subject.mcqTimeMinutes, 120);
   assert.equal(subject.totalExamTimeLabel, "3h 0m");
   assert.equal(subject.formatVerified, true);
-  assert.equal(subject.releaseStatus, "draft");
+  assert.equal(subject.releaseStatus, "released");
   assert.equal(subject.allowsMultiSelect, true);
   assert.deepEqual(JSON.parse(JSON.stringify(subject.stimulusSetRange)), [1,1]);
   assert.deepEqual(JSON.parse(JSON.stringify(subject.attributeRanges.cspQuestionKind)), { multi:[8,8], passage:[5,5] });
