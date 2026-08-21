@@ -127,7 +127,7 @@
       [
         ["Choose a course", "Pick any released AP subject."],
         ["Check the format", "Review question count, timing, calculator, selection, and timed-part details before the clock starts."],
-        ["Practice timed", "Work under exam-style timing. Refreshing this tab preserves the current attempt; closing the browser session is not long-term save."],
+        ["Practice timed", "Work under exam-style timing. Refreshing this tab preserves the current attempt but does not pause the clock; closing the browser session is not a long-term save."],
       ].forEach(([titleValue, body]) => {
         const item = document.createElement("li");
         text(item, "strong", "", "", titleValue);
@@ -271,7 +271,7 @@
     instructions.className = "preflight-instructions";
     text(instructions, "h3", "", "", "Before you start");
     const list = document.createElement("ul");
-    addInstructionItem(list, "The timer starts only when you choose Start timed practice. When time expires, the current timed part advances automatically; the final part submits automatically.");
+    addInstructionItem(list, "The timer starts only when you choose Start timed practice. There is no pause control, and refreshing does not stop the clock. When time expires, the current timed part advances automatically; the final part submits automatically.");
     addInstructionItem(list, "Use the question numbers to move within the current timed part. You can change answers, cross out options with ×, and flag questions for review while that part is open.");
     addInstructionItem(list, "On exams with multiple timed parts, moving to the next part permanently locks earlier questions.");
     addInstructionItem(list, "Submitting ends the attempt. Unanswered or incomplete questions are scored incorrect.");
