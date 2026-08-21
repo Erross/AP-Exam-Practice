@@ -8,6 +8,8 @@ Use this checklist for every new or materially revised AP course. A bank is not 
 - [ ] `releaseStatus` remains `"draft"` during development.
 - [ ] Current College Board exam page and governing CED/current specification were checked independently.
 - [ ] Verification date/source are recorded beside the **effective** metadata (base registry or course metadata overlay).
+- [ ] [`OFFICIAL_AP_SOURCES.md`](OFFICIAL_AP_SOURCES.md) contains the course's stable AP Central course/CED link and current exam-format link.
+- [ ] The public `official-sources.html` page exposes the same source set and an accurate verification snapshot for the current alignment claim.
 - [ ] MCQ count, timing, calculator policy, parts, units/categories, weights, topic codes, skills/practices, set rules, and selection type are current.
 - [ ] Any redesign effective date is accounted for explicitly.
 
@@ -117,8 +119,9 @@ AP <Subject> release candidate
 
 Official format:
   <count> MCQ / <minutes> min
-  source: <official source>
-  verified: <date>
+  course/CED source: <official College Board source>
+  exam-format source: <official College Board source>
+  verified: <date/time and timezone>
 
 Bank:
   <n> effective questions
@@ -150,10 +153,12 @@ Release-evidence files are point-in-time records. Do not silently rewrite histor
 Only after all course gates pass:
 
 - [ ] Change `releaseStatus` from `"draft"` to `"released"` in a small reviewable promotion change.
+- [ ] Confirm `OFFICIAL_AP_SOURCES.md` and the public official-source page remain current for the governing College Board source set.
 - [ ] Create a fresh ephemeral integration/release branch from current `main`.
 - [ ] Bring in only the reviewed course/core heads.
 - [ ] Run `npm ci` and `npm run check` on the integrated candidate.
 - [ ] Build `_site/` and verify the release manifest includes the course and excludes draft/out-of-scope banks.
+- [ ] Verify `_site/official-sources.html` exists and the released course is represented there.
 - [ ] Smoke-test catalog → preflight → exam start in the production artifact.
 - [ ] Verify README/About/catalog scope language is still accurate.
 - [ ] Validate the **exact prospective production merge tree** with the full gate.
@@ -166,6 +171,7 @@ Only after all course gates pass:
 - [ ] Final deployment—not only build/artifact upload—is green.
 - [ ] Public catalog shows the course and correct metadata.
 - [ ] Public scope/out-of-scope grouping and About page are accurate.
+- [ ] Public Official AP Sources page loads, includes the course, and shows the current verification snapshot.
 - [ ] Public preflight shows correct format and limitations.
 - [ ] A real public attempt starts and renders correctly.
 - [ ] Navigation, save/resume, submit, explanations, and return-to-catalog work.
