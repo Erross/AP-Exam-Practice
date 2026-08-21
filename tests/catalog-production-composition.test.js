@@ -12,6 +12,9 @@ test("production landing composition is semantic, current, and uses desktop spac
   assert.match(js, /Available now/);
   assert.match(js, /Outside current scope: audio-dependent AP courses/);
   assert.match(js, /About, scope & limitations/);
+  assert.match(js, /Official AP sources/);
+  assert.match(js, /ensureSiteMenu\(\)/);
+  assert.match(js, /aria-current/);
   assert.match(js, /course-category/);
   assert.match(js, /site-footer/);
   assert.match(js, /Choose your AP course/);
