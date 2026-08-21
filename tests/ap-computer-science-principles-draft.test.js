@@ -14,6 +14,7 @@ function loadCsp() {
   vm.runInContext(fs.readFileSync("data/ap-computer-science-principles.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("data/ap-computer-science-principles-quality.js", "utf8"), sandbox);
   vm.runInContext(fs.readFileSync("data/ap-computer-science-principles-passages.js", "utf8"), sandbox);
+  vm.runInContext(fs.readFileSync("data/ap-computer-science-principles-passage-quality.js", "utf8"), sandbox);
   return {
     subject: sandbox.__subjects.find((candidate) => candidate.id === "ap-computer-science-principles"),
     bank: sandbox.window.QUESTIONS_AP_COMPUTER_SCIENCE_PRINCIPLES,
@@ -222,7 +223,7 @@ test("1,000 AP CSP retake pairs average at most 40% shared questions", () => {
 test("AP CSP browser wiring includes metadata, quality/passages, select-two runtime, and scope note", () => {
   const html = fs.readFileSync("index.html", "utf8");
   assert.match(html, /js\/ap-computer-science-principles-metadata\.js/);
-  assert.match(html, /data\/ap-computer-science-principles\.js[\s\S]*data\/ap-computer-science-principles-quality\.js[\s\S]*data\/ap-computer-science-principles-passages\.js/);
+  assert.match(html, /data\/ap-computer-science-principles\.js[\s\S]*data\/ap-computer-science-principles-quality\.js[\s\S]*data\/ap-computer-science-principles-passages\.js[\s\S]*data\/ap-computer-science-principles-passage-quality\.js/);
   assert.match(html, /js\/app\.js[\s\S]*js\/multiselect\.js[\s\S]*js\/catalog\.js/);
   assert.match(html, /Language and Culture courses are outside the current scope/);
 });
