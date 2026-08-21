@@ -11,27 +11,29 @@ function loadAllBanks() {
   scripts.forEach((file) => {
     const key = file.startsWith("data/ap-computer-science-a-")
       ? "data/ap-computer-science-a.js"
-      : file.startsWith("data/ap-environmental-science-")
-        ? "data/ap-environmental-science.js"
-        : file.startsWith("data/ap-human-geography-")
-          ? "data/ap-human-geography.js"
-          : file.startsWith("data/ap-european-history-")
-            ? "data/ap-european-history.js"
-            : file.startsWith("data/ap-us-history-")
-              ? "data/ap-us-history.js"
-              : file.startsWith("data/ap-world-history-")
-                ? "data/ap-world-history.js"
-                : file.startsWith("data/ap-latin-")
-                  ? "data/ap-latin.js"
-                  : file.startsWith("data/ap-business-personal-finance-")
-                    ? "data/ap-business-personal-finance.js"
-                    : file.startsWith("data/ap-cybersecurity-")
-                      ? "data/ap-cybersecurity.js"
-                      : file.startsWith("data/ap-art-history-")
-                        ? "data/ap-art-history.js"
-                        : file.startsWith("data/ap-calculus-bc-")
-                          ? "data/ap-calculus-bc.js"
-                          : file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
+      : file.startsWith("data/ap-computer-science-principles-")
+        ? "data/ap-computer-science-principles.js"
+        : file.startsWith("data/ap-cybersecurity-")
+          ? "data/ap-cybersecurity.js"
+          : file.startsWith("data/ap-environmental-science-")
+            ? "data/ap-environmental-science.js"
+            : file.startsWith("data/ap-human-geography-")
+              ? "data/ap-human-geography.js"
+              : file.startsWith("data/ap-european-history-")
+                ? "data/ap-european-history.js"
+                : file.startsWith("data/ap-us-history-")
+                  ? "data/ap-us-history.js"
+                  : file.startsWith("data/ap-world-history-")
+                    ? "data/ap-world-history.js"
+                    : file.startsWith("data/ap-latin-")
+                      ? "data/ap-latin.js"
+                      : file.startsWith("data/ap-business-personal-finance-")
+                        ? "data/ap-business-personal-finance.js"
+                        : file.startsWith("data/ap-art-history-")
+                          ? "data/ap-art-history.js"
+                          : file.startsWith("data/ap-calculus-bc-")
+                            ? "data/ap-calculus-bc.js"
+                            : file.replace(/-(?:curation|corrections|quality-fixes)\.js$/, ".js");
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(file);
   });
