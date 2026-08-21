@@ -2,14 +2,14 @@
 
 This file identifies the authoritative College Board source set used to align every released course in AP Exam Practice.
 
-**Verification snapshot:** **August 21, 2026 at 11:15 AM CDT (UTC−05:00; 16:15 UTC)**  
+**Verification date:** **August 21, 2026**  
 **Target cycle:** **2026–27 course year / May 2027 AP exams**
 
-At that timestamp, the College Board pages below were rechecked as the current public sources for the released catalog. The **Course / CED** link is the stable AP Central course page that exposes the current Course and Exam Description (CED) and, where College Board publishes them, current clarifications/corrections. The **Exam format** link is the current AP Central exam page used for question count, timing, delivery mode, calculator rules, section structure, and other exam-format requirements.
+On that date, the College Board pages below were rechecked as the current public sources for the released catalog. The **Course / CED** link is the stable AP Central course page that exposes the current Course and Exam Description (CED) and, where College Board publishes them, current clarifications/corrections. The **Exam format** link is the current AP Central exam page used for question count, timing, delivery mode, calculator rules, section structure, and other exam-format requirements.
 
 We intentionally link the stable AP Central course page rather than hard-coding a PDF asset URL: College Board can replace a CED PDF or corrections file while keeping the course page current. When a current CED has a separate clarifications/corrections document, that document is part of the governing source set.
 
-This timestamp is an alignment snapshot, not a claim that College Board can never revise a course after that moment. If College Board changes a CED, clarification, or exam format after the timestamp above, the affected practice course must be reverified before the project should claim alignment to the revised standard.
+This verification date is an alignment snapshot, not a claim that College Board can never revise a course after that date. If College Board changes a CED, clarification, or exam format after the date above, the affected practice course must be reverified before the project should claim alignment to the revised standard.
 
 College Board master catalog: [AP Courses and Exams](https://apcentral.collegeboard.org/courses)
 
@@ -53,4 +53,4 @@ Project engineering choices are documented separately and must not be presented 
 
 ## Accuracy statement
 
-As of **August 21, 2026 at 11:15 AM CDT (UTC−05:00)**, these links and the released-course alignment claim reflect the current College Board materials available for the **2026–27 / May 2027** cycle. AP Exam Practice is independent and unofficial; College Board is the authority if any discrepancy exists.
+As of **August 21, 2026**, these links and the released-course alignment claim reflect the current College Board materials available for the **2026–27 / May 2027** cycle. AP Exam Practice is independent and unofficial; College Board is the authority if any discrepancy exists.
