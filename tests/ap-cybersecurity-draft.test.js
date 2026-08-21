@@ -37,7 +37,7 @@ test("AP Cybersecurity metadata matches the May 2027 exam and published skill we
   assert.equal(subject.mcqTimeMinutes, 80);
   assert.equal(subject.totalExamTimeLabel, "2h 10m");
   assert.equal(subject.formatVerified, true);
-  assert.equal(subject.releaseStatus, "draft");
+  assert.equal(subject.releaseStatus, "released");
   assert.deepEqual(JSON.parse(JSON.stringify(subject.skillCountRanges)), { "1":[15,24], "2":[15,24], "3":[15,24] });
   assert.deepEqual(JSON.parse(JSON.stringify(subject.stimulusSetRange)), [5,8]);
   assert.equal(subject.freeResponse.timeMinutes, 50);
