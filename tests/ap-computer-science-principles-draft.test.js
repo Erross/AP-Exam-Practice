@@ -2,8 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
-const { drawExam, shuffleQuestionOptions } = require("../js/draw");
-const { validSavedAnswer } = require("../js/multiselect");
+const { shuffleQuestionOptions } = require("../js/draw");
+const { validSavedAnswer, drawCspExam } = require("../js/multiselect");
 
 function loadCsp() {
   const sandbox = { window: {} };
@@ -30,6 +30,7 @@ const topicCodes = [
 
 const wordCount = (value) => String(value).trim().split(/\s+/).filter(Boolean).length;
 const family = (skill) => String(skill).split(".")[0];
+const ABSOLUTE_LANGUAGE = /\b(always|never|every|only|entirely|unlimited|impossible|guaranteed|guarantees)\b/i;
 
 function auditDraw(draw) {
   assert.equal(draw.length, 70);
@@ -74,6 +75,9 @@ test("AP CSP draft metadata matches the current Section I structure", () => {
   assert.equal(subject.allowsMultiSelect, true);
   assert.deepEqual(JSON.parse(JSON.stringify(subject.stimulusSetRange)), [1,1]);
   assert.deepEqual(JSON.parse(JSON.stringify(subject.attributeRanges.cspQuestionKind)), { multi:[8,8], passage:[5,5] });
+  assert.deepEqual(JSON.parse(JSON.stringify(subject.cspBlueprint.unitCounts)), { U1:8,U2:14,U3:23,U4:9,U5:16 });
+  assert.equal(subject.cspBlueprint.multiCount, 8);
+  assert.equal(subject.cspBlueprint.passageQuestionCount, 5);
   assert.equal(subject.freeResponse.timeMinutes, 60);
   assert.equal(subject.freeResponse.questions.length, 4);
 });
@@ -138,6 +142,14 @@ test("AP CSP question schema, rationales, and select-two keys are sound", () => 
   }
 });
 
+test("AP CSP distractors avoid stacked absolute-language tells", () => {
+  const offenders = bank.filter((q) =>
+    q.o.filter((_, index) => !q.c.includes(index)).filter((option) => ABSOLUTE_LANGUAGE.test(option)).length > 1
+  ).map((q) => q.id);
+  if (offenders.length) console.log("AP CSP stacked-absolute items", offenders);
+  assert.deepEqual(offenders, []);
+});
+
 test("AP CSP single-select answer construction stays inside project cue limits", () => {
   const singles = bank.filter((q) => q.type === "s");
   let uniqueLongest = 0;
@@ -145,11 +157,15 @@ test("AP CSP single-select answer construction stays inside project cue limits",
   let correctWords = 0;
   let distractorWords = 0;
   const keys = [0,0,0,0];
+  const offenders = [];
   for (const q of singles) {
     const lengths = q.o.map(wordCount);
     const longest = Math.max(...lengths);
     const correctLength = lengths[q.c[0]];
-    if (correctLength === longest && lengths.filter((n) => n === longest).length === 1) uniqueLongest++;
+    if (correctLength === longest && lengths.filter((n) => n === longest).length === 1) {
+      uniqueLongest++;
+      offenders.push({ id:q.id, lengths, key:q.c[0] });
+    }
     if (correctLength === longest && lengths.filter((n) => n === longest).length < 4) amongLongest++;
     correctWords += correctLength;
     lengths.forEach((length, index) => { if (index !== q.c[0]) distractorWords += length; });
@@ -160,6 +176,7 @@ test("AP CSP single-select answer construction stays inside project cue limits",
   const correctMean = correctWords / singles.length;
   const distractorMean = distractorWords / (singles.length * 3);
   console.log("AP CSP answer metrics", { uniqueShare, amongShare, correctMean, distractorMean, keys });
+  if (uniqueShare > 0.25) console.log("AP CSP unique-longest sample", offenders.slice(0, 40));
   assert.ok(uniqueShare <= 0.25, `unique-longest ${(100*uniqueShare).toFixed(1)}%`);
   assert.ok(amongShare <= 0.58, `among-longest ${(100*amongShare).toFixed(1)}%`);
   assert.ok(Math.abs(correctMean - distractorMean) / distractorMean <= 0.12, `${correctMean} vs ${distractorMean}`);
@@ -184,15 +201,15 @@ test("AP CSP multi-select option shuffling and persistence helpers preserve two-
   assert.equal(validSavedAnswer({ ...q, type:"s" }, q.c), false);
 });
 
-test("500 AP CSP draws satisfy exact unit, passage, select-two, practice, and variant constraints", () => {
-  for (let i = 0; i < 500; i++) auditDraw(drawExam(subject, bank));
+test("500 AP CSP constructive draws satisfy exact unit, passage, select-two, practice, and variant constraints", () => {
+  for (let i = 0; i < 500; i++) auditDraw(drawCspExam(subject, bank));
 });
 
 test("1,000 AP CSP retake pairs average at most 40% shared questions", () => {
   let total = 0;
   for (let i = 0; i < 1000; i++) {
-    const first = drawExam(subject, bank);
-    const second = drawExam(subject, bank);
+    const first = drawCspExam(subject, bank);
+    const second = drawCspExam(subject, bank);
     const ids = new Set(first.map((q) => q.id));
     total += second.filter((q) => ids.has(q.id)).length / 70;
   }
@@ -201,7 +218,7 @@ test("1,000 AP CSP retake pairs average at most 40% shared questions", () => {
   assert.ok(overlap <= 0.40, `overlap ${(100*overlap).toFixed(1)}%`);
 });
 
-test("AP CSP browser wiring includes metadata, passage layer, multi-select support, and scope note", () => {
+test("AP CSP browser wiring includes metadata, passage layer, select-two runtime, and scope note", () => {
   const html = fs.readFileSync("index.html", "utf8");
   assert.match(html, /js\/ap-computer-science-principles-metadata\.js/);
   assert.match(html, /data\/ap-computer-science-principles\.js[\s\S]*data\/ap-computer-science-principles-passages\.js/);
