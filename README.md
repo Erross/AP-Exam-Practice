@@ -69,7 +69,7 @@ A practice attempt is not a simple random sample. Depending on the course, the d
 - official select-two behavior where the course uses it;
 - exclusion of near-duplicate variants within one attempt;
 - randomized option order while preserving the semantic answer key;
-- browser-local save/resume, navigation, flagging, submission, explanations, and per-unit results.
+- same-tab/session persistence across refreshes, plus navigation, flagging, submission, explanations, and per-unit results.
 
 Current exam assumptions are recorded beside the effective course metadata. Some mature courses use small metadata overlays in addition to the base registry in `js/subjects.js`; the browser load order is the source of truth for the effective configuration.
 
@@ -77,7 +77,7 @@ Current exam assumptions are recorded beside the effective course metadata. Some
 
 Every released course now has a public, clickable source record in [`OFFICIAL_AP_SOURCES.md`](OFFICIAL_AP_SOURCES.md). The corresponding public site page is `official-sources.html`.
 
-**Verification snapshot:** **August 21, 2026 at 11:15 AM CDT (UTC−05:00; 16:15 UTC)**  
+**Verification date:** **August 21, 2026**  
 **Target cycle:** **2026–27 course year / May 2027 AP exams**
 
 For each of the 29 released courses, the source index links to:
@@ -85,7 +85,7 @@ For each of the 29 released courses, the source index links to:
 - the official AP Central course page that hosts the current Course and Exam Description (CED) and any current clarifications/corrections; and
 - the official AP Central exam page used for current question counts, timing, section structure, delivery mode, calculator rules, and related exam-format requirements.
 
-The timestamp states exactly when the alignment claim was rechecked. If College Board changes a CED, correction, or exam format after that timestamp, the affected course must be reverified before this project should claim alignment to the revised standard. College Board remains the authority if any discrepancy exists.
+The verification date states when the alignment claim was last rechecked. If College Board changes a CED, correction, or exam format after that date, the affected course must be reverified before this project should claim alignment to the revised standard. College Board remains the authority if any discrepancy exists.
 
 ## Content and quality standard
 
@@ -163,7 +163,7 @@ GitHub Pages deploys the released-only `_site/` artifact from successful `main` 
 
 ## Documentation map
 
-- [`OFFICIAL_AP_SOURCES.md`](OFFICIAL_AP_SOURCES.md) — authoritative College Board course/CED and exam-format links for every released course, with the verification timestamp.
+- [`OFFICIAL_AP_SOURCES.md`](OFFICIAL_AP_SOURCES.md) — authoritative College Board course/CED and exam-format links for every released course, with the verification date.
 - [`PLAN.md`](PLAN.md) — current product status, scope, and roadmap.
 - [`CONTENT_STANDARDS.md`](CONTENT_STANDARDS.md) — authoring and content-quality rules.
 - [`SUBJECT_RELEASE_CHECKLIST.md`](SUBJECT_RELEASE_CHECKLIST.md) — required course release gates and evidence.
