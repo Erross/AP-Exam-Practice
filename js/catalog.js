@@ -40,7 +40,7 @@
       header.insertBefore(eyebrow, heading);
     }
     if (heading) heading.textContent = "Practice AP multiple-choice sections in the format you’ll actually see.";
-    if (tagline) tagline.textContent = "Full-length Section I practice built around current AP question counts, timing, weighting, skills, and stimulus sets. Free, original, unofficial — no account required. Progress stays in this browser.";
+    if (tagline) tagline.textContent = "Full-length Section I practice built around current AP question counts, timing, weighting, skills, and stimulus sets. Free, original, unofficial — no account required. In-progress work survives a refresh in this tab.";
   }
 
   function ensureLandingComposition() {
@@ -70,7 +70,7 @@
         ["✓", "Current-format configuration"],
         ["✦", "Original questions"],
         ["○", "No account required"],
-        ["▣", "Progress stays in this browser"],
+        ["▣", "In-progress work survives refresh"],
       ].forEach(([icon, label]) => {
         const item = document.createElement("li");
         const mark = document.createElement("span");
@@ -91,8 +91,8 @@
       const steps = document.createElement("ol");
       [
         ["Choose a course", "Pick any released AP subject."],
-        ["Check the format", "Review question count, timing, and calculator or part details before the clock starts."],
-        ["Practice timed", "Work the multiple-choice section under exam-style timing; your in-progress attempt stays in this browser."],
+        ["Check the format", "Review question count, timing, calculator, selection, and timed-part details before the clock starts."],
+        ["Practice timed", "Work under exam-style timing. Refreshing this tab preserves the current attempt; closing the browser session is not long-term save."],
       ].forEach(([titleValue, body]) => {
         const item = document.createElement("li");
         text(item, "strong", "", "", titleValue);
@@ -107,7 +107,7 @@
       const footer = document.createElement("footer");
       footer.className = "site-footer";
       text(footer, "p", "", "", "AP Exam Practice is free and unofficial. Questions are original and are not College Board material.");
-      text(footer, "p", "", "footer-secondary", "No account required. Practice progress is stored only in this browser.");
+      text(footer, "p", "", "footer-secondary", "No account required. In-progress work is stored only for this browser tab/session.");
       const docs = document.createElement("p");
       docs.className = "footer-docs";
       const about = document.createElement("a");
@@ -137,7 +137,7 @@
       const status = card.querySelector(".subject-status");
       if (status) {
         status.classList.toggle("subject-cta", playable);
-        if (playable) status.textContent = "Start timed Section I →";
+        if (playable) status.textContent = "Review format & start →";
         else if (outsideScope) status.textContent = "Audio workflow not currently supported";
       }
     });
@@ -202,6 +202,12 @@
     appendCollapsibleGroup(container, "outside-scope-catalog", "Outside current scope: audio-dependent AP courses", outsideScope, openForSearch && drafts.length === 0);
   }
 
+  function addInstructionItem(list, value) {
+    const item = document.createElement("li");
+    item.textContent = value;
+    list.appendChild(item);
+  }
+
   function ensurePreflight() {
     if (document.getElementById("screen-preflight")) return;
     const screen = document.createElement("main");
@@ -209,19 +215,32 @@
     screen.className = "screen";
     screen.setAttribute("aria-label", "Practice exam details");
     const panel = document.createElement("div");
-    panel.className = "question-panel";
+    panel.className = "question-panel preflight-panel";
     screen.appendChild(panel);
     const heading = text(panel, "h2", "preflight-subject", "", "");
     heading.tabIndex = -1;
-    text(panel, "p", "", "results-scope-note", "Timed Section I multiple-choice practice");
+    text(panel, "p", "", "preflight-scope", "This attempt covers the multiple-choice practice section only. Written, free-response, oral, portfolio, and other performance components are not included.");
     text(panel, "p", "preflight-format", "question-text", "");
     text(panel, "p", "preflight-parts", "subject-timing", "");
     text(panel, "p", "preflight-calculator", "subject-timing", "");
+    text(panel, "p", "preflight-selection", "subject-timing", "");
     text(panel, "p", "preflight-full", "subject-total", "");
     text(panel, "p", "preflight-note", "results-scope-note", "");
-    text(panel, "p", "", "results-scope-note", "Your in-progress attempt is saved in this browser session. The timer starts only after you choose Start timed practice.");
+
+    const instructions = document.createElement("section");
+    instructions.className = "preflight-instructions";
+    text(instructions, "h3", "", "", "Before you start");
+    const list = document.createElement("ul");
+    addInstructionItem(list, "The timer starts only when you choose Start timed practice. When time expires, the current timed part advances automatically; the final part submits automatically.");
+    addInstructionItem(list, "Use the question numbers to move within the current timed part. You can change answers, cross out options with ×, and flag questions for review while that part is open.");
+    addInstructionItem(list, "On exams with multiple timed parts, moving to the next part permanently locks earlier questions.");
+    addInstructionItem(list, "Submitting ends the attempt. Unanswered or incomplete questions are scored incorrect.");
+    addInstructionItem(list, "Your in-progress attempt is saved for this browser tab/session and survives refresh. Choosing Exit clears it; this is not cross-device or long-term storage.");
+    instructions.appendChild(list);
+    panel.appendChild(instructions);
+
     const controls = document.createElement("div");
-    controls.className = "question-controls";
+    controls.className = "question-controls preflight-controls";
     panel.appendChild(controls);
     const back = text(controls, "button", "preflight-back", "", "← Back to subjects");
     back.type = "button";
@@ -247,7 +266,7 @@
     selectedSubject = subject;
     document.getElementById("preflight-subject").textContent = subject.name;
     document.getElementById("preflight-format").textContent = `${subject.mcqCount} multiple-choice questions · ${subject.mcqTimeMinutes} minutes`;
-    document.getElementById("preflight-full").textContent = `Official full AP exam duration: ${subject.totalExamTimeLabel}`;
+    document.getElementById("preflight-full").textContent = `Official full AP exam duration (for context): ${subject.totalExamTimeLabel}`;
     const note = document.getElementById("preflight-note");
     note.textContent = subject.tierNote || "";
     note.hidden = !subject.tierNote;
@@ -258,12 +277,19 @@
     parts.hidden = !partText;
     const calculator = document.getElementById("preflight-calculator");
     const calculatorText = subject.calculatorAllowed === false
-      ? "Calculator not permitted for this AP exam."
+      ? "Calculator not permitted for this practice section."
       : subject.calculatorExpected === true
       ? "Calculator expected/permitted throughout this practice section."
       : (partText && /calculator/i.test(partText) ? "Calculator rules change by part; see the timed-part details above." : "");
     calculator.textContent = calculatorText;
     calculator.hidden = !calculatorText;
+    const selection = document.getElementById("preflight-selection");
+    const multiCount = subject.cspBlueprint && Number.isInteger(subject.cspBlueprint.multiCount)
+      ? subject.cspBlueprint.multiCount : 0;
+    selection.textContent = multiCount > 0
+      ? `${multiCount} questions require selecting two answers; those questions will say “Select two answers.”`
+      : "";
+    selection.hidden = !selection.textContent;
     showScreen("screen-preflight");
     document.getElementById("preflight-subject").focus();
   }
