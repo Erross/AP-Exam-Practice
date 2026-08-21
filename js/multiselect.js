@@ -146,6 +146,16 @@
     return isIntegerInRange(value, 0, question.o.length - 1);
   }
 
+  function groupPractice(group) {
+    const families = new Set(group.map(practiceFamily));
+    if (families.size !== 1) throw new Error(`${group[0].variantGroupId}: CSP variant group crosses practice families`);
+    return [...families][0];
+  }
+
+  function isMultiCapable(group) {
+    return group.some((question) => question.type === "m") && group.some((question) => question.type === "s");
+  }
+
   function collectGroups(bank) {
     const passages = new Map();
     const variantsByUnit = new Map();
@@ -182,9 +192,7 @@
   }
 
   function chooseVariantMembers(groups, multiCount, rng) {
-    const selectableMulti = groups.filter((group) =>
-      group.some((question) => question.type === "m") && group.some((question) => question.type === "s")
-    );
+    const selectableMulti = groups.filter(isMultiCapable);
     if (selectableMulti.length < multiCount) return null;
     const multiGroups = new Set(shuffle(selectableMulti, rng).slice(0, multiCount));
 
@@ -196,6 +204,144 @@
       chosen.push(shuffle(candidates, rng)[0]);
     }
     return chosen;
+  }
+
+  function boundedRows(total, families, capacities) {
+    const rows = [];
+    const current = {};
+    function visit(index, remaining) {
+      if (index === families.length) {
+        if (remaining === 0) rows.push({ ...current });
+        return;
+      }
+      const family = families[index];
+      const max = Math.min(capacities[family] || 0, remaining);
+      for (let count = 0; count <= max; count++) {
+        current[family] = count;
+        visit(index + 1, remaining - count);
+      }
+      delete current[family];
+    }
+    visit(0, total);
+    return rows;
+  }
+
+  function makeBuckets(variantsByUnit, families) {
+    const byUnit = new Map();
+    for (const [unit, groups] of variantsByUnit) {
+      const buckets = Object.fromEntries(families.map((family) => [family, []]));
+      groups.forEach((group) => {
+        const family = groupPractice(group);
+        if (!buckets[family]) throw new Error(`${group[0].variantGroupId}: unexpected CSP practice family ${family}`);
+        buckets[family].push(group);
+      });
+      byUnit.set(unit, buckets);
+    }
+    return byUnit;
+  }
+
+  function findCountPlan(subject, blueprint, passage, bucketsByUnit, rng) {
+    const families = Object.keys(subject.skillCountRanges || {});
+    const units = Object.keys(blueprint.unitCounts || {});
+    const passagePractice = Object.fromEntries(families.map((family) => [family, 0]));
+    passage.forEach((question) => {
+      const family = practiceFamily(question);
+      if (!(family in passagePractice)) throw new Error(`${question.id}: passage uses unexpected practice family ${family}`);
+      passagePractice[family]++;
+    });
+
+    const rowOptions = new Map();
+    for (const unit of units) {
+      const passageCount = passage.filter((question) => question.unit === unit).length;
+      const needed = blueprint.unitCounts[unit] - passageCount;
+      const buckets = bucketsByUnit.get(unit) || Object.fromEntries(families.map((family) => [family, []]));
+      const capacities = Object.fromEntries(families.map((family) => [family, buckets[family].length]));
+      if (needed < 0 || Object.values(capacities).reduce((sum, value) => sum + value, 0) < needed) return null;
+      rowOptions.set(unit, shuffle(boundedRows(needed, families, capacities), rng));
+    }
+
+    const running = { ...passagePractice };
+    const plan = {};
+
+    function canStillReach(unitIndex) {
+      for (const family of families) {
+        const [min, max] = subject.skillCountRanges[family];
+        if (running[family] > max) return false;
+        let remainingCapacity = 0;
+        for (let i = unitIndex; i < units.length; i++) {
+          const unit = units[i];
+          const options = rowOptions.get(unit);
+          if (!options.length) return false;
+          remainingCapacity += Math.max(...options.map((row) => row[family] || 0));
+        }
+        if (running[family] + remainingCapacity < min) return false;
+      }
+      return true;
+    }
+
+    function search(unitIndex) {
+      if (unitIndex === units.length) {
+        return families.every((family) => {
+          const [min, max] = subject.skillCountRanges[family];
+          return running[family] >= min && running[family] <= max;
+        });
+      }
+      if (!canStillReach(unitIndex)) return false;
+      const unit = units[unitIndex];
+      for (const row of rowOptions.get(unit)) {
+        let exceeds = false;
+        for (const family of families) {
+          running[family] += row[family] || 0;
+          if (running[family] > subject.skillCountRanges[family][1]) exceeds = true;
+        }
+        if (!exceeds) {
+          plan[unit] = row;
+          if (search(unitIndex + 1)) return true;
+          delete plan[unit];
+        }
+        for (const family of families) running[family] -= row[family] || 0;
+      }
+      return false;
+    }
+
+    return search(0) ? plan : null;
+  }
+
+  function selectGroupsForPlan(plan, bucketsByUnit, multiCount, rng) {
+    const selectedByBucket = [];
+    const selectedGroups = [];
+
+    for (const [unit, row] of Object.entries(plan)) {
+      const buckets = bucketsByUnit.get(unit);
+      for (const [family, count] of Object.entries(row)) {
+        if (!count) continue;
+        const pool = shuffle(buckets[family], rng);
+        const selected = pool.slice(0, count);
+        const unselected = pool.slice(count);
+        selectedGroups.push(...selected);
+        selectedByBucket.push({ selected, unselected });
+      }
+    }
+
+    let capable = selectedGroups.filter(isMultiCapable).length;
+    if (capable < multiCount) {
+      for (const bucket of shuffle(selectedByBucket, rng)) {
+        while (capable < multiCount) {
+          const incomingIndex = bucket.unselected.findIndex(isMultiCapable);
+          const outgoingIndex = bucket.selected.findIndex((group) => !isMultiCapable(group));
+          if (incomingIndex < 0 || outgoingIndex < 0) break;
+          const incoming = bucket.unselected.splice(incomingIndex, 1)[0];
+          const outgoing = bucket.selected.splice(outgoingIndex, 1, incoming)[0];
+          bucket.unselected.push(outgoing);
+          const globalIndex = selectedGroups.indexOf(outgoing);
+          selectedGroups[globalIndex] = incoming;
+          capable++;
+        }
+        if (capable >= multiCount) break;
+      }
+    }
+
+    return capable >= multiCount ? selectedGroups : null;
   }
 
   function drawCspExam(subject, bank, rng) {
@@ -214,36 +360,46 @@
       }
     });
 
-    const attempts = subject.constraintDrawAttempts || 50000;
-    for (let attempt = 0; attempt < attempts; attempt++) {
-      const passage = shuffle(passages, rng)[0];
-      const selectedGroups = [];
-      let possible = true;
-
-      for (const [unit, target] of Object.entries(blueprint.unitCounts)) {
-        const passageCount = passage.filter((question) => question.unit === unit).length;
-        const needed = target - passageCount;
-        const groups = variantsByUnit.get(unit) || [];
-        if (needed < 0 || groups.length < needed) { possible = false; break; }
-        selectedGroups.push(...shuffle(groups, rng).slice(0, needed));
-      }
-      if (!possible) continue;
-
+    const families = Object.keys(subject.skillCountRanges || {});
+    const bucketsByUnit = makeBuckets(variantsByUnit, families);
+    for (const passage of shuffle(passages, rng)) {
+      const plan = findCountPlan(subject, blueprint, passage, bucketsByUnit, rng);
+      if (!plan) continue;
+      const selectedGroups = selectGroupsForPlan(plan, bucketsByUnit, blueprint.multiCount, rng);
+      if (!selectedGroups) continue;
       const standalone = chooseVariantMembers(selectedGroups, blueprint.multiCount, rng);
       if (!standalone) continue;
+
       const questions = standalone.concat(passage);
       if (questions.length !== subject.mcqCount) continue;
       if (!practicesValid(subject, questions)) continue;
       if (questions.filter((question) => question.type === "m").length !== blueprint.multiCount) continue;
       if (questions.filter((question) => question.cspQuestionKind === "passage").length !== blueprint.passageQuestionCount) continue;
 
+      for (const [unit, target] of Object.entries(blueprint.unitCounts)) {
+        if (questions.filter((question) => question.unit === unit).length !== target) {
+          throw new Error(`AP CSP constructive plan produced the wrong ${unit} count`);
+        }
+      }
+
       const blocks = standalone.map((question) => [question]);
       blocks.push(passage.slice());
       return shuffle(blocks, rng).flat();
     }
 
-    throw new Error("No constructive AP CSP draw satisfies the configured practice ranges");
+    throw new Error("No constructive AP CSP draw satisfies the configured unit, practice, passage, and select-two constraints");
   }
 
-  return { shuffle, validSavedAnswer, collectGroups, practicesValid, chooseVariantMembers, drawCspExam };
+  return {
+    shuffle,
+    validSavedAnswer,
+    collectGroups,
+    practicesValid,
+    chooseVariantMembers,
+    boundedRows,
+    makeBuckets,
+    findCountPlan,
+    selectGroupsForPlan,
+    drawCspExam,
+  };
 });
