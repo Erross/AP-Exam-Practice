@@ -61,8 +61,9 @@ test("unified export contains every browser-effective released AP bank item", ()
   assert(sourceCspItem, "CSP multi-select regression source item must exist");
   assert(exportedCspItem, "CSP multi-select regression item must be exported");
   assert.equal(exportedCspItem.response.kind, "multiple-select");
-  assert.deepEqual(exportedCspItem.scoring.extensions.sourceCorrectIndices, sourceCspItem.c);
-  assert.deepEqual(exportedCspItem.scoring.answers, sourceCspItem.c.map((index) => sourceCspItem.o[index]));
+  const sourceCorrect = [...sourceCspItem.c];
+  assert.deepEqual(exportedCspItem.scoring.extensions.sourceCorrectIndices, sourceCorrect);
+  assert.deepEqual(exportedCspItem.scoring.answers, sourceCorrect.map((index) => sourceCspItem.o[index]));
 });
 
 test("unified AP metadata retains MCQ scope and calculator/free-response boundaries", () => {
