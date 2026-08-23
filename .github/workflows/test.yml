@@ -27,6 +27,33 @@ jobs:
       - name: Materialize unified artifact
         run: npm run export:unified -- --out /tmp/ap-unified.json --generated-at 2026-08-23T21:55:00Z
 
+  diagnostics:
+    name: diagnose-${{ matrix.gate }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - gate: audit
+            command: npm run audit
+          - gate: tests
+            command: npm test
+          - gate: build
+            command: npm run build
+          - gate: artifact
+            command: npm run build && npm run test:artifact
+          - gate: dependency-audit
+            command: npm audit --omit=dev
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run ${{ matrix.gate }} diagnostic
+        run: ${{ matrix.command }}
+
   check:
     runs-on: ubuntu-latest
     steps:
