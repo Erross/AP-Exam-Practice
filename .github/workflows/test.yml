@@ -36,8 +36,6 @@ jobs:
         include:
           - gate: audit
             command: npm run audit
-          - gate: tests
-            command: npm test
           - gate: build
             command: npm run build
           - gate: artifact
@@ -53,6 +51,73 @@ jobs:
       - run: npm ci
       - name: Run ${{ matrix.gate }} diagnostic
         run: ${{ matrix.command }}
+
+  test-shards:
+    name: tests-${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: humanities-1
+            files: >-
+              tests/ap-african-american-studies*.test.js
+              tests/ap-art-history*.test.js
+              tests/ap-business-personal-finance*.test.js
+              tests/ap-english*.test.js
+          - shard: stem-1
+            files: >-
+              tests/ap-biology*.test.js
+              tests/ap-calculus*.test.js
+              tests/ap-chemistry*.test.js
+              tests/ap-environmental-science*.test.js
+          - shard: computing-social
+            files: >-
+              tests/ap-comparative-government*.test.js
+              tests/ap-computer-science-a*.test.js
+              tests/ap-computer-science-principles*.test.js
+              tests/ap-cybersecurity*.test.js
+              tests/ap-government*.test.js
+              tests/ap-human-geography*.test.js
+          - shard: humanities-2
+            files: >-
+              tests/ap-european-history*.test.js
+              tests/ap-latin*.test.js
+              tests/ap-macroeconomics*.test.js
+              tests/ap-microeconomics*.test.js
+              tests/ap-us-history*.test.js
+              tests/ap-world-history*.test.js
+          - shard: stem-2
+            files: >-
+              tests/ap-physics-1*.test.js
+              tests/ap-physics-2*.test.js
+              tests/ap-physics-c-em*.test.js
+              tests/ap-physics-c-mechanics*.test.js
+              tests/ap-precalculus*.test.js
+              tests/ap-psychology*.test.js
+              tests/ap-statistics*.test.js
+          - shard: platform
+            files: >-
+              tests/browser-data-global-scope.test.js
+              tests/catalog-*.test.js
+              tests/documentation-current-state.test.js
+              tests/draw.test.js
+              tests/exam-flow-clarity.test.js
+              tests/notation*.test.js
+              tests/pages-*.test.js
+              tests/session.test.js
+              tests/static.test.js
+              tests/subject-release-audit.test.js
+              tests/unified-export.test.js
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run ${{ matrix.shard }} tests
+        run: node --test ${{ matrix.files }}
 
   check:
     runs-on: ubuntu-latest
