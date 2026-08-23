@@ -102,7 +102,7 @@ function normalizeSectionI(subject) {
     scoredItems: subject.mcqCount,
     fieldTestItems: 0,
     blueprint: without(subject, reserved),
-    supportedItemTypes: ["multiple_choice"],
+    supportedItemTypes: subject.allowsMultiSelect ? ["multiple_choice", "multiple_select"] : ["multiple_choice"],
     deferredCapabilities: [],
     extensions: { formatVerified: Boolean(subject.formatVerified), tierNote: subject.tierNote ?? null }
   };
@@ -177,26 +177,36 @@ function normalizeQuestion(question, subject) {
   const options = question.o ?? question.options;
   const correct = question.c ?? question.correctIndices;
   if (!question.id || typeof prompt !== "string" || !Array.isArray(options)) throw new Error(`${subject.id}: invalid released question shape ${question.id || "<no-id>"}`);
-  if (question.type && question.type !== "s") throw new Error(`${question.id}: released AP exporter currently requires single-select questions, got ${question.type}`);
-  if (!Array.isArray(correct) || correct.length !== 1 || !Number.isInteger(correct[0]) || correct[0] < 0 || correct[0] >= options.length) {
-    throw new Error(`${question.id}: invalid single-select semantic answer key`);
+  if (!Array.isArray(correct) || correct.length === 0 || !correct.every((index) => Number.isInteger(index) && index >= 0 && index < options.length) || new Set(correct).size !== correct.length) {
+    throw new Error(`${question.id}: invalid semantic answer key`);
   }
+
+  const sourceType = question.type ?? (correct.length > 1 ? "m" : "s");
+  if (sourceType !== "s" && sourceType !== "m") throw new Error(`${question.id}: unsupported released AP question type ${sourceType}`);
+  if (sourceType === "s" && correct.length !== 1) throw new Error(`${question.id}: single-select question must have exactly one semantic answer`);
+  if (sourceType === "m" && correct.length < 2) throw new Error(`${question.id}: multi-select question must have at least two semantic answers`);
+  if (sourceType === "m" && subject.allowsMultiSelect !== true) throw new Error(`${question.id}: multi-select item is not declared by ${subject.id}`);
+
   const stimulus = normalizeStimulus(question);
   const reserved = new Set(["id", "q", "prompt", "o", "options", "c", "correctIndices", "e", "explanation", "stimulus", "type"]);
+  const semanticAnswers = correct.map((index) => options[index]);
+  const multi = sourceType === "m";
   return {
     stimulus,
     item: {
       id: question.id,
       assessmentId: subject.id,
       sectionIds: ["section-i"],
-      itemType: "multiple_choice",
+      itemType: multi ? "multiple_select" : "multiple_choice",
       points: 1,
       prompt,
       ...(stimulus ? { stimulusRefs: [stimulus.id] } : {}),
-      response: { kind: "single-choice", options: [...options] },
+      response: multi
+        ? { kind: "multiple-select", options: [...options], constraints: { minSelections: correct.length, maxSelections: correct.length } }
+        : { kind: "single-choice", options: [...options] },
       scoring: {
         mode: "automatic",
-        answer: options[correct[0]],
+        ...(multi ? { answers: semanticAnswers } : { answer: semanticAnswers[0] }),
         rationale: question.e ?? question.explanation ?? null,
         extensions: { sourceCorrectIndices: [...correct] }
       },
