@@ -9,6 +9,7 @@
     "test": "node --test",
     "build": "node tools/build.js",
     "test:artifact": "node tools/artifact-check.js",
+    "export:unified": "node tools/export-unified.js",
     "check": "npm run audit && npm test && npm run build && npm run test:artifact && npm audit --omit=dev"
   },
   "engines": { "node": ">=22" },
