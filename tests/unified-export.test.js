@@ -37,11 +37,32 @@ test("unified export contains every browser-effective released AP bank item", ()
 
   for (const item of artifact.content.items) {
     assert.deepEqual(item.sectionIds, ["section-i"]);
-    assert.equal(item.itemType, "multiple_choice");
-    assert.equal(item.response.kind, "single-choice");
-    assert(item.response.options.includes(item.scoring.answer), `${item.id}: semantic answer must exist in effective displayed options`);
     assert.equal(item.scoring.mode, "automatic");
+    if (item.response.kind === "single-choice") {
+      assert.equal(item.itemType, "multiple_choice");
+      assert(item.response.options.includes(item.scoring.answer), `${item.id}: semantic answer must exist in effective displayed options`);
+      assert.equal(item.scoring.extensions.sourceCorrectIndices.length, 1);
+    } else if (item.response.kind === "multiple-select") {
+      assert.equal(item.itemType, "multiple_select");
+      assert(item.scoring.answers.length >= 2, `${item.id}: multi-select must preserve multiple semantic answers`);
+      assert.equal(item.response.constraints.minSelections, item.scoring.answers.length);
+      assert.equal(item.response.constraints.maxSelections, item.scoring.answers.length);
+      for (const answer of item.scoring.answers) {
+        assert(item.response.options.includes(answer), `${item.id}: multi-select semantic answer must exist in effective displayed options`);
+      }
+      assert.equal(item.scoring.extensions.sourceCorrectIndices.length, item.scoring.answers.length);
+    } else {
+      assert.fail(`${item.id}: unexpected AP response kind ${item.response.kind}`);
+    }
   }
+
+  const sourceCspItem = banks.QUESTIONS_AP_COMPUTER_SCIENCE_PRINCIPLES.find((item) => item.id === "apcsp-1-1-v8");
+  const exportedCspItem = artifact.content.items.find((item) => item.id === "apcsp-1-1-v8");
+  assert(sourceCspItem, "CSP multi-select regression source item must exist");
+  assert(exportedCspItem, "CSP multi-select regression item must be exported");
+  assert.equal(exportedCspItem.response.kind, "multiple-select");
+  assert.deepEqual(exportedCspItem.scoring.extensions.sourceCorrectIndices, sourceCspItem.c);
+  assert.deepEqual(exportedCspItem.scoring.answers, sourceCspItem.c.map((index) => sourceCspItem.o[index]));
 });
 
 test("unified AP metadata retains MCQ scope and calculator/free-response boundaries", () => {
@@ -66,6 +87,7 @@ test("unified AP metadata retains MCQ scope and calculator/free-response boundar
   assert.equal(byId.get("ap-precalculus").sections[0].calculator.policy, "part-specific");
   assert.equal(byId.get("ap-statistics").sections[0].calculator.policy, "available");
   assert.equal(byId.get("ap-art-history").sections[0].calculator.policy, "none");
+  assert.deepEqual(byId.get("ap-computer-science-principles").sections[0].supportedItemTypes, ["multiple_choice", "multiple_select"]);
   assert.deepEqual(byId.get("ap-english-language").sections[1].extensions, { readingPeriodMinutes: 15 });
 });
 
